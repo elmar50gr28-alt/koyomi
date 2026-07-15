@@ -1,0 +1,17 @@
+{
+  "name": "KOYOMI",
+  "short_name": "KOYOMI",
+  "description": "暦を読み、今日を暮らす。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#08111b",
+  "theme_color": "#111b26",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

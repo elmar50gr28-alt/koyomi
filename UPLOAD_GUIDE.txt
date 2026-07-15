@@ -1,0 +1,20 @@
+KOYOMI Build 001 - GitHubアップロード手順
+
+1. このZIPをWindowsで右クリックし、「すべて展開」を選びます。
+2. 展開したフォルダを開きます。
+3. GitHubのkoyomiリポジトリ画面で「uploading an existing file」または「Add file > Upload files」を押します。
+4. このフォルダの「中身」をすべて選択して、GitHubの画面へドラッグします。
+   ※フォルダ自体ではなく、index.htmlなど中のファイルを選びます。
+5. 画面下の「Commit changes」を押します。
+6. Settings > Pages で、Sourceを Deploy from a branch、Branchを main、Folderを /(root) にして保存します。
+
+正しい状態：
+リポジトリを開いたとき、一番上の階層に index.html が見えます。
+
+主なファイル：
+- index.html : KOYOMIホーム
+- today.html : 動くKOYOMI
+- app.html : 詳細鑑定
+- manifest.webmanifest : ホーム画面追加用設定
+- service-worker.js : 基本オフライン対応
+- icon.svg : アイコン
