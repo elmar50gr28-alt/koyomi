@@ -17,7 +17,9 @@ const requiredData = [
   'mitsunome-input-schema.json',
   'quality-audit.json','rule-consolidation.json','contradiction-report.json',
   'source-coverage-report.json','low-confidence-report.json','review-status-report.json',
-  'implementation-rate-report.json','case-classification.json','phase4-test-cases.json'
+  'implementation-rate-report.json','case-classification.json','phase4-test-cases.json',
+  'final-rule-audit.json','final-classical-audit.json','final-example-cases.json',
+  'final-test-cases.json','final-quality-score.json','final-ai-review.json'
 ];
 
 for (const file of requiredWorkflows) await access(join('.github', 'workflows', file));
@@ -27,13 +29,15 @@ const app = await readFile('app.html', 'utf8');
 assert.ok(app.includes('KOYOMI_BAZI'), 'app.html must expose the Bazi engine without profile re-entry');
 
 const serviceWorker = await readFile('service-worker.js', 'utf8');
-assert.ok(serviceWorker.includes('koyomi-bazi-phase4-quality'), 'service worker cache name must include bazi phase4 quality');
+assert.ok(serviceWorker.includes('koyomi-bazi-final-rc'), 'service worker cache name must include bazi final rc');
 assert.ok(serviceWorker.includes('./src/bazi/index.js'), 'service worker must cache bazi engine entry');
 assert.ok(serviceWorker.includes('./data/bazi/solar-term-rules.json'), 'service worker must cache solar-term rules');
 assert.ok(serviceWorker.includes('./data/bazi/phase2-test-cases.json'), 'service worker must cache phase2 test cases');
 assert.ok(serviceWorker.includes('./data/bazi/example-cases.json'), 'service worker must cache phase3 example cases');
 assert.ok(serviceWorker.includes('./data/bazi/quality-audit.json'), 'service worker must cache phase4 quality audit');
 assert.ok(serviceWorker.includes('./data/bazi/phase4-test-cases.json'), 'service worker must cache phase4 test cases');
+assert.ok(serviceWorker.includes('./data/bazi/final-quality-score.json'), 'service worker must cache final quality score');
+assert.ok(serviceWorker.includes('./data/bazi/final-test-cases.json'), 'service worker must cache final test cases');
 
 const docs = await readdir(join('docs', 'bazi'));
 assert.ok(docs.includes('IMPLEMENTATION_STATUS.md'), 'implementation status doc missing');

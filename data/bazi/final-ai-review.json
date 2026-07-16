@@ -1,0 +1,32 @@
+{
+    "reportId":  "bazi-final-rc-ai-review-20260717",
+    "contradictions":  [
+                           "weak-support-vs-follow-pattern-boundary",
+                           "transformation-season-support",
+                           "climate-vs-balance-yongshen-priority",
+                           "yangren-auspicious-language",
+                           "monthly-luck-not-precise",
+                           "unknown-birth-time-luck-precision"
+                       ],
+    "exceptions":  [
+                       "solar-term-boundary-day",
+                       "unknown-birth-time",
+                       "timezone-boundary",
+                       "true-solar-time-boundary",
+                       "special-pattern-candidate"
+                   ],
+    "suspiciousRules":  [
+                            "follow-pattern-strict-establishment",
+                            "transformation-pattern-strict-establishment",
+                            "health-tendency-language",
+                            "monthly-luck-schema"
+                        ],
+    "humanReviewRecommended":  [
+                                   "follow-pattern",
+                                   "transformation-pattern",
+                                   "yangren-pattern",
+                                   "climate-yongshen-priority",
+                                   "illness-medicine-yongshen",
+                                   "annual-monthly-luck-interpretation"
+                               ]
+}

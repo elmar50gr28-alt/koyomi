@@ -1,0 +1,39 @@
+{
+    "auditId":  "bazi-final-rc-rule-audit-20260717",
+    "version":  "1.0-rc",
+    "summary":  {
+                    "ruleTotal":  23,
+                    "duplicateRuleGroups":  3,
+                    "contradictionCandidates":  6,
+                    "unusedRules":  0,
+                    "circularReferences":  0,
+                    "unreferencedSourceIds":  0,
+                    "unusedJson":  0,
+                    "reviewPendingCount":  18
+                },
+    "duplicateRules":  [
+                           "pattern-candidate-vs-pattern-rescue",
+                           "follow-pattern-vs-weak-daymaster",
+                           "climate-yongshen-vs-balance-yongshen"
+                       ],
+    "contradictionCandidates":  [
+                                    "weak-support-vs-follow-pattern-boundary",
+                                    "transformation-season-support",
+                                    "climate-vs-balance-yongshen-priority",
+                                    "yangren-auspicious-language",
+                                    "monthly-luck-not-precise",
+                                    "unknown-birth-time-luck-precision"
+                                ],
+    "unusedRuleIds":  [
+
+                      ],
+    "circularReferences":  [
+
+                           ],
+    "unreferencedSourceIds":  [
+
+                              ],
+    "unusedJsonFiles":  [
+
+                        ]
+}

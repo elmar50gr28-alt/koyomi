@@ -78,3 +78,15 @@
 - Exact passage-level mapping from each reviewed rule to classical source excerpts.
 - Adoption of anonymized real cases only after consent and source documentation.
 - Further school-by-school density balancing for advanced professional comparisons.
+
+## Final Phase: Version 1.0 Release Candidate
+
+- Scope remains limited to the Bazi knowledge engine; no new UI, profile flow, wearable, Qimen, or other divination feature was added.
+- Final quality score is 86%.
+- Rule total is 23.
+- Classical source count is 5.
+- Example case total is 213.
+- Test case total is 432.
+- Human review pending count is 18.
+- Unused rules, circular references, unreferenced sourceIds, and unused JSON files are 0 in the final audit.
+- Final reports are stored in `QUALITY_REPORT.md`, `CLASSICAL_SOURCE_INDEX.md`, `KNOWN_LIMITATIONS.md`, `ROAD_TO_1_0.md`, `final-rule-audit.json`, `final-classical-audit.json`, `final-example-cases.json`, `final-test-cases.json`, `final-quality-score.json`, and `final-ai-review.json`.

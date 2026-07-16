@@ -31,6 +31,12 @@ const caseClassification = await json('data/bazi/case-classification.json');
 const sourceCoverageReport = await json('data/bazi/source-coverage-report.json');
 const lowConfidenceReport = await json('data/bazi/low-confidence-report.json');
 const reviewStatusReport = await json('data/bazi/review-status-report.json');
+const finalRuleAudit = await json('data/bazi/final-rule-audit.json');
+const finalClassicalAudit = await json('data/bazi/final-classical-audit.json');
+const finalExampleCases = await json('data/bazi/final-example-cases.json');
+const finalTestCases = await json('data/bazi/final-test-cases.json');
+const finalQualityScore = await json('data/bazi/final-quality-score.json');
+const finalAiReview = await json('data/bazi/final-ai-review.json');
 
 assert.equal(stems.length, 10, 'stems data must include 10 heavenly stems');
 assert.equal(branches.length, 12, 'branches data must include 12 earthly branches');
@@ -170,4 +176,30 @@ for (const testCase of phase4TestCases) {
 }
 
 const totalCases = testCases.length + phase2TestCases.length + exampleCases.length + phase4TestCases.length;
-console.log(`Bazi engine tests passed: stems=${stems.length}, branches=${branches.length}, tenGods=${tenGodCount}, stages=${stageCount}, cases=${totalCases}, phase4=${phase4TestCases.length}, sources=${classicalIndex.length}`);
+assert.equal(finalRuleAudit.version, '1.0-rc', 'final rule audit must mark 1.0 rc');
+assert.equal(finalRuleAudit.summary.ruleTotal, 23, 'final rule total mismatch');
+assert.equal(finalRuleAudit.summary.unusedRules, 0, 'final audit must not leave unused rules');
+assert.equal(finalRuleAudit.summary.circularReferences, 0, 'final audit must not leave circular references');
+assert.equal(finalRuleAudit.summary.unreferencedSourceIds, 0, 'final audit must not leave unreferenced sourceIds');
+assert.equal(finalRuleAudit.summary.unusedJson, 0, 'final audit must not leave unused JSON files');
+assert.equal(finalClassicalAudit.classicalSourceCount, 5, 'final classical source count mismatch');
+assert.equal(finalClassicalAudit.rules.length, finalRuleAudit.summary.ruleTotal, 'every final rule must have classical audit');
+assert.ok(finalExampleCases.length >= 200, 'final example cases must be 200 or more');
+assert.ok(finalTestCases.length >= 300, 'final test cases must be 300 or more');
+assert.ok(finalQualityScore.qualityScore >= 0.85, 'final quality score must be release-candidate level');
+assert.equal(finalQualityScore.counts.exampleCaseTotal, exampleCases.length + finalExampleCases.length, 'final example total mismatch');
+assert.equal(finalQualityScore.counts.testCaseTotal, testCases.length + phase2TestCases.length + exampleCases.length + phase4TestCases.length + finalTestCases.length, 'final test total mismatch');
+assert.ok(finalAiReview.humanReviewRecommended.length >= 5, 'final AI review must include human review recommendations');
+
+for (const testCase of finalTestCases) {
+  assert.ok(testCase.caseId && testCase.domain && testCase.profile && testCase.expected, `final test case incomplete: ${testCase.caseId}`);
+  assert.ok(['chart-generation','solar-term-boundary','true-solar-time','month-command','strength','pattern','yongshen','luck-cycle','school-comparison','api'].includes(testCase.domain), `final test domain invalid: ${testCase.caseId}`);
+}
+
+for (const example of finalExampleCases) {
+  assert.ok(example.caseId && example.classification && example.reviewStatus, `final example incomplete: ${example.caseId}`);
+  assert.ok(example.sourceIds?.length >= 1, `final example sourceIds missing: ${example.caseId}`);
+}
+
+const finalTotalCases = totalCases + finalTestCases.length;
+console.log(`Bazi engine tests passed: stems=${stems.length}, branches=${branches.length}, tenGods=${tenGodCount}, stages=${stageCount}, cases=${finalTotalCases}, finalExamples=${finalExampleCases.length}, finalTests=${finalTestCases.length}, sources=${classicalIndex.length}`);
