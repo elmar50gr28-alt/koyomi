@@ -38,6 +38,16 @@ const tests=[
   {name:'app personal',url:'app.html#personal',check:d=>d.querySelector('.page.active')?.id==='page-personal'},
   {name:'app compat',url:'app.html#compat',check:d=>d.querySelector('.page.active')?.id==='page-compat'},
   {name:'app ledger',url:'app.html#ledger',check:d=>d.querySelector('.page.active')?.id==='page-ledger'},
+  {name:'mobile profile quick fields',url:'app.html#ledger',check:d=>{
+    const quick=d.querySelector('#ledgerQuickGrid');
+    return !!quick&&['lpDisplayName','lpBirthDate','lpBirthTime','lpBirthPlaceLabel','lpGender','lpRelationships','lpMemo'].every(id=>quick.querySelector('#'+id));
+  }},
+  {name:'profile detailed settings folded',url:'app.html#ledger',check:d=>!!d.querySelector('details.ledger-profile-advanced:not([open])')&&d.querySelector('details.ledger-profile-advanced summary')?.textContent.includes('姓名・各占術の詳しい設定')},
+  {name:'readiness state visible',url:'app.html#ledger',check:d=>d.querySelectorAll('#ledgerReadiness .ledger-ready-row').length>=4},
+  {name:'general management buttons hidden',url:'app.html#ledger',check:d=>{
+    const ids=['sampleBtn','saveBtn','copyBtn','clearBtn','compatSample','compatCopy','ledgerCreatePersonal','ledgerSavePersonalReading','ledgerSaveCompatReading','ledgerDuplicateCurrent','ledgerSaveProfile','ledgerBulkDelete'];
+    return ids.every(id=>{const el=d.getElementById(id);return !el||getComputedStyle(el).display==='none'||el.closest('[hidden]')});
+  }},
   {name:'app qimen',url:'app.html#qimen',check:d=>d.querySelector('.page.active')?.id==='page-qimen'},
   {name:'app settings',url:'app.html#settings',check:d=>d.querySelector('.page.active')?.id==='page-settings'}
 ];
