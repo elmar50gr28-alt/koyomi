@@ -3,7 +3,7 @@ name: Deploy Pages Check
 on:
   pull_request:
   push:
-    branches: [main, feature/bazi-knowledge-engine]
+    branches: [main, feature/bazi-knowledge-engine, feature/bazi-phase2-strength-pattern-yongshen]
 
 permissions:
   contents: read
