@@ -23,3 +23,14 @@ export function validateBaziPhase2Result(result) {
   if (!result?.luckCycles?.cycles) errors.push('phase2-luck-cycles-missing');
   return { ok: errors.length === 0, errors, warnings: result?.warnings || [] };
 }
+
+export function validateBaziPhase3Result(result) {
+  const phase2 = validateBaziPhase2Result(result);
+  const errors = [...phase2.errors];
+  if (!result?.interpretation?.tendencies) errors.push('phase3-interpretation-tendencies-missing');
+  if (!result?.interpretation?.luck) errors.push('phase3-luck-interpretation-missing');
+  if (!Array.isArray(result?.beginnerExplanation)) errors.push('phase3-beginner-explanation-missing');
+  if (!Array.isArray(result?.professionalEvidence)) errors.push('phase3-professional-evidence-missing');
+  if (!result?.mitsunomeInput?.sourcePolicy?.aiGeneratedTextIsNotSource) errors.push('phase3-mitsunome-source-policy-missing');
+  return { ok: errors.length === 0, errors, warnings: result?.warnings || [] };
+}

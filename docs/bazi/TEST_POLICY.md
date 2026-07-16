@@ -31,6 +31,16 @@ Phase 2 tests also cover:
 - luck cycle direction and cycle generation
 - phase2 validation schema
 
+Phase 3 tests also cover:
+
+- classical source index separation
+- example case count and schema
+- interpretation categories
+- beginner explanation blocks
+- professional evidence blocks
+- Mitsunome input schema source policy
+- Phase 3 validation schema
+
 GitHub Actions workflows:
 
 - `validate.yml`

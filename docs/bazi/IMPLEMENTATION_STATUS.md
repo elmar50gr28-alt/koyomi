@@ -41,3 +41,19 @@
 - 従格 and transformation pattern strict establishment.
 - Final用神 when methods conflict.
 - Exact大運 start timing.
+
+## Phase 3 Added
+
+- Classical bibliography index with reviewed index status.
+- Classical excerpt records that separate original text, summary, modern interpretation, and generated prose policy.
+- Synthetic example-case database for regression.
+- Structured interpretation categories: career, finance, relationship, family, health.
+- Luck interpretation schema for decade, annual, and monthly scopes.
+- Beginner explanation blocks and professional evidence blocks.
+- Mitsunome Bazi input schema.
+
+## Phase 3 Human Review Required
+
+- Any rule marked `human-review-required`.
+- Any annual/monthly luck interpretation before precise year/month luck expansion.
+- Any generated explanation before it is shown as a professional conclusion.
