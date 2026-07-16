@@ -57,3 +57,24 @@
 - Any rule marked `human-review-required`.
 - Any annual/monthly luck interpretation before precise year/month luck expansion.
 - Any generated explanation before it is shown as a professional conclusion.
+
+## Phase 4 Quality Audit
+
+- Scope is limited to the Bazi knowledge database; no new UI or new divination system was added.
+- Implementation rate is 78%.
+- Rule total is 23, with 23 source-linked rules and 0 sourceId-missing rules.
+- Review-pending count is 14.
+- Low-confidence item count is 12.
+- Duplicate rule groups identified for consolidation: 3.
+- Contradiction candidates identified for human review: 6.
+- Example and regression case total is 108.
+- Total test case count is 112.
+- Real case count is 0 until consent, source notes, anonymization, and human review are complete.
+- Phase 4 reports are stored in `data/bazi/quality-audit.json`, `rule-consolidation.json`, `contradiction-report.json`, `source-coverage-report.json`, `low-confidence-report.json`, `review-status-report.json`, `implementation-rate-report.json`, and `case-classification.json`.
+
+## Phase 4 Remaining
+
+- Human review of transformation, follow-pattern, and yongshen conflict rules.
+- Exact passage-level mapping from each reviewed rule to classical source excerpts.
+- Adoption of anonymized real cases only after consent and source documentation.
+- Further school-by-school density balancing for advanced professional comparisons.

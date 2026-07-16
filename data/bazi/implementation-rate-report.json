@@ -1,0 +1,23 @@
+{
+  "reportId": "bazi-implementation-rate-phase4",
+  "overallImplementationRate": 0.78,
+  "areas": [
+    {"area":"stems-branches-hidden-stems-ten-gods","rate":1.0,"status":"implemented"},
+    {"area":"four-pillars-calendar-boundaries","rate":0.72,"status":"partial-astronomical-terms-pending"},
+    {"area":"strength","rate":0.82,"status":"structured-factors-implemented"},
+    {"area":"patterns","rate":0.68,"status":"candidate-structure-implemented-final-review-pending"},
+    {"area":"yongshen","rate":0.76,"status":"method-separation-implemented-final-conflict-resolution-pending"},
+    {"area":"luck-cycles","rate":0.66,"status":"cycle-structure-implemented-exact-start-pending"},
+    {"area":"evidence-source-policy","rate":0.84,"status":"source-separation-implemented-passage-review-pending"},
+    {"area":"example-cases-tests","rate":0.86,"status":"synthetic-cases-expanded-real-cases-pending"},
+    {"area":"ui-integration","rate":0.55,"status":"not-phase4-focus"}
+  ],
+  "remainingTasks": [
+    "astronomical solar-term entry times",
+    "reviewed public-domain passage mapping",
+    "real-case adoption workflow",
+    "strict special-pattern adjudication",
+    "annual/monthly luck calculation expansion",
+    "professional source review"
+  ]
+}
