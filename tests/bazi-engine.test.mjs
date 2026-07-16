@@ -193,7 +193,7 @@ assert.ok(finalAiReview.humanReviewRecommended.length >= 5, 'final AI review mus
 
 for (const testCase of finalTestCases) {
   assert.ok(testCase.caseId && testCase.domain && testCase.profile && testCase.expected, `final test case incomplete: ${testCase.caseId}`);
-  assert.ok(['命式生成','節入り','真太陽時','月令','旺衰','格局','用神','大運','流派比較','API'].includes(testCase.domain), `final test domain invalid: ${testCase.caseId}`);
+  assert.ok(['chart-generation','solar-term-boundary','true-solar-time','month-command','strength','pattern','yongshen','luck-cycle','school-comparison','api'].includes(testCase.domain), `final test domain invalid: ${testCase.caseId}`);
 }
 
 for (const example of finalExampleCases) {

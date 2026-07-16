@@ -1,4 +1,4 @@
-﻿{
+{
     "auditId":  "bazi-final-rc-classical-audit-20260717",
     "classicalSourceCount":  5,
     "rules":  [
@@ -11,8 +11,8 @@
                                         "traditional-ziping",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -24,8 +24,8 @@
                                         "modern-score",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -34,8 +34,8 @@
                                         "src-ditian-sui-biblio"
                                     ],
                       "schoolIds":  "koyomi-integrated",
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -47,8 +47,8 @@
                                         "qiongtong-baojian",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "human-review-required"
                   },
                   {
@@ -60,8 +60,8 @@
                                         "ziping-zhenquan",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -73,8 +73,8 @@
                                         "traditional-ziping",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -86,8 +86,8 @@
                                         "modern-score",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -96,8 +96,8 @@
                                         "src-ditian-sui-biblio"
                                     ],
                       "schoolIds":  "koyomi-integrated",
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "human-review-required"
                   },
                   {
@@ -109,8 +109,8 @@
                                         "qiongtong-baojian",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -122,8 +122,8 @@
                                         "ziping-zhenquan",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -135,8 +135,8 @@
                                         "traditional-ziping",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -148,8 +148,8 @@
                                         "modern-score",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "human-review-required"
                   },
                   {
@@ -158,8 +158,8 @@
                                         "src-ditian-sui-biblio"
                                     ],
                       "schoolIds":  "koyomi-integrated",
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -171,8 +171,8 @@
                                         "qiongtong-baojian",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -184,8 +184,8 @@
                                         "ziping-zhenquan",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -197,8 +197,8 @@
                                         "traditional-ziping",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "human-review-required"
                   },
                   {
@@ -210,8 +210,8 @@
                                         "modern-score",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -220,8 +220,8 @@
                                         "src-ditian-sui-biblio"
                                     ],
                       "schoolIds":  "koyomi-integrated",
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -233,8 +233,8 @@
                                         "qiongtong-baojian",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -246,8 +246,8 @@
                                         "ziping-zhenquan",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "human-review-required"
                   },
                   {
@@ -259,8 +259,8 @@
                                         "traditional-ziping",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -272,8 +272,8 @@
                                         "modern-score",
                                         "koyomi-integrated"
                                     ],
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   },
                   {
@@ -282,8 +282,8 @@
                                         "src-ditian-sui-biblio"
                                     ],
                       "schoolIds":  "koyomi-integrated",
-                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
-                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
                       "reviewStatus":  "reviewed-index"
                   }
               ]

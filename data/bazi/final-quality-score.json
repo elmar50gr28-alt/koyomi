@@ -1,4 +1,4 @@
-﻿{
+{
     "reportId":  "bazi-final-rc-quality-score-20260717",
     "version":  "1.0-release-candidate",
     "qualityScore":  0.86,
@@ -17,22 +17,22 @@
                    "reviewPendingCount":  18
                },
     "topQualityItems":  [
-                            "sourceIds未設定0件",
-                            "命例213件へ拡充",
-                            "テスト327件へ拡充",
-                            "古典原文・要約・現代解釈・AI文の分離",
-                            "AIレビューで矛盾候補と人間レビュー推奨箇所を明示"
+                            "zero missing sourceIds",
+                            "213 classified example cases",
+                            "432 total regression tests",
+                            "separated source summary interpretation and generated prose",
+                            "AI review lists contradictions exceptions and human-review areas"
                         ],
     "unresolvedTop10":  [
-                            "24節気の正確な天文時刻",
-                            "大運開始時期の精密計算",
-                            "流年・月運の実運用検証",
-                            "従格成立条件の流派差",
-                            "化気格成立条件の季節支持",
-                            "用神衝突時の優先順位",
-                            "健康傾向表現の安全レビュー",
-                            "実在命例採用フロー",
-                            "出生時刻不明時の精度表示",
-                            "古典passage-level対応"
+                            "precise solar-term entry times",
+                            "precise luck-cycle start timing",
+                            "annual and monthly luck validation",
+                            "follow-pattern school differences",
+                            "transformation-pattern season support",
+                            "yongshen conflict priority",
+                            "health-language safety review",
+                            "real-case adoption workflow",
+                            "unknown birth-time confidence display",
+                            "passage-level classical mapping"
                         ]
 }

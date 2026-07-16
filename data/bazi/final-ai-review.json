@@ -1,19 +1,19 @@
-﻿{
+{
     "reportId":  "bazi-final-rc-ai-review-20260717",
     "contradictions":  [
-                           "身弱補助と従格採用境界",
-                           "化気格成立条件の季節支持",
-                           "調候用神と扶抑用神の優先順位",
-                           "羊刃格の吉凶表現",
-                           "月運解釈の未精密化",
-                           "出生時刻不明時の大運精度"
+                           "weak-support-vs-follow-pattern-boundary",
+                           "transformation-season-support",
+                           "climate-vs-balance-yongshen-priority",
+                           "yangren-auspicious-language",
+                           "monthly-luck-not-precise",
+                           "unknown-birth-time-luck-precision"
                        ],
     "exceptions":  [
-                       "節入り当日",
-                       "出生時刻不明",
-                       "地域タイムゾーン境界",
-                       "真太陽時補正境界",
-                       "特殊格局候補"
+                       "solar-term-boundary-day",
+                       "unknown-birth-time",
+                       "timezone-boundary",
+                       "true-solar-time-boundary",
+                       "special-pattern-candidate"
                    ],
     "suspiciousRules":  [
                             "follow-pattern-strict-establishment",
@@ -22,11 +22,11 @@
                             "monthly-luck-schema"
                         ],
     "humanReviewRecommended":  [
-                                   "従格",
-                                   "化気格",
-                                   "羊刃格",
-                                   "調候用神優先",
-                                   "病薬用神",
-                                   "流年・月運解釈"
+                                   "follow-pattern",
+                                   "transformation-pattern",
+                                   "yangren-pattern",
+                                   "climate-yongshen-priority",
+                                   "illness-medicine-yongshen",
+                                   "annual-monthly-luck-interpretation"
                                ]
 }

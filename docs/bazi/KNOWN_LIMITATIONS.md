@@ -1,13 +1,12 @@
-﻿# KOYOMI Bazi Known Limitations
+# KOYOMI Bazi Known Limitations
 
-1. 24節気の天文時刻は精密化待ち。
-2. 大運開始時期は近似を含む。
-3. 流年・月運は構造化途中。
-4. 従格・化気格は人間レビュー必須。
-5. 健康傾向は医療判断ではない。
-6. 実在命例は未採用。
-7. 出生時刻不明は部分結果として扱う。
-8. 流派差は統一しない。
-9. 用神衝突時の優先順位はレビュー待ち。
-10. passage-levelの古典対応は未完了。
-
+1. Precise astronomical solar-term entry times are still pending.
+2. Luck-cycle start timing still uses approximations.
+3. Annual and monthly luck interpretation need more validation.
+4. Follow-pattern establishment requires human review.
+5. Transformation-pattern establishment requires human review.
+6. Health tendency language is not medical advice.
+7. Real-life cases are not adopted yet.
+8. Unknown birth time must remain a partial result.
+9. Yongshen priority conflicts need professional review.
+10. Passage-level classical mapping is not complete.

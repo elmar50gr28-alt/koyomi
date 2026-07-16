@@ -1,7 +1,7 @@
-﻿[
+[
     {
         "caseId":  "final-test-001",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -23,12 +23,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-002",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -50,12 +50,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-003",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -77,12 +77,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-004",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -104,12 +104,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-005",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -131,14 +131,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-006",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 006",
                         "birthData":  {
@@ -158,14 +158,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-007",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 007",
                         "birthData":  {
@@ -185,14 +185,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-008",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 008",
                         "birthData":  {
@@ -212,12 +212,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-009",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -239,12 +239,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-010",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -266,12 +266,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-011",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -293,12 +293,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-012",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -320,12 +320,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-013",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -347,12 +347,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-014",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -374,12 +374,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-015",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -401,14 +401,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-016",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 016",
                         "birthData":  {
@@ -428,14 +428,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-017",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 017",
                         "birthData":  {
@@ -455,14 +455,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-018",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 018",
                         "birthData":  {
@@ -482,12 +482,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-019",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -509,12 +509,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-020",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -536,12 +536,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-021",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -563,12 +563,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-022",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -590,12 +590,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-023",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -617,12 +617,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-024",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -644,12 +644,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-025",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -671,14 +671,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-026",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 026",
                         "birthData":  {
@@ -698,14 +698,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-027",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 027",
                         "birthData":  {
@@ -725,14 +725,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-028",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 028",
                         "birthData":  {
@@ -752,12 +752,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-029",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -779,12 +779,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-030",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -806,12 +806,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-031",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -833,12 +833,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-032",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -860,12 +860,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-033",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -887,12 +887,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-034",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -914,12 +914,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-035",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -941,14 +941,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-036",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 036",
                         "birthData":  {
@@ -968,14 +968,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-037",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 037",
                         "birthData":  {
@@ -995,14 +995,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-038",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 038",
                         "birthData":  {
@@ -1022,12 +1022,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-039",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1049,12 +1049,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-040",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1076,12 +1076,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-041",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1103,12 +1103,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-042",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1130,12 +1130,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-043",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1157,12 +1157,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-044",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1184,12 +1184,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-045",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1211,14 +1211,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-046",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 046",
                         "birthData":  {
@@ -1238,14 +1238,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-047",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 047",
                         "birthData":  {
@@ -1265,14 +1265,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-048",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 048",
                         "birthData":  {
@@ -1292,12 +1292,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-049",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1319,12 +1319,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-050",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1346,12 +1346,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-051",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1373,12 +1373,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-052",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1400,12 +1400,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-053",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1427,12 +1427,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-054",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1454,12 +1454,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-055",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1481,14 +1481,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-056",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 056",
                         "birthData":  {
@@ -1508,14 +1508,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-057",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 057",
                         "birthData":  {
@@ -1535,14 +1535,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-058",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 058",
                         "birthData":  {
@@ -1562,12 +1562,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-059",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1589,12 +1589,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-060",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1616,12 +1616,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-061",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1643,12 +1643,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-062",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1670,12 +1670,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-063",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1697,12 +1697,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-064",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1724,12 +1724,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-065",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1751,14 +1751,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-066",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 066",
                         "birthData":  {
@@ -1778,14 +1778,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-067",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 067",
                         "birthData":  {
@@ -1805,14 +1805,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-068",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 068",
                         "birthData":  {
@@ -1832,12 +1832,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-069",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1859,12 +1859,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-070",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1886,12 +1886,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-071",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1913,12 +1913,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-072",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1940,12 +1940,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-073",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1967,12 +1967,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-074",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -1994,12 +1994,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-075",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2021,14 +2021,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-076",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 076",
                         "birthData":  {
@@ -2048,14 +2048,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-077",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 077",
                         "birthData":  {
@@ -2075,14 +2075,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-078",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 078",
                         "birthData":  {
@@ -2102,12 +2102,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-079",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2129,12 +2129,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-080",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2156,12 +2156,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-081",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2183,12 +2183,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-082",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2210,12 +2210,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-083",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2237,12 +2237,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-084",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2264,12 +2264,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-085",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2291,14 +2291,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-086",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 086",
                         "birthData":  {
@@ -2318,14 +2318,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-087",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 087",
                         "birthData":  {
@@ -2345,14 +2345,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-088",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 088",
                         "birthData":  {
@@ -2372,12 +2372,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-089",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2399,12 +2399,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-090",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2426,12 +2426,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-091",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2453,12 +2453,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-092",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2480,12 +2480,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-093",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2507,12 +2507,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-094",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2534,12 +2534,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-095",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2561,14 +2561,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-096",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 096",
                         "birthData":  {
@@ -2588,14 +2588,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-097",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 097",
                         "birthData":  {
@@ -2615,14 +2615,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-098",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 098",
                         "birthData":  {
@@ -2642,12 +2642,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-099",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2669,12 +2669,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-100",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2696,12 +2696,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-101",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2723,12 +2723,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-102",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2750,12 +2750,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-103",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2777,12 +2777,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-104",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2804,12 +2804,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-105",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2831,14 +2831,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-106",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 106",
                         "birthData":  {
@@ -2858,14 +2858,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-107",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 107",
                         "birthData":  {
@@ -2885,14 +2885,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-108",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 108",
                         "birthData":  {
@@ -2912,12 +2912,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-109",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2939,12 +2939,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-110",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2966,12 +2966,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-111",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -2993,12 +2993,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-112",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3020,12 +3020,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-113",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3047,12 +3047,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-114",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3074,12 +3074,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-115",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3101,14 +3101,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-116",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 116",
                         "birthData":  {
@@ -3128,14 +3128,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-117",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 117",
                         "birthData":  {
@@ -3155,14 +3155,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-118",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 118",
                         "birthData":  {
@@ -3182,12 +3182,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-119",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3209,12 +3209,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-120",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3236,12 +3236,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-121",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3263,12 +3263,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-122",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3290,12 +3290,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-123",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3317,12 +3317,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-124",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3344,12 +3344,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-125",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3371,14 +3371,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-126",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 126",
                         "birthData":  {
@@ -3398,14 +3398,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-127",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 127",
                         "birthData":  {
@@ -3425,14 +3425,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-128",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 128",
                         "birthData":  {
@@ -3452,12 +3452,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-129",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3479,12 +3479,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-130",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3506,12 +3506,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-131",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3533,12 +3533,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-132",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3560,12 +3560,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-133",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3587,12 +3587,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-134",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3614,12 +3614,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-135",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3641,14 +3641,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-136",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 136",
                         "birthData":  {
@@ -3668,14 +3668,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-137",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 137",
                         "birthData":  {
@@ -3695,14 +3695,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-138",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 138",
                         "birthData":  {
@@ -3722,12 +3722,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-139",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3749,12 +3749,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-140",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3776,12 +3776,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-141",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3803,12 +3803,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-142",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3830,12 +3830,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-143",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3857,12 +3857,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-144",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3884,12 +3884,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-145",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -3911,14 +3911,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-146",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 146",
                         "birthData":  {
@@ -3938,14 +3938,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-147",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 147",
                         "birthData":  {
@@ -3965,14 +3965,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-148",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 148",
                         "birthData":  {
@@ -3992,12 +3992,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-149",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4019,12 +4019,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-150",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4046,12 +4046,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-151",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4073,12 +4073,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-152",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4100,12 +4100,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-153",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4127,12 +4127,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-154",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4154,12 +4154,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-155",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4181,14 +4181,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-156",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 156",
                         "birthData":  {
@@ -4208,14 +4208,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-157",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 157",
                         "birthData":  {
@@ -4235,14 +4235,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-158",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 158",
                         "birthData":  {
@@ -4262,12 +4262,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-159",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4289,12 +4289,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-160",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4316,12 +4316,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-161",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4343,12 +4343,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-162",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4370,12 +4370,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-163",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4397,12 +4397,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-164",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4424,12 +4424,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-165",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4451,14 +4451,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-166",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 166",
                         "birthData":  {
@@ -4478,14 +4478,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-167",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 167",
                         "birthData":  {
@@ -4505,14 +4505,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-168",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 168",
                         "birthData":  {
@@ -4532,12 +4532,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-169",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4559,12 +4559,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-170",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4586,12 +4586,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-171",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4613,12 +4613,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-172",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4640,12 +4640,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-173",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4667,12 +4667,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-174",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4694,12 +4694,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-175",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4721,14 +4721,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-176",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 176",
                         "birthData":  {
@@ -4748,14 +4748,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-177",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 177",
                         "birthData":  {
@@ -4775,14 +4775,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-178",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 178",
                         "birthData":  {
@@ -4802,12 +4802,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-179",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4829,12 +4829,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-180",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4856,12 +4856,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-181",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4883,12 +4883,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-182",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4910,12 +4910,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-183",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4937,12 +4937,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-184",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4964,12 +4964,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-185",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -4991,14 +4991,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-186",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 186",
                         "birthData":  {
@@ -5018,14 +5018,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-187",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 187",
                         "birthData":  {
@@ -5045,14 +5045,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-188",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 188",
                         "birthData":  {
@@ -5072,12 +5072,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-189",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5099,12 +5099,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-190",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5126,12 +5126,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-191",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5153,12 +5153,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-192",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5180,12 +5180,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-193",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5207,12 +5207,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-194",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5234,12 +5234,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-195",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5261,14 +5261,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-196",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 196",
                         "birthData":  {
@@ -5288,14 +5288,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-197",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 197",
                         "birthData":  {
@@ -5315,14 +5315,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-198",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 198",
                         "birthData":  {
@@ -5342,12 +5342,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-199",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5369,12 +5369,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-200",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5396,12 +5396,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-201",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5423,12 +5423,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-202",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5450,12 +5450,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-203",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5477,12 +5477,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-204",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5504,12 +5504,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-205",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5531,14 +5531,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-206",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 206",
                         "birthData":  {
@@ -5558,14 +5558,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-207",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 207",
                         "birthData":  {
@@ -5585,14 +5585,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-208",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 208",
                         "birthData":  {
@@ -5612,12 +5612,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-209",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5639,12 +5639,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-210",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5666,12 +5666,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-211",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5693,12 +5693,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-212",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5720,12 +5720,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-213",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5747,12 +5747,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-214",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5774,12 +5774,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-215",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5801,14 +5801,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-216",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 216",
                         "birthData":  {
@@ -5828,14 +5828,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-217",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 217",
                         "birthData":  {
@@ -5855,14 +5855,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-218",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 218",
                         "birthData":  {
@@ -5882,12 +5882,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-219",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5909,12 +5909,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-220",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5936,12 +5936,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-221",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5963,12 +5963,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-222",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -5990,12 +5990,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-223",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6017,12 +6017,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-224",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6044,12 +6044,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-225",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6071,14 +6071,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-226",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 226",
                         "birthData":  {
@@ -6098,14 +6098,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-227",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 227",
                         "birthData":  {
@@ -6125,14 +6125,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-228",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 228",
                         "birthData":  {
@@ -6152,12 +6152,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-229",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6179,12 +6179,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-230",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6206,12 +6206,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-231",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6233,12 +6233,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-232",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6260,12 +6260,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-233",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6287,12 +6287,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-234",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6314,12 +6314,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-235",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6341,14 +6341,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-236",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 236",
                         "birthData":  {
@@ -6368,14 +6368,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-237",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 237",
                         "birthData":  {
@@ -6395,14 +6395,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-238",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 238",
                         "birthData":  {
@@ -6422,12 +6422,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-239",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6449,12 +6449,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-240",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6476,12 +6476,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-241",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6503,12 +6503,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-242",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6530,12 +6530,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-243",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6557,12 +6557,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-244",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6584,12 +6584,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-245",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6611,14 +6611,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-246",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 246",
                         "birthData":  {
@@ -6638,14 +6638,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-247",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 247",
                         "birthData":  {
@@ -6665,14 +6665,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-248",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 248",
                         "birthData":  {
@@ -6692,12 +6692,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-249",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6719,12 +6719,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-250",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6746,12 +6746,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-251",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6773,12 +6773,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-252",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6800,12 +6800,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-253",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6827,12 +6827,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-254",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6854,12 +6854,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-255",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6881,14 +6881,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-256",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 256",
                         "birthData":  {
@@ -6908,14 +6908,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-257",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 257",
                         "birthData":  {
@@ -6935,14 +6935,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-258",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 258",
                         "birthData":  {
@@ -6962,12 +6962,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-259",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -6989,12 +6989,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-260",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7016,12 +7016,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-261",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7043,12 +7043,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-262",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7070,12 +7070,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-263",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7097,12 +7097,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-264",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7124,12 +7124,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-265",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7151,14 +7151,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-266",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 266",
                         "birthData":  {
@@ -7178,14 +7178,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-267",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 267",
                         "birthData":  {
@@ -7205,14 +7205,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-268",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 268",
                         "birthData":  {
@@ -7232,12 +7232,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-269",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7259,12 +7259,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-270",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7286,12 +7286,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-271",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7313,12 +7313,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-272",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7340,12 +7340,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-273",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7367,12 +7367,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-274",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7394,12 +7394,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-275",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7421,14 +7421,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-276",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 276",
                         "birthData":  {
@@ -7448,14 +7448,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-277",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 277",
                         "birthData":  {
@@ -7475,14 +7475,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-278",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 278",
                         "birthData":  {
@@ -7502,12 +7502,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-279",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7529,12 +7529,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-280",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7556,12 +7556,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-281",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7583,12 +7583,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-282",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7610,12 +7610,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-283",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7637,12 +7637,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-284",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7664,12 +7664,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-285",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7691,14 +7691,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-286",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 286",
                         "birthData":  {
@@ -7718,14 +7718,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-287",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 287",
                         "birthData":  {
@@ -7745,14 +7745,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-288",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 288",
                         "birthData":  {
@@ -7772,12 +7772,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-289",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7799,12 +7799,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-290",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7826,12 +7826,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-291",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7853,12 +7853,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-292",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7880,12 +7880,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-293",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7907,12 +7907,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-294",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7934,12 +7934,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-295",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -7961,14 +7961,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-296",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 296",
                         "birthData":  {
@@ -7988,14 +7988,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-297",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 297",
                         "birthData":  {
@@ -8015,14 +8015,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-298",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 298",
                         "birthData":  {
@@ -8042,12 +8042,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-299",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8069,12 +8069,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-300",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8096,12 +8096,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-301",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8123,12 +8123,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-302",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8150,12 +8150,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-303",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8177,12 +8177,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-304",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8204,12 +8204,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-305",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8231,14 +8231,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-306",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 306",
                         "birthData":  {
@@ -8258,14 +8258,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-307",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 307",
                         "birthData":  {
@@ -8285,14 +8285,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-308",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 308",
                         "birthData":  {
@@ -8312,12 +8312,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-309",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8339,12 +8339,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-310",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8366,12 +8366,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     },
     {
         "caseId":  "final-test-311",
-        "domain":  "命式生成",
+        "domain":  "chart-generation",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8393,12 +8393,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "命式生成"
+                         "domain":  "chart-generation"
                      }
     },
     {
         "caseId":  "final-test-312",
-        "domain":  "節入り",
+        "domain":  "solar-term-boundary",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8420,12 +8420,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "節入り"
+                         "domain":  "solar-term-boundary"
                      }
     },
     {
         "caseId":  "final-test-313",
-        "domain":  "真太陽時",
+        "domain":  "true-solar-time",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8447,12 +8447,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "真太陽時"
+                         "domain":  "true-solar-time"
                      }
     },
     {
         "caseId":  "final-test-314",
-        "domain":  "月令",
+        "domain":  "month-command",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8474,12 +8474,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "月令"
+                         "domain":  "month-command"
                      }
     },
     {
         "caseId":  "final-test-315",
-        "domain":  "旺衰",
+        "domain":  "strength",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8501,14 +8501,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "旺衰"
+                         "domain":  "strength"
                      }
     },
     {
         "caseId":  "final-test-316",
-        "domain":  "格局",
+        "domain":  "pattern",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 316",
                         "birthData":  {
@@ -8528,14 +8528,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "格局"
+                         "domain":  "pattern"
                      }
     },
     {
         "caseId":  "final-test-317",
-        "domain":  "用神",
+        "domain":  "yongshen",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 317",
                         "birthData":  {
@@ -8555,14 +8555,14 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "用神"
+                         "domain":  "yongshen"
                      }
     },
     {
         "caseId":  "final-test-318",
-        "domain":  "大運",
+        "domain":  "luck-cycle",
         "caseType":  "synthetic-regression",
-        "reviewStatus":  "accepted-regression",
+        "reviewStatus":  "review-required-domain",
         "profile":  {
                         "displayName":  "RC Test 318",
                         "birthData":  {
@@ -8582,12 +8582,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "大運"
+                         "domain":  "luck-cycle"
                      }
     },
     {
         "caseId":  "final-test-319",
-        "domain":  "流派比較",
+        "domain":  "school-comparison",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8609,12 +8609,12 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "流派比較"
+                         "domain":  "school-comparison"
                      }
     },
     {
         "caseId":  "final-test-320",
-        "domain":  "API",
+        "domain":  "api",
         "caseType":  "synthetic-regression",
         "reviewStatus":  "accepted-regression",
         "profile":  {
@@ -8636,7 +8636,7 @@
                          "hasEvidence":  true,
                          "hasConfidence":  true,
                          "hasReviewStatus":  true,
-                         "domain":  "API"
+                         "domain":  "api"
                      }
     }
 ]
