@@ -1,4 +1,4 @@
-const C='koyomi-v300-mobile-ux-1';
+const C='koyomi-v300-recovery-1';
 const A=['./','./index.html','./today.html','./app.html','./smoke-test.html','./manifest.webmanifest','./icon.svg'];
 
 self.addEventListener('install',e=>{
