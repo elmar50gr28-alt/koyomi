@@ -1,0 +1,6 @@
+{
+  "spring":{"branches":["yin","mao","chen"],"dominant":"wood"},
+  "summer":{"branches":["si","wu","wei"],"dominant":"fire"},
+  "autumn":{"branches":["shen","you","xu"],"dominant":"metal"},
+  "winter":{"branches":["hai","zi","chou"],"dominant":"water"}
+}

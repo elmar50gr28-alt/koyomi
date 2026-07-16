@@ -1,0 +1,14 @@
+[
+  {"id":"zi","kanji":"\u5b50","element":"water","order":1,"monthNumber":11,"startHour":23,"endHour":1},
+  {"id":"chou","kanji":"\u4e11","element":"earth","order":2,"monthNumber":12,"startHour":1,"endHour":3},
+  {"id":"yin","kanji":"\u5bc5","element":"wood","order":3,"monthNumber":1,"startHour":3,"endHour":5},
+  {"id":"mao","kanji":"\u536f","element":"wood","order":4,"monthNumber":2,"startHour":5,"endHour":7},
+  {"id":"chen","kanji":"\u8fb0","element":"earth","order":5,"monthNumber":3,"startHour":7,"endHour":9},
+  {"id":"si","kanji":"\u5df3","element":"fire","order":6,"monthNumber":4,"startHour":9,"endHour":11},
+  {"id":"wu","kanji":"\u5348","element":"fire","order":7,"monthNumber":5,"startHour":11,"endHour":13},
+  {"id":"wei","kanji":"\u672a","element":"earth","order":8,"monthNumber":6,"startHour":13,"endHour":15},
+  {"id":"shen","kanji":"\u7533","element":"metal","order":9,"monthNumber":7,"startHour":15,"endHour":17},
+  {"id":"you","kanji":"\u9149","element":"metal","order":10,"monthNumber":8,"startHour":17,"endHour":19},
+  {"id":"xu","kanji":"\u620c","element":"earth","order":11,"monthNumber":9,"startHour":19,"endHour":21},
+  {"id":"hai","kanji":"\u4ea5","element":"water","order":12,"monthNumber":10,"startHour":21,"endHour":23}
+]

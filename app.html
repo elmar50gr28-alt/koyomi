@@ -1790,4 +1790,8 @@ init=async function(){await koyomiInitBase();await initStep('koyomiUiUx',()=>koy
 window.V191={setPage,renderCalendar,buildPersonal,compatibility,generateTimeline,diagnostics,openGuide,refreshHistory,setOracleMode:v191zSetMode};window.V192={mesopotamianDate:v192MesopotamianDate,onkanProfile:v192OnkanProfile,runOracle:v192RunOracle};window.V193={qimenChart:qmdjChart,qimenEvaluate:qmdjEvaluate,qimenGenerate:qmdjGenerate,diagnostics:qmdjDiagnostics};Promise.resolve().then(()=>initStep('persona',()=>v195Init())).then(()=>initStep('lifeTranslator',()=>v196Init())).then(()=>init()).catch(e=>console.error('[KOYOMI] boot failed',e));
 })();
 </script>
+<script type="module">
+import * as KOYOMI_BAZI from './src/bazi/index.js';
+window.KOYOMI_BAZI = KOYOMI_BAZI;
+</script>
 </body></html>

@@ -1,0 +1,4 @@
+{
+  "combinations":[["jia","ji","earth"],["yi","geng","metal"],["bing","xin","water"],["ding","ren","wood"],["wu","gui","fire"]],
+  "clashes":[["jia","geng"],["yi","xin"],["bing","ren"],["ding","gui"]]
+}

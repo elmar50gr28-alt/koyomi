@@ -1,0 +1,13 @@
+{
+  "traditional-ziping":{"dayBoundary":"midnight","ziHour":"split","strengthMethod":"dimensional","luckStart":"solar-term-distance"},
+  "yuanhai-ziping":{"dayBoundary":"midnight","ziHour":"late-zi-next-day","strengthMethod":"month-command-first","luckStart":"solar-term-distance"},
+  "sanming-tonghui":{"dayBoundary":"midnight","ziHour":"split","strengthMethod":"relations-heavy","luckStart":"solar-term-distance"},
+  "ziping-zhenquan":{"dayBoundary":"midnight","ziHour":"split","strengthMethod":"pattern-first","luckStart":"solar-term-distance"},
+  "ditian-sui":{"dayBoundary":"midnight","ziHour":"split","strengthMethod":"qi-flow","luckStart":"solar-term-distance"},
+  "qiongtong-baojian":{"dayBoundary":"midnight","ziHour":"split","strengthMethod":"climate-first","luckStart":"solar-term-distance"},
+  "taiwan-modern":{"dayBoundary":"midnight","ziHour":"split","strengthMethod":"dimensional","luckStart":"solar-term-distance"},
+  "hongkong-modern":{"dayBoundary":"midnight","ziHour":"split","strengthMethod":"dimensional","luckStart":"solar-term-distance"},
+  "japan-taizan":{"dayBoundary":"midnight","ziHour":"early-zi-same-day","strengthMethod":"season-score","luckStart":"solar-term-distance"},
+  "modern-score":{"dayBoundary":"midnight","ziHour":"split","strengthMethod":"score","luckStart":"solar-term-distance"},
+  "koyomi-integrated":{"dayBoundary":"midnight","ziHour":"split","strengthMethod":"integrated","luckStart":"solar-term-distance"}
+}

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KOYOMI Bazi Engine Test</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;margin:0;padding:16px;background:#101820;color:#f5f1e8}
+.ok{color:#8ef0c0}.ng{color:#ff9a9a}pre{white-space:pre-wrap;background:#182632;padding:12px;border-radius:8px}
+</style>
+</head>
+<body>
+<h1>KOYOMI Bazi Engine Test</h1>
+<div id="result">running...</div>
+<pre id="log"></pre>
+<script type="module">
+import { calculateBazi, calculateBaziChart, calculateSolarTerms, calculateTrueSolarTime, compareSchools, explainRule, getEvidence, validateChartResult } from '../index.js';
+
+const tests = [];
+function test(name, fn){ tests.push({name, fn}); }
+function assert(value, message){ if(!value) throw new Error(message); }
+
+const profile = { displayName:'Phase1', birthData:{ date:'1984-02-04', time:'12:00', place:{ label:'Tokyo', longitude:139.767, utcOffset:9, timezone:'Asia/Tokyo' } } };
+const unknown = { displayName:'Unknown', birthData:{ date:'1990-07-10', timeUnknown:true, place:{ label:'Osaka', longitude:135.502, utcOffset:9 } } };
+
+test('calculateBaziChart returns four pillar structure', () => {
+  const r = calculateBaziChart(profile);
+  assert(r.chart.pillars.year.stem.id === 'jia' && r.chart.pillars.year.branch.id === 'zi', 'year pillar should be jia-zi on 1984 spring boundary');
+  assert(r.chart.pillars.hour, 'hour pillar exists');
+  assert(validateChartResult(r).ok, 'chart validates');
+});
+test('unknown birth time keeps hour pillar partial', () => {
+  const r = calculateBaziChart(unknown);
+  assert(!r.chart.pillars.hour, 'hour pillar must be null');
+  assert(r.warnings.includes('birth-time-unknown-hour-pillar-partial'), 'warning exists');
+});
+test('full calculation includes required domains', () => {
+  const r = calculateBazi(profile);
+  ['relations','strength','patterns','yongshen','luckCycles','interpretationFacts'].forEach(k => assert(r[k], `${k} missing`));
+});
+test('solar and true solar APIs are deterministic', () => {
+  assert(calculateSolarTerms('2026-07-17').length === 12, 'solar terms length');
+  assert(Math.abs(calculateTrueSolarTime('2026-07-17T12:00:00', 139.767, 9).minutesOffset - 19.068) < 0.1, 'true solar offset');
+});
+test('schools and evidence are accessible', () => {
+  assert(compareSchools(profile, ['koyomi-integrated','japan-taizan']).length === 2, 'school comparison length');
+  assert(explainRule('bazi-strength-month-command-001').sources.length >= 1, 'rule evidence');
+  assert(getEvidence('src-yuanhai-ziping-biblio'), 'source evidence');
+});
+
+const lines = [];
+let passed = 0;
+for (const t of tests) {
+  try { t.fn(); passed++; lines.push(`OK ${t.name}`); }
+  catch (e) { lines.push(`NG ${t.name}: ${e.message}`); }
+}
+document.getElementById('result').className = passed === tests.length ? 'ok' : 'ng';
+document.getElementById('result').textContent = `${passed}/${tests.length} passed`;
+document.getElementById('log').textContent = lines.join('\n');
+</script>
+</body>
+</html>

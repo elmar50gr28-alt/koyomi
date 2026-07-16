@@ -1,0 +1,4 @@
+[
+  {"caseId":"phase1-known-cycle-1984","profile":{"displayName":"Phase1","birthData":{"date":"1984-02-04","time":"12:00","place":{"label":"Tokyo","longitude":139.767,"utcOffset":9}}},"expects":{"yearStem":"jia","yearBranch":"zi","hasHour":true}},
+  {"caseId":"phase1-unknown-time","profile":{"displayName":"Unknown Time","birthData":{"date":"1990-07-10","timeUnknown":true,"place":{"label":"Osaka","longitude":135.502,"utcOffset":9}}},"expects":{"hasHour":false}}
+]

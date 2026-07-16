@@ -1,0 +1,12 @@
+[
+  {"id":"bijian","kanji":"\u6bd4\u80a9","elementRelation":"same","polarity":"same"},
+  {"id":"jie_cai","kanji":"\u52ab\u8ca1","elementRelation":"same","polarity":"opposite"},
+  {"id":"shi_shen","kanji":"\u98df\u795e","elementRelation":"output","polarity":"same"},
+  {"id":"shang_guan","kanji":"\u50b7\u5b98","elementRelation":"output","polarity":"opposite"},
+  {"id":"pian_cai","kanji":"\u504f\u8ca1","elementRelation":"wealth","polarity":"same"},
+  {"id":"zheng_cai","kanji":"\u6b63\u8ca1","elementRelation":"wealth","polarity":"opposite"},
+  {"id":"qi_sha","kanji":"\u4e03\u6bba","elementRelation":"officer","polarity":"same"},
+  {"id":"zheng_guan","kanji":"\u6b63\u5b98","elementRelation":"officer","polarity":"opposite"},
+  {"id":"pian_yin","kanji":"\u504f\u5370","elementRelation":"resource","polarity":"same"},
+  {"id":"zheng_yin","kanji":"\u6b63\u5370","elementRelation":"resource","polarity":"opposite"}
+]

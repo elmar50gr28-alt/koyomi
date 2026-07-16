@@ -1,0 +1,12 @@
+[
+  {"id":"jia","kanji":"\u7532","name":"Jia","element":"wood","yinYang":"yang","order":1},
+  {"id":"yi","kanji":"\u4e59","name":"Yi","element":"wood","yinYang":"yin","order":2},
+  {"id":"bing","kanji":"\u4e19","name":"Bing","element":"fire","yinYang":"yang","order":3},
+  {"id":"ding","kanji":"\u4e01","name":"Ding","element":"fire","yinYang":"yin","order":4},
+  {"id":"wu","kanji":"\u620a","name":"Wu","element":"earth","yinYang":"yang","order":5},
+  {"id":"ji","kanji":"\u5df1","name":"Ji","element":"earth","yinYang":"yin","order":6},
+  {"id":"geng","kanji":"\u5e9a","name":"Geng","element":"metal","yinYang":"yang","order":7},
+  {"id":"xin","kanji":"\u8f9b","name":"Xin","element":"metal","yinYang":"yin","order":8},
+  {"id":"ren","kanji":"\u58ec","name":"Ren","element":"water","yinYang":"yang","order":9},
+  {"id":"gui","kanji":"\u7678","name":"Gui","element":"water","yinYang":"yin","order":10}
+]
