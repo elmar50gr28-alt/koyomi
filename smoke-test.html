@@ -34,15 +34,17 @@ small{color:#cfc7b7}
 const tests=[
   {name:'index.html',url:'index.html',check:d=>!!d.querySelector('a[href="today.html"]')&&!!d.querySelector('a[href^="app.html"]')},
   {name:'today.html',url:'today.html',check:d=>!!d.getElementById('kikan')&&!!d.getElementById('dateText')},
-  {name:'app calendar',url:'app.html#calendar',check:d=>d.querySelector('.page.active')?.id==='page-calendar'},
+  {name:'app calendar or first setup',url:'app.html#calendar',check:d=>['page-calendar','page-ledger'].includes(d.querySelector('.page.active')?.id)},
+  {name:'home destiny navigator',url:'app.html#calendar',check:d=>!!d.getElementById('koyomiStartReading')&&d.querySelectorAll('#koyomiHomeNav [data-koyomi-shortcut]').length>=8},
+  {name:'personal mode hides ledger nav',url:'app.html#calendar',check:d=>d.body.classList.contains('koyomi-mode-personal')&&getComputedStyle(d.querySelector('.mobile-nav [data-page="ledger"]')).display==='none'},
   {name:'app personal',url:'app.html#personal',check:d=>d.querySelector('.page.active')?.id==='page-personal'},
   {name:'app compat',url:'app.html#compat',check:d=>d.querySelector('.page.active')?.id==='page-compat'},
   {name:'app ledger',url:'app.html#ledger',check:d=>d.querySelector('.page.active')?.id==='page-ledger'},
   {name:'mobile profile quick fields',url:'app.html#ledger',check:d=>{
     const quick=d.querySelector('#ledgerQuickGrid');
-    return !!quick&&['lpDisplayName','lpBirthDate','lpBirthTime','lpBirthPlaceLabel','lpGender','lpRelationships','lpMemo'].every(id=>quick.querySelector('#'+id));
+    return !!quick&&['lpDisplayName','lpBirthDate','lpBirthTime','lpTimeUnknown','lpBirthPlaceLabel','lpGender'].every(id=>quick.querySelector('#'+id));
   }},
-  {name:'mobile profile has only seven normal groups',url:'app.html#ledger',check:d=>d.querySelector('#ledgerQuickGrid')?.children.length===7},
+  {name:'mobile profile has only five normal groups',url:'app.html#ledger',check:d=>d.querySelector('#ledgerQuickGrid')?.children.length===5},
   {name:'world name detailed fields',url:'app.html#ledger',check:d=>['lpMiddleName','lpCompoundSurname','lpRomanizedName','lpOriginalSpelling','lpVariantGlyph','lpDivinationGlyph','lpTransliterationSystem'].every(id=>d.getElementById(id))},
   {name:'world birthplace metadata fields',url:'app.html#ledger',check:d=>['lpPlacePrecision','lpPlaceSource'].every(id=>d.getElementById(id))},
   {name:'profile detailed settings folded',url:'app.html#ledger',check:d=>!!d.querySelector('details.ledger-profile-advanced:not([open])')&&d.querySelector('details.ledger-profile-advanced summary')?.textContent.includes('姓名・各占術設定')},
@@ -53,7 +55,8 @@ const tests=[
   }},
   {name:'app qimen',url:'app.html#qimen',check:d=>d.querySelector('.page.active')?.id==='page-qimen'},
   {name:'app settings',url:'app.html#settings',check:d=>d.querySelector('.page.active')?.id==='page-settings'},
-  {name:'production service worker cache',url:'service-worker.js',check:d=>d.body?.textContent.includes('koyomi-profile-redesign-20260716-1')}
+  {name:'mode settings visible',url:'app.html#settings',check:d=>!!d.getElementById('koyomiAppMode')&&['personal','family','pro'].every(v=>d.querySelector(`#koyomiAppMode option[value="${v}"]`))},
+  {name:'production service worker cache',url:'service-worker.js',check:d=>d.body?.textContent.includes('koyomi-uiux-navigator-20260716-1')}
 ];
 const frame=document.getElementById('frame'),results=document.getElementById('results');
 function row(name,state,msg){const el=document.createElement('div');el.className='row';el.innerHTML=`<b class="${state}">${state.toUpperCase()}</b><div><strong>${name}</strong><br><small>${msg}</small></div>`;results.append(el)}

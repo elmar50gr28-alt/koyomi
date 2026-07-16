@@ -134,6 +134,7 @@ body.oracle-zubat .reading,body.oracle-zubat .divination-reading{border-color:#7
 html,body{max-width:100%;overflow-x:hidden}.mobile-nav button,.tab,.action,.ledger-btn,.field input,.field select,.field textarea,.ledger-form input,.ledger-form select,.ledger-form textarea{min-height:44px}
 input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));scroll-margin-bottom:calc(22vh + env(safe-area-inset-bottom))}
 .ledger-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ledger-quick-grid .wide{grid-column:1/-1}.ledger-mobile-note{margin:.25rem 0 12px;color:#71583c;font-weight:800}.ledger-readiness{display:grid;gap:7px;margin:10px 0 0}.ledger-ready-row{display:flex;justify-content:space-between;gap:10px;border:1px solid #e0d2bc;border-radius:10px;padding:8px 10px;background:#fffdf8;font-size:.9rem}.ledger-ready-row b{color:#3f2a18}.ledger-ready-row span{font-weight:900}.ledger-ready-row.ready span{color:#1e765f}.ledger-ready-row.partial span{color:#9a6717}.ledger-ready-row.unavailable span{color:#a33}.profile-card{cursor:pointer}.profile-card:focus{outline:2px solid var(--gold);outline-offset:3px}.profile-card input[data-ledger-bulk]{display:none}
+.koyomi-home-nav{display:grid;gap:10px;margin:0 0 16px}.koyomi-main-action{display:block;width:100%;min-height:64px;border:0;border-radius:16px;background:linear-gradient(135deg,#f3c86f,#d79b32);color:#211407;font-size:1.18rem;font-weight:950;box-shadow:0 14px 30px rgba(0,0,0,.24)}.koyomi-home-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.koyomi-home-grid button{min-height:54px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.055);color:#eafdf8;font-weight:900}.koyomi-profile-gate{border:2px solid #111;border-radius:16px;padding:13px;margin:10px 0;background:#fff8da;color:#211407;font-weight:900}.koyomi-mode-card{border:3px solid #111;border-radius:14px;background:#fff;padding:12px;margin-top:12px}.koyomi-mode-card label{font-weight:950}.koyomi-mode-card select{width:100%;min-height:48px;border:2px solid #111;border-radius:10px;padding:8px;font-weight:850}body.koyomi-mode-personal [data-page="ledger"],body.koyomi-mode-personal #page-personal .ledger-inline,body.koyomi-mode-family [data-ledger-panel="readings"],body.koyomi-mode-family [data-ledger-panel="privacy"] .pro-only,body:not(.koyomi-mode-pro) .pro-only{display:none!important}body.koyomi-mode-personal #page-ledger .ledger-subnav button:not([data-ledger-panel="edit"]){display:none!important}body.koyomi-mode-personal #page-ledger #ledger-panel-people,body.koyomi-mode-personal #page-ledger #ledger-panel-locations,body.koyomi-mode-personal #page-ledger #ledger-panel-readings,body.koyomi-mode-personal #page-ledger #ledger-panel-privacy{display:none!important}body.koyomi-mode-personal #page-ledger #ledger-panel-edit{display:block!important}body.koyomi-profile-ready #personalForm details,body.koyomi-profile-ready #personalForm .oracle-mode-panel{display:none}body.koyomi-profile-ready #personalForm:before{content:"本人プロフィールを使用します。";display:block;margin:6px 0 10px;font-weight:950}.compat-self-lock{display:none}body.koyomi-profile-ready .compat-self-lock{display:block;border:2px solid #111;border-radius:14px;padding:10px;margin:10px 0;background:#fff8da;color:#211407;font-weight:900}
 @media(max-width:760px){#page-personal .paper{margin:10px 0;padding:13px 12px 16px;border-radius:14px}#page-personal .paper h2{margin-bottom:8px}#page-personal .lead{font-size:.94rem;line-height:1.65}.oracle-mode-panel{margin:10px 0;padding:12px}.oracle-mode-panel h3{margin-top:0}.oracle-mode-panel p,.oracle-caution{font-size:.86rem;line-height:1.6}.detail-box{margin:9px 0;border-radius:12px}.detail-box>summary{padding:13px 14px}.detail-content{padding:12px}.field label{font-size:.88rem}.field input,.field select,.field textarea{min-height:48px;border-radius:11px;padding:10px 11px}.field textarea{min-height:92px}.personal-actions{position:sticky;bottom:84px;z-index:45;margin:12px -2px 0;padding:8px;border:1px solid rgba(0,0,0,.16);border-radius:14px;background:rgba(255,255,255,.96);box-shadow:0 10px 28px rgba(0,0,0,.18);backdrop-filter:blur(12px)}.personal-actions .action.primary{min-height:58px;border-radius:13px;font-size:1.08rem}body.keyboard-open .personal-actions{position:static;box-shadow:none;background:transparent;border:0;padding:0}.ledger-savebar{bottom:84px;border-radius:13px}.ledger-savebar .ledger-btn{min-height:50px}.ledger-savebar small{font-size:.82rem}.ledger-form{padding:14px}.ledger-form details{margin:8px 0}.ledger-form input,.ledger-form select,.ledger-form textarea{min-height:48px}.ledger-toolbar{display:block}.ledger-toolbar .field{margin-bottom:9px}.ledger-toolbar #ledgerNewProfile{position:sticky;bottom:84px;z-index:44;width:100%;min-height:56px;border-radius:14px;font-size:1.05rem}.ledger-quick-grid,.profile-grid{grid-template-columns:1fr}.profile-head{padding-left:0!important}.profile-meta{grid-template-columns:1fr!important}.ledger-subnav{gap:5px;padding:7px}.ledger-subnav button{min-height:44px}body.keyboard-open .ledger-toolbar #ledgerNewProfile,body.keyboard-open .ledger-savebar,body.keyboard-open .ledger-status-toast{display:none!important}}
 </style>
 </head>
@@ -482,7 +483,7 @@ function scrollKeyboardInputIntoView(el){const adjust=()=>{try{if(!isKeyboardInp
 function bindInputViewport(){setViewportUnit();const update=()=>setViewportUnit();if(window.visualViewport){window.visualViewport.addEventListener('resize',update);window.visualViewport.addEventListener('scroll',update)}window.addEventListener('resize',update);document.addEventListener('focusin',e=>{if(!isKeyboardInput(e.target))return;document.body.classList.add('keyboard-open');setViewportUnit();scrollKeyboardInputIntoView(e.target)});document.addEventListener('focusout',e=>{if(!isKeyboardInput(e.target))return;setTimeout(()=>{if(!isKeyboardInput(document.activeElement)){document.body.classList.remove('keyboard-open');setViewportUnit()}},180)})}
 function toast(msg){const e=$('toast');e.textContent=msg;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2200)}
 function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}function fmtIso(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}function safeDate(s){if(!s)return null;const d=new Date(s+'T12:00:00');return isNaN(d)?null:d}function hash(s){let h=2166136261;for(const c of String(s||'')){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}function mod(n,m){return((n%m)+m)%m}function jd(d){return d.getTime()/DAY+2440587.5}function jdn(d){return Math.floor(jd(d)+.5)}
-function setPage(page){$$('.page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page));$$('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));location.hash=page;window.scrollTo({top:0,behavior:'smooth'});document.querySelector('.mobile-nav [data-page="'+page+'"]')?.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});if(page==='history')refreshHistory()}
+function setPage(page){$$('.page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page));$$('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));location.hash=page;if(page==='history')refreshHistory()}
 function calendarFormat(d,cal,locale='ja-JP'){try{return new Intl.DateTimeFormat(`${locale}-u-ca-${cal}`,{year:'numeric',month:'long',day:'numeric'}).format(d)}catch(e){return 'この環境では未対応'}}
 function japaneseEra(d){try{return new Intl.DateTimeFormat('ja-JP-u-ca-japanese',{era:'long',year:'numeric',month:'long',day:'numeric'}).format(d)}catch(e){return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`}}
 function isoWeek(d){const x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));x.setUTCDate(x.getUTCDate()+4-(x.getUTCDay()||7));const y0=new Date(Date.UTC(x.getUTCFullYear(),0,1));return Math.ceil((((x-y0)/DAY)+1)/7)}
@@ -1245,7 +1246,7 @@ const LEDGER_IMPORTANT_FIELDS={
  'birthData.date':'生年月日','birthData.time':'出生時刻','birthData.timeUnknown':'出生時刻不明','birthData.place.prefecture':'出生地（都道府県）','birthData.place.city':'出生地（市区町村）','birthData.place.latitude':'出生地緯度','birthData.place.longitude':'出生地経度','nameData.glyphMode':'使用字体','nameData.divinationName':'姓名判断名','nameData.strokeMethod':'画数計算方式'
 };
 const LedgerState={db:null,key:null,lockConfig:null,locked:false,currentProfileId:null,selectedPrimary:null,selectedCompatA:null,selectedCompatB:null,selectedQimen:null,selectorContext:null,showRecent:false,draftTimer:null,lockTimer:null,lastActivity:Date.now(),settings:null,sessionCleanupDone:false};
-const ledgerDefaults={startupMode:'main',autosave:'on',saveReadings:'on',readingRetention:'forever',saveCurrentLocation:'never',autoLock:'0',mainProfileId:null,lastProfileId:null,lastBackupAt:null};
+const ledgerDefaults={startupMode:'main',autosave:'on',saveReadings:'on',readingRetention:'forever',saveCurrentLocation:'never',autoLock:'0',mainProfileId:null,lastProfileId:null,lastBackupAt:null,appMode:'personal'};
 const ledgerId=(prefix='id')=>`${prefix}_${Date.now().toString(36)}_${(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)).replaceAll('-','').slice(0,14)}`;
 const ledgerClone=o=>o==null?o:JSON.parse(JSON.stringify(o));
 const ledgerEscape=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -1596,8 +1597,8 @@ function setupLedgerProfileUx(){
  advanced.className='ledger-profile-advanced';
  advanced.innerHTML='<summary>姓名・各占術設定</summary><div class="detail-content"></div>';
  const quickGrid=$('ledgerQuickGrid');
- const moveField=id=>{const el=$(id);const wrap=id==='lpRelationships'?el?.closest('.wide'):el?.closest('div');if(wrap&&quickGrid&&!quickGrid.contains(wrap)){wrap.classList.toggle('wide',['lpDisplayName','lpBirthPlaceLabel','lpRelationships','lpMemo'].includes(id));quickGrid.appendChild(wrap)}};
- ['lpDisplayName','lpBirthDate','lpBirthTime','lpBirthPlaceLabel','lpGender','lpRelationships','lpMemo'].forEach(moveField);
+ const moveField=id=>{const el=$(id);const wrap=id==='lpRelationships'?el?.closest('.wide'):el?.closest('div');if(wrap&&quickGrid&&!quickGrid.contains(wrap)){wrap.classList.toggle('wide',['lpDisplayName','lpBirthPlaceLabel'].includes(id));quickGrid.appendChild(wrap)}};
+ ['lpDisplayName','lpBirthDate','lpBirthTime','lpBirthPlaceLabel','lpGender'].forEach(moveField);
  const displayLabel=document.querySelector('label[for="lpDisplayName"]');if(displayLabel)displayLabel.textContent='氏名 *';
  const display=$('lpDisplayName');if(display){display.placeholder='例：山田太郎 / Maria Garcia / 李小龍';display.autocomplete='name';display.enterKeyHint='next';display.setAttribute('autocapitalize','words');display.setAttribute('autocorrect','off');display.spellcheck=false}
  const place=$('lpBirthPlaceLabel');if(place){place.placeholder='市区町村・都市名を検索';place.setAttribute('list','worldBirthplaceList');place.autocomplete='off';place.enterKeyHint='next'}
@@ -1634,6 +1635,107 @@ const ledgerResetFormBase=ledgerResetForm;
 ledgerResetForm=function(){ledgerResetFormBase();setupLedgerProfileUx();ledgerSyncBirthTimeUnknown();ledgerUpdateReadiness()}
 const ledgerRenderProfilesBase=ledgerRenderProfiles;
 ledgerRenderProfiles=async function(){await ledgerRenderProfilesBase();$$('#ledgerProfileGrid .profile-card .profile-actions').forEach(el=>el.remove());$$('#ledgerProfileGrid [data-ledger-bulk]').forEach(el=>el.closest('label')?.remove());$$('#ledgerProfileGrid .profile-card').forEach(card=>{card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label',`${card.querySelector('.profile-title b')?.textContent||'人物'}を編集`)})}
+
+function koyomiMode(){return LedgerState.settings?.appMode||'personal'}
+function koyomiApplyMode(){
+ const mode=koyomiMode();
+ document.body.classList.remove('koyomi-mode-personal','koyomi-mode-family','koyomi-mode-pro');
+ document.body.classList.add('koyomi-mode-'+mode);
+ if($('koyomiAppMode'))$('koyomiAppMode').value=mode;
+ const ledgerLabel=document.querySelector('[data-page="ledger"].ledger-tab');if(ledgerLabel)ledgerLabel.textContent=mode==='pro'?'顧客管理':'家族・友人';
+ const mobileLedger=document.querySelector('.mobile-nav [data-page="ledger"]');if(mobileLedger)mobileLedger.innerHTML=mode==='pro'?'<b>客</b>顧客':'<b>縁</b>家族';
+}
+function koyomiInstallHome(){
+ if($('koyomiHomeNav'))return;
+ const first=document.querySelector('#page-calendar .dashboard');
+ if(!first)return;
+ const nav=document.createElement('section');
+ nav.id='koyomiHomeNav';
+ nav.className='koyomi-home-nav';
+ nav.innerHTML='<button class="koyomi-main-action" id="koyomiStartReading" type="button">総合鑑定</button><div class="koyomi-home-grid"><button type="button" data-koyomi-shortcut="calendar">今日の暦</button><button type="button" data-koyomi-shortcut="qimen">今日の吉方位</button><button type="button" data-koyomi-shortcut="personal">四柱推命</button><button type="button" data-koyomi-shortcut="personal">姓名判断</button><button type="button" data-koyomi-shortcut="personal">西洋占星術</button><button type="button" data-koyomi-shortcut="personal">宿曜</button><button type="button" data-koyomi-shortcut="qimen">奇門遁甲</button><button type="button" data-koyomi-shortcut="personal">その他占術</button><button type="button" data-koyomi-shortcut="compat">相性</button></div>';
+ first.parentNode.insertBefore(nav,first);
+ $('koyomiStartReading').onclick=koyomiStartPersonalReading;
+ $$('[data-koyomi-shortcut]').forEach(b=>b.onclick=()=>{const p=b.dataset.koyomiShortcut;if(p==='personal')koyomiStartPersonalReading();else setPage(p)});
+}
+function koyomiInstallModeSettings(){
+ if($('koyomiAppMode'))return;
+ const settings=document.querySelector('#page-settings .paper .form-grid');
+ if(!settings)return;
+ const wrap=document.createElement('div');
+ wrap.className='field';
+ wrap.innerHTML='<label for="koyomiAppMode">利用モード</label><select id="koyomiAppMode"><option value="personal">パーソナルモード</option><option value="family">家族・友人モード</option><option value="pro">プロモード</option></select>';
+ settings.insertBefore(wrap,settings.firstChild);
+ $('koyomiAppMode').onchange=async e=>{LedgerState.settings.appMode=e.target.value;LedgerState.settings.startupMode='main';await ledgerSaveAppSettings();koyomiApplyMode();toast('利用モードを保存しました')};
+}
+async function koyomiPrimaryProfile(){
+ const all=await ledgerList('profiles');
+ let p=all.find(x=>x.id===LedgerState.settings.mainProfileId)||all.find(x=>x.isMain)||all.find(x=>x.id===LedgerState.settings.lastProfileId)||all[0]||null;
+ if(p&&!LedgerState.settings.mainProfileId){LedgerState.settings.mainProfileId=p.id;p.isMain=true;await ledgerPut('profiles',p);await ledgerSaveAppSettings()}
+ return p;
+}
+async function koyomiMigratePersonalInputProfile(){
+ const all=await ledgerList('profiles');
+ if(all.length||!$('birthDate')?.value)return null;
+ const name=($('name')?.value||[$('surname')?.value,$('givenName')?.value].filter(Boolean).join(' ')||'').trim();
+ if(!name)return null;
+ const p=ledgerNormalizeProfile({displayName:name,birthData:{date:$('birthDate').value,time:$('birthTime')?.value||'',timeUnknown:$('birthTimeAccuracy')?.value==='unknown',timeAccuracy:({exact:'verified',within30:'family-memory',approx:'approximate',unknown:'unknown'})[$('birthTimeAccuracy')?.value]||'unknown',place:{label:$('birthPlace')?.value||'',country:'',prefecture:$('postalPrefecture')?.value||'',city:$('postalCity')?.value||'',postalCode:'',latitude:$('latitude')?.value||null,longitude:$('longitude')?.value||null,timezone:'Asia/Tokyo',utcOffset:+($('timezoneOffset')?.value||9)}},nameData:{surname:$('surname')?.value||'',givenName:$('givenName')?.value||'',romanizedName:$('romaji')?.value||''},gender:$('gender')?.value||'',isMain:true});
+ await ledgerPut('profiles',p);
+ LedgerState.settings.mainProfileId=p.id;
+ await ledgerSaveAppSettings();
+ return p;
+}
+async function koyomiApplyPrimaryProfile(){
+ if(LedgerState.locked)return null;
+ const p=await koyomiPrimaryProfile()||await koyomiMigratePersonalInputProfile();
+ document.body.classList.toggle('koyomi-profile-ready',!!p);
+ if(p){LedgerState.selectedPrimary=p.id;ledgerApplyPersonal(p);ledgerUpdateSelectionLabels();return p}
+ return null;
+}
+async function koyomiRequireProfile(){
+ const p=await koyomiApplyPrimaryProfile();
+ if(p)return p;
+ ledgerResetForm();
+ ledgerSetPanel('edit');
+ setPage('ledger');
+ const gate=document.querySelector('#ledger-panel-edit .koyomi-profile-gate')||document.createElement('div');
+ gate.className='koyomi-profile-gate';
+ gate.textContent='初回設定：氏名・生年月日・出生時刻・出生地を登録してください。次回から本人として自動使用します。';
+ $('ledgerProfileForm')?.prepend(gate);
+ return null;
+}
+async function koyomiStartPersonalReading(){
+ const p=await koyomiRequireProfile();
+ if(!p)return;
+ setPage('personal');
+ const result=buildPersonal();
+ if(result)renderPersonal(result);
+}
+async function koyomiPrepareCompat(){
+ const p=await koyomiApplyPrimaryProfile();
+ if(!p)return;
+ ledgerApplyCompat(p,'A');
+ const lock=document.querySelector('#page-compat .compat-self-lock')||document.createElement('div');
+ lock.className='compat-self-lock';
+ lock.textContent='あなたは本人プロフィールで固定されています。相手だけ選択してください。';
+ document.querySelector('#page-compat form')?.prepend(lock);
+ ['personA','birthA','birthTimeA','birthPlaceA','latA','lonA','tzA','bloodA'].forEach(id=>$(id)?.closest('.field')?.classList.add('pro-only'));
+ if($('ledgerSelectCompatA'))$('ledgerSelectCompatA').style.display='none';
+}
+async function koyomiFinalizeUi(){
+ koyomiInstallHome();
+ koyomiInstallModeSettings();
+ koyomiApplyMode();
+ const p=await koyomiApplyPrimaryProfile();
+ const startHash=location.hash.replace('#','');
+ if(!p&&koyomiMode()==='personal'&&(!startHash||startHash==='calendar'||startHash==='ledger'))await koyomiRequireProfile();
+ await koyomiPrepareCompat();
+}
+const koyomiLedgerStartupProfileBase=ledgerStartupProfile;
+ledgerStartupProfile=async function(){await koyomiLedgerStartupProfileBase();await koyomiApplyPrimaryProfile();koyomiApplyMode()}
+const koyomiLedgerSavePrivacyBase=ledgerSavePrivacy;
+ledgerSavePrivacy=async function(){await koyomiLedgerSavePrivacyBase();if($('koyomiAppMode')){LedgerState.settings.appMode=$('koyomiAppMode').value;await ledgerSaveAppSettings()}koyomiApplyMode()}
+const koyomiInitBase=init;
+init=async function(){await koyomiInitBase();await initStep('koyomiUiUx',()=>koyomiFinalizeUi())}
 window.V191={setPage,renderCalendar,buildPersonal,compatibility,generateTimeline,diagnostics,openGuide,refreshHistory,setOracleMode:v191zSetMode};window.V192={mesopotamianDate:v192MesopotamianDate,onkanProfile:v192OnkanProfile,runOracle:v192RunOracle};window.V193={qimenChart:qmdjChart,qimenEvaluate:qmdjEvaluate,qimenGenerate:qmdjGenerate,diagnostics:qmdjDiagnostics};Promise.resolve().then(()=>initStep('persona',()=>v195Init())).then(()=>initStep('lifeTranslator',()=>v196Init())).then(()=>init()).catch(e=>console.error('[KOYOMI] boot failed',e));
 })();
 </script>
