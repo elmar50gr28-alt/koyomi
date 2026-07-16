@@ -14,6 +14,18 @@ This audit was created before implementation. No field is deleted based on appea
 - Compatibility and Qimen screens can already consume a saved profile through `ledgerApplyCompat()` and `ledgerUseProfile()`.
 - The safest implementation path is DOM reorganization and wrapper functions that preserve all current IDs and storage keys.
 
+## 2026-07-16 Final Implementation Addendum
+
+- Normal profile screen is limited to: name, birth date, birth time, birth time unknown, birthplace, gender, relationship/memo.
+- Detailed settings keep all existing name, birthplace, privacy, image, optional, and expert fields.
+- New world-name fields are additive only: middle name, compound surname, romanized name, original spelling, variant glyph, divination glyph, transliteration system.
+- Birthplace keeps country, region, city, latitude, longitude, timezone, UTC offset, precision, and source internally.
+- Postal code and address-like helper fields are not shown on the normal profile screen.
+- `personId` remains the profile id; autosave updates the current profile and avoids creating duplicates on silent saves.
+- Unknown top-level profile data remains under `unknownFields`; known nested data is merged without deleting legacy nested keys.
+- Autosave remains 700 ms and skips list re-rendering to preserve scroll and editing focus.
+- Preview storage namespacing was disabled before main release so existing production device data remains visible and unchanged.
+
 ## Field Audit Table
 
 | fieldId | UIラベル | 保存キー | データ型 | 使用占術 | 必須度 | 重複候補 | 自動生成可能 | スマホ取得可能 | 通常画面 | 詳しい設定 | 内部専用 | 旧データ移行 | 備考 |

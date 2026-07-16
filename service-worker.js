@@ -1,4 +1,4 @@
-const C='koyomi-preview-mobile-profile-redesign-1';
+const C='koyomi-profile-redesign-20260716-1';
 const A=['./','./index.html','./today.html','./app.html','./smoke-test.html','./manifest.webmanifest','./icon.svg'];
 
 self.addEventListener('install',e=>{
