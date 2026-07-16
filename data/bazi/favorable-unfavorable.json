@@ -1,0 +1,5 @@
+{
+  "version":"phase2-1",
+  "classifications":["useful","assistant","favorable","unfavorable","avoid","neutral"],
+  "notes":"Classifications are context-sensitive and may change by luck cycle."
+}

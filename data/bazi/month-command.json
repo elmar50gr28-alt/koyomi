@@ -1,0 +1,9 @@
+{
+  "version": "phase2-1",
+  "rules": [
+    {"ruleId":"month-command-season-wood","monthBranches":["yin","mao","chen"],"commandElement":"wood","seasonalPhase":"spring","evidenceLevel":"classical-index","confidence":0.7},
+    {"ruleId":"month-command-season-fire","monthBranches":["si","wu","wei"],"commandElement":"fire","seasonalPhase":"summer","evidenceLevel":"classical-index","confidence":0.7},
+    {"ruleId":"month-command-season-metal","monthBranches":["shen","you","xu"],"commandElement":"metal","seasonalPhase":"autumn","evidenceLevel":"classical-index","confidence":0.7},
+    {"ruleId":"month-command-season-water","monthBranches":["hai","zi","chou"],"commandElement":"water","seasonalPhase":"winter","evidenceLevel":"classical-index","confidence":0.7}
+  ]
+}

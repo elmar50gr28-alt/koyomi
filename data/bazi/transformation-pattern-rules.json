@@ -1,0 +1,3 @@
+[
+  {"ruleId":"transformation-stem-combination-candidate","name":"Transformation candidate","category":"transformation-pattern","description":"A stem combination plus seasonal support may produce a transformation candidate.","conditions":["stem-combination-present","season-supports-transform-element"],"exclusions":["transform-element-blocked"],"priority":75,"result":"transformation-candidate","schoolIds":["traditional-ziping","koyomi-integrated"],"sourceIds":["src-yuanhai-ziping-biblio"],"evidenceLevel":"classical-index","confidence":0.5,"reviewStatus":"human-review-required","version":"1.0.0","notes":"Strict and permissive results must be separated."}
+]

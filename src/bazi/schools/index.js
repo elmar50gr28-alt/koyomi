@@ -20,3 +20,7 @@ export function compareSchools(profile, schoolIds = Object.keys(SCHOOL_PROFILES)
     };
   });
 }
+
+export function compareBaziSchools(profile, schoolIds = Object.keys(SCHOOL_PROFILES)) {
+  return compareSchools(profile, schoolIds);
+}

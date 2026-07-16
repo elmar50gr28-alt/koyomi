@@ -58,7 +58,7 @@ const tests=[
   {name:'mode settings visible',url:'app.html#settings',check:d=>!!d.getElementById('koyomiAppMode')&&['personal','family','pro'].every(v=>d.querySelector(`#koyomiAppMode option[value="${v}"]`))},
   {name:'own profile settings entry',url:'app.html#settings',check:d=>!!d.getElementById('koyomiOwnProfileCard')&&!!d.getElementById('koyomiEditOwnProfile')&&d.body.textContent.includes('あなたのプロフィール')},
   {name:'bazi engine module',url:'src/bazi/validation/bazi-test.html',check:d=>d.getElementById('result')?.textContent.includes('/5 passed')},
-  {name:'production service worker cache',url:'service-worker.js',check:d=>d.body?.textContent.includes('koyomi-bazi-phase1-actions-20260717-1')}
+  {name:'production service worker cache',url:'service-worker.js',check:d=>d.body?.textContent.includes('koyomi-bazi-phase2-20260717-1')}
 ];
 const frame=document.getElementById('frame'),results=document.getElementById('results');
 function row(name,state,msg){const el=document.createElement('div');el.className='row';el.innerHTML=`<b class="${state}">${state.toUpperCase()}</b><div><strong>${name}</strong><br><small>${msg}</small></div>`;results.append(el)}

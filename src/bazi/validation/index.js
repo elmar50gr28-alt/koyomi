@@ -13,3 +13,13 @@ export function validateChartResult(result) {
 export function validateBaziResult(result) {
   return validateChartResult(result);
 }
+
+export function validateBaziPhase2Result(result) {
+  const base = validateChartResult(result);
+  const errors = [...base.errors];
+  if (!result?.strength?.dayMasterStrength) errors.push('phase2-day-master-strength-missing');
+  if (!result?.patterns?.candidates) errors.push('phase2-pattern-candidates-missing');
+  if (!result?.yongshen?.methods) errors.push('phase2-yongshen-methods-missing');
+  if (!result?.luckCycles?.cycles) errors.push('phase2-luck-cycles-missing');
+  return { ok: errors.length === 0, errors, warnings: result?.warnings || [] };
+}

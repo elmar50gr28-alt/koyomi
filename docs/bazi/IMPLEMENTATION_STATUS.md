@@ -25,3 +25,19 @@
 - Luck start date precision from solar-term distance.
 - UI view for professional Bazi detail panels.
 - Manual approval before merging this feature branch to `main`.
+
+## Phase 2 Added
+
+- Month command, roots, exposed stems, element distribution, climate, qi flow, and day-master strength are evaluated as separate structured factors.
+- Pattern candidates, follow-pattern candidates, and transformation-pattern candidates are separated from final establishment.
+- Yongshen methods are separated into support-control, climate, mediation, illness-medicine, pattern, and assistant-god.
+- Favorable/unfavorable element classification is returned as contextual structured data.
+- Luck cycles include direction rule, approximate start age/date, cycle stems/branches, confidence, and warnings.
+- Phase 2 data files and regression test cases were added.
+
+## Human Review Required
+
+- Final格局 establishment.
+- 従格 and transformation pattern strict establishment.
+- Final用神 when methods conflict.
+- Exact大運 start timing.
