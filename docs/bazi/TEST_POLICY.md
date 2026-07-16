@@ -16,4 +16,17 @@ The browser test page is:
 
 `src/bazi/validation/bazi-test.html`
 
+Automated tests are:
+
+- `npm run test:static`
+- `npm run test:bazi`
+- `npm run test:mobile`
+
+GitHub Actions workflows:
+
+- `validate.yml`
+- `bazi-tests.yml`
+- `mobile-regression.yml`
+- `deploy-pages.yml`
+
 Phase 2 must add larger verified case tables and astronomical solar-term precision tests.

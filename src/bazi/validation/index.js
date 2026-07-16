@@ -9,3 +9,7 @@ export function validateChartResult(result) {
   if (!Array.isArray(result?.chart?.elementBalance)) errors.push('element-balance-missing');
   return { ok: errors.length === 0, errors, warnings: result?.warnings || [] };
 }
+
+export function validateBaziResult(result) {
+  return validateChartResult(result);
+}

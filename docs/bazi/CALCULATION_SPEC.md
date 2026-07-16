@@ -15,6 +15,8 @@ The engine accepts the existing KOYOMI profile shape and normalizes:
 
 Unknown birth time is never replaced with noon. The hour pillar is omitted and confidence is lowered.
 
+The public API also exposes `calculateFourPillars`, `calculateTenGod`, `calculateTwelveStage`, and `getHiddenStems` for deterministic regression tests and future UI integration. These functions return structured facts only.
+
 ## Calendar
 
 Phase 1 uses deterministic fixed-day solar-term boundaries to establish the engine contract. This is intentionally marked as `phase1-fixed-day`. Phase 2 should replace it with astronomical term-entry times.

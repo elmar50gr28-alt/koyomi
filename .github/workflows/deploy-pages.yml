@@ -1,0 +1,20 @@
+name: Deploy Pages Check
+
+on:
+  pull_request:
+  push:
+    branches: [main, feature/bazi-knowledge-engine]
+
+permissions:
+  contents: read
+
+jobs:
+  pages-readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run test:static
+      - run: test -f index.html && test -f app.html && test -f today.html && test -f service-worker.js
