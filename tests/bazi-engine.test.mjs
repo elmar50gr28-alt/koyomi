@@ -9,6 +9,7 @@ import {
   evaluateBasicBranchRelations,
   evaluateBasicStemRelations,
   getHiddenStems,
+  validateBaziPhase3Result,
   validateBaziPhase2Result,
   validateBaziResult
 } from '../src/bazi/index.js';
@@ -21,6 +22,9 @@ const hiddenStems = await json('data/bazi/hidden-stems.json');
 const twelveStages = await json('data/bazi/twelve-stages.json');
 const testCases = await json('data/bazi/test-cases.json');
 const phase2TestCases = await json('data/bazi/phase2-test-cases.json');
+const exampleCases = await json('data/bazi/example-cases.json');
+const classicalIndex = await json('data/bazi/classical-index.json');
+const interpretationRules = await json('data/bazi/interpretation-rules.json');
 
 assert.equal(stems.length, 10, 'stems data must include 10 heavenly stems');
 assert.equal(branches.length, 12, 'branches data must include 12 earthly branches');
@@ -98,6 +102,15 @@ assert.ok(full.patterns.followPatterns && full.patterns.transformationPatterns, 
 assert.ok(full.yongshen.methods && full.yongshen.favorableElements, 'phase2 yongshen domains missing');
 assert.ok(full.luckCycles.directionRule && full.luckCycles.cycles.length >= 8, 'phase2 luck cycles missing');
 assert.ok(validateBaziPhase2Result(full).ok, 'phase2 validation should pass');
+assert.ok(validateBaziPhase3Result(full).ok, 'phase3 validation should pass');
+assert.ok(full.interpretation?.tendencies?.career, 'career interpretation missing');
+assert.ok(full.interpretation?.tendencies?.finance, 'finance interpretation missing');
+assert.ok(full.interpretation?.tendencies?.relationship, 'relationship interpretation missing');
+assert.ok(full.interpretation?.tendencies?.family, 'family interpretation missing');
+assert.ok(full.interpretation?.tendencies?.health, 'health interpretation missing');
+assert.ok(Array.isArray(full.beginnerExplanation) && full.beginnerExplanation.length >= 5, 'beginner explanation missing');
+assert.ok(Array.isArray(full.professionalEvidence) && full.professionalEvidence.length >= 1, 'professional evidence missing');
+assert.ok(full.mitsunomeInput?.sourcePolicy?.aiGeneratedTextIsNotSource, 'mitsunome source policy missing');
 assert.ok(evaluateBasicStemRelations(full).evidence.length >= 1, 'basic stem relations missing evidence');
 assert.ok(evaluateBasicBranchRelations(full).evidence.length >= 1, 'basic branch relations missing evidence');
 
@@ -117,4 +130,22 @@ for (const testCase of phase2TestCases) {
   if (testCase.expects.hasYongshenMethods) assert.ok(Object.keys(result.yongshen.methods).length >= 5, `${testCase.caseId} yongshen methods`);
 }
 
-console.log(`Bazi engine tests passed: stems=${stems.length}, branches=${branches.length}, tenGods=${tenGodCount}, stages=${stageCount}, cases=${testCases.length}, phase2=${phase2TestCases.length}`);
+assert.equal(classicalIndex.length, 5, 'classical index count');
+assert.equal(exampleCases.length, 3, 'example cases count');
+assert.equal(interpretationRules.length, 5, 'interpretation category rules count');
+for (const source of classicalIndex) {
+  assert.ok(source.sourceId && source.reviewStatus, `classical source review status missing: ${source.sourceId}`);
+}
+for (const rule of interpretationRules) {
+  assert.ok(rule.sourceIds?.length >= 1, `interpretation rule sourceIds missing: ${rule.ruleId}`);
+  assert.ok(rule.reviewStatus, `interpretation rule reviewStatus missing: ${rule.ruleId}`);
+}
+for (const testCase of exampleCases) {
+  const result = calculateBazi(testCase.input);
+  if (testCase.expectedResults.hasBeginnerExplanation) assert.ok(result.beginnerExplanation.length >= 5, `${testCase.caseId} beginner`);
+  if (testCase.expectedResults.hasProfessionalEvidence) assert.ok(result.professionalEvidence.length >= 1, `${testCase.caseId} evidence`);
+  if (testCase.expectedResults.hasMitsunomeSchema) assert.ok(result.mitsunomeInput.schemaId, `${testCase.caseId} mitsunome`);
+  if (testCase.expectedResults.hourUnknown) assert.equal(result.chart.pillars.hour, null, `${testCase.caseId} hour unknown`);
+}
+
+console.log(`Bazi engine tests passed: stems=${stems.length}, branches=${branches.length}, tenGods=${tenGodCount}, stages=${stageCount}, cases=${testCases.length}, phase2=${phase2TestCases.length}, examples=${exampleCases.length}, sources=${classicalIndex.length}`);

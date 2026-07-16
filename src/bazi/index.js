@@ -6,9 +6,9 @@ export { evaluateFollowPatterns, evaluatePatternCandidates, evaluatePatterns, ev
 export { evaluateFavorableElements, evaluateYongshen, evaluateYongshenByMethod } from './yongshen/index.js';
 export { calculateLuckCycles } from './luck/index.js';
 export { compareBaziSchools, compareSchools, listSchoolProfiles } from './schools/index.js';
-export { explainBaziDecision, explainRule, getEvidence } from './evidence/index.js';
-export { validateBaziPhase2Result, validateBaziResult, validateChartResult } from './validation/index.js';
-export { buildInterpretationFacts } from './interpretation/index.js';
+export { explainBaziDecision, explainRule, getEvidence, PHASE3_CLASSICAL_INDEX } from './evidence/index.js';
+export { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
+export { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput, buildProfessionalEvidence, evaluateInterpretationTendencies, evaluateLuckInterpretations } from './interpretation/index.js';
 
 import { calculateBaziChart, calculateFourPillars, calculateTenGod, calculateTwelveStage, getHiddenStems } from './chart/index.js';
 import { evaluateBasicBranchRelations, evaluateBasicStemRelations, evaluateBranchRelations, evaluateStemRelations } from './relations/index.js';
@@ -17,8 +17,8 @@ import { evaluatePatterns } from './patterns/index.js';
 import { evaluateFavorableElements, evaluateYongshen } from './yongshen/index.js';
 import { calculateLuckCycles } from './luck/index.js';
 import { compareBaziSchools, compareSchools } from './schools/index.js';
-import { buildInterpretationFacts } from './interpretation/index.js';
-import { validateBaziPhase2Result, validateBaziResult, validateChartResult } from './validation/index.js';
+import { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput, buildProfessionalEvidence, evaluateInterpretationTendencies, evaluateLuckInterpretations } from './interpretation/index.js';
+import { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
 
 export function calculateBazi(profile, schoolConfig = {}) {
   const chart = calculateBaziChart(profile, schoolConfig);
@@ -44,10 +44,30 @@ export function calculateBazi(profile, schoolConfig = {}) {
     interpretationFacts,
     calculationVersion: KOYOMI_BAZI_VERSION
   };
-  return { ...result, validation: validateBaziResult(result), phase2Validation: validateBaziPhase2Result(result) };
+  const interpretation = {
+    facts: interpretationFacts,
+    tendencies: evaluateInterpretationTendencies(result),
+    luck: evaluateLuckInterpretations(result)
+  };
+  const phase3Result = {
+    ...result,
+    interpretation,
+    beginnerExplanation: buildBeginnerExplanation({ ...result, interpretation }),
+    professionalEvidence: buildProfessionalEvidence({ ...result, interpretation })
+  };
+  const finalResult = {
+    ...phase3Result,
+    mitsunomeInput: buildMitsunomeInput(phase3Result)
+  };
+  return {
+    ...finalResult,
+    validation: validateBaziResult(finalResult),
+    phase2Validation: validateBaziPhase2Result(finalResult),
+    phase3Validation: validateBaziPhase3Result(finalResult)
+  };
 }
 
-export const KOYOMI_BAZI_VERSION = 'phase2-2026-07-17';
+export const KOYOMI_BAZI_VERSION = 'phase3-2026-07-17';
 
 export default {
   calculateBazi,
@@ -69,5 +89,11 @@ export default {
   compareBaziSchools,
   validateChartResult,
   validateBaziResult,
-  validateBaziPhase2Result
+  validateBaziPhase2Result,
+  validateBaziPhase3Result,
+  evaluateInterpretationTendencies,
+  evaluateLuckInterpretations,
+  buildBeginnerExplanation,
+  buildProfessionalEvidence,
+  buildMitsunomeInput
 };

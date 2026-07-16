@@ -3,7 +3,7 @@ name: Validate
 on:
   pull_request:
   push:
-    branches: [main, feature/bazi-knowledge-engine, feature/bazi-phase2-strength-pattern-yongshen]
+    branches: [main, feature/bazi-knowledge-engine, feature/bazi-phase2-strength-pattern-yongshen, feature/bazi-phase3-evidence-interpretation]
 
 jobs:
   validate:

@@ -12,6 +12,9 @@ const requiredData = [
   'pattern-rescue-rules.json', 'follow-pattern-rules.json', 'transformation-pattern-rules.json',
   'yongshen-methods.json', 'yongshen-rules.json', 'favorable-unfavorable.json',
   'luck-cycle-rules.json', 'phase2-test-cases.json'
+  ,'classical-index.json','classical-excerpts.json','interpretation-rules.json',
+  'luck-interpretation-rules.json','example-cases.json','explanation-templates.json',
+  'mitsunome-input-schema.json'
 ];
 
 for (const file of requiredWorkflows) await access(join('.github', 'workflows', file));
@@ -21,10 +24,11 @@ const app = await readFile('app.html', 'utf8');
 assert.ok(app.includes('KOYOMI_BAZI'), 'app.html must expose the Bazi engine without profile re-entry');
 
 const serviceWorker = await readFile('service-worker.js', 'utf8');
-assert.ok(serviceWorker.includes('koyomi-bazi-phase2'), 'service worker cache name must include bazi phase2');
+assert.ok(serviceWorker.includes('koyomi-bazi-phase3'), 'service worker cache name must include bazi phase3');
 assert.ok(serviceWorker.includes('./src/bazi/index.js'), 'service worker must cache bazi engine entry');
 assert.ok(serviceWorker.includes('./data/bazi/solar-term-rules.json'), 'service worker must cache solar-term rules');
 assert.ok(serviceWorker.includes('./data/bazi/phase2-test-cases.json'), 'service worker must cache phase2 test cases');
+assert.ok(serviceWorker.includes('./data/bazi/example-cases.json'), 'service worker must cache phase3 example cases');
 
 const docs = await readdir(join('docs', 'bazi'));
 assert.ok(docs.includes('IMPLEMENTATION_STATUS.md'), 'implementation status doc missing');
