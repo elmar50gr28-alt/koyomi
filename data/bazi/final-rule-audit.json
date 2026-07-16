@@ -1,0 +1,39 @@
+﻿{
+    "auditId":  "bazi-final-rc-rule-audit-20260717",
+    "version":  "1.0-rc",
+    "summary":  {
+                    "ruleTotal":  23,
+                    "duplicateRuleGroups":  3,
+                    "contradictionCandidates":  6,
+                    "unusedRules":  0,
+                    "circularReferences":  0,
+                    "unreferencedSourceIds":  0,
+                    "unusedJson":  0,
+                    "reviewPendingCount":  18
+                },
+    "duplicateRules":  [
+                           "pattern-candidate-vs-pattern-rescue",
+                           "follow-pattern-vs-weak-daymaster",
+                           "climate-yongshen-vs-balance-yongshen"
+                       ],
+    "contradictionCandidates":  [
+                                    "身弱補助と従格採用境界",
+                                    "化気格成立条件の季節支持",
+                                    "調候用神と扶抑用神の優先順位",
+                                    "羊刃格の吉凶表現",
+                                    "月運解釈の未精密化",
+                                    "出生時刻不明時の大運精度"
+                                ],
+    "unusedRuleIds":  [
+
+                      ],
+    "circularReferences":  [
+
+                           ],
+    "unreferencedSourceIds":  [
+
+                              ],
+    "unusedJsonFiles":  [
+
+                        ]
+}

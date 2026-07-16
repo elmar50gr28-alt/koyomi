@@ -1,0 +1,290 @@
+﻿{
+    "auditId":  "bazi-final-rc-classical-audit-20260717",
+    "classicalSourceCount":  5,
+    "rules":  [
+                  {
+                      "ruleId":  "month-command",
+                      "sourceIds":  [
+                                        "src-yuanhai-ziping-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "traditional-ziping",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "root-strength",
+                      "sourceIds":  [
+                                        "src-sanming-tonghui-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "modern-score",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "exposed-stems",
+                      "sourceIds":  [
+                                        "src-ditian-sui-biblio"
+                                    ],
+                      "schoolIds":  "koyomi-integrated",
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "element-flow",
+                      "sourceIds":  [
+                                        "src-ziping-zhenquan-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "qiongtong-baojian",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "human-review-required"
+                  },
+                  {
+                      "ruleId":  "climate",
+                      "sourceIds":  [
+                                        "src-qiongtong-baojian-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "ziping-zhenquan",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "strength",
+                      "sourceIds":  [
+                                        "src-yuanhai-ziping-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "traditional-ziping",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "pattern-candidate",
+                      "sourceIds":  [
+                                        "src-sanming-tonghui-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "modern-score",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "pattern-rescue",
+                      "sourceIds":  [
+                                        "src-ditian-sui-biblio"
+                                    ],
+                      "schoolIds":  "koyomi-integrated",
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "human-review-required"
+                  },
+                  {
+                      "ruleId":  "follow-pattern",
+                      "sourceIds":  [
+                                        "src-ziping-zhenquan-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "qiongtong-baojian",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "transformation-pattern",
+                      "sourceIds":  [
+                                        "src-qiongtong-baojian-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "ziping-zhenquan",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "yongshen-support-control",
+                      "sourceIds":  [
+                                        "src-yuanhai-ziping-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "traditional-ziping",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "yongshen-climate",
+                      "sourceIds":  [
+                                        "src-sanming-tonghui-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "modern-score",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "human-review-required"
+                  },
+                  {
+                      "ruleId":  "yongshen-mediation",
+                      "sourceIds":  [
+                                        "src-ditian-sui-biblio"
+                                    ],
+                      "schoolIds":  "koyomi-integrated",
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "yongshen-illness-medicine",
+                      "sourceIds":  [
+                                        "src-ziping-zhenquan-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "qiongtong-baojian",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "favorable-unfavorable",
+                      "sourceIds":  [
+                                        "src-qiongtong-baojian-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "ziping-zhenquan",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "luck-direction",
+                      "sourceIds":  [
+                                        "src-yuanhai-ziping-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "traditional-ziping",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "human-review-required"
+                  },
+                  {
+                      "ruleId":  "luck-cycle",
+                      "sourceIds":  [
+                                        "src-sanming-tonghui-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "modern-score",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "luck-start",
+                      "sourceIds":  [
+                                        "src-ditian-sui-biblio"
+                                    ],
+                      "schoolIds":  "koyomi-integrated",
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "career-interpretation",
+                      "sourceIds":  [
+                                        "src-ziping-zhenquan-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "qiongtong-baojian",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "finance-interpretation",
+                      "sourceIds":  [
+                                        "src-qiongtong-baojian-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "ziping-zhenquan",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "human-review-required"
+                  },
+                  {
+                      "ruleId":  "relationship-interpretation",
+                      "sourceIds":  [
+                                        "src-yuanhai-ziping-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "traditional-ziping",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "family-interpretation",
+                      "sourceIds":  [
+                                        "src-sanming-tonghui-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "modern-score",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "health-interpretation",
+                      "sourceIds":  [
+                                        "src-ditian-sui-biblio"
+                                    ],
+                      "schoolIds":  "koyomi-integrated",
+                      "adoptionReason":  "KOYOMI RCでは計算可能な構造、根拠分離、反対説保持を満たすため採用。",
+                      "opposingViews":  "流派により成立条件、優先順位、吉凶表現に差があるため統一しない。",
+                      "reviewStatus":  "reviewed-index"
+                  }
+              ]
+}

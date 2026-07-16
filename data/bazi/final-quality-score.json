@@ -1,0 +1,38 @@
+﻿{
+    "reportId":  "bazi-final-rc-quality-score-20260717",
+    "version":  "1.0-release-candidate",
+    "qualityScore":  0.86,
+    "scores":  {
+                   "evidenceRate":  0.91,
+                   "exampleRate":  0.9,
+                   "testRate":  1,
+                   "reviewRate":  0.72,
+                   "consistencyRate":  0.79
+               },
+    "counts":  {
+                   "ruleTotal":  23,
+                   "classicalSourceCount":  5,
+                   "exampleCaseTotal":  213,
+                   "testCaseTotal":  432,
+                   "reviewPendingCount":  18
+               },
+    "topQualityItems":  [
+                            "sourceIds未設定0件",
+                            "命例213件へ拡充",
+                            "テスト327件へ拡充",
+                            "古典原文・要約・現代解釈・AI文の分離",
+                            "AIレビューで矛盾候補と人間レビュー推奨箇所を明示"
+                        ],
+    "unresolvedTop10":  [
+                            "24節気の正確な天文時刻",
+                            "大運開始時期の精密計算",
+                            "流年・月運の実運用検証",
+                            "従格成立条件の流派差",
+                            "化気格成立条件の季節支持",
+                            "用神衝突時の優先順位",
+                            "健康傾向表現の安全レビュー",
+                            "実在命例採用フロー",
+                            "出生時刻不明時の精度表示",
+                            "古典passage-level対応"
+                        ]
+}
