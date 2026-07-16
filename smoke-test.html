@@ -38,6 +38,16 @@ const tests=[
   {name:'app personal',url:'app.html#personal',check:d=>d.querySelector('.page.active')?.id==='page-personal'},
   {name:'app compat',url:'app.html#compat',check:d=>d.querySelector('.page.active')?.id==='page-compat'},
   {name:'app ledger',url:'app.html#ledger',check:d=>d.querySelector('.page.active')?.id==='page-ledger'},
+  {name:'ledger mobile labels',url:'app.html#ledger',check:d=>d.querySelector('#ledger-panel-people h2')?.textContent.includes('家族・大切な人')&&d.querySelector('#ledgerNewProfile')?.textContent.includes('人物を追加')},
+  {name:'ledger quick profile form',url:'app.html#ledger',check:d=>{
+    const quick=d.querySelector('#ledgerQuickGrid');
+    return !!quick&&['lpDisplayName','lpBirthDate','lpBirthTime','lpBirthPlaceLabel','lpGender','lpRelationships','lpMemo'].every(id=>quick.querySelector('#'+id));
+  }},
+  {name:'ledger advanced folded',url:'app.html#ledger',check:d=>!!d.querySelector('details.ledger-advanced-settings:not([open])')&&d.querySelector('details.ledger-advanced-settings summary')?.textContent.includes('姓名判断・詳しい設定')},
+  {name:'general helper buttons hidden',url:'app.html#ledger',check:d=>{
+    const ids=['sampleBtn','saveBtn','copyBtn','clearBtn','compatSample','compatCopy','timelineCopy','historyExport','oracleCopy','qmCopyReading','ledgerCreatePersonal','ledgerSavePersonalReading','ledgerDuplicateCurrent','ledgerSaveProfile','ledgerBulkDelete'];
+    return ids.every(id=>{const el=d.getElementById(id);return !el||getComputedStyle(el).display==='none'||el.closest('[hidden]')});
+  }},
   {name:'app qimen',url:'app.html#qimen',check:d=>d.querySelector('.page.active')?.id==='page-qimen'},
   {name:'app settings',url:'app.html#settings',check:d=>d.querySelector('.page.active')?.id==='page-settings'}
 ];

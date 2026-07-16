@@ -130,9 +130,10 @@ body.oracle-zubat .reading,body.oracle-zubat .divination-reading{border-color:#7
 .koyomi-foundation-banner{position:sticky;top:0;z-index:999;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 14px;background:#f4ead1;color:#25170f;border-bottom:2px solid #8d6a34;font-size:.82rem;font-weight:800}.koyomi-foundation-banner a{color:#25170f;text-decoration:none;border:1px solid #8d6a34;border-radius:999px;padding:5px 9px}.koyomi-foundation-banner span{text-align:right}.page#page-oracle{display:none!important}@media(max-width:760px){.koyomi-foundation-banner{position:relative;display:block}.koyomi-foundation-banner span{display:block;text-align:left;margin-top:7px}}
 @media(max-width:760px){.mobile-nav{transition:transform .22s ease,opacity .18s ease}body.keyboard-open .mobile-nav{transform:translateY(calc(100% + env(safe-area-inset-bottom)));opacity:0;pointer-events:none}body.keyboard-open .app{padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
 .actions.personal-actions{grid-template-columns:1fr}.actions.personal-actions .action.primary{min-height:56px;font-size:1.05rem}
-#sampleBtn,#saveBtn,#copyBtn,#clearBtn,#compatSample,#compatCopy,.profile-actions [data-ledger-act="dup"]{display:none!important}
-html,body{max-width:100%;overflow-x:hidden}.mobile-nav button,.tab,.action,.ledger-btn,.field input,.field select,.field textarea{min-height:44px}
-@media(max-width:760px){#page-personal .paper{margin:10px 0;padding:13px 12px 16px;border-radius:14px}#page-personal .paper h2{margin-bottom:8px}#page-personal .lead{font-size:.94rem;line-height:1.65}.oracle-mode-panel{margin:10px 0;padding:12px}.oracle-mode-panel h3{margin-top:0}.oracle-mode-panel p,.oracle-caution{font-size:.86rem;line-height:1.6}.detail-box{margin:9px 0;border-radius:12px}.detail-box>summary{padding:13px 14px}.detail-content{padding:12px}.field label{font-size:.88rem}.field input,.field select,.field textarea{min-height:48px;border-radius:11px;padding:10px 11px}.field textarea{min-height:92px}.personal-actions{position:sticky;bottom:84px;z-index:45;margin:12px -2px 0;padding:8px;border:1px solid rgba(0,0,0,.16);border-radius:14px;background:rgba(255,255,255,.96);box-shadow:0 10px 28px rgba(0,0,0,.18);backdrop-filter:blur(12px)}.personal-actions .action.primary{min-height:58px;border-radius:13px;font-size:1.08rem}body.keyboard-open .personal-actions{position:static;box-shadow:none;background:transparent;border:0;padding:0}.ledger-savebar{bottom:84px;border-radius:13px}.ledger-savebar .ledger-btn{min-height:50px}.ledger-savebar small{font-size:.82rem}.ledger-form{padding:14px}.ledger-form details{margin:8px 0}.ledger-form input,.ledger-form select,.ledger-form textarea{min-height:48px}}
+#sampleBtn,#saveBtn,#copyBtn,#clearBtn,#compatSample,#compatCopy,#timelineCopy,#historyExport,#oracleCopy,#qmCopyReading,#ledgerCreatePersonal,#ledgerSavePersonalReading,#ledgerSaveCompatReading,#ledgerDuplicateCurrent,#ledgerSaveProfile,#ledgerBulkDelete,#ledgerShowRecent,.profile-actions,[data-ledger-act="dup"],[data-ledger-act="export"]{display:none!important}
+html,body{max-width:100%;overflow-x:hidden}.mobile-nav button,.tab,.action,.ledger-btn,.field input,.field select,.field textarea,.ledger-form input,.ledger-form select,.ledger-form textarea{min-height:44px}
+.profile-card{cursor:pointer}.profile-card:focus-within,.profile-card:focus{outline:2px solid var(--gold);outline-offset:3px}.profile-card input[data-ledger-bulk]{display:none}.ledger-mobile-note{margin:.45rem 0 0;color:#71583c;font-size:.92rem;font-weight:800}.ledger-form details.ledger-advanced-settings:not([open]){background:#fffaf1}.ledger-form details.ledger-advanced-settings>summary{position:relative}.ledger-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ledger-quick-grid .wide{grid-column:1/-1}.ledger-quick-grid label{font-size:.86rem}.ledger-quick-grid input,.ledger-quick-grid select,.ledger-quick-grid textarea{font-size:16px}.ledger-savebar{box-shadow:none}
+@media(max-width:760px){#page-personal .paper{margin:10px 0;padding:13px 12px 16px;border-radius:14px}#page-personal .paper h2{margin-bottom:8px}#page-personal .lead{font-size:.94rem;line-height:1.65}.oracle-mode-panel{margin:10px 0;padding:12px}.oracle-mode-panel h3{margin-top:0}.oracle-mode-panel p,.oracle-caution{font-size:.86rem;line-height:1.6}.detail-box{margin:9px 0;border-radius:12px}.detail-box>summary{padding:13px 14px}.detail-content{padding:12px}.field label{font-size:.88rem}.field input,.field select,.field textarea{min-height:48px;border-radius:11px;padding:10px 11px}.field textarea{min-height:92px}.personal-actions{position:sticky;bottom:84px;z-index:45;margin:12px -2px 0;padding:8px;border:1px solid rgba(0,0,0,.16);border-radius:14px;background:rgba(255,255,255,.96);box-shadow:0 10px 28px rgba(0,0,0,.18);backdrop-filter:blur(12px)}.personal-actions .action.primary{min-height:58px;border-radius:13px;font-size:1.08rem}body.keyboard-open .personal-actions{position:static;box-shadow:none;background:transparent;border:0;padding:0}.ledger-savebar{bottom:84px;border-radius:13px}.ledger-savebar .ledger-btn{min-height:50px}.ledger-savebar small{font-size:.82rem}.ledger-form{padding:14px}.ledger-form details{margin:8px 0}.ledger-form input,.ledger-form select,.ledger-form textarea{min-height:48px}.ledger-toolbar{display:block}.ledger-toolbar .field{margin-bottom:9px}.ledger-toolbar #ledgerNewProfile{position:sticky;bottom:84px;z-index:44;width:100%;min-height:56px;border-radius:14px;font-size:1.05rem}.profile-grid{display:grid;grid-template-columns:1fr;gap:10px}.profile-card{border-radius:16px;padding:14px}.profile-head{padding-left:0!important}.profile-meta{grid-template-columns:1fr!important}.ledger-subnav{gap:5px;padding:7px}.ledger-subnav button{min-height:44px}.ledger-quick-grid{grid-template-columns:1fr}body.keyboard-open .ledger-toolbar #ledgerNewProfile,body.keyboard-open .ledger-savebar,body.keyboard-open .ledger-status-toast{display:none!important}}
 </style>
 </head>
 <body class="read-standard">
@@ -675,6 +676,7 @@ function setupMobileFirstUi(){
   place.querySelectorAll('.postal-console,.compact-note').forEach(node=>advanced.querySelector('.detail-content').appendChild(node));
  }
  details.slice(2).forEach(section=>{section.open=false;advanced.querySelector('.detail-content').appendChild(section)});
+ setupLedgerMobileUx();
 }
 function restoreState(){let s=null;for(const k of ['mitsunome_v191_complete','meishiki_kantei_v191','mitsunome_v191','meishiki_v190','meishiki_kantei_v190']){s=storageJson('local',k,null);if(s)break}if(!s)return;Object.entries(s).forEach(([k,v])=>{if($(k))$(k).value=v});setReadingMode(s.readingModeSetting||'standard')}
 function copyText(text,msg){if(!text){toast('コピーする内容がありません');return}if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>toast(msg)).catch(()=>fallbackCopy(text,msg));else fallbackCopy(text,msg)}function fallbackCopy(text,msg){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast(msg)}catch(e){toast('コピーできませんでした')}ta.remove()}
@@ -1283,6 +1285,7 @@ async function ledgerFindDuplicates(p){const all=await ledgerList('profiles'),no
 async function ledgerLogChanges(oldP,newP){if(!oldP)return;const changes=[];for(const [path,label] of Object.entries(LEDGER_IMPORTANT_FIELDS)){const before=ledgerGetPath(oldP,path),after=ledgerGetPath(newP,path);if(JSON.stringify(before)!==JSON.stringify(after))changes.push({field:path,label,before:before??'',after:after??''})}if(changes.length)await ledgerPut('changes',{id:ledgerId('chg'),profileId:newP.id,changes,createdAt:new Date().toISOString()})}
 async function ledgerSaveProfile(e){
  e?.preventDefault();
+ const silent=!!e?.silent;
  const saveButton=$('ledgerSaveProfile');
  try{
   if(saveButton){saveButton.disabled=true;saveButton.textContent='保存中...'}
@@ -1317,7 +1320,7 @@ async function ledgerSaveProfile(e){
   $('ledgerDraftState').textContent='保存済み';
   $('ledgerLastSaved').textContent=`最終保存：${ledgerDateLabel(p.updatedAt)}`;
   $('ledgerSaveHint').textContent='このプロフィールは端末内に保存済みです。';
-  ledgerNotify(`${p.displayName}をこの端末へ保存しました`);
+  if(!silent)ledgerNotify(`${p.displayName}をこの端末へ保存しました`);
   await ledgerRenderProfiles();
   await ledgerRefreshSelectors();
   ledgerUpdateSelectionLabels();
@@ -1344,7 +1347,7 @@ async function ledgerOpenSelector(context){if(LedgerState.locked){ledgerShowLock
 function ledgerCloseSelector(){$('ledgerSelector')?.classList.remove('open')}
 async function ledgerImageResize(file){if(!file||!/^image\/(png|jpeg|webp)$/i.test(file.type))throw new Error('PNG/JPEG/WebP画像を選択してください');if(file.size>8*1024*1024)throw new Error('画像は8MB以下にしてください');const url=URL.createObjectURL(file);try{const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url}),scale=Math.min(1,480/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));c.getContext('2d').drawImage(img,0,0,c.width,c.height);return c.toDataURL('image/webp',.82)}finally{URL.revokeObjectURL(url)}}
 async function ledgerSaveDraft(){if(LedgerState.settings?.autosave==='off'||LedgerState.locked)return;try{const p=ledgerCollectProfile();await ledgerPut('drafts',{id:'profile-draft',profile:p,savedAt:new Date().toISOString()});$('ledgerDraftState').textContent='下書き保存済み';$('ledgerSaveHint').textContent=`下書き保存：${new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})}`}catch(e){console.error('[LEDGER] draft',e);$('ledgerDraftState').textContent='下書き保存失敗'}}
-function ledgerScheduleProfileAutoSave(){if(LedgerState.settings?.autosave==='off'||LedgerState.locked)return;clearTimeout(LedgerState.profileAutoSaveTimer);if(!ledgerFormValue('lpDisplayName').trim())return;$('ledgerDraftState').textContent='自動保存待ち';LedgerState.profileAutoSaveTimer=setTimeout(()=>ledgerSaveProfile({preventDefault(){},silent:true}),1200)}
+function ledgerScheduleProfileAutoSave(){if(LedgerState.settings?.autosave==='off'||LedgerState.locked)return;clearTimeout(LedgerState.profileAutoSaveTimer);if(!ledgerFormValue('lpDisplayName').trim())return;$('ledgerDraftState').textContent='自動保存待ち';LedgerState.profileAutoSaveTimer=setTimeout(()=>ledgerSaveProfile({preventDefault(){},silent:true}),700)}
 function ledgerScheduleDraft(){if(LedgerState.settings?.autosave==='off')return;$('ledgerDraftState').textContent='未保存の変更あり';clearTimeout(LedgerState.draftTimer);LedgerState.draftTimer=setTimeout(ledgerSaveDraft,700);ledgerScheduleProfileAutoSave()}
 async function ledgerResumeDraft(){const d=await ledgerGet('drafts','profile-draft');if(!d?.profile)return;if(confirm('保存されていない入力内容があります。続きから編集しますか？')){ledgerFillProfile(d.profile);ledgerSetPanel('edit');$('ledgerDraftState').textContent=`下書き：${ledgerDateLabel(d.savedAt)}`}}
 function ledgerNormalizeLocation(x={}){return{id:ledgerText(x.id,100)||ledgerId('loc'),schemaVersion:LEDGER_SCHEMA_VERSION,label:ledgerText(x.label,100),country:ledgerText(x.country,80),prefecture:ledgerText(x.prefecture,80),city:ledgerText(x.city,100),address:ledgerText(x.address,200),postalCode:ledgerText(x.postalCode,12),latitude:x.latitude!==null&&x.latitude!==''&&Number.isFinite(+x.latitude)?+x.latitude:null,longitude:x.longitude!==null&&x.longitude!==''&&Number.isFinite(+x.longitude)?+x.longitude:null,timezone:ledgerText(x.timezone,80)||'Asia/Tokyo',utcOffset:Number.isFinite(+x.utcOffset)?+x.utcOffset:9,memo:ledgerText(x.memo,500),createdAt:x.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()}}
@@ -1542,7 +1545,61 @@ function v196Diagnostics(){const sample=v196Generate({system:'奇門遁甲',ques
 const v196DiagnosticsBase=diagnostics;
 diagnostics=async function(){await v196DiagnosticsBase();const checks=v196Diagnostics();$('diagnostic').textContent+='\n'+checks.map(x=>`${x[1]?'✓':'×'} 人生翻訳 ${x[0]}: ${x[1]?'OK':'NG'}`).join('\n')+'\nV196 みつのめ姉さん 人生翻訳アルゴリズム'};
 function v196Init(){v196AddUi();FEATURES.push('人生翻訳アルゴリズム','生活語優先鑑定','専門用語後置','天気予報比喩','運命ナビ比喩','予防助言','体感運勢表現','今日やること','今日やめること','会うべき人','避ける人','おすすめ時間','おすすめ場所','おすすめ方角','持ち物・食べ物・色','気分転換','今日の宿題一つ','初心者生活語モード','詳細根拠後置');renderFeatures();window.V196={translator:{generate:v196Generate,map:V196_LIFE_MAP,diagnostics:v196Diagnostics}}}
-window.V191={setPage,renderCalendar,buildPersonal,compatibility,generateTimeline,diagnostics,openGuide,refreshHistory,setOracleMode:v191zSetMode};window.V192={mesopotamianDate:v192MesopotamianDate,onkanProfile:v192OnkanProfile,runOracle:v192RunOracle};window.V193={qimenChart:qmdjChart,qimenEvaluate:qmdjEvaluate,qimenGenerate:qmdjGenerate,diagnostics:qmdjDiagnostics};Promise.resolve().then(()=>initStep('persona',()=>v195Init())).then(()=>initStep('lifeTranslator',()=>v196Init())).then(()=>init()).catch(e=>console.error('[KOYOMI] boot failed',e));
+window.V191={setPage,renderCalendar,buildPersonal,compatibility,generateTimeline,diagnostics,openGuide,refreshHistory,setOracleMode:v191zSetMode};window.V192={mesopotamianDate:v192MesopotamianDate,onkanProfile:v192OnkanProfile,runOracle:v192RunOracle};window.V193={qimenChart:qmdjChart,qimenEvaluate:qmdjEvaluate,qimenGenerate,diagnostics:qmdjDiagnostics};Promise.resolve().then(()=>initStep('persona',()=>v195Init())).then(()=>initStep('lifeTranslator',()=>v196Init())).then(()=>init()).catch(e=>console.error('[KOYOMI] boot failed',e));
+/* ========================= Sprint1 Mobile UX integration ========================= */
+function setupLedgerMobileUx(){
+ const form=$('ledgerProfileForm');
+ if(!form)return;
+ $$('[data-page="ledger"]').forEach(el=>{el.innerHTML=el.classList.contains('tab')?'家族・大切な人':'<b>縁</b>家族・大切な人'});
+ const peopleTitle=document.querySelector('#ledger-panel-people h2');if(peopleTitle)peopleTitle.textContent='家族・大切な人';
+ const hero=document.querySelector('#page-ledger .ledger-hero h2');if(hero)hero.textContent='家族・大切な人';
+ const lead=document.querySelector('#ledger-panel-people .lead');if(lead)lead.textContent='大切な人の表示名、生年月日、出生時刻、出生地だけで始められます。詳しい姓名判断用データは折りたたみに保持します。';
+ if($('ledgerNewProfile'))$('ledgerNewProfile').textContent='＋ 人物を追加';
+ if(!form.dataset.ledgerMobileReady){
+  form.dataset.ledgerMobileReady='1';
+  const quick=document.createElement('details');
+  quick.open=true;
+  quick.className='ledger-quick-settings';
+  quick.innerHTML='<summary>人物登録</summary><div class="detail-content"><p class="ledger-mobile-note">表示名だけでも保存できます。入力内容は端末内へ自動保存されます。</p><div class="ledger-quick-grid" id="ledgerQuickGrid"></div></div>';
+  const advanced=document.createElement('details');
+  advanced.className='ledger-advanced-settings';
+  advanced.innerHTML='<summary>姓名判断・詳しい設定</summary><div class="detail-content"></div>';
+  const first=form.querySelector('details');
+  if(first)form.insertBefore(quick,first);
+  const quickGrid=$('ledgerQuickGrid');
+  const pick=id=>{const el=$(id);const wrap=id==='lpRelationships'?el?.closest('.wide'):el?.closest('div');if(wrap&&quickGrid&&!quickGrid.contains(wrap)){wrap.classList.toggle('wide',['lpDisplayName','lpBirthPlaceLabel','lpRelationships','lpMemo'].includes(id));quickGrid.appendChild(wrap)}};
+  ['lpDisplayName','lpBirthDate','lpBirthTime','lpBirthPlaceLabel','lpGender','lpRelationships','lpMemo'].forEach(pick);
+  Array.from(form.children).filter(el=>el.matches?.('details')&&!el.classList.contains('ledger-quick-settings')&&!el.classList.contains('ledger-advanced-settings')).forEach(el=>{el.open=false;advanced.querySelector('.detail-content').appendChild(el)});
+  const savebar=form.querySelector('.ledger-savebar');
+  form.insertBefore(advanced,savebar||null);
+  $('lpTimeUnknown')?.addEventListener('change',ledgerSyncTimeUnknown);
+  $('ledgerProfileGrid')?.addEventListener('click',e=>{if(e.target.closest('[data-ledger-act],input,button,a,select,textarea,label'))return;const card=e.target.closest('.profile-card[data-profile-id]');if(card)ledgerEditProfile(card.dataset.profileId)});
+  $('ledgerProfileGrid')?.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const card=e.target.closest('.profile-card[data-profile-id]');if(card){e.preventDefault();ledgerEditProfile(card.dataset.profileId)}});
+ }
+ const attrs={
+  lpDisplayName:{autocomplete:'off',enterkeyhint:'next',autocapitalize:'words',autocorrect:'off',spellcheck:'false'},
+  lpBirthDate:{autocomplete:'bday',enterkeyhint:'next'},
+  lpBirthTime:{autocomplete:'off',enterkeyhint:'next'},
+  lpBirthPlaceLabel:{autocomplete:'off',enterkeyhint:'next',autocapitalize:'words',autocorrect:'off',spellcheck:'false'},
+  lpMemo:{autocomplete:'off',enterkeyhint:'done',autocapitalize:'sentences',spellcheck:'false'}
+ };
+ Object.entries(attrs).forEach(([id,a])=>{const el=$(id);if(el)Object.entries(a).forEach(([k,v])=>el.setAttribute(k,v))});
+ ['lpPostal','lpLatitude','lpLongitude','lpTimezone','locPostal','locLat','locLon','locUtcOffset'].forEach(id=>$(id)?.setAttribute('inputmode','decimal'));
+ ledgerSyncTimeUnknown();
+}
+function ledgerSyncTimeUnknown(){
+ const unknown=$('lpTimeUnknown'),time=$('lpBirthTime');
+ if(!unknown||!time)return;
+ time.disabled=unknown.checked;
+ time.setAttribute('aria-disabled',unknown.checked?'true':'false');
+ if(unknown.checked){time.value='';if($('lpTimeAccuracy'))$('lpTimeAccuracy').value='unknown'}
+}
+const ledgerFillProfileMobileBase=ledgerFillProfile;
+ledgerFillProfile=function(p){ledgerFillProfileMobileBase(p);setupLedgerMobileUx();ledgerSyncTimeUnknown()};
+const ledgerResetFormMobileBase=ledgerResetForm;
+ledgerResetForm=function(){ledgerResetFormMobileBase();setupLedgerMobileUx();ledgerSyncTimeUnknown()};
+const ledgerRenderProfilesMobileBase=ledgerRenderProfiles;
+ledgerRenderProfiles=async function(){await ledgerRenderProfilesMobileBase();$$('#ledgerProfileGrid .profile-card').forEach(card=>{card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label',`${card.querySelector('.profile-title b')?.textContent||'人物'}を編集`)})};
 })();
 </script>
 </body></html>
