@@ -38,6 +38,8 @@ const tests=[
   {name:'app personal',url:'app.html#personal',check:d=>d.querySelector('.page.active')?.id==='page-personal'},
   {name:'app compat',url:'app.html#compat',check:d=>d.querySelector('.page.active')?.id==='page-compat'},
   {name:'app ledger',url:'app.html#ledger',check:d=>d.querySelector('.page.active')?.id==='page-ledger'},
+  {name:'preview banner app',url:'app.html#ledger',check:d=>d.querySelector('.koyomi-preview-banner')?.textContent.includes('feature/mobile-profile-redesign')},
+  {name:'preview storage namespace',url:'app.html#ledger',check:d=>d.body.innerHTML.includes('koyomi-preview:mobile-profile-redesign:')&&d.body.innerHTML.includes("previewDbName('mitsunome_v194_destiny_ledger')")},
   {name:'mobile profile quick fields',url:'app.html#ledger',check:d=>{
     const quick=d.querySelector('#ledgerQuickGrid');
     return !!quick&&['lpDisplayName','lpBirthDate','lpBirthTime','lpBirthPlaceLabel','lpGender','lpRelationships','lpMemo'].every(id=>quick.querySelector('#'+id));
@@ -49,7 +51,10 @@ const tests=[
     return ids.every(id=>{const el=d.getElementById(id);return !el||getComputedStyle(el).display==='none'||el.closest('[hidden]')});
   }},
   {name:'app qimen',url:'app.html#qimen',check:d=>d.querySelector('.page.active')?.id==='page-qimen'},
-  {name:'app settings',url:'app.html#settings',check:d=>d.querySelector('.page.active')?.id==='page-settings'}
+  {name:'app settings',url:'app.html#settings',check:d=>d.querySelector('.page.active')?.id==='page-settings'},
+  {name:'preview banner index',url:'index.html',check:d=>d.querySelector('.koyomi-preview-banner')?.textContent.includes('feature/mobile-profile-redesign')},
+  {name:'preview banner today',url:'today.html',check:d=>d.querySelector('.koyomi-preview-banner')?.textContent.includes('feature/mobile-profile-redesign')},
+  {name:'preview service worker cache',url:'service-worker.js',check:d=>d.body?.textContent.includes('koyomi-preview-mobile-profile-redesign-1')}
 ];
 const frame=document.getElementById('frame'),results=document.getElementById('results');
 function row(name,state,msg){const el=document.createElement('div');el.className='row';el.innerHTML=`<b class="${state}">${state.toUpperCase()}</b><div><strong>${name}</strong><br><small>${msg}</small></div>`;results.append(el)}

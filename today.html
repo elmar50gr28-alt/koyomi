@@ -43,6 +43,7 @@ main{width:min(1180px,100%);margin:auto;padding:12px 12px 20px;display:grid;gap:
 @media(orientation:landscape) and (max-height:560px){.hero-grid{grid-template-columns:170px 1fr 170px}.side.left,.side.right{display:flex}.instrument-frame{width:min(72vh,620px)}.app{padding-bottom:58px}.bottomnav{padding-bottom:4px}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}.gear-a,.gear-b,.gear-c,.solar-ring,.yin-spin{animation:none!important}}
 </style>
+<style>.koyomi-preview-banner{position:sticky;top:0;z-index:1001;padding:4px 10px calc(4px + env(safe-area-inset-top));background:#1d4ed8;color:#fff;text-align:center;font-size:.72rem;font-weight:900;letter-spacing:.03em}</style>
 
 <style id="v200-style">
 .v200-panel{border:1px solid rgba(226,195,120,.24);border-radius:22px;padding:16px;background:linear-gradient(160deg,rgba(63,106,98,.12),transparent 38%),linear-gradient(180deg,rgba(15,20,31,.96),rgba(7,9,14,.98));box-shadow:0 16px 42px rgba(0,0,0,.34)}
@@ -51,6 +52,7 @@ main{width:min(1180px,100%);margin:auto;padding:12px 12px 20px;display:grid;gap:
 </style>
 <style>.koyomi-back{position:fixed;top:max(10px,env(safe-area-inset-top));left:10px;z-index:1000;padding:8px 12px;border-radius:999px;background:rgba(13,17,28,.86);color:#e8d7ad;text-decoration:none;border:1px solid rgba(222,183,104,.55);font-weight:800;font-size:13px;backdrop-filter:blur(10px)}</style></head>
 <body class="basic">
+<div class="koyomi-preview-banner" role="status">PREVIEW: feature/mobile-profile-redesign - 保存データは本番と分離</div>
 <div class="app">
 <header class="topbar">
   <div class="brand"><div class="seal">天</div><div><h1>今日の暦機構</h1><small>KOYOMI V200｜玄人命理・人生翻訳プロトタイプ</small></div></div>
