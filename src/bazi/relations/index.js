@@ -23,6 +23,10 @@ export function evaluateStemRelations(chartResult, schoolConfig = {}) {
   };
 }
 
+export function evaluateBasicStemRelations(chartResult, schoolConfig = {}) {
+  return evaluateStemRelations(chartResult, schoolConfig);
+}
+
 export function evaluateBranchRelations(chartResult, schoolConfig = {}) {
   const branches = Object.values(chartResult.chart?.pillars || {}).filter(Boolean).map(p => p.branch.id);
   return {
@@ -36,4 +40,8 @@ export function evaluateBranchRelations(chartResult, schoolConfig = {}) {
     storageOpening: [],
     evidence: ['branch-relations-seed']
   };
+}
+
+export function evaluateBasicBranchRelations(chartResult, schoolConfig = {}) {
+  return evaluateBranchRelations(chartResult, schoolConfig);
 }

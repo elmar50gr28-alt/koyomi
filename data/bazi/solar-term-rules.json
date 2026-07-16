@@ -1,0 +1,11 @@
+{
+  "version":"phase1-fixed-day",
+  "precision":"documented-approximation",
+  "monthBoundaries":[
+    {"month":2,"day":4,"branchId":"yin"},{"month":3,"day":6,"branchId":"mao"},{"month":4,"day":5,"branchId":"chen"},
+    {"month":5,"day":6,"branchId":"si"},{"month":6,"day":6,"branchId":"wu"},{"month":7,"day":7,"branchId":"wei"},
+    {"month":8,"day":8,"branchId":"shen"},{"month":9,"day":8,"branchId":"you"},{"month":10,"day":8,"branchId":"xu"},
+    {"month":11,"day":7,"branchId":"hai"},{"month":12,"day":7,"branchId":"zi"},{"month":1,"day":6,"branchId":"chou"}
+  ],
+  "warnings":["Phase 2 must replace fixed-day approximation with astronomical term-entry timestamps."]
+}

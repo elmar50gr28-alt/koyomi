@@ -35,18 +35,31 @@ export const ELEMENTS = {
 };
 
 export const HIDDEN_STEMS = {
-  zi: ['gui'],
-  chou: ['ji', 'gui', 'xin'],
-  yin: ['jia', 'bing', 'wu'],
-  mao: ['yi'],
-  chen: ['wu', 'yi', 'gui'],
-  si: ['bing', 'wu', 'geng'],
-  wu: ['ding', 'ji'],
-  wei: ['ji', 'ding', 'yi'],
-  shen: ['geng', 'ren', 'wu'],
-  you: ['xin'],
-  xu: ['wu', 'xin', 'ding'],
-  hai: ['ren', 'jia']
+  zi: [{ hiddenStemId: 'gui', role: 'main', weight: 1 }],
+  chou: [{ hiddenStemId: 'ji', role: 'main', weight: 0.6 }, { hiddenStemId: 'gui', role: 'middle', weight: 0.3 }, { hiddenStemId: 'xin', role: 'residual', weight: 0.1 }],
+  yin: [{ hiddenStemId: 'jia', role: 'main', weight: 0.6 }, { hiddenStemId: 'bing', role: 'middle', weight: 0.3 }, { hiddenStemId: 'wu', role: 'residual', weight: 0.1 }],
+  mao: [{ hiddenStemId: 'yi', role: 'main', weight: 1 }],
+  chen: [{ hiddenStemId: 'wu', role: 'main', weight: 0.6 }, { hiddenStemId: 'yi', role: 'middle', weight: 0.3 }, { hiddenStemId: 'gui', role: 'residual', weight: 0.1 }],
+  si: [{ hiddenStemId: 'bing', role: 'main', weight: 0.6 }, { hiddenStemId: 'wu', role: 'middle', weight: 0.3 }, { hiddenStemId: 'geng', role: 'residual', weight: 0.1 }],
+  wu: [{ hiddenStemId: 'ding', role: 'main', weight: 0.7 }, { hiddenStemId: 'ji', role: 'middle', weight: 0.3 }],
+  wei: [{ hiddenStemId: 'ji', role: 'main', weight: 0.6 }, { hiddenStemId: 'ding', role: 'middle', weight: 0.3 }, { hiddenStemId: 'yi', role: 'residual', weight: 0.1 }],
+  shen: [{ hiddenStemId: 'geng', role: 'main', weight: 0.6 }, { hiddenStemId: 'ren', role: 'middle', weight: 0.3 }, { hiddenStemId: 'wu', role: 'residual', weight: 0.1 }],
+  you: [{ hiddenStemId: 'xin', role: 'main', weight: 1 }],
+  xu: [{ hiddenStemId: 'wu', role: 'main', weight: 0.6 }, { hiddenStemId: 'xin', role: 'middle', weight: 0.3 }, { hiddenStemId: 'ding', role: 'residual', weight: 0.1 }],
+  hai: [{ hiddenStemId: 'ren', role: 'main', weight: 0.7 }, { hiddenStemId: 'jia', role: 'middle', weight: 0.3 }]
+};
+
+export const TWELVE_STAGES = {
+  jia: ['muyu', 'guandai', 'jianlu', 'diwang', 'shuai', 'bing', 'si', 'mu', 'jue', 'tai', 'yang', 'changsheng'],
+  yi: ['bing', 'shuai', 'diwang', 'jianlu', 'guandai', 'muyu', 'changsheng', 'yang', 'tai', 'jue', 'mu', 'si'],
+  bing: ['tai', 'yang', 'changsheng', 'muyu', 'guandai', 'jianlu', 'diwang', 'shuai', 'bing', 'si', 'mu', 'jue'],
+  ding: ['jue', 'mu', 'si', 'bing', 'shuai', 'diwang', 'jianlu', 'guandai', 'muyu', 'changsheng', 'yang', 'tai'],
+  wu: ['tai', 'yang', 'changsheng', 'muyu', 'guandai', 'jianlu', 'diwang', 'shuai', 'bing', 'si', 'mu', 'jue'],
+  ji: ['jue', 'mu', 'si', 'bing', 'shuai', 'diwang', 'jianlu', 'guandai', 'muyu', 'changsheng', 'yang', 'tai'],
+  geng: ['si', 'mu', 'jue', 'tai', 'yang', 'changsheng', 'muyu', 'guandai', 'jianlu', 'diwang', 'shuai', 'bing'],
+  xin: ['changsheng', 'yang', 'tai', 'jue', 'mu', 'si', 'bing', 'shuai', 'diwang', 'jianlu', 'guandai', 'muyu'],
+  ren: ['diwang', 'shuai', 'bing', 'si', 'mu', 'jue', 'tai', 'yang', 'changsheng', 'muyu', 'guandai', 'jianlu'],
+  gui: ['jianlu', 'guandai', 'muyu', 'changsheng', 'yang', 'tai', 'jue', 'mu', 'si', 'bing', 'shuai', 'diwang']
 };
 
 export const TEN_GODS = [

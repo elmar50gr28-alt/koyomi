@@ -6,6 +6,9 @@
 - Deterministic API directory created under `src/bazi`.
 - Stem, branch, element, hidden-stem, ten-god, relation, school, rule, source, terminology, and test-case seed data added.
 - Required public API functions exported from `src/bazi/index.js`.
+- Additional Phase 1 API aliases exported: `calculateFourPillars`, `calculateTenGod`, `calculateTwelveStage`, `getHiddenStems`, `evaluateBasicStemRelations`, `evaluateBasicBranchRelations`, `validateBaziResult`.
+- GitHub Actions workflow files added for static validation, Bazi engine tests, mobile regression, and Pages readiness.
+- Node-based regression tests added under `tests/`.
 - Result structure separates calculation facts, evidence, confidence, warnings, and interpretation facts.
 - Unknown birth time is treated as partial and does not assume noon.
 - Existing profile and person data are not mutated.
@@ -15,9 +18,10 @@
 
 - Astronomical 24 solar-term calculation with term entry times.
 - Verified historical calendar case corpus.
-- Full twelve-stage integration into chart output.
+- Full twelve-stage source review beyond the Phase 1 deterministic matrix.
 - Full storage opening, dark-combination, and competing-relation resolution.
 - Professional pattern establishment/break/rescue rule set.
 - Full yongshen conflict resolution and source review.
 - Luck start date precision from solar-term distance.
 - UI view for professional Bazi detail panels.
+- Manual approval before merging this feature branch to `main`.
