@@ -1,0 +1,17 @@
+{
+  "reportId": "bazi-source-coverage-phase4",
+  "sourceIdsMissing": [],
+  "sourceLinkedRuleCount": 23,
+  "sourceMissingRuleCount": 0,
+  "sourceQualityLevels": {
+    "reviewed-index": 8,
+    "classical-index": 12,
+    "engine-rule": 3,
+    "human-review-required": 8
+  },
+  "policy": {
+    "classicalOriginalSeparated": true,
+    "aiGeneratedTextIsNotFormalSource": true,
+    "modernCopyrightedTextNotCopied": true
+  }
+}

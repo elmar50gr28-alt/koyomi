@@ -1,0 +1,15 @@
+{
+  "classificationId": "bazi-case-classification-phase4",
+  "categories": {
+    "synthetic-regression": {"count": 108, "description": "Generated non-personal cases for deterministic regression."},
+    "typical-pattern": {"count": 84, "description": "Typical structural cases such as seasonal strength, weak roots, and method conflicts."},
+    "edge-case": {"count": 24, "description": "Unknown time, boundary dates, missing gender, and location precision cases."},
+    "real-case": {"count": 0, "description": "Real cases require consent, source notes, and human review before inclusion."}
+  },
+  "realCasePolicy": {
+    "requiresConsent": true,
+    "requiresSourceNote": true,
+    "requiresAnonymization": true,
+    "status": "not-yet-adopted"
+  }
+}

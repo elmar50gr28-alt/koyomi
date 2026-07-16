@@ -1,0 +1,9 @@
+{
+  "consolidationId": "bazi-rule-consolidation-phase4",
+  "duplicateGroups": [
+    {"groupId":"yongshen-climate","members":["bazi-yongshen-climate-001","yongshen-climate-season","climate-winter-needs-fire","climate-summer-needs-water"],"canonicalRuleId":"yongshen-climate-season","action":"keep-method-specific-children","status":"consolidated-by-reference"},
+    {"groupId":"strength-month-command","members":["bazi-strength-month-command-001","strength-month-root-support","month-command-season-wood","month-command-season-fire","month-command-season-metal","month-command-season-water"],"canonicalRuleId":"strength-month-root-support","action":"keep-seasonal-data-as-input-rules","status":"consolidated-by-reference"},
+    {"groupId":"pattern-candidate","members":["pattern-month-ten-god-candidate","pattern-resource-rescue"],"canonicalRuleId":"pattern-month-ten-god-candidate","action":"separate-candidate-and-rescue","status":"not-merged-different-purpose"}
+  ],
+  "notes": "No rule was deleted. Consolidation is represented by canonical IDs to preserve traceability."
+}
