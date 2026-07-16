@@ -9,3 +9,7 @@ export function explainRule(ruleId) {
 export function getEvidence(entityId) {
   return CLASSICAL_SOURCES.find(s => s.sourceId === entityId) || RULE_CATALOG.find(r => r.ruleId === entityId) || null;
 }
+
+export function explainBaziDecision(entityId) {
+  return explainRule(entityId) || getEvidence(entityId);
+}

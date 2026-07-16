@@ -1,0 +1,10 @@
+{
+  "version":"phase2-1",
+  "directionRules":[
+    {"ruleId":"luck-direction-yang-male-yin-female-forward","conditions":["yang-year-and-male","yin-year-and-female"],"direction":"forward","confidence":0.62},
+    {"ruleId":"luck-direction-yang-female-yin-male-reverse","conditions":["yang-year-and-female","yin-year-and-male"],"direction":"reverse","confidence":0.62},
+    {"ruleId":"luck-direction-unknown-gender-school-default","conditions":["gender-unknown"],"direction":"school-default","confidence":0.35}
+  ],
+  "startAgePolicy":"phase2-approximate-solar-term-distance",
+  "warnings":["Exact start date requires astronomical solar-term entry times in a later phase."]
+}

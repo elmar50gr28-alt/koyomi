@@ -9,6 +9,7 @@ import {
   evaluateBasicBranchRelations,
   evaluateBasicStemRelations,
   getHiddenStems,
+  validateBaziPhase2Result,
   validateBaziResult
 } from '../src/bazi/index.js';
 
@@ -19,6 +20,7 @@ const branches = await json('data/bazi/branches.json');
 const hiddenStems = await json('data/bazi/hidden-stems.json');
 const twelveStages = await json('data/bazi/twelve-stages.json');
 const testCases = await json('data/bazi/test-cases.json');
+const phase2TestCases = await json('data/bazi/phase2-test-cases.json');
 
 assert.equal(stems.length, 10, 'stems data must include 10 heavenly stems');
 assert.equal(branches.length, 12, 'branches data must include 12 earthly branches');
@@ -91,6 +93,11 @@ assert.ok(partial.warnings.includes('birth-time-unknown-hour-pillar-partial'), '
 
 const full = calculateBazi(profile);
 assert.ok(full.relations && full.strength && full.patterns && full.yongshen && full.luckCycles, 'full result domains missing');
+assert.ok(full.strength.monthCommand && full.strength.roots && full.strength.dayMasterStrength, 'phase2 strength domains missing');
+assert.ok(full.patterns.followPatterns && full.patterns.transformationPatterns, 'phase2 pattern domains missing');
+assert.ok(full.yongshen.methods && full.yongshen.favorableElements, 'phase2 yongshen domains missing');
+assert.ok(full.luckCycles.directionRule && full.luckCycles.cycles.length >= 8, 'phase2 luck cycles missing');
+assert.ok(validateBaziPhase2Result(full).ok, 'phase2 validation should pass');
 assert.ok(evaluateBasicStemRelations(full).evidence.length >= 1, 'basic stem relations missing evidence');
 assert.ok(evaluateBasicBranchRelations(full).evidence.length >= 1, 'basic branch relations missing evidence');
 
@@ -101,4 +108,13 @@ for (const testCase of testCases) {
   if (testCase.expects.hasHour === false) assert.equal(result.chart.pillars.hour, null, `${testCase.caseId} hour pillar`);
 }
 
-console.log(`Bazi engine tests passed: stems=${stems.length}, branches=${branches.length}, tenGods=${tenGodCount}, stages=${stageCount}, cases=${testCases.length}`);
+for (const testCase of phase2TestCases) {
+  const result = calculateBazi(testCase.profile);
+  if (testCase.expects.hasStrength) assert.ok(result.strength.dayMasterStrength, `${testCase.caseId} strength`);
+  if (testCase.expects.hasClimate) assert.ok(result.strength.climate, `${testCase.caseId} climate`);
+  if (testCase.expects.hasLuckCycles) assert.ok(result.luckCycles.cycles.length >= 8, `${testCase.caseId} luck cycles`);
+  if (testCase.expects.hourUnknown) assert.equal(result.chart.pillars.hour, null, `${testCase.caseId} hour unknown`);
+  if (testCase.expects.hasYongshenMethods) assert.ok(Object.keys(result.yongshen.methods).length >= 5, `${testCase.caseId} yongshen methods`);
+}
+
+console.log(`Bazi engine tests passed: stems=${stems.length}, branches=${branches.length}, tenGods=${tenGodCount}, stages=${stageCount}, cases=${testCases.length}, phase2=${phase2TestCases.length}`);

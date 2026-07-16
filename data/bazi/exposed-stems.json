@@ -1,0 +1,7 @@
+{
+  "version": "phase2-1",
+  "weights": {"sameStem":1,"sameElement":0.7,"resource":0.55,"controlled":-0.35,"drain":-0.25},
+  "rules": [
+    {"ruleId":"exposed-stem-peer-support","category":"exposed-stems","description":"Visible same-element stems support the day master as candidate evidence.","conditions":["same-element-visible"],"exclusions":[],"priority":50,"result":"support-candidate","schoolIds":["koyomi-integrated"],"sourceIds":["src-yuanhai-ziping-biblio"],"evidenceLevel":"engine-rule","confidence":0.58,"reviewStatus":"phase2-seed","version":"1.0.0","notes":"Not a final strength decision."}
+  ]
+}

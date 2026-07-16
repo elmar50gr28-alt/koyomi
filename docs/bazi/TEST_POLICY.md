@@ -22,6 +22,15 @@ Automated tests are:
 - `npm run test:bazi`
 - `npm run test:mobile`
 
+Phase 2 tests also cover:
+
+- strength structure
+- pattern candidate structure
+- yongshen method separation
+- favorable element classification
+- luck cycle direction and cycle generation
+- phase2 validation schema
+
 GitHub Actions workflows:
 
 - `validate.yml`
