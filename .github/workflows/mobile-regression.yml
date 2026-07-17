@@ -3,7 +3,7 @@ name: Mobile Regression
 on:
   pull_request:
   push:
-    branches: [main, feature/bazi-knowledge-engine, feature/bazi-phase2-strength-pattern-yongshen, feature/bazi-phase3-evidence-interpretation, feature/bazi-final-rc-quality, feature/bazi-reading-engine, feature/bazi-practical-tuning, feature/bazi-japanese-reading, feature/bazi-display-cleanup]
+    branches: [main, feature/bazi-knowledge-engine, feature/bazi-phase2-strength-pattern-yongshen, feature/bazi-phase3-evidence-interpretation, feature/bazi-final-rc-quality, feature/bazi-reading-engine, feature/bazi-practical-tuning, feature/bazi-japanese-reading, feature/bazi-display-cleanup, feature/bazi-all-section-display-cleanup]
 
 jobs:
   mobile-regression:

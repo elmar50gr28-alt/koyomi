@@ -181,9 +181,33 @@ assert.ok(!/practical-reading-rc|sourceIds?|schoolIds?|ruleIds?|evidenceIds?|rev
 assert.ok(!/(^|\s)0\.\d+/.test(full.reading.beginnerText), 'Japanese public reading must not expose raw confidence decimals');
 assert.ok(full.reading.sections.overall.publicEvidence.includes('\u65e5\u4e3b\u306f'), 'Japanese public evidence must be natural prose');
 assert.ok(!full.reading.sections.overall.publicEvidence.includes('='), 'Japanese public evidence must not use developer notation');
+const requiredPublicSections = [
+  'overall', 'personality', 'talent', 'weakness', 'career', 'finance', 'love', 'marriage',
+  'family', 'relationship', 'health', 'decadeLuck', 'annualLuck', 'monthlyLuck',
+  'importantTiming', 'advice'
+];
+const forbiddenPublicCodePattern = /bing|jia|yi|\u65e5\u4e3b=|\u65fa\u8870=|\u7528\u795e\u5019\u88dc=|\u5224\u65ad\u50be\u5411=|sourceId|ruleId|schoolId|evidenceId|[a-z]+_[a-z]+|[a-z]+-[a-z]+|\//;
+for (const id of requiredPublicSections) {
+  assert.ok(full.reading.sections[id], `required public section missing: ${id}`);
+}
 for (const section of Object.values(full.reading.sections)) {
   assert.ok(section.publicEvidence, `${section.id} public evidence missing`);
-  assert.ok(!/bing|\u65e5\u4e3b=|\u65fa\u8870=|\u7528\u795e\u5019\u88dc=|\u5224\u65ad\u50be\u5411=|\//.test(section.publicEvidence), `${section.id} public evidence must not expose internal notation`);
+  assert.ok(section.publicDisplay, `${section.id} public display missing`);
+  for (const field of ['conclusion', 'evidenceSummary', 'opposingFactors', 'timing', 'recommendation', 'caution', 'mitigation', 'confidence']) {
+    assert.ok(section.publicDisplay[field] != null, `${section.id} public display field missing: ${field}`);
+  }
+  const publicValues = [
+    section.publicEvidence,
+    section.publicDisplay.conclusion,
+    section.publicDisplay.evidenceSummary,
+    ...section.publicDisplay.opposingFactors,
+    section.publicDisplay.timing,
+    section.publicDisplay.recommendation,
+    section.publicDisplay.caution,
+    section.publicDisplay.mitigation,
+    section.publicDisplay.confidence
+  ].join('\n');
+  assert.ok(!forbiddenPublicCodePattern.test(publicValues), `${section.id} public display must not expose internal notation`);
 }
 assert.ok(full.reading.professionalText.includes('reviewStatus=practical-reading-rc'), 'expert display must retain generation review status');
 assert.ok(full.reading?.mitsunomeInput?.sourcePolicy?.noNewCalculationByAi, 'reading mitsunome source policy missing');
@@ -218,9 +242,20 @@ const bingResult = calculateBazi({
 assert.equal(bingResult.chart.pillars.day.stem.id, 'bing', 'test fixture must keep bing as internal day-master id');
 const bingReading = buildBaziReading(bingResult);
 assert.ok(bingReading.beginnerText.includes('\u4e19\u306e\u65e5\u4e3b'), 'bing must be displayed as 丙 in public Japanese text');
-assert.ok(!/bing|day-master|\u65e5\u4e3b=|\u65fa\u8870=|\u7528\u795e\u5019\u88dc=|\u5224\u65ad\u50be\u5411=|\//.test(bingReading.beginnerText), 'public Japanese text must not expose bing or developer notation');
+assert.ok(!forbiddenPublicCodePattern.test(bingReading.beginnerText), 'public Japanese text must not expose bing or developer notation');
 for (const section of Object.values(bingReading.sections)) {
-  assert.ok(!/bing|\u65e5\u4e3b=|\u65fa\u8870=|\u7528\u795e\u5019\u88dc=|\u5224\u65ad\u50be\u5411=|\//.test(section.publicEvidence), `${section.id} public evidence must hide internal codes`);
+  const publicValues = [
+    section.publicEvidence,
+    section.publicDisplay.conclusion,
+    section.publicDisplay.evidenceSummary,
+    ...section.publicDisplay.opposingFactors,
+    section.publicDisplay.timing,
+    section.publicDisplay.recommendation,
+    section.publicDisplay.caution,
+    section.publicDisplay.mitigation,
+    section.publicDisplay.confidence
+  ].join('\n');
+  assert.ok(!forbiddenPublicCodePattern.test(publicValues), `${section.id} public display must hide internal codes`);
 }
 assert.ok(bingReading.professionalText.includes('\u65e5\u4e3b=bing'), 'expert display must retain internal day-master id');
 
