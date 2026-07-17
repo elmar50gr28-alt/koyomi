@@ -1,43 +1,148 @@
-const C='koyomi-bazi-japanese-reading-20260717-1';
-const A=[
-  './','./index.html','./today.html','./app.html','./smoke-test.html','./manifest.webmanifest','./icon.svg',
-  './src/bazi/index.js','./src/bazi/data.js','./src/bazi/astronomy/index.js','./src/bazi/calendar/index.js','./src/bazi/chart/index.js','./src/bazi/relations/index.js','./src/bazi/strength/index.js','./src/bazi/patterns/index.js','./src/bazi/yongshen/index.js','./src/bazi/luck/index.js','./src/bazi/interpretation/index.js','./src/bazi/reading/index.js','./src/bazi/schools/index.js','./src/bazi/evidence/index.js','./src/bazi/validation/index.js','./src/bazi/validation/bazi-test.html',
-  './data/bazi/stems.json','./data/bazi/branches.json','./data/bazi/elements.json','./data/bazi/yin-yang.json','./data/bazi/hidden-stems.json','./data/bazi/ten-gods.json','./data/bazi/twelve-stages.json','./data/bazi/stem-relations.json','./data/bazi/branch-relations.json','./data/bazi/combinations.json','./data/bazi/clashes.json','./data/bazi/punishments.json','./data/bazi/harms.json','./data/bazi/destructions.json','./data/bazi/voids.json','./data/bazi/tomb-storage.json','./data/bazi/seasonal-strength.json','./data/bazi/month-command.json','./data/bazi/root-strength.json','./data/bazi/exposed-stems.json','./data/bazi/element-flow.json','./data/bazi/climate-rules.json','./data/bazi/strength-rules.json','./data/bazi/pattern-catalog.json','./data/bazi/pattern-rules.json','./data/bazi/pattern-rescue-rules.json','./data/bazi/follow-pattern-rules.json','./data/bazi/transformation-pattern-rules.json','./data/bazi/yongshen-methods.json','./data/bazi/yongshen-rules.json','./data/bazi/favorable-unfavorable.json','./data/bazi/luck-cycle-rules.json','./data/bazi/classical-index.json','./data/bazi/classical-excerpts.json','./data/bazi/interpretation-rules.json','./data/bazi/luck-interpretation-rules.json','./data/bazi/example-cases.json','./data/bazi/explanation-templates.json','./data/bazi/mitsunome-input-schema.json','./data/bazi/schools.json','./data/bazi/school-settings.json','./data/bazi/solar-term-rules.json','./data/bazi/rule-catalog.json','./data/bazi/classical-sources.json','./data/bazi/terminology.json','./data/bazi/test-cases.json','./data/bazi/phase2-test-cases.json','./data/bazi/quality-audit.json','./data/bazi/rule-consolidation.json','./data/bazi/contradiction-report.json','./data/bazi/source-coverage-report.json','./data/bazi/low-confidence-report.json','./data/bazi/review-status-report.json','./data/bazi/implementation-rate-report.json','./data/bazi/case-classification.json','./data/bazi/phase4-test-cases.json','./data/bazi/final-rule-audit.json','./data/bazi/final-classical-audit.json','./data/bazi/final-example-cases.json','./data/bazi/final-test-cases.json','./data/bazi/final-quality-score.json','./data/bazi/final-ai-review.json','./data/bazi/practical-audit-cases.json'
+const CACHE_VERSION = 'koyomi-foundation-20260717-2';
+const SHELL_CACHE = `${CACHE_VERSION}-shell`;
+const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
+
+const APP_SHELL = [
+  './',
+  './index.html',
+  './today.html',
+  './app.html',
+  './smoke-test.html',
+  './manifest.webmanifest',
+  './icon.svg'
 ];
 
-self.addEventListener('install',e=>{
-  e.waitUntil(caches.open(C).then(c=>c.addAll(A)).then(()=>self.skipWaiting()));
-});
-
-self.addEventListener('activate',e=>{
-  e.waitUntil(
-    caches.keys()
-      .then(keys=>Promise.all(keys.filter(x=>x!==C).map(x=>caches.delete(x))))
-      .then(()=>self.clients.claim())
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches
+      .open(SHELL_CACHE)
+      .then(cache => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener('fetch',e=>{
-  if(e.request.method!=='GET')return;
-  const isHtml=e.request.mode==='navigate'||e.request.headers.get('accept')?.includes('text/html');
-  if(isHtml){
-    e.respondWith(
-      fetch(e.request)
-        .then(res=>{
-          const copy=res.clone();
-          caches.open(C).then(c=>c.put(e.request,copy)).catch(()=>{});
-          return res;
-        })
-        .catch(()=>caches.match(e.request).then(r=>r||caches.match('./index.html')))
+self.addEventListener('activate', event => {
+  const activeCaches = new Set([
+    SHELL_CACHE,
+    RUNTIME_CACHE
+  ]);
+
+  event.waitUntil(
+    caches
+      .keys()
+      .then(keys =>
+        Promise.all(
+          keys
+            .filter(key => !activeCaches.has(key))
+            .map(key => caches.delete(key))
+        )
+      )
+      .then(() => self.clients.claim())
+  );
+});
+
+function isHtmlRequest(request) {
+  const accept = request.headers.get('accept') || '';
+
+  return (
+    request.mode === 'navigate' ||
+    accept.includes('text/html')
+  );
+}
+
+function isSameOrigin(request) {
+  return new URL(request.url).origin === self.location.origin;
+}
+
+async function networkFirstHtml(request) {
+  try {
+    const response = await fetch(request);
+
+    if (response && response.ok) {
+      const cache = await caches.open(RUNTIME_CACHE);
+
+      cache
+        .put(request, response.clone())
+        .catch(() => {});
+    }
+
+    return response;
+  } catch (error) {
+    const cachedPage = await caches.match(request);
+
+    if (cachedPage) {
+      return cachedPage;
+    }
+
+    const homePage = await caches.match('./index.html');
+
+    if (homePage) {
+      return homePage;
+    }
+
+    return new Response(
+      'KOYOMIは現在オフラインです。',
+      {
+        status: 503,
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8'
+        }
+      }
     );
+  }
+}
+
+async function staleWhileRevalidate(request) {
+  const cachedResponse = await caches.match(request);
+
+  const networkRequest = fetch(request).then(
+    async response => {
+      if (response && response.ok) {
+        const cache = await caches.open(RUNTIME_CACHE);
+
+        cache
+          .put(request, response.clone())
+          .catch(() => {});
+      }
+
+      return response;
+    }
+  );
+
+  if (cachedResponse) {
+    networkRequest.catch(() => {});
+    return cachedResponse;
+  }
+
+  try {
+    return await networkRequest;
+  } catch (error) {
+    return new Response(
+      'オフラインのため、このデータを取得できません。',
+      {
+        status: 503,
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8'
+        }
+      }
+    );
+  }
+}
+
+self.addEventListener('fetch', event => {
+  const { request } = event;
+
+  if (
+    request.method !== 'GET' ||
+    !isSameOrigin(request)
+  ) {
     return;
   }
-  e.respondWith(
-    caches.match(e.request)
-      .then(r=>r||fetch(e.request).then(res=>{
-        const copy=res.clone();
-        caches.open(C).then(c=>c.put(e.request,copy)).catch(()=>{});
-        return res;
-      }).catch(()=>caches.match('./index.html')))
-  );
+
+  if (isHtmlRequest(request)) {
+    event.respondWith(networkFirstHtml(request));
+    return;
+  }
+
+  event.respondWith(staleWhileRevalidate(request));
 });
