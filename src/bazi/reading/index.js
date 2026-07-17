@@ -245,6 +245,19 @@ const JA_ELEMENTS = {
   water: '\u6c34'
 };
 
+const JA_STEMS = {
+  jia: '\u7532',
+  yi: '\u4e59',
+  bing: '\u4e19',
+  ding: '\u4e01',
+  wu: '\u620a',
+  ji: '\u5df1',
+  geng: '\u5e9a',
+  xin: '\u8f9b',
+  ren: '\u58ec',
+  gui: '\u7678'
+};
+
 const JA_ELEMENT_WORDS = {
   wood: '\u6210\u9577\u30fb\u8a08\u753b\u30fb\u767a\u5c55',
   fire: '\u8868\u73fe\u30fb\u660e\u308b\u3055\u30fb\u767a\u4fe1',
@@ -324,12 +337,14 @@ function localizeSectionJa(section, facts) {
     `\u672a\u89e3\u6c7a=${section.unresolvedFactors.join('|') || 'none'}`,
     `reviewStatus=${section.reviewStatus}`
   ].join('; ');
+  const publicEvidence = publicEvidenceJa(section.id, facts);
   return {
     ...section,
     title,
     tendency,
     conclusion,
     evidence,
+    publicEvidence,
     opposingFactors,
     timing,
     action,
@@ -342,14 +357,15 @@ function localizeSectionJa(section, facts) {
 
 function buildExecutiveSummaryJa(facts, sections) {
   const element = elementWordsJa(facts.primaryFavorable);
+  const dayMaster = dayMasterLabelJa(facts);
   const strength = isStrong(facts)
     ? '\u81ea\u5206\u306e\u610f\u5fd7\u3084\u884c\u52d5\u529b\u304c\u524d\u306b\u51fa\u3084\u3059\u3044\u50be\u5411\u3067\u3059\u3002'
     : isWeak(facts)
       ? '\u74b0\u5883\u3084\u5468\u56f2\u306e\u652f\u3048\u3092\u53d7\u3051\u308b\u307b\u3069\u529b\u3092\u767a\u63ee\u3057\u3084\u3059\u3044\u50be\u5411\u3067\u3059\u3002'
       : '\u4e00\u3064\u306e\u5f37\u5f31\u3060\u3051\u3067\u65ad\u5b9a\u305b\u305a\u3001\u72b6\u6cc1\u3054\u3068\u306e\u30d0\u30e9\u30f3\u30b9\u3092\u898b\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059\u3002';
   return {
-    centralTheme: `${facts.dayMasterName}\u306e\u65e5\u4e3b\u304c\u6301\u3064\u50be\u5411\u3092\u3001${element}\u306b\u3088\u3063\u3066\u7740\u5b9f\u306a\u6210\u679c\u3078\u3064\u306a\u3052\u308b\u6642\u671f\u3067\u3059\u3002`,
-    strength: `\u547d\u5f0f\u306e\u529b\u306e\u4f7f\u3044\u65b9\uff1a${strength}`,
+    centralTheme: `${dayMaster}\u306e\u65e5\u4e3b\u304c\u6301\u3064\u50be\u5411\u3092\u3001${element}\u306b\u3088\u3063\u3066\u7740\u5b9f\u306a\u6210\u679c\u3078\u3064\u306a\u3052\u308b\u6642\u671f\u3067\u3059\u3002`,
+    strength,
     currentIssue: sections.weakness?.conclusion || sections.overall.conclusion,
     currentFlow: '\u73fe\u5728\u306e\u5927\u904b\u304c\u9577\u671f\u7684\u306a\u6d41\u308c\u3092\u4f5c\u308a\u3001\u6b73\u904b\u3068\u6708\u904b\u304c\u884c\u52d5\u306e\u5f37\u5f31\u3092\u8abf\u6574\u3057\u3066\u3044\u307e\u3059\u3002\u65ad\u5b9a\u3067\u306f\u306a\u304f\u3001\u52d5\u304f\u6642\u671f\u3092\u898b\u6975\u3081\u308b\u6750\u6599\u3068\u3057\u3066\u4f7f\u3063\u3066\u304f\u3060\u3055\u3044\u3002',
     doNow: sections.advice.action,
@@ -410,8 +426,9 @@ function buildGlossaryJa() {
 function tendencyJa(id, facts) {
   const primary = elementWordsJa(facts.primaryFavorable);
   const occupation = occupationFocusJa(facts.occupation);
+  const dayMaster = dayMasterLabelJa(facts);
   const map = {
-    overall: `${facts.dayMasterName}\u306e\u65e5\u4e3b\u3068${strengthLabelJa(facts.strengthLevel)}\u3092\u3001${primary}\u3067\u6574\u3048\u308b\u50be\u5411`,
+    overall: `${dayMaster}\u306e\u65e5\u4e3b\u3068${strengthLabelJa(facts.strengthLevel)}\u3092\u3001${primary}\u3067\u6574\u3048\u308b\u50be\u5411`,
     personality: `${elementJa(facts.dayMasterElement)}\u306e\u6027\u8cea\u3068\u5b63\u7bc0\u611f\u304c\u8868\u306b\u51fa\u3084\u3059\u3044\u50be\u5411`,
     essence: `${elementJa(facts.dayMasterElement)}\u3089\u3057\u3044\u52d5\u304d\u65b9\u304c\u3001\u652f\u3048\u3084\u5727\u529b\u3067\u5909\u5316\u3059\u308b\u50be\u5411`,
     talent: `${primary}\u3092\u7fd2\u6163\u3068\u3057\u3066\u4f7f\u3046\u3068\u624d\u80fd\u304c\u73fe\u308c\u3084\u3059\u3044\u50be\u5411`,
@@ -486,12 +503,25 @@ function avoidanceJa(id, facts) {
 
 function evidenceJa(section, facts, tendency) {
   return [
-    `\u65e5\u4e3b=${facts.dayMaster.id || facts.dayMasterName}`,
-    `\u65fa\u8870=${strengthLabelJa(facts.strengthLevel)}`,
-    `\u7528\u795e\u5019\u88dc=${elementJa(facts.primaryFavorable)}`,
-    `\u5224\u65ad\u50be\u5411=${tendency}`,
+    `\u65e5\u4e3b\u306f${dayMasterLabelJa(facts)}\u3067\u3059\u3002`,
+    `\u547d\u5f0f\u5168\u4f53\u3067\u306f${strengthLabelJa(facts.strengthLevel)}\u306e\u50be\u5411\u304c\u3042\u308a\u307e\u3059\u3002`,
+    `\u30d0\u30e9\u30f3\u30b9\u3092\u6574\u3048\u308b\u5019\u88dc\u3068\u3057\u3066${elementJa(facts.primaryFavorable)}\u304c\u91cd\u8996\u3055\u308c\u307e\u3059\u3002`,
+    `\u3053\u306e\u9805\u76ee\u3067\u306f\u3001${tendency}\u3092\u4e3b\u306a\u7406\u7531\u3068\u3057\u3066\u8aad\u307f\u307e\u3059\u3002`,
     PROFESSIONAL_CATEGORIES.has(section.id) ? '\u904b\u52e2\u306e\u91cd\u306d\u8aad\u307f\u304c\u5fc5\u8981' : '\u547d\u5f0f\u5168\u4f53\u306e\u6587\u8108\u304c\u5fc5\u8981'
   ];
+}
+
+function publicEvidenceJa(id, facts) {
+  const dayMaster = dayMasterLabelJa(facts);
+  const strength = strengthLabelJa(facts.strengthLevel);
+  const yongshen = elementJa(facts.primaryFavorable);
+  if (id === 'health') {
+    return `\u65e5\u4e3b\u306f${dayMaster}\u3067\u3059\u3002\u547d\u5f0f\u5168\u4f53\u306e${strength}\u306e\u50be\u5411\u3068${yongshen}\u306e\u50cd\u304d\u304b\u3089\u3001\u751f\u6d3b\u30ea\u30ba\u30e0\u306e\u6574\u3048\u65b9\u3092\u78ba\u8a8d\u3057\u307e\u3059\u3002`;
+  }
+  if (PROFESSIONAL_CATEGORIES.has(id)) {
+    return `\u65e5\u4e3b\u306f${dayMaster}\u3067\u3059\u3002\u5927\u904b\u30fb\u6b73\u904b\u30fb\u6708\u904b\u306e\u91cd\u306a\u308a\u3092\u898b\u306a\u304c\u3089\u3001${strength}\u306e\u529b\u306e\u4f7f\u3044\u65b9\u3068${yongshen}\u306e\u50cd\u304d\u3092\u78ba\u8a8d\u3057\u307e\u3059\u3002`;
+  }
+  return `\u65e5\u4e3b\u306f${dayMaster}\u3067\u3059\u3002\u547d\u5f0f\u5168\u4f53\u3067\u306f${strength}\u306e\u50be\u5411\u304c\u3042\u308a\u3001\u30d0\u30e9\u30f3\u30b9\u3092\u6574\u3048\u308b\u5019\u88dc\u3068\u3057\u3066${yongshen}\u304c\u91cd\u8996\u3055\u308c\u307e\u3059\u3002`;
 }
 
 function opposingJa(section, facts) {
@@ -522,7 +552,7 @@ function renderReadingTextJa(sections, mode, executiveSummary, timingReading) {
     `\u73fe\u5728\u306e\u904b\uff1a${executiveSummary.currentFlow}`,
     `\u4eca\u65e5\u304b\u3089\u3067\u304d\u308b\u3053\u3068\uff1a${executiveSummary.doNow}`,
     `\u907f\u3051\u305f\u65b9\u304c\u3088\u3044\u3053\u3068\uff1a${executiveSummary.avoid}`,
-    `\u78ba\u5ea6\uff1a${executiveSummary.confidence}`,
+    `\u78ba\u5ea6\uff1a${Math.round((executiveSummary.confidence || 0) * 100)}%`,
     '',
     '\u3010\u6642\u671f\u306e\u91cd\u306d\u8aad\u307f\u3011',
     `\u5927\u904b\uff1a${timingReading.longTermTheme}`,
@@ -538,8 +568,10 @@ function renderReadingTextJa(sections, mode, executiveSummary, timingReading) {
     lines.push(`\u884c\u52d5\u63d0\u6848\uff1a${section.action}`);
     lines.push(`\u6ce8\u610f\u70b9\uff1a${section.caution}`);
     lines.push(`\u56de\u907f\u7b56\uff1a${section.avoidance}`);
-    lines.push(`\u78ba\u5ea6\uff1a${section.confidence}\uff0freviewStatus\uff1a${section.reviewStatus}`);
-    if (section.warnings.length) lines.push(`\u6ce8\u610f\u30d5\u30e9\u30b0\uff1a${section.warnings.join(', ')}`);
+    lines.push(mode === 'professional'
+      ? `\u78ba\u5ea6\uff1a${section.confidence}\uff0freviewStatus\uff1a${section.reviewStatus}`
+      : `\u78ba\u5ea6\uff1a${Math.round((section.confidence || 0) * 100)}%`);
+    if (section.warnings.length && mode === 'professional') lines.push(`\u6ce8\u610f\u30d5\u30e9\u30b0\uff1a${section.warnings.join(', ')}`);
     if (mode === 'professional') lines.push(`\u51fa\u5178ID\uff1a${section.sourceIds.join(', ')}\uff0f\u6d41\u6d3eID\uff1a${section.schoolIds.join(', ')}`);
     lines.push('');
   }
@@ -586,7 +618,7 @@ function buildMitsunomeInputJa(facts, sections, beginnerText, professionalText, 
 }
 
 function elementJa(element) {
-  return JA_ELEMENTS[normalizeElement(element)] || String(element || '\u4e0d\u660e');
+  return JA_ELEMENTS[normalizeElement(element)] || '\u8a73\u7d30\u306a\u6280\u8853\u60c5\u5831\u306f\u5c02\u9580\u5bb6\u8868\u793a\u3067\u78ba\u8a8d\u3067\u304d\u307e\u3059';
 }
 
 function elementWordsJa(element) {
@@ -609,6 +641,11 @@ function strengthLabelJa(value) {
   if (raw.includes('strong') || raw.includes('旺') || raw.includes('身強')) return '\u8eab\u5f37';
   if (raw.includes('weak') || raw.includes('弱') || raw.includes('身弱')) return '\u8eab\u5f31';
   return '\u5224\u65ad\u4fdd\u7559';
+}
+
+function dayMasterLabelJa(facts) {
+  const id = String(facts.dayMaster?.id || facts.dayMasterName || '').toLowerCase();
+  return facts.dayMaster?.kanji || JA_STEMS[id] || (/[^\x00-\x7F]/.test(String(facts.dayMasterName || '')) ? facts.dayMasterName : '\u8a73\u7d30\u306a\u6280\u8853\u60c5\u5831\u306f\u5c02\u9580\u5bb6\u8868\u793a\u3067\u78ba\u8a8d\u3067\u304d\u307e\u3059');
 }
 
 function occupationFocusJa(occupation) {
