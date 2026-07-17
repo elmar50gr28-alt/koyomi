@@ -11,6 +11,7 @@ import {
   getHiddenStems,
   validateBaziPhase3Result,
   validateBaziPhase2Result,
+  buildBaziReading,
   validateBaziReading,
   validateBaziResult
 } from '../src/bazi/index.js';
@@ -38,6 +39,7 @@ const finalExampleCases = await json('data/bazi/final-example-cases.json');
 const finalTestCases = await json('data/bazi/final-test-cases.json');
 const finalQualityScore = await json('data/bazi/final-quality-score.json');
 const finalAiReview = await json('data/bazi/final-ai-review.json');
+const practicalAuditCases = await json('data/bazi/practical-audit-cases.json');
 
 assert.equal(stems.length, 10, 'stems data must include 10 heavenly stems');
 assert.equal(branches.length, 12, 'branches data must include 12 earthly branches');
@@ -136,12 +138,63 @@ assert.ok(full.reading?.sections?.decadeLuck, 'bazi reading decade luck section 
 assert.ok(full.reading?.sections?.annualLuck, 'bazi reading annual luck section missing');
 assert.ok(full.reading?.sections?.monthlyLuck, 'bazi reading monthly luck section missing');
 assert.ok(full.reading?.sections?.advice, 'bazi reading advice section missing');
+assert.ok(full.reading?.sections?.essence, 'bazi practical reading essence section missing');
+assert.ok(full.reading?.sections?.weakness, 'bazi practical reading weakness section missing');
+assert.ok(full.reading?.sections?.love, 'bazi practical reading love section missing');
+assert.ok(full.reading?.sections?.marriage, 'bazi practical reading marriage section missing');
+assert.ok(full.reading?.sections?.learning, 'bazi practical reading learning section missing');
+assert.ok(full.reading?.sections?.creation, 'bazi practical reading creation section missing');
+assert.ok(full.reading?.sections?.importantTiming, 'bazi practical reading important timing section missing');
+assert.ok(full.reading?.executiveSummary?.centralTheme, 'practical reading executive summary missing');
+assert.ok(full.reading?.executiveSummary?.doNow, 'practical reading action missing');
+assert.ok(full.reading?.executiveSummary?.avoid, 'practical reading avoidance missing');
+assert.ok(full.reading?.timingReading?.longTermTheme, 'integrated timing long term missing');
+assert.ok(full.reading?.timingReading?.annualTheme, 'integrated timing annual missing');
+assert.ok(full.reading?.timingReading?.monthlyTheme, 'integrated timing monthly missing');
+assert.ok(full.reading?.timingReading?.schoolDifferences?.length >= 2, 'school differences must be visible');
+assert.ok(full.reading?.glossary?.strongDayMaster?.beginner, 'strong day master beginner explanation missing');
+assert.ok(full.reading?.glossary?.weakDayMaster?.beginner, 'weak day master beginner explanation missing');
+assert.ok(full.reading?.glossary?.yongshen?.beginner, 'yongshen beginner explanation missing');
+assert.ok(full.reading?.uiModel?.mobileFirst, 'mobile-first reading UI model missing');
+assert.ok(full.reading?.uiModel?.collapsedDetails?.includes('professional'), 'professional detail must be collapsed');
+for (const section of Object.values(full.reading.sections)) {
+  assert.ok(section.conclusion, `${section.id} conclusion missing`);
+  assert.ok(section.evidence?.length >= 1, `${section.id} evidence missing`);
+  assert.ok(section.opposingFactors?.length >= 1, `${section.id} opposing factors missing`);
+  assert.ok(section.conditions?.length >= 1, `${section.id} conditions missing`);
+  assert.ok(section.timing, `${section.id} timing missing`);
+  assert.ok(section.action, `${section.id} action missing`);
+  assert.ok(section.caution, `${section.id} caution missing`);
+  assert.ok(section.avoidance, `${section.id} avoidance missing`);
+  assert.ok(section.sourceIds?.length >= 1, `${section.id} sourceIds missing`);
+  assert.ok(section.schoolIds?.length >= 1, `${section.id} schoolIds missing`);
+  assert.ok(section.reviewStatus, `${section.id} reviewStatus missing`);
+}
 assert.ok(full.reading?.beginnerText.includes('[Overall Reading]'), 'beginner reading text missing');
-assert.ok(full.reading?.professionalText.includes('source'), 'professional reading text missing evidence');
+assert.ok(full.reading?.beginnerText.indexOf('[Overall Conclusion]') < full.reading?.beginnerText.indexOf('[Overall Reading]'), 'overall conclusion must appear first');
+assert.ok(full.reading?.professionalText.includes('sourceIds'), 'professional reading text missing evidence');
 assert.ok(full.reading?.mitsunomeInput?.sourcePolicy?.noNewCalculationByAi, 'reading mitsunome source policy missing');
+assert.ok(full.reading?.mitsunomeInput?.voiceDrafts?.normal?.text, 'mitsunome normal mode missing');
+assert.ok(full.reading?.mitsunomeInput?.voiceDrafts?.zubat?.text, 'mitsunome zubat mode missing');
+assert.ok(full.reading?.mitsunomeInput?.voiceDrafts?.zubat?.escapeRoute, 'mitsunome zubat escape route missing');
+assert.equal(full.reading?.quality?.emptySectionIds?.length, 0, 'practical reading must not have empty sections');
+assert.equal(full.reading?.quality?.bannedExpressionHits?.length, 0, 'practical reading must avoid banned health/fate expressions');
 assert.ok(validateBaziReading(full.reading).ok, 'bazi reading validation should pass');
 assert.ok(evaluateBasicStemRelations(full).evidence.length >= 1, 'basic stem relations missing evidence');
 assert.ok(evaluateBasicBranchRelations(full).evidence.length >= 1, 'basic branch relations missing evidence');
+
+const lowConfidenceReading = buildBaziReading({ ...full, confidence: 0.42 });
+assert.ok(/may|partial|limited|conditional|review|tendency/i.test(lowConfidenceReading.sections.monthlyLuck.conclusion + lowConfidenceReading.sections.monthlyLuck.caution), 'low confidence reading must use soft language');
+assert.ok(!/diagnose|death|pregnancy|fatal/i.test(full.reading.sections.health.conclusion + full.reading.sections.health.caution), 'health reading must not become diagnosis or prediction');
+
+const emergencyReading = buildBaziReading(full, { occupation: 'emergency' });
+assert.ok(emergencyReading.sections.career.action.includes('field judgement'), 'occupation wording must translate career advice without changing calculation');
+const noOccupationReading = buildBaziReading(full);
+assert.ok(noOccupationReading.sections.career.action.length > 0, 'missing occupation must still produce career action');
+
+const partialReading = calculateBazi(unknown).reading;
+assert.ok(partialReading.sections.overall.warnings.includes('birth-time-unknown-hour-pillar-partial'), 'unknown birth time warning must be preserved');
+assert.ok(partialReading.sections.importantTiming.unresolvedFactors.includes('birth-time-unknown'), 'unknown birth time must lower timing certainty');
 
 for (const testCase of testCases) {
   const result = calculateBaziChart(testCase.profile);
@@ -207,6 +260,28 @@ assert.ok(finalQualityScore.qualityScore >= 0.85, 'final quality score must be r
 assert.equal(finalQualityScore.counts.exampleCaseTotal, exampleCases.length + finalExampleCases.length, 'final example total mismatch');
 assert.equal(finalQualityScore.counts.testCaseTotal, testCases.length + phase2TestCases.length + exampleCases.length + phase4TestCases.length + finalTestCases.length, 'final test total mismatch');
 assert.ok(finalAiReview.humanReviewRecommended.length >= 5, 'final AI review must include human review recommendations');
+assert.ok(practicalAuditCases.length >= 20, 'practical audit must cover 20 representative cases');
+
+for (const auditCase of practicalAuditCases) {
+  const result = calculateBazi(auditCase.profile);
+  const reading = buildBaziReading(result, { occupation: auditCase.occupation });
+  assert.ok(reading.executiveSummary.centralTheme, `${auditCase.caseId} conclusion missing`);
+  assert.ok(reading.executiveSummary.doNow, `${auditCase.caseId} action missing`);
+  assert.ok(reading.executiveSummary.avoid, `${auditCase.caseId} avoid missing`);
+  assert.ok(reading.timingReading.longTermTheme, `${auditCase.caseId} long-term timing missing`);
+  assert.ok(reading.timingReading.annualTheme, `${auditCase.caseId} annual timing missing`);
+  assert.ok(reading.timingReading.monthlyTheme, `${auditCase.caseId} monthly timing missing`);
+  assert.ok(reading.timingReading.schoolDifferences.length >= 2, `${auditCase.caseId} school differences missing`);
+  assert.equal(reading.quality.emptySectionIds.length, 0, `${auditCase.caseId} has empty section`);
+  assert.equal(reading.quality.bannedExpressionHits.length, 0, `${auditCase.caseId} has banned expression`);
+  assert.ok(validateBaziReading(reading).ok, `${auditCase.caseId} practical reading validation failed`);
+  if (auditCase.classification === 'unknown-birth-time') {
+    assert.ok(reading.sections.overall.warnings.includes('birth-time-unknown-hour-pillar-partial'), `${auditCase.caseId} unknown time warning missing`);
+  }
+  if (auditCase.occupation) {
+    assert.ok(reading.sections.career.conditions.includes('occupation-used-for-wording-only'), `${auditCase.caseId} occupation condition missing`);
+  }
+}
 
 for (const testCase of finalTestCases) {
   assert.ok(testCase.caseId && testCase.domain && testCase.profile && testCase.expected, `final test case incomplete: ${testCase.caseId}`);
