@@ -176,6 +176,12 @@ assert.ok(full.reading?.beginnerText.indexOf('\u3010\u7dcf\u5408\u7d50\u8ad6\u30
 assert.ok(full.reading?.professionalText.includes('\u51fa\u5178ID'), 'Japanese professional reading text missing evidence');
 assert.equal(full.reading?.quality?.englishDisplayHits?.length, 0, 'Japanese reading must not expose English templates');
 assert.ok(!/day[- ]master|Overall Conclusion|Current flow|Do now|Recovery path|Plain meaning/.test(full.reading.beginnerText), 'Japanese reading must not expose English template words');
+assert.ok(!/(^|\s|[。、：])[\w-]+=[\w-]+/.test(full.reading.beginnerText), 'Japanese public reading must not expose developer key=value notation');
+assert.ok(!/practical-reading-rc|sourceIds?|schoolIds?|ruleIds?|evidenceIds?|reviewStatus|current decade luck|pattern-established/.test(full.reading.beginnerText), 'Japanese public reading must not expose internal ids');
+assert.ok(!/(^|\s)0\.\d+/.test(full.reading.beginnerText), 'Japanese public reading must not expose raw confidence decimals');
+assert.ok(full.reading.sections.overall.publicEvidence.includes('\u65e5\u4e3b\u306f'), 'Japanese public evidence must be natural prose');
+assert.ok(!full.reading.sections.overall.publicEvidence.includes('='), 'Japanese public evidence must not use developer notation');
+assert.ok(full.reading.professionalText.includes('reviewStatus=practical-reading-rc'), 'expert display must retain generation review status');
 assert.ok(full.reading?.mitsunomeInput?.sourcePolicy?.noNewCalculationByAi, 'reading mitsunome source policy missing');
 assert.ok(full.reading?.mitsunomeInput?.voiceDrafts?.normal?.text, 'mitsunome normal mode missing');
 assert.ok(full.reading?.mitsunomeInput?.voiceDrafts?.zubat?.text, 'mitsunome zubat mode missing');
@@ -198,6 +204,18 @@ const englishReading = buildBaziReading(full, { locale: 'en', occupation: 'emerg
 assert.equal(englishReading.locale, 'en', 'English locale must be available when explicitly requested');
 assert.ok(englishReading.beginnerText.includes('[Overall Conclusion]'), 'English display must remain available for English locale');
 assert.ok(englishReading.sections.career.action.includes('field judgement'), 'English occupation wording must remain available');
+
+const bingResult = calculateBazi({
+  birthDate: '1984-01-05',
+  birthTime: '08:20',
+  birthPlace: { longitude: 139.767, latitude: 35.681, timezone: 'Asia/Tokyo', utcOffset: 9 },
+  name: 'Bing Check'
+});
+assert.equal(bingResult.chart.pillars.day.stem.id, 'bing', 'test fixture must keep bing as internal day-master id');
+const bingReading = buildBaziReading(bingResult);
+assert.ok(bingReading.beginnerText.includes('\u4e19\u306e\u65e5\u4e3b'), 'bing must be displayed as 丙 in public Japanese text');
+assert.ok(!/bing|day-master|\u65e5\u4e3b=/.test(bingReading.beginnerText), 'public Japanese text must not expose bing or developer day-master notation');
+assert.ok(bingReading.professionalText.includes('\u65e5\u4e3b=bing'), 'expert display must retain internal day-master id');
 
 const partialReading = calculateBazi(unknown).reading;
 assert.ok(partialReading.sections.overall.warnings.includes('birth-time-unknown-hour-pillar-partial'), 'unknown birth time warning must be preserved');

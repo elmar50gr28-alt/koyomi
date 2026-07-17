@@ -1903,15 +1903,16 @@ function koyomiBaziLabels(reading){
 function koyomiBaziSectionHtml(section,labels){
   if(!section)return '';
   labels=labels||koyomiBaziLabels({locale:'ja'});
+  const evidenceText=section.publicEvidence||((section.evidence||[]).join(' / '));
   return `<div class="koyomi-bazi-section">
     <p><b>${koyomiEscapeHtml(labels.conclusion)}</b> ${koyomiEscapeHtml(section.conclusion)}</p>
-    <p><b>${koyomiEscapeHtml(labels.evidence)}</b> ${koyomiEscapeHtml((section.evidence||[]).join(' / '))}</p>
+    <p><b>${koyomiEscapeHtml(labels.evidence)}</b> ${koyomiEscapeHtml(evidenceText)}</p>
     <p><b>${koyomiEscapeHtml(labels.opposingFactors)}</b> ${koyomiEscapeHtml((section.opposingFactors||[]).join(' / '))}</p>
     <p><b>${koyomiEscapeHtml(labels.timing)}</b> ${koyomiEscapeHtml(section.timing)}</p>
     <p class="koyomi-bazi-action"><b>${koyomiEscapeHtml(labels.action)}</b> ${koyomiEscapeHtml(section.action)}</p>
     <p><b>${koyomiEscapeHtml(labels.caution)}</b> ${koyomiEscapeHtml(section.caution)}</p>
     <p><b>${koyomiEscapeHtml(labels.avoidance)}</b> ${koyomiEscapeHtml(section.avoidance)}</p>
-    <div class="koyomi-bazi-meta"><span>${koyomiEscapeHtml(labels.confidence)} ${Math.round((section.confidence||0)*100)}%</span><span>${koyomiEscapeHtml(section.reviewStatus)}</span></div>
+    <div class="koyomi-bazi-meta"><span>${koyomiEscapeHtml(labels.confidence)} ${Math.round((section.confidence||0)*100)}%</span></div>
   </div>`;
 }
 function koyomiBaziReadingHtml(reading){
@@ -1934,10 +1935,14 @@ function koyomiBaziReadingHtml(reading){
     [ja?'\u91cd\u8981\u6642\u671f':'Important timing',sections.importantTiming]
   ];
   const detailHtml=details.map(([title,section])=>`<details><summary>${koyomiEscapeHtml(title)}</summary>${koyomiBaziSectionHtml(section,labels)}</details>`).join('');
+  const generationVersion=reading.version||'';
+  const calculationVersion=reading.sourceCalculationVersion||'';
+  const technicalRows=Object.values(sections).map(s=>`${s.id}: ruleIds=${(s.ruleIds||[]).join('|')||'none'}; sourceIds=${(s.sourceIds||[]).join('|')}; schoolIds=${(s.schoolIds||[]).join('|')}; evidenceIds=${(s.evidenceIds||s.sourceIds||[]).join('|')}; reviewStatus=${s.reviewStatus}; confidence=${s.confidence}`).join('\n');
   const professional=`<details><summary>${koyomiEscapeHtml(labels.expert)}</summary><div class="koyomi-bazi-section">
     <p><b>${koyomiEscapeHtml(labels.schoolDifferences)}</b> ${koyomiEscapeHtml((reading.timingReading?.schoolDifferences||[]).join(' / '))}</p>
-    <p><b>${koyomiEscapeHtml(labels.sources)}</b> ${koyomiEscapeHtml(Object.values(sections).flatMap(s=>s.sourceIds||[]).filter((v,i,a)=>a.indexOf(v)===i).join(' / '))}</p>
-    <p><b>${koyomiEscapeHtml(labels.review)}</b> ${koyomiEscapeHtml(Object.values(sections).filter(s=>s.reviewStatus!=='practical-reading-rc').map(s=>`${s.id}:${s.reviewStatus}`).join(' / ')||'practical-reading-rc')}</p>
+    <p><b>${ja?'\u9451\u5b9a\u751f\u6210\u30d0\u30fc\u30b8\u30e7\u30f3':'Generation version'}</b> ${koyomiEscapeHtml(generationVersion)}</p>
+    <p><b>${ja?'\u8a08\u7b97\u30d0\u30fc\u30b8\u30e7\u30f3':'Calculation version'}</b> ${koyomiEscapeHtml(calculationVersion)}</p>
+    <pre style="white-space:pre-wrap;overflow-wrap:anywhere">${koyomiEscapeHtml(technicalRows)}</pre>
   </div></details>`;
   return `<div class="koyomi-bazi-reading">
     <section class="koyomi-bazi-summary">
@@ -1946,7 +1951,7 @@ function koyomiBaziReadingHtml(reading){
       <p><b>${ja?'\u73fe\u5728\u306e\u904b':'Current flow'}</b>${koyomiEscapeHtml(summary.currentFlow)}</p>
       <p class="koyomi-bazi-action"><b>${ja?'\u4eca\u65e5\u304b\u3089\u3067\u304d\u308b\u3053\u3068':'Do today'}</b>${koyomiEscapeHtml(summary.doNow)}</p>
       <p><b>${ja?'\u907f\u3051\u305f\u65b9\u304c\u3088\u3044\u3053\u3068':'Avoid'}</b>${koyomiEscapeHtml(summary.avoid)}</p>
-      <div class="koyomi-bazi-meta"><span>${koyomiEscapeHtml(labels.confidence)} ${Math.round((summary.confidence||0)*100)}%</span><span>${koyomiEscapeHtml(summary.reviewStatus||labels.review)}</span></div>
+      <div class="koyomi-bazi-meta"><span>${koyomiEscapeHtml(labels.confidence)} ${Math.round((summary.confidence||0)*100)}%</span></div>
     </section>
     ${detailHtml}
     ${professional}
@@ -1969,8 +1974,8 @@ function koyomiRenderBaziReading(){
     if(meta){
       const confidence=Math.round((reading.sections?.overall?.confidence||0)*100);
       meta.innerHTML=[
-        `${reading.locale==='en'?'Reading Engine':'\u9451\u5b9a\u30a8\u30f3\u30b8\u30f3'} ${reading.version}`,
-        `${reading.locale==='en'?'Beginner + Professional':'\u521d\u5fc3\u8005\u8868\u793a\uff0b\u5c02\u9580\u5bb6\u8868\u793a'}`,
+        `${reading.locale==='en'?'Reading Engine':'\u56db\u67f1\u63a8\u547d\u9451\u5b9a'}`,
+        `${reading.locale==='en'?'Public + Expert views':'\u4e00\u822c\u8868\u793a\uff0b\u5c02\u9580\u5bb6\u8868\u793a'}`,
         `${reading.locale==='en'?'Mitsunome ready':'\u307f\u3064\u306e\u3081\u59c9\u3055\u3093\u9023\u643a\u5bfe\u5fdc'}`,
         `${reading.locale==='en'?'confidence':'\u78ba\u5ea6'} ${confidence}%`
       ].map(x=>`<span>${x}</span>`).join('');
