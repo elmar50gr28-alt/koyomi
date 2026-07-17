@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0.0",
+  "datasetId": "koyomi-bazi-solar-term-boundaries-jst",
+  "title": "四柱推命用 節入り境界基準データ",
+  "timezone": "Asia/Tokyo",
+  "utcOffset": "+09:00",
+  "timeStandard": "日本中央標準時",
+  "sourcePolicy": {
+    "primarySource": "国立天文台 暦計算室 暦要項",
+    "usage": "命式計算および境界時刻回帰テスト",
+    "precision": "minute",
+    "notes": [
+      "暦要項に掲載された中央標準時をISO 8601形式で記録する",
+      "掲載時刻の分単位を境界値として使用する",
+      "将来は1900年から2100年まで拡張する"
+    ]
+  },
+  "terms": [
+    {
+      "year": 2024,
+      "termId": "risshun",
+      "nameJa": "立春",
+      "solarLongitudeDegrees": 315,
+      "datetime": "2024-02-04T17:27:00+09:00",
+      "sourceId": "naoj-rekiyou-2024"
+    },
+    {
+      "year": 2025,
+      "termId": "risshun",
+      "nameJa": "立春",
+      "solarLongitudeDegrees": 315,
+      "datetime": "2025-02-03T23:10:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2026,
+      "termId": "risshun",
+      "nameJa": "立春",
+      "solarLongitudeDegrees": 315,
+      "datetime": "2026-02-04T05:02:00+09:00",
+      "sourceId": "naoj-rekiyou-2026"
+    },
+    {
+      "year": 2027,
+      "termId": "risshun",
+      "nameJa": "立春",
+      "solarLongitudeDegrees": 315,
+      "datetime": "2027-02-04T10:46:00+09:00",
+      "sourceId": "naoj-rekiyou-2027"
+    }
+  ],
+  "sources": [
+    {
+      "id": "naoj-rekiyou-2024",
+      "publisher": "国立天文台 暦計算室",
+      "document": "令和6年（2024）暦要項 二十四節気および雑節",
+      "reviewStatus": "official-source-confirmed"
+    },
+    {
+      "id": "naoj-rekiyou-2025",
+      "publisher": "国立天文台 暦計算室",
+      "document": "令和7年（2025）暦要項 二十四節気および雑節",
+      "reviewStatus": "official-source-confirmed"
+    },
+    {
+      "id": "naoj-rekiyou-2026",
+      "publisher": "国立天文台 暦計算室",
+      "document": "令和8年（2026）暦要項 二十四節気および雑節",
+      "reviewStatus": "official-source-confirmed"
+    },
+    {
+      "id": "naoj-rekiyou-2027",
+      "publisher": "国立天文台 暦計算室",
+      "document": "令和9年（2027）暦要項 二十四節気および雑節",
+      "reviewStatus": "official-source-confirmed"
+    }
+  ]
+}
