@@ -29,7 +29,7 @@ const app = await readFile('app.html', 'utf8');
 assert.ok(app.includes('KOYOMI_BAZI'), 'app.html must expose the Bazi engine without profile re-entry');
 
 const serviceWorker = await readFile('service-worker.js', 'utf8');
-assert.ok(serviceWorker.includes('koyomi-bazi-final-rc'), 'service worker cache name must include bazi final rc');
+assert.ok(serviceWorker.includes('koyomi-bazi-reading-engine'), 'service worker cache name must include bazi reading engine');
 assert.ok(serviceWorker.includes('./src/bazi/index.js'), 'service worker must cache bazi engine entry');
 assert.ok(serviceWorker.includes('./data/bazi/solar-term-rules.json'), 'service worker must cache solar-term rules');
 assert.ok(serviceWorker.includes('./data/bazi/phase2-test-cases.json'), 'service worker must cache phase2 test cases');
@@ -44,5 +44,8 @@ assert.ok(docs.includes('IMPLEMENTATION_STATUS.md'), 'implementation status doc 
 
 const srcStat = await stat(join('src', 'bazi', 'index.js'));
 assert.ok(srcStat.size > 0, 'bazi index module is empty');
+const readingStat = await stat(join('src', 'bazi', 'reading', 'index.js'));
+assert.ok(readingStat.size > 0, 'bazi reading module is empty');
+assert.ok(serviceWorker.includes('./src/bazi/reading/index.js'), 'service worker must cache bazi reading engine');
 
 console.log(`Static validation passed: workflows=${requiredWorkflows.length}, data=${requiredData.length}`);

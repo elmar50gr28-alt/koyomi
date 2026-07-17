@@ -11,6 +11,7 @@ import {
   getHiddenStems,
   validateBaziPhase3Result,
   validateBaziPhase2Result,
+  validateBaziReading,
   validateBaziResult
 } from '../src/bazi/index.js';
 
@@ -123,6 +124,22 @@ assert.ok(full.interpretation?.tendencies?.health, 'health interpretation missin
 assert.ok(Array.isArray(full.beginnerExplanation) && full.beginnerExplanation.length >= 5, 'beginner explanation missing');
 assert.ok(Array.isArray(full.professionalEvidence) && full.professionalEvidence.length >= 1, 'professional evidence missing');
 assert.ok(full.mitsunomeInput?.sourcePolicy?.aiGeneratedTextIsNotSource, 'mitsunome source policy missing');
+assert.ok(full.reading?.sections?.overall, 'bazi reading overall section missing');
+assert.ok(full.reading?.sections?.personality, 'bazi reading personality section missing');
+assert.ok(full.reading?.sections?.talent, 'bazi reading talent section missing');
+assert.ok(full.reading?.sections?.career, 'bazi reading career section missing');
+assert.ok(full.reading?.sections?.finance, 'bazi reading finance section missing');
+assert.ok(full.reading?.sections?.relationship, 'bazi reading relationship section missing');
+assert.ok(full.reading?.sections?.family, 'bazi reading family section missing');
+assert.ok(full.reading?.sections?.health, 'bazi reading health section missing');
+assert.ok(full.reading?.sections?.decadeLuck, 'bazi reading decade luck section missing');
+assert.ok(full.reading?.sections?.annualLuck, 'bazi reading annual luck section missing');
+assert.ok(full.reading?.sections?.monthlyLuck, 'bazi reading monthly luck section missing');
+assert.ok(full.reading?.sections?.advice, 'bazi reading advice section missing');
+assert.ok(full.reading?.beginnerText.includes('[Overall Reading]'), 'beginner reading text missing');
+assert.ok(full.reading?.professionalText.includes('source'), 'professional reading text missing evidence');
+assert.ok(full.reading?.mitsunomeInput?.sourcePolicy?.noNewCalculationByAi, 'reading mitsunome source policy missing');
+assert.ok(validateBaziReading(full.reading).ok, 'bazi reading validation should pass');
 assert.ok(evaluateBasicStemRelations(full).evidence.length >= 1, 'basic stem relations missing evidence');
 assert.ok(evaluateBasicBranchRelations(full).evidence.length >= 1, 'basic branch relations missing evidence');
 
