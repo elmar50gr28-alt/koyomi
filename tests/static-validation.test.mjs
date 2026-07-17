@@ -30,7 +30,7 @@ const app = await readFile('app.html', 'utf8');
 assert.ok(app.includes('KOYOMI_BAZI'), 'app.html must expose the Bazi engine without profile re-entry');
 
 const serviceWorker = await readFile('service-worker.js', 'utf8');
-assert.ok(serviceWorker.includes('koyomi-bazi-practical-tuning'), 'service worker cache name must include bazi practical tuning');
+assert.ok(serviceWorker.includes('koyomi-bazi-japanese-reading'), 'service worker cache name must include bazi japanese reading');
 assert.ok(serviceWorker.includes('./src/bazi/index.js'), 'service worker must cache bazi engine entry');
 assert.ok(serviceWorker.includes('./data/bazi/solar-term-rules.json'), 'service worker must cache solar-term rules');
 assert.ok(serviceWorker.includes('./data/bazi/phase2-test-cases.json'), 'service worker must cache phase2 test cases');
@@ -41,6 +41,9 @@ assert.ok(serviceWorker.includes('./data/bazi/final-quality-score.json'), 'servi
 assert.ok(serviceWorker.includes('./data/bazi/final-test-cases.json'), 'service worker must cache final test cases');
 assert.ok(serviceWorker.includes('./data/bazi/practical-audit-cases.json'), 'service worker must cache practical audit cases');
 assert.ok(app.includes('koyomi-bazi-summary'), 'app.html must render practical Bazi summary first');
+assert.ok(app.includes('function koyomiBaziLocale'), 'app.html must choose Bazi display language from app/device locale');
+assert.ok(app.includes('\\u7dcf\\u5408\\u7d50\\u8ad6'), 'app.html must expose Japanese overall conclusion label');
+assert.ok(app.includes('\\u6839\\u62e0\\u30fb\\u5c02\\u9580\\u5bb6\\u8868\\u793a'), 'app.html must expose localized expert evidence display');
 assert.ok(app.includes('根拠・専門家表示'), 'app.html must expose expert evidence display');
 assert.ok(app.includes('<details><summary>'), 'app.html must keep long reading sections collapsed');
 
