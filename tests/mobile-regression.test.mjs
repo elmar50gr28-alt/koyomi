@@ -1,9 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const appHtml = await readFile('app.html', 'utf8');
-const appMain = await readFile('src/app-main.js', 'utf8');
-const app = `${appHtml}\n${appMain}`;
+const app = await readFile('app.html', 'utf8');
 const smoke = await readFile('smoke-test.html', 'utf8');
 const index = await readFile('index.html', 'utf8');
 const today = await readFile('today.html', 'utf8');
