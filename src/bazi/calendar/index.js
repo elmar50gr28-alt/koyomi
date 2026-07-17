@@ -1,19 +1,9 @@
 import { BRANCHES, SCHOOL_PROFILES, STEMS } from '../data.js';
 
-const stemById = Object.fromEntries(
-  STEMS.map(stem => [stem.id, stem])
-);
-
 const branchById = Object.fromEntries(
   BRANCHES.map(branch => [branch.id, branch])
 );
 
-/**
- * 国立天文台「暦要項」を基準にした立春時刻。
- *
- * 正式な基準データ：
- * data/bazi/solar-term-boundaries.json
- */
 const RISSHUN_BOUNDARIES_JST = Object.freeze({
   2024: '2024-02-04T17:27:00+09:00',
   2025: '2025-02-03T23:10:00+09:00',
@@ -21,90 +11,159 @@ const RISSHUN_BOUNDARIES_JST = Object.freeze({
   2027: '2027-02-04T10:46:00+09:00'
 });
 
-/**
- * 2026年の月柱切替に使う十二の節。
- *
- * 月支は各節入りの瞬間から切り替わる。
- */
-const MONTH_BOUNDARIES_2026_JST = Object.freeze([
-  {
-    termId: 'shokan',
-    nameJa: '小寒',
-    branchId: 'chou',
-    datetime: '2026-01-05T17:23:00+09:00'
-  },
-  {
-    termId: 'risshun',
-    nameJa: '立春',
-    branchId: 'yin',
-    datetime: '2026-02-04T05:02:00+09:00'
-  },
-  {
-    termId: 'keichitsu',
-    nameJa: '啓蟄',
-    branchId: 'mao',
-    datetime: '2026-03-05T22:59:00+09:00'
-  },
-  {
-    termId: 'seimei',
-    nameJa: '清明',
-    branchId: 'chen',
-    datetime: '2026-04-05T03:40:00+09:00'
-  },
-  {
-    termId: 'rikka',
-    nameJa: '立夏',
-    branchId: 'si',
-    datetime: '2026-05-05T20:49:00+09:00'
-  },
-  {
-    termId: 'boshu',
-    nameJa: '芒種',
-    branchId: 'wu',
-    datetime: '2026-06-06T00:48:00+09:00'
-  },
-  {
-    termId: 'shosho',
-    nameJa: '小暑',
-    branchId: 'wei',
-    datetime: '2026-07-07T10:57:00+09:00'
-  },
-  {
-    termId: 'risshu',
-    nameJa: '立秋',
-    branchId: 'shen',
-    datetime: '2026-08-07T20:43:00+09:00'
-  },
-  {
-    termId: 'hakuro',
-    nameJa: '白露',
-    branchId: 'you',
-    datetime: '2026-09-07T23:41:00+09:00'
-  },
-  {
-    termId: 'kanro',
-    nameJa: '寒露',
-    branchId: 'xu',
-    datetime: '2026-10-08T15:29:00+09:00'
-  },
-  {
-    termId: 'ritto',
-    nameJa: '立冬',
-    branchId: 'hai',
-    datetime: '2026-11-07T18:52:00+09:00'
-  },
-  {
-    termId: 'taisetsu',
-    nameJa: '大雪',
-    branchId: 'zi',
-    datetime: '2026-12-07T11:53:00+09:00'
-  }
-]);
+const MONTH_BOUNDARIES_JST_BY_YEAR = Object.freeze({
+  2025: Object.freeze([
+    {
+      termId: 'shokan',
+      nameJa: '小寒',
+      branchId: 'chou',
+      datetime: '2025-01-05T11:33:00+09:00'
+    },
+    {
+      termId: 'risshun',
+      nameJa: '立春',
+      branchId: 'yin',
+      datetime: '2025-02-03T23:10:00+09:00'
+    },
+    {
+      termId: 'keichitsu',
+      nameJa: '啓蟄',
+      branchId: 'mao',
+      datetime: '2025-03-05T17:07:00+09:00'
+    },
+    {
+      termId: 'seimei',
+      nameJa: '清明',
+      branchId: 'chen',
+      datetime: '2025-04-04T21:49:00+09:00'
+    },
+    {
+      termId: 'rikka',
+      nameJa: '立夏',
+      branchId: 'si',
+      datetime: '2025-05-05T14:57:00+09:00'
+    },
+    {
+      termId: 'boshu',
+      nameJa: '芒種',
+      branchId: 'wu',
+      datetime: '2025-06-05T18:57:00+09:00'
+    },
+    {
+      termId: 'shosho',
+      nameJa: '小暑',
+      branchId: 'wei',
+      datetime: '2025-07-07T05:05:00+09:00'
+    },
+    {
+      termId: 'risshu',
+      nameJa: '立秋',
+      branchId: 'shen',
+      datetime: '2025-08-07T14:52:00+09:00'
+    },
+    {
+      termId: 'hakuro',
+      nameJa: '白露',
+      branchId: 'you',
+      datetime: '2025-09-07T17:52:00+09:00'
+    },
+    {
+      termId: 'kanro',
+      nameJa: '寒露',
+      branchId: 'xu',
+      datetime: '2025-10-08T09:41:00+09:00'
+    },
+    {
+      termId: 'ritto',
+      nameJa: '立冬',
+      branchId: 'hai',
+      datetime: '2025-11-07T13:04:00+09:00'
+    },
+    {
+      termId: 'taisetsu',
+      nameJa: '大雪',
+      branchId: 'zi',
+      datetime: '2025-12-07T06:05:00+09:00'
+    }
+  ]),
 
-/**
- * 正式時刻が未登録の年に使う暫定日付。
- */
-const monthBoundaries = [
+  2026: Object.freeze([
+    {
+      termId: 'shokan',
+      nameJa: '小寒',
+      branchId: 'chou',
+      datetime: '2026-01-05T17:23:00+09:00'
+    },
+    {
+      termId: 'risshun',
+      nameJa: '立春',
+      branchId: 'yin',
+      datetime: '2026-02-04T05:02:00+09:00'
+    },
+    {
+      termId: 'keichitsu',
+      nameJa: '啓蟄',
+      branchId: 'mao',
+      datetime: '2026-03-05T22:59:00+09:00'
+    },
+    {
+      termId: 'seimei',
+      nameJa: '清明',
+      branchId: 'chen',
+      datetime: '2026-04-05T03:40:00+09:00'
+    },
+    {
+      termId: 'rikka',
+      nameJa: '立夏',
+      branchId: 'si',
+      datetime: '2026-05-05T20:49:00+09:00'
+    },
+    {
+      termId: 'boshu',
+      nameJa: '芒種',
+      branchId: 'wu',
+      datetime: '2026-06-06T00:48:00+09:00'
+    },
+    {
+      termId: 'shosho',
+      nameJa: '小暑',
+      branchId: 'wei',
+      datetime: '2026-07-07T10:57:00+09:00'
+    },
+    {
+      termId: 'risshu',
+      nameJa: '立秋',
+      branchId: 'shen',
+      datetime: '2026-08-07T20:43:00+09:00'
+    },
+    {
+      termId: 'hakuro',
+      nameJa: '白露',
+      branchId: 'you',
+      datetime: '2026-09-07T23:41:00+09:00'
+    },
+    {
+      termId: 'kanro',
+      nameJa: '寒露',
+      branchId: 'xu',
+      datetime: '2026-10-08T15:29:00+09:00'
+    },
+    {
+      termId: 'ritto',
+      nameJa: '立冬',
+      branchId: 'hai',
+      datetime: '2026-11-07T18:52:00+09:00'
+    },
+    {
+      termId: 'taisetsu',
+      nameJa: '大雪',
+      branchId: 'zi',
+      datetime: '2026-12-07T11:53:00+09:00'
+    }
+  ])
+});
+
+const fallbackMonthBoundaries = [
   { m: 2, d: 4, branch: 'yin' },
   { m: 3, d: 6, branch: 'mao' },
   { m: 4, d: 5, branch: 'chen' },
@@ -151,9 +210,7 @@ const JST_YEAR_FORMATTER = new Intl.DateTimeFormat('en-US', {
 });
 
 export function resolveSchoolConfig(config = {}) {
-  const schoolId =
-    config.schoolId ||
-    'koyomi-integrated';
+  const schoolId = config.schoolId || 'koyomi-integrated';
 
   return {
     schoolId,
@@ -163,71 +220,37 @@ export function resolveSchoolConfig(config = {}) {
 }
 
 export function normalizeProfile(profile = {}) {
-  const birth =
-    profile.birthData ||
-    profile.birth ||
-    {};
-
-  const place =
-    birth.place ||
-    profile.birthPlace ||
-    {};
-
-  const date =
-    birth.date ||
-    profile.birthDate ||
-    profile.date;
-
+  const birth = profile.birthData || profile.birth || {};
+  const place = birth.place || profile.birthPlace || {};
+  const date = birth.date || profile.birthDate || profile.date;
   const timeUnknown = Boolean(
-    birth.timeUnknown ||
-    profile.timeUnknown
+    birth.timeUnknown || profile.timeUnknown
   );
 
   return {
-    personId:
-      profile.personId ||
-      profile.id ||
-      null,
-
-    name:
-      profile.displayName ||
-      profile.name ||
-      '',
-
+    personId: profile.personId || profile.id || null,
+    name: profile.displayName || profile.name || '',
     date,
-
     time: timeUnknown
       ? ''
-      : (
-          birth.time ||
-          profile.birthTime ||
-          ''
-        ),
-
+      : (birth.time || profile.birthTime || ''),
     timeUnknown,
-
     place: {
       label:
         place.label ||
         place.city ||
         profile.birthPlace ||
         '',
-
       latitude: numberOrNull(
-        place.latitude ??
-        profile.latitude
+        place.latitude ?? profile.latitude
       ),
-
       longitude: numberOrNull(
-        place.longitude ??
-        profile.longitude
+        place.longitude ?? profile.longitude
       ),
-
       timezone:
         place.timezone ||
         profile.timezone ||
         'Asia/Tokyo',
-
       utcOffset: Number(
         place.utcOffset ??
         profile.utcOffset ??
@@ -238,10 +261,7 @@ export function normalizeProfile(profile = {}) {
 }
 
 function numberOrNull(value) {
-  if (
-    value === '' ||
-    value == null
-  ) {
+  if (value === '' || value == null) {
     return null;
   }
 
@@ -252,10 +272,7 @@ function numberOrNull(value) {
     : null;
 }
 
-function requireValidDate(
-  value,
-  functionName
-) {
+function requireValidDate(value, functionName) {
   const date =
     value instanceof Date
       ? new Date(value.getTime())
@@ -285,8 +302,7 @@ function getRisshunBoundary(year) {
       date: new Date(officialBoundary),
       datetime: officialBoundary,
       precision: 'official-minute',
-      sourceId:
-        `naoj-rekiyou-${year}`,
+      sourceId: `naoj-rekiyou-${year}`,
       dataPath:
         'data/bazi/solar-term-boundaries.json',
       warning: null
@@ -309,23 +325,23 @@ function getRisshunBoundary(year) {
 
 function getOfficialMonthBoundary(date) {
   const year = getJstYear(date);
+  const boundaries =
+    MONTH_BOUNDARIES_JST_BY_YEAR[year];
 
-  if (year !== 2026) {
+  if (!boundaries) {
     return null;
   }
 
   let selectedBoundary = null;
 
-  for (
-    const boundary
-    of MONTH_BOUNDARIES_2026_JST
-  ) {
+  for (const boundary of boundaries) {
     const boundaryDate =
       new Date(boundary.datetime);
 
     if (date >= boundaryDate) {
       selectedBoundary = {
         ...boundary,
+        year,
         date: boundaryDate
       };
     } else {
@@ -349,10 +365,7 @@ function getFallbackMonthBranch(date) {
 
   let branch = 'chou';
 
-  for (
-    const boundary
-    of monthBoundaries
-  ) {
+  for (const boundary of fallbackMonthBoundaries) {
     const boundaryYear =
       boundary.m === 1
         ? key.getFullYear() + 1
@@ -404,8 +417,7 @@ function buildMonthPillar(
     stem,
     branch,
     index: null,
-    label:
-      `${stem.kanji}${branch.kanji}`,
+    label: `${stem.kanji}${branch.kanji}`,
     boundary
   };
 }
@@ -476,9 +488,11 @@ export function calculateSolarTerms(
   );
 
   const year = getJstYear(date);
+  const officialBoundaries =
+    MONTH_BOUNDARIES_JST_BY_YEAR[year];
 
-  if (year === 2026) {
-    return MONTH_BOUNDARIES_2026_JST.map(
+  if (officialBoundaries) {
+    return officialBoundaries.map(
       boundary => ({
         termId: boundary.termId,
         name: boundary.nameJa,
@@ -486,12 +500,12 @@ export function calculateSolarTerms(
         datetime: boundary.datetime,
         timezone: 'Asia/Tokyo',
         precision: 'official-minute',
-        sourceId: 'naoj-rekiyou-2026'
+        sourceId: `naoj-rekiyou-${year}`
       })
     );
   }
 
-  return monthBoundaries.map(
+  return fallbackMonthBoundaries.map(
     (boundary, index) => ({
       termId:
         `term-${String(
@@ -546,9 +560,6 @@ function cyclePillar(index) {
   };
 }
 
-/**
- * 年柱を立春の瞬間で切り替える。
- */
 export function calculateYearPillar(date) {
   const validDate = requireValidDate(
     date,
@@ -594,13 +605,6 @@ export function calculateYearPillar(date) {
   };
 }
 
-/**
- * 月柱を各月の節入りの瞬間で切り替える。
- *
- * 2026年は国立天文台の正式時刻を使用する。
- * それ以外の年は暫定日付を使い、
- * boundary.warningで未精密であることを明示する。
- */
 export function calculateMonthPillar(
   date,
   yearStemId
@@ -631,7 +635,7 @@ export function calculateMonthPillar(
         precision:
           'official-minute',
         sourceId:
-          'naoj-rekiyou-2026',
+          `naoj-rekiyou-${officialBoundary.year}`,
         dataPath:
           'data/bazi/solar-term-boundaries.json',
         warning: null
