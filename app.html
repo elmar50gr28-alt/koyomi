@@ -1838,6 +1838,7 @@ function koyomiEnsureBaziReadingStyle(){
   `;
   document.head.appendChild(style);
 }
+/*
 function koyomiBaziSectionHtml(section){
   if(!section)return '';
   return `<div class="koyomi-bazi-section">
@@ -1887,12 +1888,77 @@ function koyomiBaziReadingHtml(reading){
     ${professional}
   </div>`;
 }
+*/
+function koyomiBaziLocale(){
+  const appLang=document.documentElement?.lang||navigator.language||'ja';
+  return String(appLang).toLowerCase().startsWith('en')?'en':'ja';
+}
+function koyomiBaziLabels(reading){
+  return reading.uiLabels||(
+    reading.locale==='en'
+      ? {conclusion:'Conclusion',evidence:'Evidence',opposingFactors:'Opposing factors',timing:'Timing',action:'Action',caution:'Caution',avoidance:'Recovery path',confidence:'confidence',review:'review',sources:'Sources',schoolDifferences:'School differences',expert:'Evidence and expert view'}
+      : {conclusion:'\u7dcf\u5408\u7d50\u8ad6',evidence:'\u6839\u62e0',opposingFactors:'\u53cd\u5bfe\u8981\u56e0',timing:'\u6642\u671f',action:'\u884c\u52d5\u63d0\u6848',caution:'\u6ce8\u610f\u70b9',avoidance:'\u56de\u907f\u7b56',confidence:'\u78ba\u5ea6',review:'\u30ec\u30d3\u30e5\u30fc',sources:'\u51fa\u5178\u0049\u0044',schoolDifferences:'\u6d41\u6d3e\u5dee',expert:'\u6839\u62e0\u30fb\u5c02\u9580\u5bb6\u8868\u793a'}
+  );
+}
+function koyomiBaziSectionHtml(section,labels){
+  if(!section)return '';
+  labels=labels||koyomiBaziLabels({locale:'ja'});
+  return `<div class="koyomi-bazi-section">
+    <p><b>${koyomiEscapeHtml(labels.conclusion)}</b> ${koyomiEscapeHtml(section.conclusion)}</p>
+    <p><b>${koyomiEscapeHtml(labels.evidence)}</b> ${koyomiEscapeHtml((section.evidence||[]).join(' / '))}</p>
+    <p><b>${koyomiEscapeHtml(labels.opposingFactors)}</b> ${koyomiEscapeHtml((section.opposingFactors||[]).join(' / '))}</p>
+    <p><b>${koyomiEscapeHtml(labels.timing)}</b> ${koyomiEscapeHtml(section.timing)}</p>
+    <p class="koyomi-bazi-action"><b>${koyomiEscapeHtml(labels.action)}</b> ${koyomiEscapeHtml(section.action)}</p>
+    <p><b>${koyomiEscapeHtml(labels.caution)}</b> ${koyomiEscapeHtml(section.caution)}</p>
+    <p><b>${koyomiEscapeHtml(labels.avoidance)}</b> ${koyomiEscapeHtml(section.avoidance)}</p>
+    <div class="koyomi-bazi-meta"><span>${koyomiEscapeHtml(labels.confidence)} ${Math.round((section.confidence||0)*100)}%</span><span>${koyomiEscapeHtml(section.reviewStatus)}</span></div>
+  </div>`;
+}
+function koyomiBaziReadingHtml(reading){
+  const summary=reading.executiveSummary||{};
+  const sections=reading.sections||{};
+  const labels=koyomiBaziLabels(reading);
+  const ja=reading.locale!=='en';
+  const details=[
+    [ja?'\u672c\u8cea':'Essence',sections.personality||sections.essence],
+    [ja?'\u624d\u80fd':'Talent',sections.talent],
+    [ja?'\u5f31\u70b9\u30fb\u6ce8\u610f\u70b9':'Weakness and caution',sections.weakness],
+    [ja?'\u4ed5\u4e8b':'Work',sections.career],
+    [ja?'\u8ca1':'Finance',sections.finance],
+    [ja?'\u604b\u611b':'Love',sections.love||sections.relationship],
+    [ja?'\u5bb6\u5ead':'Family',sections.family],
+    [ja?'\u5065\u5eb7\u50be\u5411':'Health tendency',sections.health],
+    [ja?'\u5927\u904b':'Decade luck',sections.decadeLuck],
+    [ja?'\u6b73\u904b':'Annual luck',sections.annualLuck],
+    [ja?'\u6708\u904b':'Monthly luck',sections.monthlyLuck],
+    [ja?'\u91cd\u8981\u6642\u671f':'Important timing',sections.importantTiming]
+  ];
+  const detailHtml=details.map(([title,section])=>`<details><summary>${koyomiEscapeHtml(title)}</summary>${koyomiBaziSectionHtml(section,labels)}</details>`).join('');
+  const professional=`<details><summary>${koyomiEscapeHtml(labels.expert)}</summary><div class="koyomi-bazi-section">
+    <p><b>${koyomiEscapeHtml(labels.schoolDifferences)}</b> ${koyomiEscapeHtml((reading.timingReading?.schoolDifferences||[]).join(' / '))}</p>
+    <p><b>${koyomiEscapeHtml(labels.sources)}</b> ${koyomiEscapeHtml(Object.values(sections).flatMap(s=>s.sourceIds||[]).filter((v,i,a)=>a.indexOf(v)===i).join(' / '))}</p>
+    <p><b>${koyomiEscapeHtml(labels.review)}</b> ${koyomiEscapeHtml(Object.values(sections).filter(s=>s.reviewStatus!=='practical-reading-rc').map(s=>`${s.id}:${s.reviewStatus}`).join(' / ')||'practical-reading-rc')}</p>
+  </div></details>`;
+  return `<div class="koyomi-bazi-reading">
+    <section class="koyomi-bazi-summary">
+      <p><b>${ja?'\u7dcf\u5408\u7d50\u8ad6':'Overall conclusion'}</b>${koyomiEscapeHtml(summary.centralTheme)}</p>
+      <p><b>${ja?'\u4eca\u306e\u91cd\u8981\u30c6\u30fc\u30de':'Important theme'}</b>${koyomiEscapeHtml(summary.currentIssue)}</p>
+      <p><b>${ja?'\u73fe\u5728\u306e\u904b':'Current flow'}</b>${koyomiEscapeHtml(summary.currentFlow)}</p>
+      <p class="koyomi-bazi-action"><b>${ja?'\u4eca\u65e5\u304b\u3089\u3067\u304d\u308b\u3053\u3068':'Do today'}</b>${koyomiEscapeHtml(summary.doNow)}</p>
+      <p><b>${ja?'\u907f\u3051\u305f\u65b9\u304c\u3088\u3044\u3053\u3068':'Avoid'}</b>${koyomiEscapeHtml(summary.avoid)}</p>
+      <div class="koyomi-bazi-meta"><span>${koyomiEscapeHtml(labels.confidence)} ${Math.round((summary.confidence||0)*100)}%</span><span>${koyomiEscapeHtml(summary.reviewStatus||labels.review)}</span></div>
+    </section>
+    ${detailHtml}
+    ${professional}
+  </div>`;
+}
 function koyomiRenderBaziReading(){
   try{
     const profile=koyomiBaziReadingProfile();
     if(!profile)return;
     const result=KOYOMI_BAZI.calculateBazi(profile);
-    const reading=result.reading||KOYOMI_BAZI.buildBaziReading(result);
+    const locale=koyomiBaziLocale();
+    const reading=KOYOMI_BAZI.buildBaziReading(result,{locale});
     window.KOYOMI_LAST_BAZI_READING={result,reading};
     const shichu=document.getElementById('shichuReading');
     if(shichu){
@@ -1903,10 +1969,10 @@ function koyomiRenderBaziReading(){
     if(meta){
       const confidence=Math.round((reading.sections?.overall?.confidence||0)*100);
       meta.innerHTML=[
-        `Reading Engine ${reading.version}`,
-        `Beginner + Professional`,
-        `Mitsunome ready`,
-        `confidence ${confidence}%`
+        `${reading.locale==='en'?'Reading Engine':'\u9451\u5b9a\u30a8\u30f3\u30b8\u30f3'} ${reading.version}`,
+        `${reading.locale==='en'?'Beginner + Professional':'\u521d\u5fc3\u8005\u8868\u793a\uff0b\u5c02\u9580\u5bb6\u8868\u793a'}`,
+        `${reading.locale==='en'?'Mitsunome ready':'\u307f\u3064\u306e\u3081\u59c9\u3055\u3093\u9023\u643a\u5bfe\u5fdc'}`,
+        `${reading.locale==='en'?'confidence':'\u78ba\u5ea6'} ${confidence}%`
       ].map(x=>`<span>${x}</span>`).join('');
     }
     if(window.lastPersonal){

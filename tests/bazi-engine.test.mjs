@@ -152,6 +152,7 @@ assert.ok(full.reading?.timingReading?.longTermTheme, 'integrated timing long te
 assert.ok(full.reading?.timingReading?.annualTheme, 'integrated timing annual missing');
 assert.ok(full.reading?.timingReading?.monthlyTheme, 'integrated timing monthly missing');
 assert.ok(full.reading?.timingReading?.schoolDifferences?.length >= 2, 'school differences must be visible');
+assert.equal(full.reading?.locale, 'ja', 'default reading locale must be Japanese');
 assert.ok(full.reading?.glossary?.strongDayMaster?.beginner, 'strong day master beginner explanation missing');
 assert.ok(full.reading?.glossary?.weakDayMaster?.beginner, 'weak day master beginner explanation missing');
 assert.ok(full.reading?.glossary?.yongshen?.beginner, 'yongshen beginner explanation missing');
@@ -170,9 +171,11 @@ for (const section of Object.values(full.reading.sections)) {
   assert.ok(section.schoolIds?.length >= 1, `${section.id} schoolIds missing`);
   assert.ok(section.reviewStatus, `${section.id} reviewStatus missing`);
 }
-assert.ok(full.reading?.beginnerText.includes('[Overall Reading]'), 'beginner reading text missing');
-assert.ok(full.reading?.beginnerText.indexOf('[Overall Conclusion]') < full.reading?.beginnerText.indexOf('[Overall Reading]'), 'overall conclusion must appear first');
-assert.ok(full.reading?.professionalText.includes('sourceIds'), 'professional reading text missing evidence');
+assert.ok(full.reading?.beginnerText.includes('\u3010\u7dcf\u5408\u7d50\u8ad6\u3011'), 'Japanese beginner reading text missing');
+assert.ok(full.reading?.beginnerText.indexOf('\u3010\u7dcf\u5408\u7d50\u8ad6\u3011') < full.reading?.beginnerText.indexOf('\u3010\u672c\u8cea\u30fb\u6027\u683c\u3011'), 'overall conclusion must appear first');
+assert.ok(full.reading?.professionalText.includes('\u51fa\u5178ID'), 'Japanese professional reading text missing evidence');
+assert.equal(full.reading?.quality?.englishDisplayHits?.length, 0, 'Japanese reading must not expose English templates');
+assert.ok(!/day[- ]master|Overall Conclusion|Current flow|Do now|Recovery path|Plain meaning/.test(full.reading.beginnerText), 'Japanese reading must not expose English template words');
 assert.ok(full.reading?.mitsunomeInput?.sourcePolicy?.noNewCalculationByAi, 'reading mitsunome source policy missing');
 assert.ok(full.reading?.mitsunomeInput?.voiceDrafts?.normal?.text, 'mitsunome normal mode missing');
 assert.ok(full.reading?.mitsunomeInput?.voiceDrafts?.zubat?.text, 'mitsunome zubat mode missing');
@@ -184,13 +187,17 @@ assert.ok(evaluateBasicStemRelations(full).evidence.length >= 1, 'basic stem rel
 assert.ok(evaluateBasicBranchRelations(full).evidence.length >= 1, 'basic branch relations missing evidence');
 
 const lowConfidenceReading = buildBaziReading({ ...full, confidence: 0.42 });
-assert.ok(/may|partial|limited|conditional|review|tendency/i.test(lowConfidenceReading.sections.monthlyLuck.conclusion + lowConfidenceReading.sections.monthlyLuck.caution), 'low confidence reading must use soft language');
+assert.ok(/\u78ba\u5ea6|\u9650\u5b9a\u7684|\u50be\u5411|\u53ef\u80fd\u6027|\u30ec\u30d3\u30e5\u30fc/.test(lowConfidenceReading.sections.monthlyLuck.conclusion + lowConfidenceReading.sections.monthlyLuck.caution), 'low confidence Japanese reading must use soft language');
 assert.ok(!/diagnose|death|pregnancy|fatal/i.test(full.reading.sections.health.conclusion + full.reading.sections.health.caution), 'health reading must not become diagnosis or prediction');
 
 const emergencyReading = buildBaziReading(full, { occupation: 'emergency' });
-assert.ok(emergencyReading.sections.career.action.includes('field judgement'), 'occupation wording must translate career advice without changing calculation');
+assert.ok(emergencyReading.sections.career.action.includes('\u73fe\u5834\u5224\u65ad'), 'occupation wording must translate career advice without changing calculation');
 const noOccupationReading = buildBaziReading(full);
 assert.ok(noOccupationReading.sections.career.action.length > 0, 'missing occupation must still produce career action');
+const englishReading = buildBaziReading(full, { locale: 'en', occupation: 'emergency' });
+assert.equal(englishReading.locale, 'en', 'English locale must be available when explicitly requested');
+assert.ok(englishReading.beginnerText.includes('[Overall Conclusion]'), 'English display must remain available for English locale');
+assert.ok(englishReading.sections.career.action.includes('field judgement'), 'English occupation wording must remain available');
 
 const partialReading = calculateBazi(unknown).reading;
 assert.ok(partialReading.sections.overall.warnings.includes('birth-time-unknown-hour-pillar-partial'), 'unknown birth time warning must be preserved');

@@ -1,4 +1,4 @@
-const C='koyomi-bazi-practical-tuning-20260717-1';
+const C='koyomi-bazi-japanese-reading-20260717-1';
 const A=[
   './','./index.html','./today.html','./app.html','./smoke-test.html','./manifest.webmanifest','./icon.svg',
   './src/bazi/index.js','./src/bazi/data.js','./src/bazi/astronomy/index.js','./src/bazi/calendar/index.js','./src/bazi/chart/index.js','./src/bazi/relations/index.js','./src/bazi/strength/index.js','./src/bazi/patterns/index.js','./src/bazi/yongshen/index.js','./src/bazi/luck/index.js','./src/bazi/interpretation/index.js','./src/bazi/reading/index.js','./src/bazi/schools/index.js','./src/bazi/evidence/index.js','./src/bazi/validation/index.js','./src/bazi/validation/bazi-test.html',

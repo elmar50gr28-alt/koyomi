@@ -1,4 +1,4 @@
-const READING_VERSION = 'bazi-practical-tuning-20260717';
+const READING_VERSION = 'bazi-japanese-reading-20260717';
 
 const CATEGORY_DEFS = [
   ['overall', 'Overall Reading', 'Read the whole chart first: theme, strength, caution, action, and confidence.'],
@@ -90,6 +90,7 @@ const GLOSSARY = {
 const PROFESSIONAL_CATEGORIES = new Set(['decadeLuck', 'annualLuck', 'monthlyLuck', 'importantTiming']);
 
 export function buildBaziReading(baziResult, options = {}) {
+  const locale = resolveLocale(options);
   const facts = extractFacts(baziResult, options);
   const sections = Object.fromEntries(CATEGORY_DEFS.map(([id, title, policy]) => [
     id,
@@ -102,14 +103,16 @@ export function buildBaziReading(baziResult, options = {}) {
   const text = renderReadingText(sections, 'beginner', executiveSummary, timingReading);
   const professionalText = renderReadingText(sections, 'professional', executiveSummary, timingReading);
   const mitsunomeInput = buildReadingMitsunomeInput(facts, sections, beginner, professional, executiveSummary, timingReading, options);
-  return {
+  const reading = {
     schemaId: 'koyomi-bazi-reading',
     version: READING_VERSION,
+    locale: 'en',
     sourceCalculationVersion: baziResult?.calculationVersion || null,
     personId: facts.personId,
     executiveSummary,
     timingReading,
     glossary: GLOSSARY,
+    uiLabels: buildReadingUiLabels('en'),
     uiModel: buildUiModel(sections, executiveSummary, timingReading),
     sections,
     beginner,
@@ -128,6 +131,7 @@ export function buildBaziReading(baziResult, options = {}) {
       weakEvidenceRequiresSoftLanguage: true
     }
   };
+  return locale === 'ja' ? localizeBaziReadingJa(reading, facts, options) : reading;
 }
 
 export function buildBaziBeginnerReading(baziResult, options = {}) {
@@ -170,6 +174,464 @@ export function validateBaziReading(reading) {
   if (!reading?.sourcePolicy?.noNewCalculation) errors.push('new-calculation-policy-missing');
   if (reading?.quality?.bannedExpressionHits?.length) errors.push('banned-expression-hit');
   return { ok: errors.length === 0, errors };
+}
+
+function resolveLocale(options = {}) {
+  const requested = String(options.locale || options.language || '').toLowerCase();
+  if (requested.startsWith('en')) return 'en';
+  return 'ja';
+}
+
+function buildReadingUiLabels(locale) {
+  if (locale === 'en') {
+    return {
+      conclusion: 'Conclusion',
+      evidence: 'Evidence',
+      opposingFactors: 'Opposing factors',
+      timing: 'Timing',
+      action: 'Action',
+      caution: 'Caution',
+      avoidance: 'Recovery path',
+      confidence: 'confidence',
+      review: 'review',
+      sources: 'Sources',
+      schoolDifferences: 'School differences',
+      expert: 'Evidence and expert view'
+    };
+  }
+  return {
+    conclusion: '\u7dcf\u5408\u7d50\u8ad6',
+    evidence: '\u6839\u62e0',
+    opposingFactors: '\u53cd\u5bfe\u8981\u56e0',
+    timing: '\u6642\u671f',
+    action: '\u884c\u52d5\u63d0\u6848',
+    caution: '\u6ce8\u610f\u70b9',
+    avoidance: '\u56de\u907f\u7b56',
+    confidence: '\u78ba\u5ea6',
+    review: '\u30ec\u30d3\u30e5\u30fc',
+    sources: '\u51fa\u5178ID',
+    schoolDifferences: '\u6d41\u6d3e\u5dee',
+    expert: '\u6839\u62e0\u30fb\u5c02\u9580\u5bb6\u8868\u793a'
+  };
+}
+
+const JA_TITLES = {
+  overall: '\u7dcf\u5408\u9451\u5b9a',
+  personality: '\u672c\u8cea\u30fb\u6027\u683c',
+  essence: '\u672c\u8cea',
+  talent: '\u624d\u80fd',
+  weakness: '\u5f31\u70b9\u30fb\u6ce8\u610f\u70b9',
+  career: '\u4ed5\u4e8b',
+  finance: '\u8ca1\u904b',
+  love: '\u604b\u611b',
+  marriage: '\u7d50\u5a5a',
+  relationship: '\u5bfe\u4eba\u95a2\u4fc2',
+  family: '\u5bb6\u5ead',
+  health: '\u5065\u5eb7\u50be\u5411',
+  learning: '\u5b66\u7fd2',
+  creation: '\u5275\u4f5c',
+  decadeLuck: '\u5927\u904b',
+  annualLuck: '\u6b73\u904b',
+  monthlyLuck: '\u6708\u904b',
+  importantTiming: '\u91cd\u8981\u6642\u671f',
+  advice: '\u958b\u904b\u30a2\u30c9\u30d0\u30a4\u30b9'
+};
+
+const JA_ELEMENTS = {
+  wood: '\u6728',
+  fire: '\u706b',
+  earth: '\u571f',
+  metal: '\u91d1',
+  water: '\u6c34'
+};
+
+const JA_ELEMENT_WORDS = {
+  wood: '\u6210\u9577\u30fb\u8a08\u753b\u30fb\u767a\u5c55',
+  fire: '\u8868\u73fe\u30fb\u660e\u308b\u3055\u30fb\u767a\u4fe1',
+  earth: '\u5b89\u5b9a\u30fb\u751f\u6d3b\u57fa\u76e4\u30fb\u4fe1\u983c',
+  metal: '\u6574\u7406\u30fb\u5224\u65ad\u30fb\u5883\u754c\u7dda',
+  water: '\u5b66\u3073\u30fb\u56de\u5fa9\u30fb\u60c5\u5831\u53ce\u96c6'
+};
+
+function localizeBaziReadingJa(reading, facts, options = {}) {
+  const sections = Object.fromEntries(Object.entries(reading.sections).map(([id, section]) => [
+    id,
+    localizeSectionJa(section, facts)
+  ]));
+  const executiveSummary = buildExecutiveSummaryJa(facts, sections);
+  const timingReading = buildTimingReadingJa(facts, sections, reading.timingReading);
+  const beginner = Object.values(sections).map(beginnerBlock);
+  const professional = Object.values(sections).map(section => ({
+    id: section.id,
+    title: section.title,
+    text: section.professionalSummary,
+    sourceIds: section.sourceIds,
+    schoolIds: section.schoolIds,
+    confidence: section.confidence,
+    reviewStatus: section.reviewStatus
+  }));
+  const beginnerText = renderReadingTextJa(sections, 'beginner', executiveSummary, timingReading);
+  const professionalText = renderReadingTextJa(sections, 'professional', executiveSummary, timingReading);
+  const mitsunomeInput = buildMitsunomeInputJa(facts, sections, beginnerText, professionalText, executiveSummary, timingReading, options);
+  return {
+    ...reading,
+    locale: 'ja',
+    executiveSummary,
+    timingReading,
+    glossary: buildGlossaryJa(),
+    uiLabels: buildReadingUiLabels('ja'),
+    uiModel: buildUiModelJa(sections, executiveSummary, timingReading),
+    sections,
+    beginner,
+    professional,
+    text: beginnerText,
+    beginnerText,
+    professionalText,
+    mitsunomeInput,
+    mitsunome: mitsunomeInput.voiceDrafts,
+    quality: {
+      ...reading.quality,
+      englishDisplayHits: findEnglishDisplayHits(beginnerText + '\n' + professionalText + '\n' + mitsunomeInput.voiceDrafts.normal.text + '\n' + mitsunomeInput.voiceDrafts.zubat.text)
+    }
+  };
+}
+
+function localizeSectionJa(section, facts) {
+  const confidence = section.confidence || 0;
+  const title = JA_TITLES[section.id] || section.title;
+  const tendency = tendencyJa(section.id, facts);
+  const conclusion = conclusionJa(section.id, facts, tendency, confidence);
+  const action = actionJa(section.id, facts);
+  const caution = cautionJa(section.id, facts, confidence);
+  const avoidance = avoidanceJa(section.id, facts);
+  const evidence = evidenceJa(section, facts, tendency);
+  const opposingFactors = opposingJa(section, facts);
+  const timing = timingJa(section.id, facts);
+  const beginnerSummary = [
+    `\u8981\u70b9\uff1a${conclusion}`,
+    `\u884c\u52d5\uff1a${action}`,
+    `\u6ce8\u610f\uff1a${caution}`,
+    `\u56de\u907f\u7b56\uff1a${avoidance}`
+  ].join(' ');
+  const professionalSummary = [
+    `\u63a1\u7528\u6d41\u6d3eID=${section.schoolIds.join('|')}`,
+    `\u51fa\u5178ID=${section.sourceIds.join('|')}`,
+    `\u65e5\u4e3b=${facts.dayMaster.id || facts.dayMasterName}`,
+    `\u65fa\u8870=${strengthLabelJa(facts.strengthLevel)}`,
+    `\u7528\u795e\u5019\u88dc=${elementJa(facts.primaryFavorable)}`,
+    `\u5224\u65ad=${tendency}`,
+    `\u53cd\u5bfe\u8981\u56e0=${opposingFactors.join('|')}`,
+    `\u672a\u89e3\u6c7a=${section.unresolvedFactors.join('|') || 'none'}`,
+    `reviewStatus=${section.reviewStatus}`
+  ].join('; ');
+  return {
+    ...section,
+    title,
+    tendency,
+    conclusion,
+    evidence,
+    opposingFactors,
+    timing,
+    action,
+    caution,
+    avoidance,
+    beginnerSummary,
+    professionalSummary
+  };
+}
+
+function buildExecutiveSummaryJa(facts, sections) {
+  const element = elementWordsJa(facts.primaryFavorable);
+  const strength = isStrong(facts)
+    ? '\u81ea\u5206\u306e\u610f\u5fd7\u3084\u884c\u52d5\u529b\u304c\u524d\u306b\u51fa\u3084\u3059\u3044\u50be\u5411\u3067\u3059\u3002'
+    : isWeak(facts)
+      ? '\u74b0\u5883\u3084\u5468\u56f2\u306e\u652f\u3048\u3092\u53d7\u3051\u308b\u307b\u3069\u529b\u3092\u767a\u63ee\u3057\u3084\u3059\u3044\u50be\u5411\u3067\u3059\u3002'
+      : '\u4e00\u3064\u306e\u5f37\u5f31\u3060\u3051\u3067\u65ad\u5b9a\u305b\u305a\u3001\u72b6\u6cc1\u3054\u3068\u306e\u30d0\u30e9\u30f3\u30b9\u3092\u898b\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059\u3002';
+  return {
+    centralTheme: `${facts.dayMasterName}\u306e\u65e5\u4e3b\u304c\u6301\u3064\u50be\u5411\u3092\u3001${element}\u306b\u3088\u3063\u3066\u7740\u5b9f\u306a\u6210\u679c\u3078\u3064\u306a\u3052\u308b\u6642\u671f\u3067\u3059\u3002`,
+    strength: `\u547d\u5f0f\u306e\u529b\u306e\u4f7f\u3044\u65b9\uff1a${strength}`,
+    currentIssue: sections.weakness?.conclusion || sections.overall.conclusion,
+    currentFlow: '\u73fe\u5728\u306e\u5927\u904b\u304c\u9577\u671f\u7684\u306a\u6d41\u308c\u3092\u4f5c\u308a\u3001\u6b73\u904b\u3068\u6708\u904b\u304c\u884c\u52d5\u306e\u5f37\u5f31\u3092\u8abf\u6574\u3057\u3066\u3044\u307e\u3059\u3002\u65ad\u5b9a\u3067\u306f\u306a\u304f\u3001\u52d5\u304f\u6642\u671f\u3092\u898b\u6975\u3081\u308b\u6750\u6599\u3068\u3057\u3066\u4f7f\u3063\u3066\u304f\u3060\u3055\u3044\u3002',
+    doNow: sections.advice.action,
+    avoid: sections.weakness.avoidance,
+    confidence: round2(Math.min(sections.overall.confidence, sections.advice.confidence)),
+    reviewStatus: facts.precision === 'partial-without-hour-pillar' ? 'partial-input-review' : 'practical-reading-rc',
+    schoolDifferenceNote: '\u65fa\u8870\u3001\u8abf\u5019\u3001\u683c\u5c40\u3001\u5927\u904b\u306e\u898b\u65b9\u304c\u4e00\u81f4\u3057\u306a\u3044\u5834\u5408\u306f\u3001\u6d41\u6d3e\u5dee\u3068\u3057\u3066\u8868\u793a\u3057\u307e\u3059\u3002'
+  };
+}
+
+function buildTimingReadingJa(facts, sections, originalTiming) {
+  return {
+    longTermTheme: sections.decadeLuck.conclusion,
+    annualTheme: sections.annualLuck.conclusion,
+    monthlyTheme: sections.monthlyLuck.conclusion,
+    supportiveAreas: unique([sections.career.tendency, sections.learning.tendency, elementWordsJa(facts.primaryFavorable)]).slice(0, 3),
+    cautionAreas: unique([sections.weakness.tendency, sections.health.tendency, elementWordsJa(facts.avoid[0] || facts.dayMasterElement)]).slice(0, 3),
+    changeWindow: '\u5927\u904b\u306e\u5207\u308a\u66ff\u308f\u308a\u306f\u4e00\u65e5\u3067\u65ad\u5b9a\u305b\u305a\u3001\u524d\u5f8c\u306e\u671f\u9593\u5e45\u3067\u5909\u5316\u3092\u898b\u307e\u3059\u3002',
+    preparationWindow: '\u6708\u904b\u304c\u6df7\u3058\u308b\u6642\u671f\u306f\u3001\u767a\u8868\u3084\u6c7a\u65ad\u3088\u308a\u6e96\u5099\u3001\u8a18\u9332\u3001\u78ba\u8a8d\u306b\u5411\u304d\u307e\u3059\u3002',
+    executionWindow: '\u5927\u904b\u3068\u6b73\u904b\u304c\u540c\u3058\u65b9\u5411\u3092\u793a\u3059\u6642\u671f\u306f\u3001\u5c0f\u3055\u3044\u5b9f\u884c\u3092\u91cd\u306d\u3066\u7d50\u679c\u3092\u898b\u307e\u3059\u3002',
+    restWindow: '\u6b73\u904b\u3068\u6708\u904b\u304c\u3076\u3064\u304b\u308b\u6642\u671f\u306f\u3001\u8ca0\u8377\u3092\u6e1b\u3089\u3057\u3001\u7761\u7720\u3001\u5bb6\u8a08\u3001\u4eba\u9593\u95a2\u4fc2\u3092\u5b88\u308b\u3053\u3068\u3092\u512a\u5148\u3057\u307e\u3059\u3002',
+    schoolDifferences: [
+      '\u6276\u6291\u3068\u8abf\u5019\u3067\u7528\u795e\u304c\u5206\u304b\u308c\u308b\u5834\u5408\u304c\u3042\u308a\u307e\u3059\u3002',
+      '\u683c\u5c40\u3092\u91cd\u8996\u3059\u308b\u6d41\u6d3e\u3067\u306f\u3001\u901a\u5e38\u306e\u65fa\u8870\u5224\u65ad\u3088\u308a\u547d\u5f0f\u5168\u4f53\u306e\u67a0\u7d44\u307f\u3092\u512a\u5148\u3059\u308b\u3053\u3068\u304c\u3042\u308a\u307e\u3059\u3002',
+      facts.precision === 'partial-without-hour-pillar' ? '\u51fa\u751f\u6642\u523b\u304c\u4e0d\u660e\u306a\u305f\u3081\u3001\u6642\u67f1\u306b\u95a2\u308f\u308b\u5224\u65ad\u306e\u78ba\u5ea6\u306f\u4e0b\u304c\u308a\u307e\u3059\u3002' : '\u51fa\u751f\u6642\u523b\u304c\u3042\u308b\u305f\u3081\u3001\u6642\u67f1\u3092\u542b\u3081\u305f\u691c\u8a0e\u304c\u53ef\u80fd\u3067\u3059\u3002'
+    ],
+    confidence: originalTiming?.confidence || round2((sections.decadeLuck.confidence + sections.annualLuck.confidence + sections.monthlyLuck.confidence) / 3)
+  };
+}
+
+function buildUiModelJa(sections, executiveSummary, timingReading) {
+  return {
+    mobileFirst: true,
+    firstView: [
+      { label: '\u7dcf\u5408\u7d50\u8ad6', value: executiveSummary.centralTheme },
+      { label: '\u4eca\u306e\u91cd\u8981\u30c6\u30fc\u30de', value: executiveSummary.currentIssue },
+      { label: '\u73fe\u5728\u306e\u904b', value: executiveSummary.currentFlow },
+      { label: '\u4eca\u65e5\u304b\u3089\u3067\u304d\u308b\u3053\u3068', value: executiveSummary.doNow },
+      { label: '\u78ba\u5ea6', value: String(executiveSummary.confidence) }
+    ],
+    collapsedDetails: [...Object.keys(sections), 'professional'],
+    timingReading,
+    sectionOrder: Object.keys(sections)
+  };
+}
+
+function buildGlossaryJa() {
+  return {
+    strongDayMaster: { term: '\u8eab\u5f37', beginner: '\u81ea\u5206\u306e\u610f\u5fd7\u3084\u529b\u3092\u62bc\u3057\u51fa\u3057\u3084\u3059\u3044\u50be\u5411', professional: '\u6708\u4ee4\u3001\u6839\u3001\u5e72\u5408\u3001\u751f\u6276\u306a\u3069\u306b\u3088\u308a\u65e5\u4e3b\u306e\u652f\u3048\u304c\u5f37\u3044\u898b\u65b9\u3002\u6d41\u6d3e\u5dee\u306f\u4fdd\u6301\u3057\u307e\u3059\u3002' },
+    weakDayMaster: { term: '\u8eab\u5f31', beginner: '\u74b0\u5883\u3084\u5468\u56f2\u306e\u652f\u63f4\u3092\u53d7\u3051\u3066\u529b\u3092\u767a\u63ee\u3057\u3084\u3059\u3044\u50be\u5411', professional: '\u6708\u4ee4\u3001\u6839\u3001\u6f0f\u308c\u3001\u5236\u5316\u306a\u3069\u306b\u3088\u308a\u65e5\u4e3b\u306e\u652f\u3048\u304c\u9650\u5b9a\u3055\u308c\u308b\u898b\u65b9\u3002' },
+    yongshen: { term: '\u7528\u795e', beginner: '\u547d\u5f0f\u306e\u504f\u308a\u3092\u6574\u3048\u308b\u9375', professional: '\u6276\u6291\u3001\u8abf\u5019\u3001\u683c\u5c40\u3001\u75c5\u85ac\u3001\u6d41\u6d3e\u5225\u30eb\u30fc\u30eb\u3067\u691c\u8a0e\u3057\u307e\u3059\u3002' },
+    climate: { term: '\u8abf\u5019', beginner: '\u5bd2\u6696\u30fb\u4e7e\u6e7f\u306e\u504f\u308a\u3092\u6574\u3048\u308b\u8996\u70b9', professional: '\u5358\u7d14\u306a\u65fa\u8870\u5224\u65ad\u3068\u7570\u306a\u308b\u5834\u5408\u304c\u3042\u308a\u307e\u3059\u3002' },
+    pattern: { term: '\u683c\u5c40', beginner: '\u547d\u5f0f\u5168\u4f53\u306e\u50cd\u304d\u65b9\u3092\u6349\u3048\u308b\u67a0\u7d44\u307f', professional: '\u6708\u4ee4\u3001\u900f\u5e72\u3001\u6839\u3001\u5316\u683c\u3001\u6551\u5fdc\u6761\u4ef6\u3092\u78ba\u8a8d\u3057\u3066\u5019\u88dc\u5316\u3057\u307e\u3059\u3002' },
+    luckCycle: { term: '\u5927\u904b\u30fb\u6b73\u904b\u30fb\u6708\u904b', beginner: '\u751f\u307e\u308c\u6301\u3063\u305f\u50be\u5411\u306b\u91cd\u306a\u308b\u6642\u671f\u306e\u6d41\u308c', professional: '\u5927\u904b\u3001\u6b73\u904b\u3001\u6708\u904b\u3092\u547d\u5f0f\u6839\u62e0\u3068\u91cd\u306d\u3001\u78ba\u5ea6\u3068\u6d41\u6d3e\u5dee\u3092\u8868\u793a\u3057\u307e\u3059\u3002' }
+  };
+}
+
+function tendencyJa(id, facts) {
+  const primary = elementWordsJa(facts.primaryFavorable);
+  const occupation = occupationFocusJa(facts.occupation);
+  const map = {
+    overall: `${facts.dayMasterName}\u306e\u65e5\u4e3b\u3068${strengthLabelJa(facts.strengthLevel)}\u3092\u3001${primary}\u3067\u6574\u3048\u308b\u50be\u5411`,
+    personality: `${elementJa(facts.dayMasterElement)}\u306e\u6027\u8cea\u3068\u5b63\u7bc0\u611f\u304c\u8868\u306b\u51fa\u3084\u3059\u3044\u50be\u5411`,
+    essence: `${elementJa(facts.dayMasterElement)}\u3089\u3057\u3044\u52d5\u304d\u65b9\u304c\u3001\u652f\u3048\u3084\u5727\u529b\u3067\u5909\u5316\u3059\u308b\u50be\u5411`,
+    talent: `${primary}\u3092\u7fd2\u6163\u3068\u3057\u3066\u4f7f\u3046\u3068\u624d\u80fd\u304c\u73fe\u308c\u3084\u3059\u3044\u50be\u5411`,
+    weakness: '\u9577\u6240\u304c\u4f7f\u3044\u904e\u304e\u306b\u306a\u308b\u3068\u3001\u75b2\u52b4\u3084\u5bfe\u4eba\u306e\u6469\u64e6\u306b\u3064\u306a\u304c\u308b\u50be\u5411',
+    career: occupation || '\u8cac\u4efb\u3001\u5b66\u7fd2\u3001\u5f79\u5272\u8abf\u6574\u3092\u6574\u3048\u308b\u50be\u5411',
+    finance: '\u8cc7\u6e90\u306e\u6d41\u308c\u3068\u30ea\u30b9\u30af\u7ba1\u7406\u304c\u91cd\u8981\u306b\u306a\u308b\u50be\u5411',
+    love: '\u8868\u73fe\u3001\u652f\u3048\u5408\u3044\u3001\u8ddd\u96e2\u611f\u306e\u30ea\u30ba\u30e0\u304c\u5927\u5207\u306b\u306a\u308b\u50be\u5411',
+    marriage: '\u5f79\u5272\u3001\u5bb6\u8a08\u3001\u56de\u5fa9\u6642\u9593\u3092\u660e\u78ba\u306b\u3059\u308b\u3068\u5b89\u5b9a\u3057\u3084\u3059\u3044\u50be\u5411',
+    relationship: '\u5bfe\u4eba\u306e\u8abf\u548c\u3068\u81ea\u5206\u306e\u5883\u754c\u7dda\u306e\u4e21\u7acb\u304c\u8ab2\u984c\u306b\u306a\u308b\u50be\u5411',
+    family: '\u6839\u3068\u652f\u3048\u306e\u69cb\u9020\u3092\u6574\u3048\u308b\u3068\u5bb6\u5ead\u304c\u5b89\u5b9a\u3057\u3084\u3059\u3044\u50be\u5411',
+    health: '\u751f\u6d3b\u30ea\u30ba\u30e0\u306e\u6574\u3048\u65b9\u306b\u6ce8\u610f\u304c\u5fc5\u8981\u306a\u50be\u5411',
+    learning: '\u5165\u529b\u3001\u4f11\u606f\u3001\u51fa\u529b\u3092\u5c0f\u3055\u304f\u5206\u3051\u308b\u3068\u5b66\u3073\u304c\u9032\u3080\u50be\u5411',
+    creation: `${primary}\u3092\u7e70\u308a\u8fd4\u305b\u308b\u5f62\u306b\u3059\u308b\u3068\u5275\u4f5c\u304c\u5e83\u304c\u308b\u50be\u5411`,
+    decadeLuck: '\u9577\u671f\u306e\u74b0\u5883\u6761\u4ef6\u304c\u4eba\u751f\u306e\u5927\u304d\u306a\u30c6\u30fc\u30de\u3092\u4f5c\u308b\u50be\u5411',
+    annualLuck: '\u4eca\u5e74\u306e\u6761\u4ef6\u304c\u3001\u884c\u52d5\u306e\u5f37\u5f31\u3092\u8abf\u6574\u3059\u308b\u50be\u5411',
+    monthlyLuck: '\u4eca\u6708\u306e\u6761\u4ef6\u304c\u3001\u6e96\u5099\u30fb\u5b9f\u884c\u30fb\u4f11\u606f\u306e\u914d\u5206\u3092\u793a\u3059\u50be\u5411',
+    importantTiming: '\u5927\u904b\u3001\u6b73\u904b\u3001\u6708\u904b\u3092\u91cd\u306d\u3066\u884c\u52d5\u6642\u671f\u3092\u898b\u308b\u50be\u5411',
+    advice: `${elementJa(facts.primaryFavorable)}\u3092\u65e5\u3005\u306e\u5c0f\u3055\u306a\u884c\u52d5\u306b\u843d\u3068\u3057\u8fbc\u3080\u50be\u5411`
+  };
+  return map[id] || '\u6761\u4ef6\u3064\u304d\u3067\u8868\u308c\u308b\u50be\u5411';
+}
+
+function conclusionJa(id, facts, tendency, confidence) {
+  const prefix = confidence < 0.55 ? '\u78ba\u5ea6\u306f\u9650\u5b9a\u7684\u3067\u3059\u304c\u3001' : '';
+  const map = {
+    overall: `${prefix}\u547d\u5f0f\u5168\u4f53\u306f\u3001${tendency}\u3092\u793a\u3057\u3066\u3044\u307e\u3059\u3002`,
+    weakness: `${prefix}\u901a\u5e38\u306f\u9577\u6240\u3068\u306a\u308b\u529b\u3092\u4f7f\u3044\u904e\u304e\u308b\u3053\u3068\u304c\u6ce8\u610f\u70b9\u3067\u3059\u3002`,
+    health: `${prefix}\u751f\u6d3b\u30da\u30fc\u30b9\u306e\u50be\u5411\u3092\u793a\u3059\u3082\u306e\u3067\u3001\u533b\u5b66\u7684\u306a\u8a3a\u65ad\u3067\u306f\u3042\u308a\u307e\u305b\u3093\u3002`,
+    importantTiming: `${prefix}\u6642\u671f\u306f\u7279\u5b9a\u65e5\u306e\u65ad\u5b9a\u3067\u306f\u306a\u304f\u3001\u671f\u9593\u306e\u5e45\u3068\u3057\u3066\u898b\u308b\u306e\u304c\u73fe\u5b9f\u7684\u3067\u3059\u3002`,
+    advice: `${prefix}\u4eca\u306f\u3001${actionJa('advice', facts)}\u3053\u3068\u304c\u5b9f\u7528\u7684\u306a\u4e00\u6b69\u3067\u3059\u3002`
+  };
+  return map[id] || `${prefix}${tendency}\u304c\u4e3b\u306a\u30c6\u30fc\u30de\u3067\u3059\u3002`;
+}
+
+function actionJa(id, facts) {
+  const base = actionByElementJa(facts.primaryFavorable);
+  const occupation = occupationFocusJa(facts.occupation);
+  const map = {
+    career: occupation ? `${base}\u3002\u4ed5\u4e8b\u3067\u306f${occupation}\u306b\u843d\u3068\u3057\u8fbc\u3093\u3067\u304f\u3060\u3055\u3044\u3002` : `${base}\u3002\u5f79\u5272\u3001\u9023\u7d61\u3001\u7e70\u308a\u8fd4\u305b\u308b\u4ed5\u4e8b\u306e\u30ea\u30ba\u30e0\u306b\u843d\u3068\u3057\u8fbc\u3093\u3067\u304f\u3060\u3055\u3044\u3002`,
+    finance: '\u652f\u51fa\u306e\u30eb\u30fc\u30eb\u3092\u5148\u306b\u66f8\u304d\u3001\u5e83\u3052\u308b\u524d\u306b\u30ea\u30b9\u30af\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002',
+    love: '\u76f8\u624b\u306b\u5bdf\u3057\u3066\u3082\u3089\u3046\u524d\u306b\u3001\u671b\u3080\u8ddd\u96e2\u3001\u30da\u30fc\u30b9\u3001\u5883\u754c\u7dda\u3092\u8a00\u8449\u306b\u3057\u3066\u304f\u3060\u3055\u3044\u3002',
+    marriage: '\u5bb6\u8a08\u3001\u6642\u9593\u3001\u5bb6\u65cf\u5185\u306e\u5f79\u5272\u3001\u4f11\u3080\u6642\u9593\u3092\u660e\u78ba\u306b\u3057\u3066\u304f\u3060\u3055\u3044\u3002',
+    health: '\u7761\u7720\u3001\u4ed5\u4e8b\u91cf\u3001\u98df\u4e8b\u3001\u904b\u52d5\u3001\u5fc5\u8981\u306a\u3068\u304d\u306e\u5c02\u9580\u5bb6\u3078\u306e\u76f8\u8ac7\u3092\u751f\u6d3b\u70b9\u691c\u3068\u3057\u3066\u6271\u3063\u3066\u304f\u3060\u3055\u3044\u3002',
+    decadeLuck: '\u4e09\u5e74\u7a0b\u5ea6\u306e\u65b9\u5411\u3092\u7acb\u3066\u3001\u5e74\u3054\u3068\u306b\u898b\u76f4\u3057\u3066\u304f\u3060\u3055\u3044\u3002',
+    annualLuck: '\u4eca\u5e74\u306e\u30c6\u30fc\u30de\u3092\u4e00\u3064\u9078\u3073\u3001\u540c\u6642\u306b\u6e1b\u3089\u3059\u3053\u3068\u3082\u4e00\u3064\u6c7a\u3081\u3066\u304f\u3060\u3055\u3044\u3002',
+    monthlyLuck: '\u4eca\u6708\u306f\u6e96\u5099\u3001\u5b9f\u884c\u3001\u4f11\u606f\u306e\u3069\u308c\u306b\u91cd\u5fc3\u3092\u7f6e\u304f\u304b\u6c7a\u3081\u3066\u304f\u3060\u3055\u3044\u3002',
+    importantTiming: '\u6df7\u3058\u308b\u6642\u671f\u306f\u6e96\u5099\u3001\u63c3\u3046\u6642\u671f\u306f\u5b9f\u884c\u3001\u3076\u3064\u304b\u308b\u6642\u671f\u306f\u4f11\u606f\u306b\u5bc4\u305b\u3066\u304f\u3060\u3055\u3044\u3002'
+  };
+  return map[id] || base;
+}
+
+function cautionJa(id, facts, confidence) {
+  const hedge = confidence < 0.55 ? '\u78ba\u5ea6\u304c\u9650\u5b9a\u7684\u306a\u305f\u3081\u3001' : '';
+  const map = {
+    finance: `${hedge}\u8ca1\u904b\u3092\u78ba\u5b9a\u7684\u306a\u5229\u76ca\u3068\u3057\u3066\u8aad\u307e\u306a\u3044\u3067\u304f\u3060\u3055\u3044\u3002`,
+    love: `${hedge}\u6c88\u9ed9\u3084\u30d7\u30ec\u30c3\u30b7\u30e3\u30fc\u3067\u611b\u60c5\u3092\u8a66\u3055\u306a\u3044\u3067\u304f\u3060\u3055\u3044\u3002`,
+    health: `${hedge}\u3053\u308c\u3092\u8a3a\u65ad\u3001\u75c5\u6c17\u306e\u4e88\u6e2c\u3001\u533b\u7642\u6307\u793a\u3068\u3057\u3066\u6271\u308f\u306a\u3044\u3067\u304f\u3060\u3055\u3044\u3002`,
+    annualLuck: `${hedge}\u4e00\u5e74\u306e\u30b5\u30a4\u30f3\u3092\u547d\u5f0f\u5168\u4f53\u3088\u308a\u5f37\u304f\u6271\u3044\u904e\u304e\u306a\u3044\u3067\u304f\u3060\u3055\u3044\u3002`,
+    monthlyLuck: `${hedge}\u6708\u904b\u304b\u3089\u7279\u5b9a\u65e5\u306e\u65ad\u5b9a\u307e\u3067\u9032\u3081\u306a\u3044\u3067\u304f\u3060\u3055\u3044\u3002`,
+    importantTiming: `${hedge}\u4e00\u65e5\u5358\u4f4d\u3067\u65ad\u5b9a\u305b\u305a\u3001\u671f\u9593\u5e45\u3067\u898b\u3066\u304f\u3060\u3055\u3044\u3002`
+  };
+  return map[id] || `${hedge}\u4e00\u3064\u306e\u6839\u62e0\u3060\u3051\u3067\u5224\u65ad\u305b\u305a\u3001\u4f7f\u3044\u904e\u304e\u3001\u5b64\u7acb\u3001\u6025\u306a\u6c7a\u65ad\u306b\u6ce8\u610f\u3057\u3066\u304f\u3060\u3055\u3044\u3002`;
+}
+
+function avoidanceJa(id, facts) {
+  if (id === 'health') return '\u4e0d\u8abf\u3084\u4e0d\u5b89\u304c\u3042\u308b\u5834\u5408\u306f\u3001\u9451\u5b9a\u3092\u4e00\u5ea6\u6b62\u3081\u3001\u533b\u7642\u3084\u5c02\u9580\u5bb6\u306e\u652f\u63f4\u3092\u512a\u5148\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
+  if (id === 'finance') return '\u884c\u52d5\u524d\u306b\u640d\u5207\u308a\u30e9\u30a4\u30f3\u3092\u6c7a\u3081\u3001\u4fe1\u983c\u3067\u304d\u308b\u4eba\u306b\u524d\u63d0\u3092\u78ba\u8a8d\u3057\u3066\u3082\u3089\u3063\u3066\u304f\u3060\u3055\u3044\u3002';
+  if (id === 'love' || id === 'relationship' || id === 'marriage') return '\u300c\u5fc5\u8981\u306a\u3053\u3068\u300d\u300c\u63d0\u4f9b\u3067\u304d\u308b\u3053\u3068\u300d\u300c\u73fe\u5b9f\u7684\u306a\u30da\u30fc\u30b9\u300d\u3092\u76f4\u63a5\u306e\u8a00\u8449\u306b\u623b\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
+  if (PROFESSIONAL_CATEGORIES.has(id)) return '\u6642\u671f\u306f\u5e83\u3081\u306b\u53d6\u308a\u3001\u6708\u3084\u5e74\u306e\u60c5\u5831\u304c\u66f4\u65b0\u3055\u308c\u305f\u3089\u518d\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
+  return `${elementWordsJa(facts.primaryFavorable)}\u306b\u623b\u308b\u5c0f\u3055\u306a\u884c\u52d5\u3092\u4e00\u3064\u884c\u3044\u3001\u7d50\u679c\u3092\u898b\u3066\u304b\u3089\u6b21\u306b\u9032\u3093\u3067\u304f\u3060\u3055\u3044\u3002`;
+}
+
+function evidenceJa(section, facts, tendency) {
+  return [
+    `\u65e5\u4e3b=${facts.dayMaster.id || facts.dayMasterName}`,
+    `\u65fa\u8870=${strengthLabelJa(facts.strengthLevel)}`,
+    `\u7528\u795e\u5019\u88dc=${elementJa(facts.primaryFavorable)}`,
+    `\u5224\u65ad\u50be\u5411=${tendency}`,
+    PROFESSIONAL_CATEGORIES.has(section.id) ? '\u904b\u52e2\u306e\u91cd\u306d\u8aad\u307f\u304c\u5fc5\u8981' : '\u547d\u5f0f\u5168\u4f53\u306e\u6587\u8108\u304c\u5fc5\u8981'
+  ];
+}
+
+function opposingJa(section, facts) {
+  const factors = [];
+  if (facts.precision === 'partial-without-hour-pillar') factors.push('\u51fa\u751f\u6642\u523b\u4e0d\u660e\u306e\u305f\u3081\u3001\u6642\u67f1\u3068\u6642\u671f\u5224\u65ad\u306e\u78ba\u5ea6\u304c\u4e0b\u304c\u308a\u307e\u3059');
+  if (facts.avoid.length) factors.push(`\u6ce8\u610f\u5143\u7d20\u304c${elementJa(facts.primaryFavorable)}\u3068\u62ee\u6297\u3059\u308b\u53ef\u80fd\u6027\uff1a${facts.avoid.map(elementJa).join(', ')}`);
+  if (section.id === 'annualLuck' || section.id === 'monthlyLuck') factors.push('\u77ed\u671f\u306e\u904b\u52e2\u3060\u3051\u3067\u547d\u5f0f\u5168\u4f53\u3092\u8986\u3055\u306a\u3044\u3053\u3068');
+  if (section.id === 'health') factors.push('\u751f\u6d3b\u7fd2\u6163\u3001\u5e74\u9f62\u3001\u30b9\u30c8\u30ec\u30b9\u3001\u533b\u5b66\u7684\u6587\u8108\u306f\u547d\u5f0f\u306e\u5916\u306b\u3042\u308a\u307e\u3059');
+  if (!factors.length) factors.push('\u683c\u5c40\u3068\u6276\u6291\u304c\u5206\u304b\u308c\u308b\u5834\u5408\u306f\u53cd\u5bfe\u8aac\u3092\u78ba\u8a8d\u3057\u307e\u3059');
+  return factors;
+}
+
+function timingJa(id, facts) {
+  if (id === 'decadeLuck') return '\u9577\u671f\uff1a\u5927\u904b\u306e\u30c6\u30fc\u30de\u3092\u6570\u5e74\u5358\u4f4d\u3067\u8aad\u307f\u307e\u3059';
+  if (id === 'annualLuck') return '\u4e2d\u671f\uff1a\u6b73\u904b\u3092\u5927\u904b\u306e\u652f\u3048\u3068\u91cd\u306d\u3066\u8aad\u307f\u307e\u3059';
+  if (id === 'monthlyLuck') return '\u77ed\u671f\uff1a\u6708\u904b\u3092\u8abf\u6574\u3068\u8ca0\u8377\u7ba1\u7406\u306b\u4f7f\u3044\u307e\u3059';
+  if (id === 'importantTiming') return '\u7d71\u5408\uff1a\u5927\u904b\u304c\u5929\u5019\u3001\u6b73\u904b\u304c\u8ab2\u984c\u3001\u6708\u904b\u304c\u30da\u30fc\u30b9\u3092\u793a\u3057\u307e\u3059';
+  return facts.precision === 'partial-without-hour-pillar'
+    ? '\u547d\u5f0f\u50be\u5411\u306f\u8aad\u3081\u307e\u3059\u304c\u3001\u6642\u67f1\u306b\u95a2\u308f\u308b\u6642\u671f\u5224\u65ad\u306f\u9650\u5b9a\u7684\u3067\u3059'
+    : '\u547d\u5f0f\u50be\u5411\u306f\u5b89\u5b9a\u3057\u3066\u304a\u308a\u3001\u6642\u671f\u306f\u904b\u52e2\u306e\u91cd\u306d\u3067\u78ba\u8a8d\u3057\u307e\u3059';
+}
+
+function renderReadingTextJa(sections, mode, executiveSummary, timingReading) {
+  const lines = [
+    '\u3010\u7dcf\u5408\u7d50\u8ad6\u3011',
+    executiveSummary.centralTheme,
+    `\u547d\u5f0f\u306e\u529b\u306e\u4f7f\u3044\u65b9\uff1a${executiveSummary.strength}`,
+    `\u73fe\u5728\u306e\u904b\uff1a${executiveSummary.currentFlow}`,
+    `\u4eca\u65e5\u304b\u3089\u3067\u304d\u308b\u3053\u3068\uff1a${executiveSummary.doNow}`,
+    `\u907f\u3051\u305f\u65b9\u304c\u3088\u3044\u3053\u3068\uff1a${executiveSummary.avoid}`,
+    `\u78ba\u5ea6\uff1a${executiveSummary.confidence}`,
+    '',
+    '\u3010\u6642\u671f\u306e\u91cd\u306d\u8aad\u307f\u3011',
+    `\u5927\u904b\uff1a${timingReading.longTermTheme}`,
+    `\u6b73\u904b\uff1a${timingReading.annualTheme}`,
+    `\u6708\u904b\uff1a${timingReading.monthlyTheme}`,
+    `\u6d41\u6d3e\u5dee\uff1a${timingReading.schoolDifferences.join(' / ')}`,
+    ''
+  ];
+  for (const [id] of CATEGORY_DEFS) {
+    const section = sections[id];
+    lines.push(`\u3010${section.title}\u3011`);
+    lines.push(mode === 'professional' ? section.professionalSummary : section.beginnerSummary);
+    lines.push(`\u884c\u52d5\u63d0\u6848\uff1a${section.action}`);
+    lines.push(`\u6ce8\u610f\u70b9\uff1a${section.caution}`);
+    lines.push(`\u56de\u907f\u7b56\uff1a${section.avoidance}`);
+    lines.push(`\u78ba\u5ea6\uff1a${section.confidence}\uff0freviewStatus\uff1a${section.reviewStatus}`);
+    if (section.warnings.length) lines.push(`\u6ce8\u610f\u30d5\u30e9\u30b0\uff1a${section.warnings.join(', ')}`);
+    if (mode === 'professional') lines.push(`\u51fa\u5178ID\uff1a${section.sourceIds.join(', ')}\uff0f\u6d41\u6d3eID\uff1a${section.schoolIds.join(', ')}`);
+    lines.push('');
+  }
+  return dedupeAdjacent(lines).join('\n').trim();
+}
+
+function buildMitsunomeInputJa(facts, sections, beginnerText, professionalText, executiveSummary, timingReading, options) {
+  const normalText = `\u3042\u306a\u305f\u306e\u4eca\u306e\u4e2d\u5fc3\u30c6\u30fc\u30de\u306f\u3001${executiveSummary.centralTheme}\u3002\u7126\u3089\u306a\u304f\u3066\u3044\u3044\u306e\u3002\u305f\u3060\u3057\u3001${sections.weakness.caution}\u3002\u4eca\u65e5\u306f${executiveSummary.doNow}\u304b\u3089\u59cb\u3081\u3066\u307f\u3066\u3002`;
+  const zubatText = `\u7d50\u8ad6\u3002${executiveSummary.centralTheme}\u3002\u4eca\u3084\u308b\u3053\u3068\u306f${executiveSummary.doNow}\u3002\u4f46\u3057\u3001${executiveSummary.avoid}\u306f\u907f\u3051\u3066\u3002\u9003\u3052\u9053\u306f\u3042\u308b\u308f\u3002${sections.weakness.avoidance}`;
+  return {
+    schemaId: 'koyomi-mitsunome-bazi-reading-input',
+    locale: 'ja',
+    personId: facts.personId,
+    modeHints: {
+      normal: '\u81ea\u7136\u3067\u611b\u60c5\u306e\u3042\u308b\u53e3\u8abf\u3002\u5c02\u9580\u7528\u8a9e\u306f\u304b\u307f\u7815\u304f\u3002',
+      zubat: '\u77ed\u304f\u7387\u76f4\u3002\u6539\u5584\u7b56\u3068\u9003\u3052\u9053\u3092\u5fc5\u305a\u6b8b\u3059\u3002'
+    },
+    executiveSummary,
+    timingReading,
+    sections,
+    beginnerText,
+    professionalText,
+    voiceDrafts: {
+      normal: {
+        style: 'mitsunome-normal-ja',
+        text: normalText,
+        guardrails: ['no-fatalism', 'no-medical-diagnosis', 'no-unsupported-claims']
+      },
+      zubat: {
+        style: 'mitsunome-zubat-ja',
+        text: zubatText,
+        escapeRoute: sections.weakness.avoidance,
+        guardrails: ['no-personality-attack', 'no-fearmongering', 'always-add-recovery-path']
+      }
+    },
+    sourcePolicy: {
+      aiGeneratedTextIsNotSource: true,
+      noNewCalculationByAi: true,
+      sourceIdsRequiredForClaims: true,
+      classicalOriginalMustRemainSeparate: true,
+      requestedTone: options.tone || 'normal'
+    }
+  };
+}
+
+function elementJa(element) {
+  return JA_ELEMENTS[normalizeElement(element)] || String(element || '\u4e0d\u660e');
+}
+
+function elementWordsJa(element) {
+  return JA_ELEMENT_WORDS[normalizeElement(element)] || '\u30d0\u30e9\u30f3\u30b9';
+}
+
+function actionByElementJa(element) {
+  const map = {
+    wood: '\u6b21\u306b\u80b2\u3066\u308b\u3053\u3068\u3092\u4e00\u3064\u9078\u3073\u3001\u4e88\u5b9a\u8868\u306b\u66f8\u3044\u3066\u898b\u3048\u308b\u5f62\u306b\u3057\u3066\u304f\u3060\u3055\u3044',
+    fire: '\u4f1d\u3048\u305f\u3044\u3053\u3068\u3092\u4e00\u3064\u660e\u78ba\u306b\u3057\u3001\u7d9a\u3051\u3089\u308c\u308b\u5c0f\u3055\u306a\u7d04\u675f\u3068\u3057\u3066\u51fa\u3057\u3066\u304f\u3060\u3055\u3044',
+    earth: '\u4e88\u5b9a\u3001\u5bb6\u8a08\u3001\u7761\u7720\u3001\u5468\u56f2\u3068\u306e\u5f79\u5272\u5206\u62c5\u3092\u6574\u3048\u3066\u304b\u3089\u5e83\u3052\u3066\u304f\u3060\u3055\u3044',
+    metal: '\u66d6\u6627\u306a\u7fa9\u52d9\u3092\u4e00\u3064\u6e1b\u3089\u3057\u3001\u30eb\u30fc\u30eb\u3084\u5883\u754c\u7dda\u3092\u8a00\u8449\u306b\u3057\u3066\u304f\u3060\u3055\u3044',
+    water: '\u60c5\u5831\u3092\u96c6\u3081\u3001\u982d\u3092\u4f11\u3081\u3001\u51b7\u9759\u3055\u304c\u5fc5\u8981\u306a\u6c7a\u65ad\u306f\u5c11\u3057\u9045\u3089\u305b\u3066\u304f\u3060\u3055\u3044'
+  };
+  return map[normalizeElement(element)] || map.earth;
+}
+
+function strengthLabelJa(value) {
+  const raw = String(value || '').toLowerCase();
+  if (raw.includes('strong') || raw.includes('旺') || raw.includes('身強')) return '\u8eab\u5f37';
+  if (raw.includes('weak') || raw.includes('弱') || raw.includes('身弱')) return '\u8eab\u5f31';
+  return '\u5224\u65ad\u4fdd\u7559';
+}
+
+function occupationFocusJa(occupation) {
+  if (!occupation) return '';
+  const id = String(occupation.id || occupation.label || occupation.focus || '').toLowerCase();
+  const map = {
+    emergency: '\u73fe\u5834\u5224\u65ad\u3001\u5371\u967a\u56de\u907f\u3001\u9023\u643a\u3001\u75b2\u52b4\u7ba1\u7406',
+    management: '\u610f\u601d\u6c7a\u5b9a\u3001\u8cac\u4efb\u3001\u90e8\u4e0b\u5bfe\u5fdc\u3001\u4ea4\u6e09',
+    student: '\u5b66\u7fd2\u65b9\u6cd5\u3001\u8a66\u9a13\u3001\u96c6\u4e2d\u3001\u9032\u8def',
+    technical: '\u7cbe\u5ea6\u3001\u6539\u5584\u3001\u96c6\u4e2d\u3001\u5c02\u9580\u6027',
+    service: '\u5bfe\u4eba\u53cd\u5fdc\u3001\u8a00\u8449\u3001\u30bf\u30a4\u30df\u30f3\u30b0'
+  };
+  if (/emergency|rescue|field judgement|risk avoidance/.test(id)) return map.emergency;
+  if (/management|leader|executive|staff care/.test(id)) return map.management;
+  if (/student|school|study/.test(id)) return map.student;
+  if (/technical|engineer|precision/.test(id)) return map.technical;
+  if (/service|sales|retail|hospitality|customer/.test(id)) return map.service;
+  return '';
+}
+
+function findEnglishDisplayHits(text) {
+  const patterns = [/day[- ]master/i, /Overall Conclusion/, /Current flow/, /Do now/, /Plain meaning/, /Recovery path/];
+  return patterns.filter(pattern => pattern.test(text)).map(pattern => pattern.source);
 }
 
 function extractFacts(result = {}, options = {}) {
@@ -718,5 +1180,5 @@ function countDuplicateLines(text) {
 }
 
 function usesSoftLanguage(text) {
-  return /\bmay\b|\bpartial\b|\blimited\b|\bconditional\b|\breview\b|\btendency\b/i.test(text);
+  return /\bmay\b|\bpartial\b|\blimited\b|\bconditional\b|\breview\b|\btendency\b|\u78ba\u5ea6|\u9650\u5b9a\u7684|\u50be\u5411|\u53ef\u80fd\u6027|\u30ec\u30d3\u30e5\u30fc/i.test(text);
 }
