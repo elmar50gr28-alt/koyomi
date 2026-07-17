@@ -613,7 +613,7 @@ function strengthLabelJa(value) {
 
 function occupationFocusJa(occupation) {
   if (!occupation) return '';
-  const id = occupation.id || occupation.label || '';
+  const id = String(occupation.id || occupation.label || occupation.focus || '').toLowerCase();
   const map = {
     emergency: '\u73fe\u5834\u5224\u65ad\u3001\u5371\u967a\u56de\u907f\u3001\u9023\u643a\u3001\u75b2\u52b4\u7ba1\u7406',
     management: '\u610f\u601d\u6c7a\u5b9a\u3001\u8cac\u4efb\u3001\u90e8\u4e0b\u5bfe\u5fdc\u3001\u4ea4\u6e09',
@@ -621,7 +621,12 @@ function occupationFocusJa(occupation) {
     technical: '\u7cbe\u5ea6\u3001\u6539\u5584\u3001\u96c6\u4e2d\u3001\u5c02\u9580\u6027',
     service: '\u5bfe\u4eba\u53cd\u5fdc\u3001\u8a00\u8449\u3001\u30bf\u30a4\u30df\u30f3\u30b0'
   };
-  return map[id] || '';
+  if (/emergency|rescue|field judgement|risk avoidance/.test(id)) return map.emergency;
+  if (/management|leader|executive|staff care/.test(id)) return map.management;
+  if (/student|school|study/.test(id)) return map.student;
+  if (/technical|engineer|precision/.test(id)) return map.technical;
+  if (/service|sales|retail|hospitality|customer/.test(id)) return map.service;
+  return '';
 }
 
 function findEnglishDisplayHits(text) {
