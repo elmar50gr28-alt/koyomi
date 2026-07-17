@@ -19,7 +19,8 @@ const requiredData = [
   'source-coverage-report.json','low-confidence-report.json','review-status-report.json',
   'implementation-rate-report.json','case-classification.json','phase4-test-cases.json',
   'final-rule-audit.json','final-classical-audit.json','final-example-cases.json',
-  'final-test-cases.json','final-quality-score.json','final-ai-review.json'
+  'final-test-cases.json','final-quality-score.json','final-ai-review.json',
+  'practical-audit-cases.json'
 ];
 
 for (const file of requiredWorkflows) await access(join('.github', 'workflows', file));
@@ -29,7 +30,7 @@ const app = await readFile('app.html', 'utf8');
 assert.ok(app.includes('KOYOMI_BAZI'), 'app.html must expose the Bazi engine without profile re-entry');
 
 const serviceWorker = await readFile('service-worker.js', 'utf8');
-assert.ok(serviceWorker.includes('koyomi-bazi-reading-engine'), 'service worker cache name must include bazi reading engine');
+assert.ok(serviceWorker.includes('koyomi-bazi-practical-tuning'), 'service worker cache name must include bazi practical tuning');
 assert.ok(serviceWorker.includes('./src/bazi/index.js'), 'service worker must cache bazi engine entry');
 assert.ok(serviceWorker.includes('./data/bazi/solar-term-rules.json'), 'service worker must cache solar-term rules');
 assert.ok(serviceWorker.includes('./data/bazi/phase2-test-cases.json'), 'service worker must cache phase2 test cases');
@@ -38,6 +39,10 @@ assert.ok(serviceWorker.includes('./data/bazi/quality-audit.json'), 'service wor
 assert.ok(serviceWorker.includes('./data/bazi/phase4-test-cases.json'), 'service worker must cache phase4 test cases');
 assert.ok(serviceWorker.includes('./data/bazi/final-quality-score.json'), 'service worker must cache final quality score');
 assert.ok(serviceWorker.includes('./data/bazi/final-test-cases.json'), 'service worker must cache final test cases');
+assert.ok(serviceWorker.includes('./data/bazi/practical-audit-cases.json'), 'service worker must cache practical audit cases');
+assert.ok(app.includes('koyomi-bazi-summary'), 'app.html must render practical Bazi summary first');
+assert.ok(app.includes('根拠・専門家表示'), 'app.html must expose expert evidence display');
+assert.ok(app.includes('<details><summary>'), 'app.html must keep long reading sections collapsed');
 
 const docs = await readdir(join('docs', 'bazi'));
 assert.ok(docs.includes('IMPLEMENTATION_STATUS.md'), 'implementation status doc missing');

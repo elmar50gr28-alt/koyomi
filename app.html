@@ -1815,6 +1815,78 @@ function koyomiBaziReadingProfile(){
     }
   };
 }
+function koyomiEscapeHtml(value){
+  return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+function koyomiEnsureBaziReadingStyle(){
+  if(document.getElementById('koyomiBaziReadingStyle'))return;
+  const style=document.createElement('style');
+  style.id='koyomiBaziReadingStyle';
+  style.textContent=`
+    .koyomi-bazi-reading{display:grid;gap:12px;max-width:100%;overflow-wrap:anywhere;word-break:normal;line-height:1.75}
+    .koyomi-bazi-reading *{box-sizing:border-box;max-width:100%}
+    .koyomi-bazi-summary{display:grid;gap:8px;padding:12px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.05)}
+    .koyomi-bazi-summary b{display:block;font-size:.92rem;opacity:.78}
+    .koyomi-bazi-action{font-weight:700}
+    .koyomi-bazi-reading details{padding:10px 0;border-top:1px solid rgba(255,255,255,.12)}
+    .koyomi-bazi-reading summary{min-height:44px;display:flex;align-items:center;font-weight:700;cursor:pointer}
+    .koyomi-bazi-section{display:grid;gap:8px;padding:4px 0 8px}
+    .koyomi-bazi-section p{margin:.15rem 0}
+    .koyomi-bazi-meta{display:flex;flex-wrap:wrap;gap:6px}
+    .koyomi-bazi-meta span{padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.08);font-size:.82rem}
+    @media(max-width:640px){.koyomi-bazi-reading{font-size:.95rem}.koyomi-bazi-summary{margin-inline:-2px}}
+  `;
+  document.head.appendChild(style);
+}
+function koyomiBaziSectionHtml(section){
+  if(!section)return '';
+  return `<div class="koyomi-bazi-section">
+    <p><b>Conclusion</b> ${koyomiEscapeHtml(section.conclusion)}</p>
+    <p><b>Evidence</b> ${koyomiEscapeHtml((section.evidence||[]).join(' / '))}</p>
+    <p><b>Opposing factors</b> ${koyomiEscapeHtml((section.opposingFactors||[]).join(' / '))}</p>
+    <p><b>Timing</b> ${koyomiEscapeHtml(section.timing)}</p>
+    <p class="koyomi-bazi-action"><b>Action</b> ${koyomiEscapeHtml(section.action)}</p>
+    <p><b>Caution</b> ${koyomiEscapeHtml(section.caution)}</p>
+    <p><b>Recovery path</b> ${koyomiEscapeHtml(section.avoidance)}</p>
+    <div class="koyomi-bazi-meta"><span>confidence ${Math.round((section.confidence||0)*100)}%</span><span>${koyomiEscapeHtml(section.reviewStatus)}</span></div>
+  </div>`;
+}
+function koyomiBaziReadingHtml(reading){
+  const summary=reading.executiveSummary||{};
+  const sections=reading.sections||{};
+  const details=[
+    ['本質',sections.personality||sections.essence],
+    ['才能',sections.talent],
+    ['弱点・注意点',sections.weakness],
+    ['仕事',sections.career],
+    ['財',sections.finance],
+    ['恋愛',sections.love||sections.relationship],
+    ['家庭',sections.family],
+    ['健康傾向',sections.health],
+    ['大運',sections.decadeLuck],
+    ['歳運',sections.annualLuck],
+    ['月運',sections.monthlyLuck],
+    ['重要時期',sections.importantTiming]
+  ];
+  const detailHtml=details.map(([title,section])=>`<details><summary>${koyomiEscapeHtml(title)}</summary>${koyomiBaziSectionHtml(section)}</details>`).join('');
+  const professional=`<details><summary>根拠・専門家表示</summary><div class="koyomi-bazi-section">
+    <p><b>School differences</b> ${koyomiEscapeHtml((reading.timingReading?.schoolDifferences||[]).join(' / '))}</p>
+    <p><b>Sources</b> ${koyomiEscapeHtml(Object.values(sections).flatMap(s=>s.sourceIds||[]).filter((v,i,a)=>a.indexOf(v)===i).join(' / '))}</p>
+    <p><b>Review</b> ${koyomiEscapeHtml(Object.values(sections).filter(s=>s.reviewStatus!=='practical-reading-rc').map(s=>`${s.id}:${s.reviewStatus}`).join(' / ')||'practical-reading-rc')}</p>
+  </div></details>`;
+  return `<div class="koyomi-bazi-reading">
+    <section class="koyomi-bazi-summary">
+      <p><b>総合結論</b>${koyomiEscapeHtml(summary.centralTheme)}</p>
+      <p><b>今の重要テーマ</b>${koyomiEscapeHtml(summary.currentIssue)}</p>
+      <p><b>現在の運</b>${koyomiEscapeHtml(summary.currentFlow)}</p>
+      <p class="koyomi-bazi-action"><b>今日からできること</b>${koyomiEscapeHtml(summary.doNow)}</p>
+      <p><b>避けた方がよいこと</b>${koyomiEscapeHtml(summary.avoid)}</p>
+      <div class="koyomi-bazi-meta"><span>confidence ${Math.round((summary.confidence||0)*100)}%</span><span>${koyomiEscapeHtml(summary.reviewStatus||'review')}</span></div>
+    </section>
+    ${detailHtml}
+    ${professional}
+  </div>`;
+}
 function koyomiRenderBaziReading(){
   try{
     const profile=koyomiBaziReadingProfile();
@@ -1823,7 +1895,10 @@ function koyomiRenderBaziReading(){
     const reading=result.reading||KOYOMI_BAZI.buildBaziReading(result);
     window.KOYOMI_LAST_BAZI_READING={result,reading};
     const shichu=document.getElementById('shichuReading');
-    if(shichu)shichu.textContent=reading.beginnerText;
+    if(shichu){
+      koyomiEnsureBaziReadingStyle();
+      shichu.innerHTML=koyomiBaziReadingHtml(reading);
+    }
     const meta=document.getElementById('shichuMeta');
     if(meta){
       const confidence=Math.round((reading.sections?.overall?.confidence||0)*100);

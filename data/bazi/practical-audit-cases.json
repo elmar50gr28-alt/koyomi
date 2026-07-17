@@ -1,0 +1,302 @@
+[
+  {
+    "caseId": "practical-001-exact-time-japan",
+    "classification": "exact-birth-time",
+    "profile": {
+      "displayName": "Practical Exact Japan",
+      "birthData": {
+        "date": "1984-02-04",
+        "time": "12:00",
+        "place": { "label": "Tokyo", "longitude": 139.767, "latitude": 35.681, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "management",
+    "auditFocus": ["conclusion-first", "professional-evidence", "occupation-wording"],
+    "reviewStatus": "synthetic-regression"
+  },
+  {
+    "caseId": "practical-002-approx-time",
+    "classification": "approximate-birth-time",
+    "profile": {
+      "displayName": "Practical Approx Time",
+      "birthData": {
+        "date": "1991-06-12",
+        "time": "07:30",
+        "place": { "label": "Osaka", "longitude": 135.502, "latitude": 34.693, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "service",
+    "auditFocus": ["confidence", "timing-range", "relationship-action"],
+    "reviewStatus": "synthetic-regression"
+  },
+  {
+    "caseId": "practical-003-unknown-time",
+    "classification": "unknown-birth-time",
+    "profile": {
+      "displayName": "Practical Unknown Time",
+      "birthData": {
+        "date": "1990-07-10",
+        "timeUnknown": true,
+        "place": { "label": "Osaka", "longitude": 135.502, "latitude": 34.693, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "",
+    "auditFocus": ["unknown-time-warning", "soft-language", "no-hour-pillar-overclaim"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-004-overseas-place",
+    "classification": "overseas-birth-place",
+    "profile": {
+      "displayName": "Practical Overseas",
+      "birthData": {
+        "date": "1988-11-03",
+        "time": "22:10",
+        "place": { "label": "New York", "longitude": -74.006, "latitude": 40.713, "utcOffset": -5, "timezone": "America/New_York" }
+      }
+    },
+    "occupation": "technical",
+    "auditFocus": ["world-place", "timezone", "iPhone-readable"],
+    "reviewStatus": "synthetic-regression"
+  },
+  {
+    "caseId": "practical-005-strong-candidate",
+    "classification": "strong-daymaster-candidate",
+    "profile": {
+      "displayName": "Practical Strong Candidate",
+      "birthData": {
+        "date": "1978-08-20",
+        "time": "09:20",
+        "place": { "label": "Nagoya", "longitude": 136.907, "latitude": 35.181, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "emergency",
+    "auditFocus": ["strong-daymaster-explanation", "caution-avoidance", "zubat-mode"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-006-weak-candidate",
+    "classification": "weak-daymaster-candidate",
+    "profile": {
+      "displayName": "Practical Weak Candidate",
+      "birthData": {
+        "date": "1995-01-18",
+        "time": "04:45",
+        "place": { "label": "Sapporo", "longitude": 141.354, "latitude": 43.062, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "student",
+    "auditFocus": ["weak-daymaster-explanation", "support-condition", "learning"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-007-strength-conflict",
+    "classification": "strength-conflict",
+    "profile": {
+      "displayName": "Practical Strength Conflict",
+      "birthData": {
+        "date": "1982-04-28",
+        "time": "16:05",
+        "place": { "label": "Fukuoka", "longitude": 130.401, "latitude": 33.590, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "sales",
+    "auditFocus": ["opposing-factors", "school-difference", "confidence"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-008-standard-pattern",
+    "classification": "regular-pattern-candidate",
+    "profile": {
+      "displayName": "Practical Regular Pattern",
+      "birthData": {
+        "date": "1972-09-09",
+        "time": "13:40",
+        "place": { "label": "Kyoto", "longitude": 135.768, "latitude": 35.011, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "management",
+    "auditFocus": ["pattern", "professional-display", "rooted-evidence"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-009-follow-pattern",
+    "classification": "follow-pattern-candidate",
+    "profile": {
+      "displayName": "Practical Follow Pattern",
+      "birthData": {
+        "date": "2001-12-05",
+        "time": "21:15",
+        "place": { "label": "Naha", "longitude": 127.679, "latitude": 26.212, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "",
+    "auditFocus": ["follow-pattern", "human-review", "non-assertive-text"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-010-pattern-conflict",
+    "classification": "pattern-conflict",
+    "profile": {
+      "displayName": "Practical Pattern Conflict",
+      "birthData": {
+        "date": "1969-03-17",
+        "time": "02:30",
+        "place": { "label": "Sendai", "longitude": 140.872, "latitude": 38.268, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "technical",
+    "auditFocus": ["pattern-candidate-competition", "unresolved-factors", "review-status"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-011-yongshen-aligned",
+    "classification": "yongshen-climate-aligned",
+    "profile": {
+      "displayName": "Practical Yongshen Aligned",
+      "birthData": {
+        "date": "1986-05-22",
+        "time": "10:50",
+        "place": { "label": "Kobe", "longitude": 135.195, "latitude": 34.690, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "service",
+    "auditFocus": ["yongshen", "climate", "clear-action"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-012-yongshen-conflict",
+    "classification": "yongshen-climate-conflict",
+    "profile": {
+      "displayName": "Practical Yongshen Conflict",
+      "birthData": {
+        "date": "1999-10-25",
+        "time": "18:25",
+        "place": { "label": "Kanazawa", "longitude": 136.656, "latitude": 36.561, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "",
+    "auditFocus": ["school-difference", "soft-language", "expert-note"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-013-decade-before-switch",
+    "classification": "decade-switch-before",
+    "profile": {
+      "displayName": "Practical Before Switch",
+      "birthData": {
+        "date": "1980-02-01",
+        "time": "06:00",
+        "place": { "label": "Tokyo", "longitude": 139.767, "latitude": 35.681, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "management",
+    "auditFocus": ["decade-transition", "period-range", "preparation-window"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-014-decade-after-switch",
+    "classification": "decade-switch-after",
+    "profile": {
+      "displayName": "Practical After Switch",
+      "birthData": {
+        "date": "1979-12-28",
+        "time": "06:00",
+        "place": { "label": "Tokyo", "longitude": 139.767, "latitude": 35.681, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "management",
+    "auditFocus": ["decade-transition", "execution-window", "rest-window"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-015-annual-tailwind",
+    "classification": "annual-tailwind",
+    "profile": {
+      "displayName": "Practical Annual Tailwind",
+      "birthData": {
+        "date": "1993-02-14",
+        "time": "11:11",
+        "place": { "label": "Yokohama", "longitude": 139.638, "latitude": 35.443, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "technical",
+    "auditFocus": ["annual-theme", "supportive-area", "action"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-016-annual-caution",
+    "classification": "annual-caution",
+    "profile": {
+      "displayName": "Practical Annual Caution",
+      "birthData": {
+        "date": "1987-07-07",
+        "time": "17:17",
+        "place": { "label": "Hiroshima", "longitude": 132.459, "latitude": 34.396, "utcOffset": 9, "timezone": "Asia/Tokyo" }
+      }
+    },
+    "occupation": "emergency",
+    "auditFocus": ["caution-with-avoidance", "no-fear", "health-non-diagnosis"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-017-large-school-difference",
+    "classification": "large-school-difference",
+    "profile": {
+      "displayName": "Practical School Difference",
+      "birthData": {
+        "date": "1965-04-05",
+        "time": "23:40",
+        "place": { "label": "London", "longitude": -0.1276, "latitude": 51.5072, "utcOffset": 0, "timezone": "Europe/London" }
+      }
+    },
+    "occupation": "",
+    "auditFocus": ["school-difference-visible", "low-confidence", "professional-evidence"],
+    "reviewStatus": "human-review-required"
+  },
+  {
+    "caseId": "practical-018-job-input-present",
+    "classification": "occupation-present",
+    "profile": {
+      "displayName": "Practical Job Present",
+      "birthData": {
+        "date": "1997-09-30",
+        "time": "08:08",
+        "place": { "label": "Los Angeles", "longitude": -118.244, "latitude": 34.052, "utcOffset": -8, "timezone": "America/Los_Angeles" }
+      }
+    },
+    "occupation": "developer",
+    "auditFocus": ["occupation-translation", "no-logic-change", "career-specificity"],
+    "reviewStatus": "synthetic-regression"
+  },
+  {
+    "caseId": "practical-019-job-input-missing",
+    "classification": "occupation-missing",
+    "profile": {
+      "displayName": "Practical Job Missing",
+      "birthData": {
+        "date": "1997-09-30",
+        "time": "08:08",
+        "place": { "label": "Los Angeles", "longitude": -118.244, "latitude": 34.052, "utcOffset": -8, "timezone": "America/Los_Angeles" }
+      }
+    },
+    "occupation": "",
+    "auditFocus": ["general-wording", "no-crash", "same-api"],
+    "reviewStatus": "synthetic-regression"
+  },
+  {
+    "caseId": "practical-020-iphone-long-reading",
+    "classification": "iphone-readable",
+    "profile": {
+      "displayName": "Practical iPhone Reading",
+      "birthData": {
+        "date": "2004-01-25",
+        "time": "14:22",
+        "place": { "label": "Singapore", "longitude": 103.819, "latitude": 1.352, "utcOffset": 8, "timezone": "Asia/Singapore" }
+      }
+    },
+    "occupation": "student",
+    "auditFocus": ["first-view-summary", "collapsed-details", "horizontal-scroll-guard"],
+    "reviewStatus": "synthetic-regression"
+  }
+]
