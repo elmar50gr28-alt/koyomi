@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/bazi-engine.test.mjs",
-    "test:bazi": "node tests/bazi-engine.test.mjs",
+    "test": "npm run test:bazi",
+    "test:bazi": "node tests/bazi-engine.test.mjs && node tests/bazi-risshun-boundary.test.mjs",
     "test:static": "node tests/static-validation.test.mjs",
     "test:mobile": "node tests/mobile-regression.test.mjs"
   }
