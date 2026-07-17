@@ -1793,5 +1793,62 @@ window.V191={setPage,renderCalendar,buildPersonal,compatibility,generateTimeline
 <script type="module">
 import * as KOYOMI_BAZI from './src/bazi/index.js';
 window.KOYOMI_BAZI = KOYOMI_BAZI;
+function koyomiBaziReadingProfile(){
+  const value=id=>document.getElementById(id)?.value||'';
+  const date=value('birthDate');
+  if(!date)return null;
+  const timeUnknown=value('birthTimeAccuracy')==='unknown'||!value('birthTime');
+  return {
+    personId: window.LedgerState?.selectedPrimary||null,
+    displayName:value('name')||[value('surname'),value('givenName')].filter(Boolean).join(' ')||'KOYOMI',
+    birthData:{
+      date,
+      time:timeUnknown?'':value('birthTime'),
+      timeUnknown,
+      place:{
+        label:value('birthPlace'),
+        longitude:Number(value('longitude'))||135,
+        latitude:Number(value('latitude'))||null,
+        utcOffset:Number(value('timezoneOffset'))||9,
+        timezone:'Asia/Tokyo'
+      }
+    }
+  };
+}
+function koyomiRenderBaziReading(){
+  try{
+    const profile=koyomiBaziReadingProfile();
+    if(!profile)return;
+    const result=KOYOMI_BAZI.calculateBazi(profile);
+    const reading=result.reading||KOYOMI_BAZI.buildBaziReading(result);
+    window.KOYOMI_LAST_BAZI_READING={result,reading};
+    const shichu=document.getElementById('shichuReading');
+    if(shichu)shichu.textContent=reading.beginnerText;
+    const meta=document.getElementById('shichuMeta');
+    if(meta){
+      const confidence=Math.round((reading.sections?.overall?.confidence||0)*100);
+      meta.innerHTML=[
+        `Reading Engine ${reading.version}`,
+        `Beginner + Professional`,
+        `Mitsunome ready`,
+        `confidence ${confidence}%`
+      ].map(x=>`<span>${x}</span>`).join('');
+    }
+    if(window.lastPersonal){
+      window.lastPersonal.baziReading=reading;
+      window.lastPersonal.baziStructuredResult=result;
+      if(window.lastPersonal.divinations)window.lastPersonal.divinations.shichu=reading.beginnerText;
+    }
+  }catch(error){
+    console.error('[KOYOMI_BAZI_READING] render failed',error);
+  }
+}
+window.KOYOMI_BAZI_READING={render:koyomiRenderBaziReading,profile:koyomiBaziReadingProfile};
+document.addEventListener('submit',event=>{
+  if(event.target?.id==='personalForm')setTimeout(koyomiRenderBaziReading,0);
+},true);
+document.addEventListener('click',event=>{
+  if(event.target?.id==='koyomiStartReading'||event.target?.closest?.('[data-koyomi-shortcut="personal"]'))setTimeout(koyomiRenderBaziReading,250);
+},true);
 </script>
 </body></html>

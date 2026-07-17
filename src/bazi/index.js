@@ -9,6 +9,7 @@ export { compareBaziSchools, compareSchools, listSchoolProfiles } from './school
 export { explainBaziDecision, explainRule, getEvidence, PHASE3_CLASSICAL_INDEX } from './evidence/index.js';
 export { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
 export { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput, buildProfessionalEvidence, evaluateInterpretationTendencies, evaluateLuckInterpretations } from './interpretation/index.js';
+export { buildBaziBeginnerReading, buildBaziMitsunomeReadingInput, buildBaziProfessionalReading, buildBaziReading, validateBaziReading } from './reading/index.js';
 
 import { calculateBaziChart, calculateFourPillars, calculateTenGod, calculateTwelveStage, getHiddenStems } from './chart/index.js';
 import { evaluateBasicBranchRelations, evaluateBasicStemRelations, evaluateBranchRelations, evaluateStemRelations } from './relations/index.js';
@@ -18,6 +19,7 @@ import { evaluateFavorableElements, evaluateYongshen } from './yongshen/index.js
 import { calculateLuckCycles } from './luck/index.js';
 import { compareBaziSchools, compareSchools } from './schools/index.js';
 import { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput, buildProfessionalEvidence, evaluateInterpretationTendencies, evaluateLuckInterpretations } from './interpretation/index.js';
+import { buildBaziReading, validateBaziReading } from './reading/index.js';
 import { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
 
 export function calculateBazi(profile, schoolConfig = {}) {
@@ -59,8 +61,11 @@ export function calculateBazi(profile, schoolConfig = {}) {
     ...phase3Result,
     mitsunomeInput: buildMitsunomeInput(phase3Result)
   };
+  const reading = buildBaziReading(finalResult);
   return {
     ...finalResult,
+    reading,
+    readingValidation: validateBaziReading(reading),
     validation: validateBaziResult(finalResult),
     phase2Validation: validateBaziPhase2Result(finalResult),
     phase3Validation: validateBaziPhase3Result(finalResult)
@@ -95,5 +100,7 @@ export default {
   evaluateLuckInterpretations,
   buildBeginnerExplanation,
   buildProfessionalEvidence,
-  buildMitsunomeInput
+  buildMitsunomeInput,
+  buildBaziReading,
+  validateBaziReading
 };
