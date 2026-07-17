@@ -181,6 +181,10 @@ assert.ok(!/practical-reading-rc|sourceIds?|schoolIds?|ruleIds?|evidenceIds?|rev
 assert.ok(!/(^|\s)0\.\d+/.test(full.reading.beginnerText), 'Japanese public reading must not expose raw confidence decimals');
 assert.ok(full.reading.sections.overall.publicEvidence.includes('\u65e5\u4e3b\u306f'), 'Japanese public evidence must be natural prose');
 assert.ok(!full.reading.sections.overall.publicEvidence.includes('='), 'Japanese public evidence must not use developer notation');
+for (const section of Object.values(full.reading.sections)) {
+  assert.ok(section.publicEvidence, `${section.id} public evidence missing`);
+  assert.ok(!/bing|\u65e5\u4e3b=|\u65fa\u8870=|\u7528\u795e\u5019\u88dc=|\u5224\u65ad\u50be\u5411=|\//.test(section.publicEvidence), `${section.id} public evidence must not expose internal notation`);
+}
 assert.ok(full.reading.professionalText.includes('reviewStatus=practical-reading-rc'), 'expert display must retain generation review status');
 assert.ok(full.reading?.mitsunomeInput?.sourcePolicy?.noNewCalculationByAi, 'reading mitsunome source policy missing');
 assert.ok(full.reading?.mitsunomeInput?.voiceDrafts?.normal?.text, 'mitsunome normal mode missing');
@@ -214,7 +218,10 @@ const bingResult = calculateBazi({
 assert.equal(bingResult.chart.pillars.day.stem.id, 'bing', 'test fixture must keep bing as internal day-master id');
 const bingReading = buildBaziReading(bingResult);
 assert.ok(bingReading.beginnerText.includes('\u4e19\u306e\u65e5\u4e3b'), 'bing must be displayed as 丙 in public Japanese text');
-assert.ok(!/bing|day-master|\u65e5\u4e3b=/.test(bingReading.beginnerText), 'public Japanese text must not expose bing or developer day-master notation');
+assert.ok(!/bing|day-master|\u65e5\u4e3b=|\u65fa\u8870=|\u7528\u795e\u5019\u88dc=|\u5224\u65ad\u50be\u5411=|\//.test(bingReading.beginnerText), 'public Japanese text must not expose bing or developer notation');
+for (const section of Object.values(bingReading.sections)) {
+  assert.ok(!/bing|\u65e5\u4e3b=|\u65fa\u8870=|\u7528\u795e\u5019\u88dc=|\u5224\u65ad\u50be\u5411=|\//.test(section.publicEvidence), `${section.id} public evidence must hide internal codes`);
+}
 assert.ok(bingReading.professionalText.includes('\u65e5\u4e3b=bing'), 'expert display must retain internal day-master id');
 
 const partialReading = calculateBazi(unknown).reading;

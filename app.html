@@ -1903,11 +1903,13 @@ function koyomiBaziLabels(reading){
 function koyomiBaziSectionHtml(section,labels){
   if(!section)return '';
   labels=labels||koyomiBaziLabels({locale:'ja'});
-  const evidenceText=section.publicEvidence||((section.evidence||[]).join(' / '));
+  const isJa=labels.conclusion!=='Conclusion';
+  const evidenceText=section.publicEvidence||(isJa?'\u8a73\u7d30\u306a\u6280\u8853\u60c5\u5831\u306f\u5c02\u9580\u5bb6\u8868\u793a\u3067\u78ba\u8a8d\u3067\u304d\u307e\u3059':((section.evidence||[]).join(' / ')));
+  const opposingText=isJa?(section.opposingFactors||[]).join('\u3002'):(section.opposingFactors||[]).join(' / ');
   return `<div class="koyomi-bazi-section">
     <p><b>${koyomiEscapeHtml(labels.conclusion)}</b> ${koyomiEscapeHtml(section.conclusion)}</p>
     <p><b>${koyomiEscapeHtml(labels.evidence)}</b> ${koyomiEscapeHtml(evidenceText)}</p>
-    <p><b>${koyomiEscapeHtml(labels.opposingFactors)}</b> ${koyomiEscapeHtml((section.opposingFactors||[]).join(' / '))}</p>
+    <p><b>${koyomiEscapeHtml(labels.opposingFactors)}</b> ${koyomiEscapeHtml(opposingText)}</p>
     <p><b>${koyomiEscapeHtml(labels.timing)}</b> ${koyomiEscapeHtml(section.timing)}</p>
     <p class="koyomi-bazi-action"><b>${koyomiEscapeHtml(labels.action)}</b> ${koyomiEscapeHtml(section.action)}</p>
     <p><b>${koyomiEscapeHtml(labels.caution)}</b> ${koyomiEscapeHtml(section.caution)}</p>

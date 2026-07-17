@@ -558,7 +558,7 @@ function renderReadingTextJa(sections, mode, executiveSummary, timingReading) {
     `\u5927\u904b\uff1a${timingReading.longTermTheme}`,
     `\u6b73\u904b\uff1a${timingReading.annualTheme}`,
     `\u6708\u904b\uff1a${timingReading.monthlyTheme}`,
-    `\u6d41\u6d3e\u5dee\uff1a${timingReading.schoolDifferences.join(' / ')}`,
+    `\u6d41\u6d3e\u5dee\uff1a${timingReading.schoolDifferences.join('\u3002')}`,
     ''
   ];
   for (const [id] of CATEGORY_DEFS) {
