@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.1.0",
+  "schemaVersion": "1.2.0",
   "datasetId": "koyomi-bazi-solar-term-boundaries-jst",
   "title": "四柱推命用 節入り境界基準データ",
   "timezone": "Asia/Tokyo",
@@ -29,12 +29,122 @@
     },
     {
       "year": 2025,
+      "termId": "shokan",
+      "nameJa": "小寒",
+      "termType": "setsu",
+      "monthBranchId": "chou",
+      "solarLongitudeDegrees": 285,
+      "datetime": "2025-01-05T11:33:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
       "termId": "risshun",
       "nameJa": "立春",
       "termType": "setsu",
       "monthBranchId": "yin",
       "solarLongitudeDegrees": 315,
       "datetime": "2025-02-03T23:10:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
+      "termId": "keichitsu",
+      "nameJa": "啓蟄",
+      "termType": "setsu",
+      "monthBranchId": "mao",
+      "solarLongitudeDegrees": 345,
+      "datetime": "2025-03-05T17:07:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
+      "termId": "seimei",
+      "nameJa": "清明",
+      "termType": "setsu",
+      "monthBranchId": "chen",
+      "solarLongitudeDegrees": 15,
+      "datetime": "2025-04-04T21:49:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
+      "termId": "rikka",
+      "nameJa": "立夏",
+      "termType": "setsu",
+      "monthBranchId": "si",
+      "solarLongitudeDegrees": 45,
+      "datetime": "2025-05-05T14:57:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
+      "termId": "boshu",
+      "nameJa": "芒種",
+      "termType": "setsu",
+      "monthBranchId": "wu",
+      "solarLongitudeDegrees": 75,
+      "datetime": "2025-06-05T18:57:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
+      "termId": "shosho",
+      "nameJa": "小暑",
+      "termType": "setsu",
+      "monthBranchId": "wei",
+      "solarLongitudeDegrees": 105,
+      "datetime": "2025-07-07T05:05:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
+      "termId": "risshu",
+      "nameJa": "立秋",
+      "termType": "setsu",
+      "monthBranchId": "shen",
+      "solarLongitudeDegrees": 135,
+      "datetime": "2025-08-07T14:52:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
+      "termId": "hakuro",
+      "nameJa": "白露",
+      "termType": "setsu",
+      "monthBranchId": "you",
+      "solarLongitudeDegrees": 165,
+      "datetime": "2025-09-07T17:52:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
+      "termId": "kanro",
+      "nameJa": "寒露",
+      "termType": "setsu",
+      "monthBranchId": "xu",
+      "solarLongitudeDegrees": 195,
+      "datetime": "2025-10-08T09:41:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
+      "termId": "ritto",
+      "nameJa": "立冬",
+      "termType": "setsu",
+      "monthBranchId": "hai",
+      "solarLongitudeDegrees": 225,
+      "datetime": "2025-11-07T13:04:00+09:00",
+      "sourceId": "naoj-rekiyou-2025"
+    },
+    {
+      "year": 2025,
+      "termId": "taisetsu",
+      "nameJa": "大雪",
+      "termType": "setsu",
+      "monthBranchId": "zi",
+      "solarLongitudeDegrees": 255,
+      "datetime": "2025-12-07T06:05:00+09:00",
       "sourceId": "naoj-rekiyou-2025"
     },
     {
