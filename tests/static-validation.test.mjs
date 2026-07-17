@@ -75,9 +75,7 @@ for (const file of requiredData) {
   );
 }
 
-const appHtml = await readFile('app.html', 'utf8');
-const appMain = await readFile('src/app-main.js', 'utf8');
-const app = `${appHtml}\n${appMain}`;
+const app = await readFile('app.html', 'utf8');
 
 assert.ok(
   app.includes('KOYOMI_BAZI'),
