@@ -47,6 +47,7 @@ export const OFFLINE_CONTRACT = Object.freeze({
     './app.html',
     './src/shared/calendar-time-compat.js',
     './src/shared/profile-schema-compat.js',
+    './src/shared/crypto-compat.js',
     './smoke-test.html',
     './manifest.webmanifest',
     './icon.svg'
