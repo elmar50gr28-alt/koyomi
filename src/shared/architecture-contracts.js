@@ -48,6 +48,7 @@ export const OFFLINE_CONTRACT = Object.freeze({
     './src/shared/calendar-time-core.js',
     './src/shared/profile-validation-core.js',
     './src/shared/profile-normalization-core.js',
+    './src/shared/profile-save-core.js',
     './src/shared/calendar-time-compat.js',
     './src/shared/profile-schema-compat.js',
     './src/shared/crypto-compat.js',
