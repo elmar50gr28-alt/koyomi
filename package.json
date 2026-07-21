@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "npm run test:bazi && npm run test:bazi-chart-core && npm run test:architecture && npm run test:calendar-time && npm run test:calendar-time-core && npm run test:profile-schema && npm run test:profile-validation-core && npm run test:profile-normalization-core && npm run test:profile-save-core && npm run test:crypto-compat && npm run test:indexeddb-compat && npm run test:backup-compat && npm run test:compat-integration",
+    "test": "npm run test:bazi && npm run test:bazi-chart-core && npm run test:bazi-birth-time-core && npm run test:architecture && npm run test:calendar-time && npm run test:calendar-time-core && npm run test:profile-schema && npm run test:profile-validation-core && npm run test:profile-normalization-core && npm run test:profile-save-core && npm run test:crypto-compat && npm run test:indexeddb-compat && npm run test:backup-compat && npm run test:compat-integration",
     "test:bazi": "node tests/bazi-engine.test.mjs && node tests/bazi-risshun-boundary.test.mjs && node tests/bazi-month-boundary.test.mjs",
     "test:bazi-chart-core": "node tests/bazi-chart-core-equivalence.test.mjs",
+    "test:bazi-birth-time-core": "node tests/bazi-birth-time-core-equivalence.test.mjs",
     "test:static": "node tests/static-validation.test.mjs",
     "test:mobile": "node tests/mobile-regression.test.mjs",
     "test:architecture": "node tests/architecture-contract.test.mjs",

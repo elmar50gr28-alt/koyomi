@@ -1,5 +1,6 @@
 export { calculateSolarTerms, calculateTrueSolarTime, julianDay } from './calendar/index.js';
 export { calculatePillarFoundation } from './chart/foundation.js';
+export { prepareBirthCalculation } from './chart/birth-time.js';
 export { calculateBaziChart, calculateFourPillars, calculateTenGod, calculateTwelveStage, getHiddenStems } from './chart/index.js';
 export { evaluateBasicBranchRelations, evaluateBasicStemRelations, evaluateBranchRelations, evaluateStemRelations } from './relations/index.js';
 export { evaluateClimate, evaluateDayMasterStrength, evaluateElementDistribution, evaluateExposedStems, evaluateMonthCommand, evaluateQiFlow, evaluateRoots, evaluateStrength } from './strength/index.js';
