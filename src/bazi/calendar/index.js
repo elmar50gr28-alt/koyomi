@@ -446,6 +446,9 @@ export function calculateTrueSolarTime(
   );
 
   if (
+    longitude === null ||
+    longitude === undefined ||
+    longitude === '' ||
     !Number.isFinite(
       Number(longitude)
     )
