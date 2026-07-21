@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260722-10';
+const CACHE_VERSION = 'koyomi-foundation-20260722-11';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -66,7 +66,7 @@ function isSameOrigin(request) {
 
 async function networkFirstHtml(request) {
   try {
-    const response = await fetch(request);
+    const response = await fetch(request, { cache: 'no-store' });
 
     if (response && response.ok) {
       const cache = await caches.open(RUNTIME_CACHE);
