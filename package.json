@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "npm run test:bazi && npm run test:architecture",
+    "test": "npm run test:bazi && npm run test:architecture && npm run test:calendar-time",
     "test:bazi": "node tests/bazi-engine.test.mjs && node tests/bazi-risshun-boundary.test.mjs && node tests/bazi-month-boundary.test.mjs",
     "test:static": "node tests/static-validation.test.mjs",
     "test:mobile": "node tests/mobile-regression.test.mjs",
-    "test:architecture": "node tests/architecture-contract.test.mjs"
+    "test:architecture": "node tests/architecture-contract.test.mjs",
+    "test:calendar-time": "node tests/calendar-time-compat.test.mjs"
   }
 }
