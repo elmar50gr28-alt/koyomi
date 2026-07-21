@@ -420,6 +420,7 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 
 <div class="toast" id="toast"></div>
 <script src="./src/shared/calendar-time-core.js"></script>
+<script src="./src/shared/profile-validation-core.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
 <script>
 (function(){'use strict';
@@ -1283,7 +1284,7 @@ function ledgerNormalizeProfile(p={}){const now=new Date().toISOString(),birth=p
  optionalData:{bloodType:['A','B','O','AB','unknown'].includes(optional.bloodType)?optional.bloodType:'unknown',occupation:ledgerText(optional.occupation,120),marriageStatus:ledgerText(optional.marriageStatus,30),mainTheme:ledgerText(optional.mainTheme,200),importantDates:{met:ledgerText(optional.importantDates?.met,10),dating:ledgerText(optional.importantDates?.dating,10),marriage:ledgerText(optional.importantDates?.marriage,10),career:ledgerText(optional.importantDates?.career,10),move:ledgerText(optional.importantDates?.move,10),other:ledgerText(optional.importantDates?.other,10)},memo:ledgerText(optional.memo,5000)},
  privacySettings:{usePseudonym:!!privacy.usePseudonym,hideBirthYear:!!privacy.hideBirthYear,lockMemo:!!privacy.lockMemo,retention:['forever','session','24h','7d','30d','1y'].includes(privacy.retention)?privacy.retention:'forever'},createdAt:p.createdAt||now,updatedAt:now,lastUsedAt:p.lastUsedAt||null
  }}
-function ledgerValidateProfile(p){const errors=[];if(!p.displayName||!p.displayName.trim())errors.push('表示名を入力してください');if(p.birthData.date){const d=new Date(p.birthData.date+'T12:00:00');if(Number.isNaN(d.getTime()))errors.push('存在しない生年月日です');else if(d>new Date())errors.push('未来の生年月日は保存できません')}if(p.birthData.time&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(p.birthData.time))errors.push('出生時刻が不正です');const lat=p.birthData.place.latitude,lon=p.birthData.place.longitude;if(lat!=null&&(lat<-90||lat>90))errors.push('緯度は-90〜90で入力してください');if(lon!=null&&(lon<-180||lon>180))errors.push('経度は-180〜180で入力してください');return errors}
+const ledgerValidateProfile=window.KOYOMI_PROFILE_VALIDATION_CORE.validateProfile;
 function ledgerFormValue(id){return $(id)?.value??''}
 function ledgerSetValue(id,value){const el=$(id);if(el)el.value=value??''}
 function ledgerKanaToKatakana(s=''){return String(s).replace(/[\u3041-\u3096]/g,ch=>String.fromCharCode(ch.charCodeAt(0)+0x60))}
