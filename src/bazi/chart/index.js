@@ -1,5 +1,5 @@
 import { BRANCHES, ELEMENTS, HIDDEN_STEMS, SEASON_STRENGTH, STEMS, TEN_GODS, TWELVE_STAGES } from '../data.js';
-import { buildBirthDateTime, calculateSolarTerms, calculateTrueSolarTime, normalizeProfile, resolveSchoolConfig } from '../calendar/index.js';
+import { prepareBirthCalculation } from './birth-time.js';
 import { calculatePillarFoundation } from './foundation.js';
 
 const byStem = Object.fromEntries(STEMS.map(s => [s.id, s]));
@@ -74,16 +74,16 @@ export function calculateFourPillars(normalizedBirthData, settings = {}) {
 }
 
 export function calculateBaziChart(profile, schoolConfigInput = {}) {
-  const schoolConfig = resolveSchoolConfig(schoolConfigInput);
-  const normalizedInput = normalizeProfile(profile);
-  const birthLocal = buildBirthDateTime(normalizedInput);
-  const warnings = [];
-  if (!normalizedInput.date) warnings.push('birth-date-missing');
-  if (normalizedInput.timeUnknown) warnings.push('birth-time-unknown-hour-pillar-partial');
-  const trueSolar = birthLocal ? calculateTrueSolarTime(birthLocal, normalizedInput.place.longitude, normalizedInput.place.utcOffset) : null;
-  if (trueSolar?.warning) warnings.push(trueSolar.warning);
-  const calcDate = trueSolar?.date || birthLocal || new Date();
-  const { year, month, day, hour } = calculatePillarFoundation(calcDate, {
+  const {
+    schoolConfig,
+    normalizedInput,
+    birthLocal,
+    trueSolarTime,
+    calculationDate,
+    solarTerms,
+    warnings
+  } = prepareBirthCalculation(profile, schoolConfigInput);
+  const { year, month, day, hour } = calculatePillarFoundation(calculationDate, {
     timeUnknown: normalizedInput.timeUnknown,
     schoolConfig
   });
@@ -100,8 +100,8 @@ export function calculateBaziChart(profile, schoolConfigInput = {}) {
     calendarCalculation: {
       timezone: normalizedInput.place.timezone,
       utcOffset: normalizedInput.place.utcOffset,
-      trueSolarTime: trueSolar,
-      solarTerms: birthLocal ? calculateSolarTerms(birthLocal, normalizedInput.place.timezone) : []
+      trueSolarTime,
+      solarTerms
     },
     chart: {
       schoolId: schoolConfig.schoolId,
