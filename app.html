@@ -1789,15 +1789,18 @@ const koyomiInitBase=init;
 init=async function(){await koyomiInitBase();await initStep('koyomiUiUx',()=>koyomiFinalizeUi())}
 window.KOYOMI_CALENDAR_TIME_LEGACY=Object.freeze({formatLocalDate:fmtIso,parseLocalDate:safeDate,startOfLocalDay:startOfDay,formatCalendarDate:calendarFormat});
 window.KOYOMI_PROFILE_SCHEMA_LEGACY=Object.freeze({normalizeProfile:ledgerNormalizeProfile,validateProfile:ledgerValidateProfile});
+window.KOYOMI_CRYPTO_LEGACY=Object.freeze({deriveKey:ledgerDeriveKey,encryptObject:ledgerEncryptObject,decryptObject:ledgerDecryptObject});
 window.V191={setPage,renderCalendar,buildPersonal,compatibility,generateTimeline,diagnostics,openGuide,refreshHistory,setOracleMode:v191zSetMode};window.V192={mesopotamianDate:v192MesopotamianDate,onkanProfile:v192OnkanProfile,runOracle:v192RunOracle};window.V193={qimenChart:qmdjChart,qimenEvaluate:qmdjEvaluate,qimenGenerate:qmdjGenerate,diagnostics:qmdjDiagnostics};Promise.resolve().then(()=>initStep('persona',()=>v195Init())).then(()=>initStep('lifeTranslator',()=>v196Init())).then(()=>init()).catch(e=>console.error('[KOYOMI] boot failed',e));
 })();
 </script>
 <script type="module">
 import { createCalendarTimeCompatibility } from './src/shared/calendar-time-compat.js';
 import { createProfileSchemaCompatibility } from './src/shared/profile-schema-compat.js';
+import { createCryptoCompatibility } from './src/shared/crypto-compat.js';
 import * as KOYOMI_BAZI from './src/bazi/index.js';
 window.KOYOMI_CALENDAR_TIME=createCalendarTimeCompatibility(window.KOYOMI_CALENDAR_TIME_LEGACY);
 window.KOYOMI_PROFILE_SCHEMA=createProfileSchemaCompatibility(window.KOYOMI_PROFILE_SCHEMA_LEGACY);
+window.KOYOMI_CRYPTO=createCryptoCompatibility(window.KOYOMI_CRYPTO_LEGACY);
 window.KOYOMI_BAZI = KOYOMI_BAZI;
 function koyomiBaziReadingProfile(){
   const value=id=>document.getElementById(id)?.value||'';
