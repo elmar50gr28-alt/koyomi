@@ -419,6 +419,7 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <div class="ledger-status-toast" id="ledgerStatusToast"></div>
 
 <div class="toast" id="toast"></div>
+<script src="./src/shared/calendar-time-core.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
 <script>
 (function(){'use strict';
@@ -483,9 +484,8 @@ function isKeyboardInput(el){return !!el&&el.matches?.('input:not([type="hidden"
 function scrollKeyboardInputIntoView(el){const adjust=()=>{try{if(!isKeyboardInput(el))return;const vv=window.visualViewport,rect=el.getBoundingClientRect(),topLimit=(vv?.offsetTop||0)+84,bottomLimit=(vv?(vv.offsetTop+vv.height):window.innerHeight)-16;if(rect.top<topLimit)window.scrollBy({top:rect.top-topLimit,behavior:'auto'});else if(rect.bottom>bottomLimit)window.scrollBy({top:rect.bottom-bottomLimit,behavior:'auto'})}catch(e){}};requestAnimationFrame(()=>setTimeout(adjust,90))}
 function bindInputViewport(){setViewportUnit();const update=()=>setViewportUnit();if(window.visualViewport){window.visualViewport.addEventListener('resize',update);window.visualViewport.addEventListener('scroll',update)}window.addEventListener('resize',update);document.addEventListener('focusin',e=>{if(!isKeyboardInput(e.target))return;document.body.classList.add('keyboard-open');setViewportUnit();scrollKeyboardInputIntoView(e.target)});document.addEventListener('focusout',e=>{if(!isKeyboardInput(e.target))return;setTimeout(()=>{if(!isKeyboardInput(document.activeElement)){document.body.classList.remove('keyboard-open');setViewportUnit()}},180)})}
 function toast(msg){const e=$('toast');e.textContent=msg;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2200)}
-function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}function fmtIso(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}function safeDate(s){if(!s)return null;const d=new Date(s+'T12:00:00');return isNaN(d)?null:d}function hash(s){let h=2166136261;for(const c of String(s||'')){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}function mod(n,m){return((n%m)+m)%m}function jd(d){return d.getTime()/DAY+2440587.5}function jdn(d){return Math.floor(jd(d)+.5)}
+const {startOfLocalDay:startOfDay,formatLocalDate:fmtIso,parseLocalDate:safeDate,formatCalendarDate:calendarFormat}=window.KOYOMI_CALENDAR_TIME_CORE;function hash(s){let h=2166136261;for(const c of String(s||'')){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}function mod(n,m){return((n%m)+m)%m}function jd(d){return d.getTime()/DAY+2440587.5}function jdn(d){return Math.floor(jd(d)+.5)}
 function setPage(page){$$('.page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page));$$('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));location.hash=page;if(page==='history')refreshHistory()}
-function calendarFormat(d,cal,locale='ja-JP'){try{return new Intl.DateTimeFormat(`${locale}-u-ca-${cal}`,{year:'numeric',month:'long',day:'numeric'}).format(d)}catch(e){return 'この環境では未対応'}}
 function japaneseEra(d){try{return new Intl.DateTimeFormat('ja-JP-u-ca-japanese',{era:'long',year:'numeric',month:'long',day:'numeric'}).format(d)}catch(e){return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`}}
 function isoWeek(d){const x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));x.setUTCDate(x.getUTCDate()+4-(x.getUTCDay()||7));const y0=new Date(Date.UTC(x.getUTCFullYear(),0,1));return Math.ceil((((x-y0)/DAY)+1)/7)}
 function solarLongitude(d){const n=jd(d)-2451545.0;const L=mod(280.460+0.9856474*n,360),g=mod(357.528+0.9856003*n,360)*Math.PI/180;return mod(L+1.915*Math.sin(g)+0.020*Math.sin(2*g),360)}

@@ -88,6 +88,9 @@ for (const boundary of boundaries) {
 }
 
 const shellModules = OFFLINE_CONTRACT.shellFiles.filter(path => path.startsWith('./src/shared/'));
-assert.deepEqual(shellModules, boundaries.map(boundary => boundary.modulePath));
+assert.deepEqual(shellModules, [
+  './src/shared/calendar-time-core.js',
+  ...boundaries.map(boundary => boundary.modulePath)
+]);
 
 console.log(`Compatibility integration passed: boundaries=${boundaries.length}`);
