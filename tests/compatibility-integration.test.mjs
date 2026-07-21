@@ -91,6 +91,7 @@ const shellModules = OFFLINE_CONTRACT.shellFiles.filter(path => path.startsWith(
 assert.deepEqual(shellModules, [
   './src/shared/calendar-time-core.js',
   './src/shared/profile-validation-core.js',
+  './src/shared/profile-normalization-core.js',
   ...boundaries.map(boundary => boundary.modulePath)
 ]);
 

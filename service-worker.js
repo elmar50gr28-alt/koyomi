@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260721-7';
+const CACHE_VERSION = 'koyomi-foundation-20260721-8';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -9,6 +9,7 @@ const APP_SHELL = [
   './app.html',
   './src/shared/calendar-time-core.js',
   './src/shared/profile-validation-core.js',
+  './src/shared/profile-normalization-core.js',
   './src/shared/calendar-time-compat.js',
   './src/shared/profile-schema-compat.js',
   './src/shared/crypto-compat.js',
