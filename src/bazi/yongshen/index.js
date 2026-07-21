@@ -1,4 +1,5 @@
 import { ELEMENTS } from '../data.js';
+import { evaluateIntegratedYongshen } from './yongshen-core.js';
 
 const methods = ['support-control', 'climate', 'mediation', 'illness-medicine', 'pattern', 'assistant-god'];
 
@@ -66,7 +67,7 @@ export function evaluateFavorableElements(chartResult, schoolConfig = {}, yongsh
   };
 }
 
-export function evaluateYongshen(chartResult, schoolConfig = {}, strengthResult = null, patternResult = null) {
+export function evaluateLegacyYongshen(chartResult, schoolConfig = {}, strengthResult = null, patternResult = null) {
   const methodResults = Object.fromEntries(methods.map(methodId => [methodId, evaluateYongshenByMethod(chartResult, methodId, schoolConfig, strengthResult, patternResult)]));
   const favorableElements = evaluateFavorableElements(chartResult, schoolConfig, { methods: methodResults });
   const primary = methodResults['support-control'].primaryCandidates[0] || methodResults.climate.primaryCandidates[0] || null;
@@ -92,6 +93,25 @@ export function evaluateYongshen(chartResult, schoolConfig = {}, strengthResult 
   };
 }
 
+export function evaluateYongshen(chartResult, schoolConfig = {}, strengthResult = null, patternResult = null, legacyContext = {}) {
+  const legacyComparison = evaluateLegacyYongshen(
+    chartResult,
+    schoolConfig,
+    legacyContext.strengthResult || strengthResult,
+    legacyContext.patternResult || patternResult
+  );
+  const precise = evaluateIntegratedYongshen(
+    chartResult,
+    schoolConfig,
+    strengthResult,
+    patternResult,
+    legacyComparison
+  );
+  // Legacy top-level fields remain available to current readings. The refined
+  // result is exposed through the new explicit fields for comparison first.
+  return { ...legacyComparison, ...precise, legacyComparison };
+}
+
 function findMediationCandidates(chartResult) {
   const branches = chartResult.relations?.branches?.clashes || [];
   return branches.length ? ['wood', 'earth'] : [];
@@ -101,3 +121,5 @@ function collectConflicts(methodResults) {
   const primarySets = Object.values(methodResults).map(x => (x.primaryCandidates || []).filter(Boolean).join(',')).filter(Boolean);
   return new Set(primarySets).size > 1 ? ['method-disagreement'] : [];
 }
+
+export { evaluateIntegratedYongshen, YONGSHEN_WEIGHTS } from './yongshen-core.js';
