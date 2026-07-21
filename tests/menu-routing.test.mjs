@@ -40,6 +40,10 @@ assert.ok(app.includes('id="page-oracle"'));
 assert.ok(app.includes('専用画面は準備中です'));
 assert.ok(app.includes("window.addEventListener('hashchange'"), 'hashchange must drive routing');
 assert.ok(app.includes('applyHashPage({replaceUnknown:true})'), 'initial load must apply the hash');
+assert.ok(
+  app.indexOf('startOfLocalDay:startOfDay') < app.indexOf('selectedDate=startOfDay(new Date())'),
+  'calendar helpers must be initialized before the app selects its first date'
+);
 
 routing.writeHash('qimen');
 assert.equal(context.location.hash, '#qimen', 'tab navigation must write a hash');
