@@ -1,4 +1,8 @@
 import { ELEMENTS, SEASON_STRENGTH } from '../data.js';
+import {
+  evaluateLegacyDayMasterStrength,
+  evaluatePreciseDayMasterStrength
+} from './day-master-core.js';
 
 const elementOrder = ['wood', 'fire', 'earth', 'metal', 'water'];
 
@@ -147,19 +151,11 @@ export function evaluateDayMasterStrength(chartResult, schoolConfig = {}) {
   const exposedStems = evaluateExposedStems(chartResult, schoolConfig);
   const elementDistribution = evaluateElementDistribution(chartResult, schoolConfig);
   const qiFlow = evaluateQiFlow(chartResult, schoolConfig);
-  const support = roots.scoreCandidate + Math.max(exposedStems.scoreCandidate, 0) + (monthCommand.relationToDayMaster === 'same' ? 1 : monthCommand.relationToDayMaster === 'resource' ? 0.7 : 0);
-  const pressure = Math.abs(Math.min(exposedStems.scoreCandidate, 0)) + (monthCommand.relationToDayMaster === 'officer' || monthCommand.relationToDayMaster === 'wealth' ? 0.8 : 0);
-  const delta = support - pressure;
-  const level = delta >= 2.2 ? 'extremely-strong' : delta >= 1.2 ? 'strong' : delta >= 0.45 ? 'slightly-strong' : delta <= -2.2 ? 'extremely-weak' : delta <= -1.2 ? 'weak' : delta <= -0.45 ? 'slightly-weak' : 'balanced';
+  const methodResults = { monthCommand, roots, exposedStems, elementDistribution, qiFlow };
+  const precise = evaluatePreciseDayMasterStrength(chartResult, methodResults, schoolConfig);
   return {
-    level,
-    reasons: ['month-command', 'roots', 'exposed-stems', 'element-distribution', 'qi-flow'],
-    supportingFactors: [monthCommand, roots, exposedStems].filter(x => x.scoreCandidate > 0 || x.relationToDayMaster === 'same' || x.relationToDayMaster === 'resource'),
-    opposingFactors: [exposedStems, monthCommand].filter(x => x.scoreCandidate < 0 || x.relationToDayMaster === 'officer' || x.relationToDayMaster === 'wealth'),
-    unresolvedFactors: chartResult.normalizedInput?.timeUnknown ? ['hour-pillar-unknown'] : [],
-    methodResults: { monthCommand, roots, exposedStems, elementDistribution, qiFlow },
-    schoolResults: [{ schoolId: schoolConfig.schoolId || chartResult.chart?.schoolId, level }],
-    confidence: chartResult.normalizedInput?.timeUnknown ? 0.5 : 0.64
+    ...precise,
+    legacyComparison: evaluateLegacyDayMasterStrength(chartResult, methodResults, schoolConfig)
   };
 }
 
