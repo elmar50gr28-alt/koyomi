@@ -1,10 +1,10 @@
 import {
   buildBirthDateTime,
   calculateSolarTerms,
-  calculateTrueSolarTime,
   normalizeProfile,
   resolveSchoolConfig
 } from '../calendar/index.js';
+import { applyBirthTimeCorrection } from './time-correction.js';
 
 /**
  * Prepare the calculation datetime without changing the existing correction
@@ -39,10 +39,10 @@ export function prepareBirthCalculation(
   }
 
   const trueSolarTime = birthLocal
-    ? calculateTrueSolarTime(
+    ? applyBirthTimeCorrection(
         birthLocal,
-        normalizedInput.place.longitude,
-        normalizedInput.place.utcOffset
+        normalizedInput.place,
+        schoolConfig.solar
       )
     : null;
 
