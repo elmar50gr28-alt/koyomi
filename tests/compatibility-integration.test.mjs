@@ -90,6 +90,7 @@ for (const boundary of boundaries) {
 const shellModules = OFFLINE_CONTRACT.shellFiles.filter(path => path.startsWith('./src/shared/'));
 assert.deepEqual(shellModules, [
   './src/shared/calendar-time-core.js',
+  './src/shared/profile-validation-core.js',
   ...boundaries.map(boundary => boundary.modulePath)
 ]);
 
