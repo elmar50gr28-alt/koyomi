@@ -7,7 +7,7 @@ export { buildDerivedChartInfo, buildDerivedPillar, calculateElementBalance, cal
 export { evaluateBasicBranchRelations, evaluateBasicStemRelations, evaluateBranchRelations, evaluateStemRelations } from './relations/index.js';
 export { evaluateClimate, evaluateDayMasterStrength, evaluateElementDistribution, evaluateExposedStems, evaluateMonthCommand, evaluateQiFlow, evaluateRoots, evaluateStrength } from './strength/index.js';
 export { classifyStrengthScore, evaluateLegacyDayMasterStrength, evaluatePreciseDayMasterStrength, relationToDayMaster, STRENGTH_WEIGHTS } from './strength/day-master-core.js';
-export { evaluateFollowPatterns, evaluatePatternCandidates, evaluatePatterns, evaluateTransformationPatterns } from './patterns/index.js';
+export { evaluateFollowPatterns, evaluateLegacyPatterns, evaluatePatternCandidates, evaluatePatterns, evaluateStructuredPatterns, evaluateTransformationPatterns, PATTERN_WEIGHTS } from './patterns/index.js';
 export { evaluateFavorableElements, evaluateYongshen, evaluateYongshenByMethod } from './yongshen/index.js';
 export { calculateLuckCycles } from './luck/index.js';
 export { compareBaziSchools, compareSchools, listSchoolProfiles } from './schools/index.js';
@@ -46,8 +46,15 @@ export function calculateBazi(profile, schoolConfig = {}) {
       level: legacyStrengthLevel
     }
   };
-  const patterns = evaluatePatterns({ ...chart, relations }, schoolConfig, strengthForDependentRules);
-  const yongshen = evaluateYongshen({ ...chart, relations }, schoolConfig, strengthForDependentRules, patterns);
+  const patterns = evaluatePatterns({ ...chart, relations }, schoolConfig, strength);
+  // Yongshen remains deliberately isolated from the refined pattern ranking.
+  // This preserves its current selection and wording until a separate review.
+  const patternsForYongshen = {
+    ...patterns,
+    candidates: patterns.legacyComparison?.candidates || [],
+    finalPattern: patterns.legacyComparison?.finalPattern || null
+  };
+  const yongshen = evaluateYongshen({ ...chart, relations }, schoolConfig, strengthForDependentRules, patternsForYongshen);
   const favorableElements = evaluateFavorableElements({ ...chart, relations }, schoolConfig, yongshen);
   const luckCycles = calculateLuckCycles({ ...chart, relations }, profile, schoolConfig);
   const interpretationFacts = buildInterpretationFacts(chart, strength, patterns, yongshen, luckCycles);
