@@ -1,5 +1,6 @@
 import { BRANCHES, ELEMENTS, HIDDEN_STEMS, SEASON_STRENGTH, STEMS, TEN_GODS, TWELVE_STAGES } from '../data.js';
-import { buildBirthDateTime, calculateDayPillar, calculateHourPillar, calculateMonthPillar, calculateSolarTerms, calculateTrueSolarTime, calculateYearPillar, normalizeProfile, resolveSchoolConfig } from '../calendar/index.js';
+import { buildBirthDateTime, calculateSolarTerms, calculateTrueSolarTime, normalizeProfile, resolveSchoolConfig } from '../calendar/index.js';
+import { calculatePillarFoundation } from './foundation.js';
 
 const byStem = Object.fromEntries(STEMS.map(s => [s.id, s]));
 
@@ -82,10 +83,10 @@ export function calculateBaziChart(profile, schoolConfigInput = {}) {
   const trueSolar = birthLocal ? calculateTrueSolarTime(birthLocal, normalizedInput.place.longitude, normalizedInput.place.utcOffset) : null;
   if (trueSolar?.warning) warnings.push(trueSolar.warning);
   const calcDate = trueSolar?.date || birthLocal || new Date();
-  const year = calculateYearPillar(calcDate);
-  const month = calculateMonthPillar(calcDate, year.stem.id);
-  const day = calculateDayPillar(calcDate);
-  const hour = normalizedInput.timeUnknown ? null : calculateHourPillar(calcDate, day.stem.id, schoolConfig);
+  const { year, month, day, hour } = calculatePillarFoundation(calcDate, {
+    timeUnknown: normalizedInput.timeUnknown,
+    schoolConfig
+  });
   const pillars = {
     year: pillarPayload(year, 'year', day.stem),
     month: pillarPayload(month, 'month', day.stem),
