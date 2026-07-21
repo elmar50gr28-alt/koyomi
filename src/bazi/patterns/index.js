@@ -1,27 +1,7 @@
+import { evaluateLegacyPatterns, evaluateStructuredPatterns } from './pattern-core.js';
+
 export function evaluatePatternCandidates(chartResult, schoolConfig = {}, strengthResult = null) {
-  const monthTenGod = chartResult.chart?.pillars?.month?.stem?.tenGod;
-  const schoolId = schoolConfig.schoolId || chartResult.chart?.schoolId;
-  const candidates = [];
-  if (monthTenGod) {
-    const established = strengthResult?.dayMasterStrength?.level && strengthResult.dayMasterStrength.level !== 'indeterminate';
-    candidates.push({
-      patternId: `regular-${monthTenGod.id}`,
-      candidate: true,
-      established: false,
-      broken: false,
-      rescued: false,
-      purity: 'mixed',
-      conditionsMet: ['month-stem-ten-god-present'],
-      conditionsFailed: established ? ['human-review-required-before-establishment'] : ['strength-indeterminate'],
-      rescueFactors: [],
-      breakingFactors: [],
-      conflictingPatterns: [],
-      schoolResults: [{ schoolId, result: 'candidate' }],
-      sourceIds: ['src-yuanhai-ziping-biblio'],
-      confidence: 0.52
-    });
-  }
-  return candidates;
+  return evaluateStructuredPatterns(chartResult, schoolConfig, strengthResult).candidates;
 }
 
 export function evaluateFollowPatterns(chartResult, schoolConfig = {}, strengthResult = null) {
@@ -51,21 +31,26 @@ export function evaluateTransformationPatterns(chartResult, schoolConfig = {}) {
 }
 
 export function evaluatePatterns(chartResult, schoolConfig = {}, strengthResult = null) {
-  const candidates = evaluatePatternCandidates(chartResult, schoolConfig, strengthResult);
-  const followPatterns = evaluateFollowPatterns(chartResult, schoolConfig, strengthResult);
-  const transformationPatterns = evaluateTransformationPatterns(chartResult, schoolConfig);
+  const structured = evaluateStructuredPatterns(chartResult, schoolConfig, strengthResult);
+  const candidates = structured.candidates;
+  const followPatterns = structured.followPatterns;
+  const transformationPatterns = structured.transformationPatterns;
   const established = candidates.filter(x => x.established);
   const broken = candidates.filter(x => x.broken);
   const rescued = candidates.filter(x => x.rescued);
   return {
+    ...structured,
     candidates,
     established,
     broken,
     rescued,
     followPatterns,
     transformationPatterns,
-    finalPattern: established[0] || null,
-    evidence: ['pattern-month-ten-god-candidate'],
-    confidence: Math.max(0.3, ...candidates.map(x => x.confidence), ...followPatterns.map(x => x.confidence), ...transformationPatterns.map(x => x.confidence))
+    // Keep the legacy final-selection field untouched while the refined
+    // result is reviewed through primaryPattern/establishmentStatus.
+    finalPattern: null,
+    legacyComparison: evaluateLegacyPatterns(chartResult, schoolConfig, strengthResult)
   };
 }
+
+export { evaluateLegacyPatterns, evaluateStructuredPatterns, PATTERN_WEIGHTS } from './pattern-core.js';
