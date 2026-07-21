@@ -8,7 +8,7 @@ export { evaluateBasicBranchRelations, evaluateBasicStemRelations, evaluateBranc
 export { evaluateClimate, evaluateDayMasterStrength, evaluateElementDistribution, evaluateExposedStems, evaluateMonthCommand, evaluateQiFlow, evaluateRoots, evaluateStrength } from './strength/index.js';
 export { classifyStrengthScore, evaluateLegacyDayMasterStrength, evaluatePreciseDayMasterStrength, relationToDayMaster, STRENGTH_WEIGHTS } from './strength/day-master-core.js';
 export { evaluateFollowPatterns, evaluateLegacyPatterns, evaluatePatternCandidates, evaluatePatterns, evaluateStructuredPatterns, evaluateTransformationPatterns, PATTERN_WEIGHTS } from './patterns/index.js';
-export { evaluateFavorableElements, evaluateYongshen, evaluateYongshenByMethod } from './yongshen/index.js';
+export { evaluateFavorableElements, evaluateIntegratedYongshen, evaluateLegacyYongshen, evaluateYongshen, evaluateYongshenByMethod, YONGSHEN_WEIGHTS } from './yongshen/index.js';
 export { calculateLuckCycles } from './luck/index.js';
 export { compareBaziSchools, compareSchools, listSchoolProfiles } from './schools/index.js';
 export { explainBaziDecision, explainRule, getEvidence, PHASE3_CLASSICAL_INDEX } from './evidence/index.js';
@@ -54,7 +54,13 @@ export function calculateBazi(profile, schoolConfig = {}) {
     candidates: patterns.legacyComparison?.candidates || [],
     finalPattern: patterns.legacyComparison?.finalPattern || null
   };
-  const yongshen = evaluateYongshen({ ...chart, relations }, schoolConfig, strengthForDependentRules, patternsForYongshen);
+  const yongshen = evaluateYongshen(
+    { ...chart, relations },
+    schoolConfig,
+    strength,
+    patterns,
+    { strengthResult: strengthForDependentRules, patternResult: patternsForYongshen }
+  );
   const favorableElements = evaluateFavorableElements({ ...chart, relations }, schoolConfig, yongshen);
   const luckCycles = calculateLuckCycles({ ...chart, relations }, profile, schoolConfig);
   const interpretationFacts = buildInterpretationFacts(chart, strength, patterns, yongshen, luckCycles);
