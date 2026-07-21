@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "npm run test:bazi && npm run test:architecture && npm run test:calendar-time && npm run test:profile-schema && npm run test:crypto-compat && npm run test:indexeddb-compat",
+    "test": "npm run test:bazi && npm run test:architecture && npm run test:calendar-time && npm run test:profile-schema && npm run test:crypto-compat && npm run test:indexeddb-compat && npm run test:backup-compat",
     "test:bazi": "node tests/bazi-engine.test.mjs && node tests/bazi-risshun-boundary.test.mjs && node tests/bazi-month-boundary.test.mjs",
     "test:static": "node tests/static-validation.test.mjs",
     "test:mobile": "node tests/mobile-regression.test.mjs",
@@ -12,6 +12,7 @@
     "test:calendar-time": "node tests/calendar-time-compat.test.mjs",
     "test:profile-schema": "node tests/profile-schema-compat.test.mjs",
     "test:crypto-compat": "node tests/crypto-compat.test.mjs",
-    "test:indexeddb-compat": "node tests/indexeddb-compat.test.mjs"
+    "test:indexeddb-compat": "node tests/indexeddb-compat.test.mjs",
+    "test:backup-compat": "node tests/backup-compat.test.mjs"
   }
 }
