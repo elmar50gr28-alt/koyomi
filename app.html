@@ -1842,6 +1842,9 @@ function koyomiEnsureBaziReadingStyle(){
     .koyomi-bazi-reading *{box-sizing:border-box;max-width:100%}
     .koyomi-bazi-summary{display:grid;gap:8px;padding:12px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.05)}
     .koyomi-bazi-summary b{display:block;font-size:.92rem;opacity:.78}
+    .koyomi-bazi-transparency{display:grid;gap:8px;padding:12px;border:1px solid rgba(243,200,111,.38);border-radius:12px;background:rgba(243,200,111,.08)}
+    .koyomi-bazi-transparency h4{margin:0;font-size:1rem}
+    .koyomi-bazi-transparency p{margin:0}
     .koyomi-bazi-action{font-weight:700}
     .koyomi-bazi-reading details{padding:10px 0;border-top:1px solid rgba(255,255,255,.12)}
     .koyomi-bazi-reading summary{min-height:44px;display:flex;align-items:center;font-weight:700;cursor:pointer}
@@ -1939,11 +1942,43 @@ function koyomiBaziSectionHtml(section,labels){
     <div class="koyomi-bazi-meta"><span>${koyomiEscapeHtml(labels.confidence)} ${koyomiEscapeHtml(confidenceText)}</span></div>
   </div>`;
 }
+function koyomiBaziGuardrailHtml(reading,ja){
+  const guardrails=reading.sourceGuardrails||{};
+  const conflicts=guardrails.conflicts||[];
+  const uncertainties=guardrails.uncertainties||[];
+  const suppressed=guardrails.suppressedClaims||[];
+  const uncertaintyLabels={
+    'birth-time-unknown':ja?'出生時刻が不明なため、時柱に関わる判断は参考です。':'Birth time is unknown, so hour-pillar conclusions are provisional.',
+    'day-boundary-proximity':ja?'日付の切替時刻に近いため、流派設定で命式が変わる可能性があります。':'The birth time is near a day boundary, so school settings may change the chart.',
+    'solar-term-boundary-proximity':ja?'節入り時刻に近いため、月柱や運の境界判断に幅があります。':'The time is near a solar-term boundary, so month and luck boundaries need care.',
+    'longitude-missing':ja?'出生地の経度情報がないため、時刻補正の精度に限界があります。':'Longitude is missing, limiting time-correction precision.'
+  };
+  const knownUncertainties=uncertainties.map(id=>uncertaintyLabels[id]).filter(Boolean);
+  const unknownUncertaintyCount=Math.max(0,uncertainties.length-knownUncertainties.length);
+  const agreement=conflicts.length
+    ? (ja?`複数の判定方式で${conflicts.length}件の見解差があります。共通する傾向を優先し、一つの結論に固定していません。`:`${conflicts.length} differences exist between methods. Shared tendencies are prioritized instead of forcing one conclusion.`)
+    : (ja?'主要な判定方式に大きな見解差はありません。':'The main methods show no material disagreement.');
+  const uncertaintyText=knownUncertainties.length||unknownUncertaintyCount
+    ? [...knownUncertainties,...(unknownUncertaintyCount?[ja?`ほか${unknownUncertaintyCount}件の確認事項があります。`:`${unknownUncertaintyCount} additional item(s) need review.`]:[])].join(' ')
+    : (ja?'出生情報や暦境界による大きな不確実性は検出されていません。':'No material uncertainty from birth data or calendar boundaries was detected.');
+  const restraint=suppressed.length
+    ? (ja?`根拠が十分でない${suppressed.length}件は断定を控えています。`:`${suppressed.length} insufficiently supported claim(s) were withheld.`)
+    : (ja?'根拠不足によって非表示にした断定はありません。':'No claims were withheld for insufficient support.');
+  const use=ja?'確度の高い共通点を生活のヒントとして使い、見解差がある項目は状況と照らして確認してください。':'Use high-confidence common points as practical guidance and review disputed points against real circumstances.';
+  return `<section class="koyomi-bazi-transparency">
+    <h4>${ja?'この鑑定の読み方':'How to read this result'}</h4>
+    <p><b>${ja?'判定の一致度':'Method agreement'}</b> ${koyomiEscapeHtml(agreement)}</p>
+    <p><b>${ja?'不確実性':'Uncertainty'}</b> ${koyomiEscapeHtml(uncertaintyText)}</p>
+    <p><b>${ja?'断定を控えた内容':'Withheld claims'}</b> ${koyomiEscapeHtml(restraint)}</p>
+    <p><b>${ja?'活用方法':'How to use it'}</b> ${koyomiEscapeHtml(use)}</p>
+  </section>`;
+}
 function koyomiBaziReadingHtml(reading){
   const summary=reading.executiveSummary||{};
   const sections=reading.sections||{};
   const labels=koyomiBaziLabels(reading);
   const ja=reading.locale!=='en';
+  const transparency=koyomiBaziGuardrailHtml(reading,ja);
   const details=[
     [ja?'\u7dcf\u5408\u9451\u5b9a':'Overall',sections.overall],
     [ja?'\u672c\u8cea':'Essence',sections.personality||sections.essence],
@@ -1983,6 +2018,7 @@ function koyomiBaziReadingHtml(reading){
       <p><b>${ja?'\u907f\u3051\u305f\u65b9\u304c\u3088\u3044\u3053\u3068':'Avoid'}</b>${koyomiEscapeHtml(summary.avoid)}</p>
       <div class="koyomi-bazi-meta"><span>${koyomiEscapeHtml(labels.confidence)} ${Math.round((summary.confidence||0)*100)}%</span></div>
     </section>
+    ${transparency}
     ${detailHtml}
     ${professional}
   </div>`;
