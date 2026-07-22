@@ -420,6 +420,7 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <script src="./src/shared/profile-normalization-core.js"></script>
 <script src="./src/shared/profile-save-core.js"></script>
 <script src="./src/shared/menu-routing-core.js"></script>
+<script src="./src/persona/conversation-adapter.js"></script>
 <script src="./src/data/name-strokes.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
 <script>
@@ -1555,6 +1556,8 @@ function v196Generate(input={}){const c=v195Context(input),weather=v195Pick(V196
  const tech=v196Technical(input,c);
  const text=`【結論】\n${conclusion}\n${weather}\n${v196Feel(c.score)}。\n\n【何が起こりそうか】\n${likely}\n${metaphor}\n\n【なぜそう読むのか】\n${why}\n\n【今日どう行動するか】\n・今日やること：${items.do}\n・会うべき人：${items.person}\n・おすすめ時間：${items.time}\n・おすすめ場所：${items.place}\n・おすすめ方角：${items.direction}\n・持ち物：${items.item}\n・食べ物：${items.food}\n・色：${items.color}\n・気分転換：${items.refresh}\n\n【避ける行動】\n・今日やめること：${items.stop}\n・避ける人：${items.avoidPerson}\n\n【一番おすすめの一手・今日の宿題】\n${items.homework}\n\n【占術の意味】\n${tech}\n\n【最後の一言】\n${v195LastWord(c)}`;
  v195SaveHistory({system:c.system,category:c.category,score:c.score,grade:c.grade,question:c.question.slice(0,500),mode:c.mode,psych:c.psych,translator:'v196'});return{text,context:c,life:items}}
+const v198LifeGenerateBase=v196Generate;
+v196Generate=function(input={}){const result=v198LifeGenerateBase(input),adapter=window.KOYOMI_PERSONA_ADAPTER;if(!adapter)return result;const layered=adapter.apply(result.text,{...input,psychRisk:result.context?.psych?.risk,variant:result.context?.history?.length||0});result.text=layered.text;result.persona=layered.persona;return result};
 const v196RenderPersonalBase=renderPersonal;
 function v196RenderMethodSummary(r,key,readingId,summaryId){const reading=$(readingId);if(!reading)return;let box=$(summaryId);if(!box){reading.insertAdjacentHTML('beforebegin',`<div class="method-result-summary" id="${summaryId}"><article><b>この占術の結論</b><p data-method-summary="conclusion"></p></article><article><b>主な根拠</b><p data-method-summary="evidence"></p></article><article><b>今日の行動</b><p data-method-summary="action"></p></article><article><b>注意点</b><p data-method-summary="caution"></p></article><article class="confidence"><b>判定の確度</b><p data-method-summary="confidence"></p></article></div>`);box=$(summaryId)}const m=v191zMethodScore(key,r),plan=v191zMethodPlan(key,r);box.querySelector('[data-method-summary="conclusion"]').textContent=`${m.grade.label} ${m.score}点。${m.grade.command}`;box.querySelector('[data-method-summary="evidence"]').textContent=m.factors.join('／');box.querySelector('[data-method-summary="action"]').textContent=plan[0];box.querySelector('[data-method-summary="caution"]').textContent=plan[3];box.querySelector('[data-method-summary="confidence"]').textContent=`${m.conf.label} ${m.conf.score}%`}
 function v196RenderSukuyoSummary(r){v196RenderMethodSummary(r,'sukuyo','sukuyoReading','sukuyoResultSummary')}
