@@ -229,6 +229,8 @@ for (const section of ['【相談と姓名判断】', '【姓名の五格】', '
   assert.ok(appHtml.includes(section), `Name full reading section is missing: ${section}`);
 }
 assert.ok(appHtml.includes("filter(ch=>!NAME_STROKES[ch])"), 'Name reading must disclose fallback stroke counts');
+assert.ok(appHtml.includes('globalThis.KOYOMI_NAME_STROKES'), 'Name reading must use the generated stroke dictionary');
+assert.ok(appHtml.includes('complete:false,unknownChars'), 'Name reading must withhold incomplete stroke calculations');
 for (const field of ['conclusion', 'evidence', 'action', 'caution', 'confidence']) {
   assert.ok(appHtml.includes(`data-method-summary="${field}"`), `${field} method summary field is missing`);
 }
