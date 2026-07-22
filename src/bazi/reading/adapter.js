@@ -18,7 +18,15 @@ export function adaptIntegratedBaziReadingSource(result = {}, options = {}) {
   }
 
   const analysis = integratedData.analysis;
-  const summaryWarnings = array(integratedData.summary?.uncertainties).map(entry => entry?.value);
+  const summary = integratedData.summary;
+  const summaryWarnings = array(summary?.uncertainties).map(entry => entry?.value);
+  const readingGuardrails = {
+    conflicts: array(summary?.conflicts).map(entry => entry?.id).filter(Boolean),
+    uncertainties: summaryWarnings.filter(Boolean),
+    suppressedClaims: array(summary?.suppressedClaims).map(entry => entry?.id).filter(Boolean),
+    priorities: array(summary?.priorities).map(entry => entry?.id).filter(Boolean),
+    evidence: array(summary?.evidence).map(entry => entry?.id).filter(Boolean)
+  };
   const chart = {
     ...(result.chart || {}),
     pillars: integratedData.basic.chart,
@@ -52,6 +60,7 @@ export function adaptIntegratedBaziReadingSource(result = {}, options = {}) {
       },
       luckCycles,
       warnings: unique([...array(result.warnings), ...summaryWarnings]),
+      readingGuardrails,
       integratedReadingData: integratedData
     },
     audit: {
