@@ -192,6 +192,13 @@ assert.ok(
   'bazi reading module is empty'
 );
 
+const appHtml = await readFile('app.html', 'utf8');
+assert.ok(!appHtml.includes('<div class="version-note"'), 'legacy release history must not be rendered');
+assert.ok(!appHtml.includes('<h1>KOYOMI <span'), 'legacy version label must not be rendered in the heading');
+assert.ok(appHtml.includes('<h1>KOYOMI</h1>'), 'current product heading is missing');
+assert.ok(appHtml.includes('class="current-guide"'), 'current guidance entry point is missing');
+assert.ok(appHtml.includes('href="#personal"'), 'personal reading entry point is missing');
+
 console.log(
   `Static validation passed: workflows=${requiredWorkflows.length}, data=${requiredData.length}`
 );
