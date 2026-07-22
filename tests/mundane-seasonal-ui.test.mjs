@@ -9,7 +9,11 @@ assert.ok(app.includes('id=\'page-mundane\''), 'mundane page must be installed')
 assert.ok(app.includes('id="mundaneGenerate"'), 'mundane page must provide a generation action');
 assert.ok(app.includes("import('./src/mundane/western/index.js')"), 'UI must load the independent mundane core');
 assert.ok(app.includes('module.buildSeasonalIngressCharts'), 'UI must render the shared seasonal ingress result');
-for (const path of ['index.js', 'seasonal-ingress-core.js', 'astronomy-engine-adapter.js']) {
+assert.ok(app.includes('id="mundaneReading"'), 'mundane page must provide an annual reading area');
+assert.ok(app.includes('module.interpretSeasonalIngressChart'), 'UI must interpret each seasonal chart');
+assert.ok(app.includes('module.synthesizeSeasonalIngressReadings'), 'UI must synthesize the annual reading');
+assert.ok(app.includes('判断の根拠'), 'seasonal reading must expose its evidence');
+for (const path of ['index.js', 'seasonal-ingress-core.js', 'seasonal-interpretation-core.js', 'astronomy-engine-adapter.js']) {
   assert.ok(worker.includes(`'./src/mundane/western/${path}'`), `${path} must be available offline`);
 }
 
