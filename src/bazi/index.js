@@ -9,7 +9,7 @@ export { evaluateClimate, evaluateDayMasterStrength, evaluateElementDistribution
 export { classifyStrengthScore, evaluateLegacyDayMasterStrength, evaluatePreciseDayMasterStrength, relationToDayMaster, STRENGTH_WEIGHTS } from './strength/day-master-core.js';
 export { evaluateFollowPatterns, evaluateLegacyPatterns, evaluatePatternCandidates, evaluatePatterns, evaluateStructuredPatterns, evaluateTransformationPatterns, PATTERN_WEIGHTS } from './patterns/index.js';
 export { evaluateFavorableElements, evaluateIntegratedYongshen, evaluateLegacyYongshen, evaluateYongshen, evaluateYongshenByMethod, YONGSHEN_WEIGHTS } from './yongshen/index.js';
-export { calculateLuckCycles } from './luck/index.js';
+export { buildLuckPeriod, calculateAnnualLuck, calculateLuckCycles, calculateLuckStart, calculateMonthlyLuck } from './luck/index.js';
 export { compareBaziSchools, compareSchools, listSchoolProfiles } from './schools/index.js';
 export { explainBaziDecision, explainRule, getEvidence, PHASE3_CLASSICAL_INDEX } from './evidence/index.js';
 export { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
@@ -21,7 +21,7 @@ import { evaluateBasicBranchRelations, evaluateBasicStemRelations, evaluateBranc
 import { evaluateStrength } from './strength/index.js';
 import { evaluatePatterns } from './patterns/index.js';
 import { evaluateFavorableElements, evaluateYongshen } from './yongshen/index.js';
-import { calculateLuckCycles } from './luck/index.js';
+import { buildLuckPeriod, calculateAnnualLuck, calculateLuckCycles, calculateLuckStart, calculateMonthlyLuck } from './luck/index.js';
 import { compareBaziSchools, compareSchools } from './schools/index.js';
 import { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput, buildProfessionalEvidence, evaluateInterpretationTendencies, evaluateLuckInterpretations } from './interpretation/index.js';
 import { buildBaziReading, validateBaziReading } from './reading/index.js';
@@ -62,7 +62,7 @@ export function calculateBazi(profile, schoolConfig = {}) {
     { strengthResult: strengthForDependentRules, patternResult: patternsForYongshen }
   );
   const favorableElements = evaluateFavorableElements({ ...chart, relations }, schoolConfig, yongshen);
-  const luckCycles = calculateLuckCycles({ ...chart, relations }, profile, schoolConfig);
+  const luckCycles = calculateLuckCycles({ ...chart, relations, strength, patterns, yongshen }, profile, schoolConfig);
   const interpretationFacts = buildInterpretationFacts(chart, strength, patterns, yongshen, luckCycles);
   const result = {
     ...chart,
@@ -119,7 +119,11 @@ export default {
   evaluatePatterns,
   evaluateYongshen,
   evaluateFavorableElements,
+  buildLuckPeriod,
+  calculateAnnualLuck,
   calculateLuckCycles,
+  calculateLuckStart,
+  calculateMonthlyLuck,
   compareSchools,
   compareBaziSchools,
   validateChartResult,

@@ -2013,6 +2013,7 @@ function koyomiRenderBaziReading(){
     if(window.lastPersonal){
       window.lastPersonal.baziReading=reading;
       window.lastPersonal.baziStructuredResult=result;
+      window.lastPersonal.luckCycles=result.luckCycles;
       if(window.lastPersonal.divinations)window.lastPersonal.divinations.shichu=reading.beginnerText;
     }
   }catch(error){
