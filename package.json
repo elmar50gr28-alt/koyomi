@@ -16,7 +16,7 @@
     "test:bazi-yongshen-core": "node tests/bazi-yongshen-core-refinement.test.mjs",
     "test:static": "node tests/static-validation.test.mjs && node tests/name-strokes-data.test.mjs",
     "test:mobile": "node tests/mobile-regression.test.mjs",
-    "test:mundane": "node tests/mundane-seasonal-ingress-core.test.mjs && node tests/mundane-seasonal-interpretation-core.test.mjs && node tests/mundane-seasonal-ui.test.mjs",
+    "test:mundane": "node tests/mundane-seasonal-ingress-core.test.mjs && node tests/mundane-seasonal-interpretation-core.test.mjs && node tests/mundane-browser-global.test.mjs && node tests/mundane-seasonal-ui.test.mjs",
     "test:architecture": "node tests/architecture-contract.test.mjs",
     "test:calendar-time": "node tests/calendar-time-compat.test.mjs",
     "test:calendar-time-core": "node tests/calendar-time-core.test.mjs",
