@@ -28,6 +28,11 @@ assert.ok(app.includes("$('qFocus').value=focus"), 'theme choice must update the
 assert.ok(app.includes("$('theme').value=category"), 'theme choice must update the broad category');
 assert.ok(app.includes("await ledgerOpenSelector('personal')"),'concern selection must continue to person selection');
 assert.ok(app.includes('id="koyomiOpenResult"'), 'home must provide a previous-result entry');
+assert.ok(app.includes('id="koyomiChooseReadingDate"'), 'home must provide a date-specific reading entry');
+assert.ok(app.indexOf('id="koyomiStartReading"') < app.indexOf('id="koyomiChooseReadingDate"'), 'date-specific reading must appear below today reading');
+assert.ok(app.includes('id="koyomiReadingDate" type="date"'), 'date-specific reading must use a date picker');
+assert.ok(app.includes('selectedDate=startOfDay(date);renderCalendar()'), 'selected date must update the existing reading date before calculation');
+assert.ok(app.includes("['koyomiStartReading','koyomiStartDateReading']"), 'selected-date reading must refresh the structured reading output');
 assert.ok(app.includes('id="koyomiMobileResult"'), 'mobile navigation must provide a result destination');
 const mobileNav=app.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0]||'';
 assert.equal((mobileNav.match(/<button/g)||[]).length,5,'mobile navigation must contain exactly five primary destinations');
