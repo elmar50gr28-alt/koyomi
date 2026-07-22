@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import vm from 'node:vm';
+const context = {};
+vm.runInNewContext(await readFile('src/persona/beginner-explainer.js', 'utf8'), context);
+const explainer = context.KOYOMI_BEGINNER_EXPLAINER;
+const model = { system:'タロット', scenario:{state:'試行',stop:'約束違反',review:'7日'}, evidence:['最終結果 正位置'] };
+const first = explainer.explain(model, {date:'2026-07-22'});
+assert.equal(JSON.stringify(first), JSON.stringify(explainer.explain(model, {date:'2026-07-22'})));
+const variants = new Set(Array.from({length:7}, (_,i) => explainer.explain(model, {date:`2026-07-${22+i}`}).example));
+assert.ok(variants.size > 1);
+assert.equal(JSON.stringify(first.unchanged), JSON.stringify({state:'試行',evidence:['最終結果 正位置'],stop:'約束違反',review:'7日'}));
+for (const system of Object.keys(explainer.examples)) assert.ok(explainer.examples[system].length >= 4);
+console.log('Beginner explainer passed');
