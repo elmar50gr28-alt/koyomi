@@ -27,6 +27,14 @@ export function adaptIntegratedBaziReadingSource(result = {}, options = {}) {
     priorities: array(summary?.priorities).map(entry => entry?.id).filter(Boolean),
     evidence: array(summary?.evidence).map(entry => entry?.id).filter(Boolean)
   };
+  const readingSignals = {
+    strengths: array(summary?.strengths).length,
+    challenges: array(summary?.challenges).length,
+    supports: array(summary?.supports).length,
+    pressures: array(summary?.pressures).length,
+    currentLuckSupports: array(summary?.supports).filter(entry => entry?.sourceCore === 'luck').length,
+    currentLuckPressures: array(summary?.pressures).filter(entry => entry?.sourceCore === 'luck').length
+  };
   const chart = {
     ...(result.chart || {}),
     pillars: integratedData.basic.chart,
@@ -61,6 +69,7 @@ export function adaptIntegratedBaziReadingSource(result = {}, options = {}) {
       luckCycles,
       warnings: unique([...array(result.warnings), ...summaryWarnings]),
       readingGuardrails,
+      readingSignals,
       integratedReadingData: integratedData
     },
     audit: {

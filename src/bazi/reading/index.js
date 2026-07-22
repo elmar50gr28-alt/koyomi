@@ -384,16 +384,36 @@ function buildExecutiveSummaryJa(facts, sections) {
     : isWeak(facts)
       ? '\u74b0\u5883\u3084\u5468\u56f2\u306e\u652f\u3048\u3092\u53d7\u3051\u308b\u307b\u3069\u529b\u3092\u767a\u63ee\u3057\u3084\u3059\u3044\u50be\u5411\u3067\u3059\u3002'
       : '\u4e00\u3064\u306e\u5f37\u5f31\u3060\u3051\u3067\u65ad\u5b9a\u305b\u305a\u3001\u72b6\u6cc1\u3054\u3068\u306e\u30d0\u30e9\u30f3\u30b9\u3092\u898b\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059\u3002';
+  const guidance = buildIntegratedGuidanceJa(facts);
   return {
     centralTheme: `${dayMaster}\u306e\u65e5\u4e3b\u304c\u6301\u3064\u50be\u5411\u3092\u3001${element}\u306b\u3088\u3063\u3066\u7740\u5b9f\u306a\u6210\u679c\u3078\u3064\u306a\u3052\u308b\u6642\u671f\u3067\u3059\u3002`,
     strength,
     currentIssue: sections.weakness?.conclusion || sections.overall.conclusion,
-    currentFlow: '\u73fe\u5728\u306e\u5927\u904b\u304c\u9577\u671f\u7684\u306a\u6d41\u308c\u3092\u4f5c\u308a\u3001\u6b73\u904b\u3068\u6708\u904b\u304c\u884c\u52d5\u306e\u5f37\u5f31\u3092\u8abf\u6574\u3057\u3066\u3044\u307e\u3059\u3002\u65ad\u5b9a\u3067\u306f\u306a\u304f\u3001\u52d5\u304f\u6642\u671f\u3092\u898b\u6975\u3081\u308b\u6750\u6599\u3068\u3057\u3066\u4f7f\u3063\u3066\u304f\u3060\u3055\u3044\u3002',
+    currentFlow: guidance.currentFlow,
+    integratedGuidance: guidance,
     doNow: sections.advice.action,
     avoid: sections.weakness.avoidance,
     confidence: round2(Math.min(sections.overall.confidence, sections.advice.confidence)),
     reviewStatus: facts.precision === 'partial-without-hour-pillar' ? 'partial-input-review' : 'practical-reading-rc',
     schoolDifferenceNote: '\u65fa\u8870\u3001\u8abf\u5019\u3001\u683c\u5c40\u3001\u5927\u904b\u306e\u898b\u65b9\u304c\u4e00\u81f4\u3057\u306a\u3044\u5834\u5408\u306f\u3001\u6d41\u6d3e\u5dee\u3068\u3057\u3066\u8868\u793a\u3057\u307e\u3059\u3002'
+  };
+}
+
+function buildIntegratedGuidanceJa(facts) {
+  const signals = facts.signals;
+  const favorable = elementWordsJa(facts.primaryFavorable);
+  const avoid = elementWordsJa(facts.avoid[0] || facts.dayMasterElement);
+  const supportBalance = signals.currentLuckSupports - signals.currentLuckPressures;
+  const currentFlow = supportBalance > 0
+    ? `現在の運には命式を支える作用が${signals.currentLuckSupports}件あり、追い風を活かしやすい状態です。小さく始めて継続してください。`
+    : supportBalance < 0
+      ? `現在の運には注意して扱う作用が${signals.currentLuckPressures}件あります。急いで結論を出さず、準備と確認を優先してください。`
+      : '現在の運は追い風と注意要素が拮抗しています。大きく決め打ちせず、小さく試して結果を確認してください。';
+  return {
+    strength: `${favorable}を意識すると、命式が持つ${signals.strengths}件の支えを活かしやすくなります。`,
+    support: signals.supports ? `命式と運勢から${signals.supports}件の追い風候補を確認しています。` : '明確な追い風は限定的なため、日々の安定を優先してください。',
+    pressure: signals.pressures ? `${avoid}に偏る場面を含め、${signals.pressures}件の注意作用があります。負荷を一度に増やさないでください。` : '強く警戒すべき圧力は現在の判定では目立ちません。',
+    currentFlow
   };
 }
 
@@ -776,6 +796,7 @@ function extractFacts(result = {}, options = {}) {
     tendencies,
     luck,
     guardrails: result.readingGuardrails || { conflicts: [], uncertainties: [], suppressedClaims: [], priorities: [], evidence: [] },
+    signals: result.readingSignals || { strengths: 0, challenges: 0, supports: 0, pressures: 0, currentLuckSupports: 0, currentLuckPressures: 0 },
     evidence: [...new Set(evidence)],
     warnings: result.warnings || [],
     confidence,
@@ -839,16 +860,34 @@ function buildExecutiveSummary(facts, sections) {
     : isWeak(facts)
       ? 'support, timing, and environment make your strength easier to use'
       : 'balance and situation reading matter more than one label';
+  const guidance = buildIntegratedGuidance(facts);
   return {
     centralTheme: `Use ${ELEMENT_WORDS[facts.primaryFavorable] || 'balance'} to turn ${facts.dayMasterName} day-master tendencies into steady action.`,
     strength: `Core strength: ${strengthMeaning}.`,
     currentIssue: sections.weakness?.conclusion || sections.overall.conclusion,
-    currentFlow: buildCurrentFlow(facts),
+    currentFlow: guidance.currentFlow,
+    integratedGuidance: guidance,
     doNow: sections.advice.action,
     avoid: sections.weakness.avoidance,
     confidence: round2(Math.min(sections.overall.confidence, sections.advice.confidence)),
     reviewStatus: facts.precision === 'partial-without-hour-pillar' ? 'partial-input-review' : 'practical-reading-rc',
     schoolDifferenceNote: 'School differences are preserved when strength, climate, pattern, or luck rules do not point in the same direction.'
+  };
+}
+
+function buildIntegratedGuidance(facts) {
+  const signals = facts.signals;
+  const supportBalance = signals.currentLuckSupports - signals.currentLuckPressures;
+  const currentFlow = supportBalance > 0
+    ? `Current luck contains ${signals.currentLuckSupports} supportive signal(s); use the tailwind through small repeatable steps.`
+    : supportBalance < 0
+      ? `Current luck contains ${signals.currentLuckPressures} pressure signal(s); prioritize preparation and review over speed.`
+      : 'Supportive and cautionary signals are balanced; test decisions in small steps before committing.';
+  return {
+    strength: `${ELEMENT_WORDS[facts.primaryFavorable] || 'balance'} helps activate ${signals.strengths} existing support signal(s).`,
+    support: signals.supports ? `${signals.supports} supportive chart or luck signal(s) are available.` : 'Clear tailwinds are limited, so prioritize stability.',
+    pressure: signals.pressures ? `${signals.pressures} pressure signal(s) call for controlled pacing.` : 'No prominent pressure signal is present in the current result.',
+    currentFlow
   };
 }
 
