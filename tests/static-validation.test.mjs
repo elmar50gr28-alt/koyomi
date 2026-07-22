@@ -195,7 +195,7 @@ assert.ok(
 const appHtml = await readFile('app.html', 'utf8');
 assert.ok(!appHtml.includes('<div class="version-note"'), 'legacy release history must not be rendered');
 assert.ok(!appHtml.includes('<h1>KOYOMI <span'), 'legacy version label must not be rendered in the heading');
-assert.ok(appHtml.includes('<h1>KOYOMI</h1>'), 'current product heading is missing');
+assert.ok(appHtml.includes('<h1>こよみ</h1>'), 'current product heading is missing');
 assert.ok(appHtml.includes("nav.id='koyomiHomeNav'"), 'minimal home guidance entry point is missing');
 assert.ok(appHtml.includes('id="koyomiChooseTheme"'), 'concern-based reading entry point is missing');
 assert.ok(appHtml.includes('id="personalActionSummary"'), 'visible personal action summary is missing');

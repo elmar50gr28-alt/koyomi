@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260722-45';
+const CACHE_VERSION = 'koyomi-foundation-20260722-46';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -97,7 +97,7 @@ async function networkFirstHtml(request) {
     }
 
     return new Response(
-      'KOYOMIは現在オフラインです。',
+      'こよみは現在オフラインです。',
       {
         status: 503,
         headers: {
