@@ -209,6 +209,16 @@ assert.ok(appHtml.includes("'kyuseiResultSummary'"), 'Kyusei result summary is m
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'sukuyo','sukuyoReading','sukuyoResultSummary')"), 'Sukuyo summary adapter is missing');
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'kyusei','kyuseiReading','kyuseiResultSummary')"), 'Kyusei summary adapter is missing');
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'astrology','astrologyReading','astrologyResultSummary')"), 'Astrology summary adapter is missing');
+assert.ok(appHtml.includes("v196RenderMethodSummary(r,'tarot','tarotReading','tarotResultSummary')"), 'Tarot summary adapter is missing');
+for (const section of ['【相談とケルト十字】', '【カードごとの読み】', '【十字部分：問題の構造】', '【杖部分：本人から結果まで】', '【相談への回答】', '【現実での確認】']) {
+  assert.ok(appHtml.includes(section), `Tarot full reading section is missing: ${section}`);
+}
+assert.ok(appHtml.includes("dominant&&dominant[1]>=3"), 'Tarot reading must evaluate repeated suits');
+assert.ok(appHtml.includes("大アルカナ${majors}枚、正位置${upright}枚、逆位置${reversed}枚"), 'Tarot reading must expose spread balance');
+for (const position of ['現状', '障害', '顕在意識', '潜在意識', '過去', '近い未来', '自分の立場', '周囲の状況', '願望・恐れ', '最終結果']) {
+  assert.ok(appHtml.includes(position), `Celtic Cross position is missing: ${position}`);
+}
+assert.ok(appHtml.includes('arr.length<10'), 'Celtic Cross must draw ten unique cards');
 for (const field of ['conclusion', 'evidence', 'action', 'caution', 'confidence']) {
   assert.ok(appHtml.includes(`data-method-summary="${field}"`), `${field} method summary field is missing`);
 }
