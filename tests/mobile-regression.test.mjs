@@ -17,9 +17,12 @@ assert.ok(app.includes('id="koyomiChoosePerson"'), 'home must provide a person-b
 assert.ok(app.includes('id="koyomiChooseTheme"'), 'home must provide a theme-based reading entry');
 assert.ok(app.includes("$('koyomiChoosePerson').onclick=koyomiOpenPersonPicker"), 'person entry must open the profile selector');
 assert.ok(app.includes('id="koyomiThemePanel"'), 'theme entry must reveal a theme choice panel');
-assert.equal((app.match(/data-koyomi-theme=/g)||[]).length,8,'theme panel must offer eight understandable choices');
+assert.equal((app.match(/choices:\[\[/g)||[]).length,5,'first concern step must offer at most five choices');
+assert.ok(app.includes('koyomiRenderConcernChoices'),'concern selection must use progressive disclosure');
+assert.ok(app.includes('data-koyomi-back'),'second concern step must allow going back');
 assert.ok(app.includes("$('qFocus').value=focus"), 'theme choice must update the detailed focus');
 assert.ok(app.includes("$('theme').value=category"), 'theme choice must update the broad category');
+assert.ok(app.includes("await ledgerOpenSelector('personal')"),'concern selection must continue to person selection');
 assert.ok(app.includes('id="koyomiOpenResult"'), 'home must provide a previous-result entry');
 assert.ok(app.includes('id="koyomiMobileResult"'), 'mobile navigation must provide a result destination');
 const mobileNav=app.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0]||'';

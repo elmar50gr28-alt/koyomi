@@ -125,6 +125,7 @@ body.oracle-zubat .reading,body.oracle-zubat .divination-reading{border-color:#7
 @media(max-width:620px){.ledger-form-grid{grid-template-columns:1fr}.ledger-form-grid .wide{grid-column:auto}.ledger-toolbar{grid-template-columns:1fr}.profile-grid{grid-template-columns:1fr}.ledger-savebar{align-items:stretch;flex-direction:column;bottom:82px}.ledger-savebar .ledger-btn{width:100%}.ledger-hero{padding:20px 16px}.ledger-subnav{top:61px}.location-grid,.reading-grid{grid-template-columns:1fr}.ledger-inline{align-items:stretch;flex-direction:column}.ledger-inline .ledger-btn{width:100%}}
 
 .top-reading-mode{display:flex;align-items:center;gap:7px;margin-left:auto;font-weight:800}.top-reading-mode select{min-width:7.5rem;padding:5px 9px;border:1px solid #8d6a34;border-radius:999px;background:#fffaf0;color:#25170f;font:inherit}@media(max-width:760px){.top-reading-mode{margin-top:7px;justify-content:space-between}.top-reading-mode select{min-width:8rem}}
+.koyomi-theme-back{grid-column:1/-1;background:transparent!important;color:#fff3d5!important;text-align:left;padding-left:12px}
 </style>
 
 <style id="koyomi-v300-patch">
@@ -1707,6 +1708,7 @@ function koyomiMarkProOnly(){
  ['ledgerSearch','ledgerRelationFilter','ledgerShowRecent','ledgerBulkDelete','ledgerPrint','ledgerJsonExport','ledgerCsvExport','ledgerEncryptedExport','ledgerImport','ledgerDeleteAllProfiles','ledgerDeleteAllLocations','ledgerDeleteAllData'].forEach(id=>$(id)?.closest('div,button,.field,.privacy-card')?.classList.add('pro-only'));
  $$('[data-ledger-panel="readings"],[data-ledger-panel="privacy"],#ledger-panel-readings,#ledger-panel-privacy').forEach(el=>el.classList.add('pro-only'));
 }
+const KOYOMI_CONCERN_GROUPS={today:{label:'今日の過ごし方',choices:[['timing','future','今日の流れ'],['healthrhythm','health','今日の心身']]},work:{label:'仕事・お金',choices:[['career','work','働き方・評価'],['changejob','work','転職・異動'],['business','work','独立・副業'],['income','money','収入・貯蓄'],['purchase','money','買い物・契約']]},relations:{label:'恋愛・人間関係',choices:[['encounter','love','出会い'],['relationship','love','交際・夫婦'],['marriage','love','結婚・同居'],['reconcile','love','復縁・修復'],['family','family','家族・親子']]},self:{label:'自分・心身',choices:[['nature','overall','性格・繰り返す癖'],['talent','overall','才能・強み'],['healthrhythm','health','睡眠・疲労'],['study','overall','学習・資格'],['creative','overall','創作・表現']]},decision:{label:'時期・選択',choices:[['timing','future','動く時期'],['choice','decision','二つの選択'],['relocation','future','引越し・環境変更']]}};
 function koyomiInstallHome(){
  if($('koyomiHomeNav'))return;
  const first=document.querySelector('#page-calendar .dashboard');
@@ -1714,19 +1716,21 @@ function koyomiInstallHome(){
  const nav=document.createElement('section');
  nav.id='koyomiHomeNav';
  nav.className='koyomi-home-nav';
- nav.innerHTML='<h2 class="koyomi-home-heading">今日は何を見ますか？</h2><p class="koyomi-home-lead">目的を一つ選べば、必要な画面だけを開きます。</p><button class="koyomi-main-action" id="koyomiStartReading" type="button">今日を占う</button><div class="koyomi-home-grid"><button class="koyomi-home-card" id="koyomiChoosePerson" type="button"><b>人物を選んで本鑑定</b><span>登録した生年月日と名前から総合結果を出す</span></button><button class="koyomi-home-card" id="koyomiChooseTheme" type="button" aria-expanded="false" aria-controls="koyomiThemePanel"><b>悩み別に占う</b><span>仕事・恋愛・お金・健康・時期から選ぶ</span></button><button class="koyomi-home-card" id="koyomiOpenResult" type="button"><b>前回の鑑定結果</b><span>今回のセッションで最後に出した結果へ戻る</span></button></div><div class="koyomi-theme-panel" id="koyomiThemePanel" hidden><p>占いたい悩みを選んでください</p><button type="button" data-koyomi-theme="nature" data-koyomi-category="overall">自分自身</button><button type="button" data-koyomi-theme="career" data-koyomi-category="work">仕事・転職</button><button type="button" data-koyomi-theme="relationship" data-koyomi-category="love">恋愛・結婚</button><button type="button" data-koyomi-theme="income" data-koyomi-category="money">お金</button><button type="button" data-koyomi-theme="family" data-koyomi-category="family">家族</button><button type="button" data-koyomi-theme="healthrhythm" data-koyomi-category="health">健康・生活</button><button type="button" data-koyomi-theme="timing" data-koyomi-category="future">時期・転機</button><button type="button" data-koyomi-theme="choice" data-koyomi-category="decision">二つの選択</button></div>';
+ nav.innerHTML='<h2 class="koyomi-home-heading">今日は何を知りたい？</h2><p class="koyomi-home-lead">ひとつ選んでください。</p><button class="koyomi-main-action" id="koyomiStartReading" type="button">今日の結論を見る</button><div class="koyomi-home-grid"><button class="koyomi-home-card" id="koyomiChoosePerson" type="button"><b>人物から占う</b></button><button class="koyomi-home-card" id="koyomiChooseTheme" type="button" aria-expanded="false" aria-controls="koyomiThemePanel"><b>悩みから占う</b></button><button class="koyomi-home-card" id="koyomiOpenResult" type="button"><b>前回の結果を見る</b></button></div><div class="koyomi-theme-panel" id="koyomiThemePanel" aria-live="polite" hidden></div>';
  first.parentNode.insertBefore(nav,first);
  $('koyomiStartReading').onclick=koyomiStartPersonalReading;
  $('koyomiChoosePerson').onclick=koyomiOpenPersonPicker;
  $('koyomiChooseTheme').onclick=koyomiOpenThemePicker;
- $$('[data-koyomi-theme]').forEach(button=>button.onclick=()=>koyomiSelectTheme(button.dataset.koyomiTheme,button.dataset.koyomiCategory));
+ $('koyomiThemePanel').onclick=e=>{const group=e.target.closest('[data-koyomi-group]'),choice=e.target.closest('[data-koyomi-theme]');if(group)koyomiRenderConcernChoices(group.dataset.koyomiGroup);else if(choice)koyomiSelectTheme(choice.dataset.koyomiTheme,choice.dataset.koyomiCategory);else if(e.target.closest('[data-koyomi-back]'))koyomiRenderConcernGroups()};
  $('koyomiOpenResult').onclick=koyomiOpenLastResult;
  if($('koyomiMobileResult'))$('koyomiMobileResult').onclick=koyomiOpenLastResult;
 }
 
 async function koyomiOpenPersonPicker(){setPage('personal');await ledgerOpenSelector('personal')}
-function koyomiOpenThemePicker(){const panel=$('koyomiThemePanel'),button=$('koyomiChooseTheme');if(!panel)return;panel.hidden=!panel.hidden;button?.setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden)panel.querySelector('button')?.focus()}
-function koyomiSelectTheme(focus,category){if($('qFocus'))$('qFocus').value=focus;if($('theme'))$('theme').value=category;saveState(false);setPage('personal');setTimeout(()=>{const target=$('qFocus'),panel=target?.closest('details');if(panel)panel.open=true;target?.scrollIntoView({behavior:'smooth',block:'center'});toast(`${target?.selectedOptions?.[0]?.textContent||'悩み'}を選びました`)},50)}
+function koyomiRenderConcernGroups(){const panel=$('koyomiThemePanel');if(!panel)return;panel.innerHTML='<p>まず、知りたい分野は？</p>'+Object.entries(KOYOMI_CONCERN_GROUPS).map(([key,item])=>`<button type="button" data-koyomi-group="${key}">${item.label}</button>`).join('')}
+function koyomiRenderConcernChoices(key){const panel=$('koyomiThemePanel'),group=KOYOMI_CONCERN_GROUPS[key];if(!panel||!group)return;panel.innerHTML=`<button class="koyomi-theme-back" type="button" data-koyomi-back>← 分野を選び直す</button><p>${group.label}の、何を知りたい？</p>`+group.choices.map(([focus,category,label])=>`<button type="button" data-koyomi-theme="${focus}" data-koyomi-category="${category}">${label}</button>`).join('');panel.querySelector('[data-koyomi-theme]')?.focus()}
+function koyomiOpenThemePicker(){const panel=$('koyomiThemePanel'),button=$('koyomiChooseTheme');if(!panel)return;panel.hidden=!panel.hidden;button?.setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden){koyomiRenderConcernGroups();panel.querySelector('[data-koyomi-group]')?.focus()}}
+async function koyomiSelectTheme(focus,category){if($('qFocus'))$('qFocus').value=focus;if($('theme'))$('theme').value=category;saveState(false);const panel=$('koyomiThemePanel');if(panel)panel.hidden=true;$('koyomiChooseTheme')?.setAttribute('aria-expanded','false');const profiles=await ledgerList('profiles');if(profiles.length){setPage('personal');await ledgerOpenSelector('personal')}else{setPage('ledger');ledgerSetPanel('edit');toast('先に占う人物を入力してください')}}
 function koyomiOpenLastResult(){setPage('personal');setTimeout(()=>{$('personalResult')?.scrollIntoView({behavior:'smooth',block:'start'});if(!lastPersonal)toast('この端末ではまだ鑑定結果がありません')},50)}
 function koyomiInstallModeSettings(){
  const settings=document.querySelector('#page-settings .paper .form-grid');
