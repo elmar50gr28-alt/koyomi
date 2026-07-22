@@ -27,14 +27,15 @@ const expected = {
 
 for (const [page, label] of Object.entries(expected)) {
   assert.equal(routing.resolveHash(`#${page}`), page, `${label} hash must resolve`);
-  assert.match(index, new RegExp(`href="app\\.html#${page}"`), `${label} menu must use a relative Pages URL`);
   assert.ok(app.includes(`id="page-${page}"`), `${label} page must exist`);
 }
+assert.ok(index.includes('href="app.html#ledger"'), 'home must keep the person-input destination');
+assert.ok(!index.includes('詳しく見る'), 'home must not show the old detail menu');
 
 assert.equal(routing.resolveHash(''), 'calendar', 'empty hash must use the safe default');
 assert.equal(routing.resolveHash('#unknown'), 'calendar', 'unknown hash must use the safe default');
 assert.equal(routing.resolveHash('#oracle'), 'oracle');
-assert.ok(index.includes('href="app.html#oracle"'), 'tarot/rune must have a dedicated route');
+assert.ok(app.includes('id="page-oracle"'), 'tarot/rune must have a dedicated route');
 assert.doesNotMatch(index, /href="app\.html#personal"[^>]*>[^<]*<span[^>]*>牌/);
 assert.ok(app.includes('id="page-oracle"'), 'tarot/rune route must remain available');
 assert.ok(!app.includes('古代メソポタミア神託 × ミツノメ神字・音環占'));
@@ -57,7 +58,7 @@ context.location.hash = '#unknown';
 routing.writeHash('unknown', { replace: true });
 assert.deepEqual(writes, ['/koyomi/app.html#calendar'], 'unknown hashes must be replaced safely under a Pages subpath');
 
-assert.ok(worker.includes("koyomi-foundation-20260722-41"), 'service worker cache version must be bumped');
+assert.ok(worker.includes("koyomi-foundation-20260722-42"), 'service worker cache version must be bumped');
 assert.ok(worker.includes("'./src/persona/divination-glossary.js'"));
 assert.ok(worker.includes("'./src/persona/beginner-explainer.js'"));
 assert.ok(worker.includes("'./src/persona/sister-lexicon.js'"));

@@ -15,6 +15,8 @@ assert.ok(index.includes('app.html') || index.includes('today.html'), 'index nav
 assert.ok(today.includes('app.html') || today.includes('KOYOMI'), 'today page must remain present');
 assert.ok(app.includes('id="koyomiChoosePerson"'), 'home must provide a person-based reading entry');
 assert.ok(app.includes('id="koyomiChooseTheme"'), 'home must provide a theme-based reading entry');
+assert.ok(app.includes("$('koyomiChoosePerson').onclick=koyomiOpenPersonPicker"), 'person entry must open the profile selector');
+assert.ok(app.includes("const panel=target?.closest('details');if(panel)panel.open=true"), 'theme entry must reveal its containing panel');
 assert.ok(app.includes('id="koyomiOpenResult"'), 'home must provide a previous-result entry');
 assert.ok(app.includes('id="koyomiMobileResult"'), 'mobile navigation must provide a result destination');
 const mobileNav=app.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0]||'';
