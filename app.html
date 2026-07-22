@@ -128,6 +128,7 @@ body.oracle-zubat .reading,body.oracle-zubat .divination-reading{border-color:#7
 
 .top-reading-mode{display:flex;align-items:center;gap:7px;margin-left:auto;font-weight:800}.top-reading-mode select{min-width:7.5rem;padding:5px 9px;border:1px solid #8d6a34;border-radius:999px;background:#fffaf0;color:#25170f;font:inherit}@media(max-width:760px){.top-reading-mode{margin-top:7px;justify-content:space-between}.top-reading-mode select{min-width:8rem}}
 .koyomi-theme-back{grid-column:1/-1;background:transparent!important;color:#fff3d5!important;text-align:left;padding-left:12px}
+.native-birth-date{position:relative;display:block}.native-birth-date input[type="date"]{position:relative;z-index:1;color:transparent!important;caret-color:transparent}.native-birth-date input[type="date"]::-webkit-datetime-edit{color:transparent}.native-birth-date-display{position:absolute;z-index:2;inset:0 46px 0 0;display:flex;align-items:center;padding:0 11px;color:#1a120b;pointer-events:none;white-space:nowrap}.native-birth-date-display:empty:before{content:"年・月・日を選択";color:#756b60}.native-birth-date input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:1}
 </style>
 
 <style id="koyomi-v300-patch">
@@ -430,6 +431,7 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <script src="./src/shared/profile-normalization-core.js"></script>
 <script src="./src/shared/profile-save-core.js"></script>
 <script src="./src/shared/menu-routing-core.js"></script>
+<script src="./src/shared/native-date-picker-core.js"></script>
 <script src="./src/mundane/western/browser-global.js"></script>
 <script src="./src/persona/sister-lexicon.js"></script>
 <script src="./src/persona/beginner-explainer.js"></script>
@@ -441,6 +443,10 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <script>
 (function(){'use strict';
 const $=id=>document.getElementById(id),$$=sel=>Array.from(document.querySelectorAll(sel));
+const NATIVE_BIRTH_DATE_IDS=['birthDate','partnerBirthDate','birthA','birthB','lpBirthDate'];
+function syncNativeBirthDates(){const core=window.KOYOMI_NATIVE_DATE_PICKER_CORE;if(!core)return;const max=core.todayIso();NATIVE_BIRTH_DATE_IDS.forEach(id=>{const input=$(id);if(!input)return;input.max=max;const normalized=core.normalizeIsoDate(input.value,{max});if(input.value!==normalized)input.value=normalized;const display=input.parentElement?.querySelector('.native-birth-date-display');if(display)display.textContent=core.formatJapaneseDate(normalized)})}
+function setupNativeBirthDatePickers(){const core=window.KOYOMI_NATIVE_DATE_PICKER_CORE;if(!core)return;NATIVE_BIRTH_DATE_IDS.forEach(id=>{const input=$(id);if(!input||input.parentElement?.classList.contains('native-birth-date'))return;input.type='date';input.lang='ja-JP';input.inputMode='none';input.max=core.todayIso();const wrapper=document.createElement('span');wrapper.className='native-birth-date';const display=document.createElement('span');display.className='native-birth-date-display';display.setAttribute('aria-hidden','true');input.parentNode.insertBefore(wrapper,input);wrapper.append(input,display);input.addEventListener('input',syncNativeBirthDates);input.addEventListener('change',syncNativeBirthDates)});syncNativeBirthDates();document.addEventListener('focusin',event=>{if(NATIVE_BIRTH_DATE_IDS.includes(event.target?.id))syncNativeBirthDates()});document.addEventListener('click',()=>requestAnimationFrame(syncNativeBirthDates),true)}
+document.addEventListener('DOMContentLoaded',()=>setTimeout(setupNativeBirthDatePickers,0),{once:true});
 const DAY=86400000,pad=n=>String(n).padStart(2,'0'),clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const STEMS='甲乙丙丁戊己庚辛壬癸'.split(''),BRANCHES='子丑寅卯辰巳午未申酉戌亥'.split('');
 const STEM_ELEMENT=['木','木','火','火','土','土','金','金','水','水'],STEM_YANG=[1,0,1,0,1,0,1,0,1,0];
