@@ -79,6 +79,9 @@ export const STEM_COMBINATIONS = [
   ['jia', 'ji', 'earth'], ['yi', 'geng', 'metal'], ['bing', 'xin', 'water'], ['ding', 'ren', 'wood'], ['wu', 'gui', 'fire']
 ];
 export const STEM_CLASHES = [['jia', 'geng'], ['yi', 'xin'], ['bing', 'ren'], ['ding', 'gui']];
+export const STEM_CONTROL_ELEMENTS = [
+  ['wood', 'earth'], ['earth', 'water'], ['water', 'fire'], ['fire', 'metal'], ['metal', 'wood']
+];
 export const BRANCH_COMBINATIONS = [
   ['zi', 'chou', 'earth'], ['yin', 'hai', 'wood'], ['mao', 'xu', 'fire'], ['chen', 'you', 'metal'], ['si', 'shen', 'water'], ['wu', 'wei', 'earth']
 ];
@@ -86,6 +89,12 @@ export const BRANCH_CLASHES = [['zi', 'wu'], ['chou', 'wei'], ['yin', 'shen'], [
 export const BRANCH_HARMS = [['zi', 'wei'], ['chou', 'wu'], ['yin', 'si'], ['mao', 'chen'], ['shen', 'hai'], ['you', 'xu']];
 export const BRANCH_PUNISHMENTS = [['zi', 'mao'], ['yin', 'si', 'shen'], ['chou', 'wei', 'xu'], ['chen'], ['wu'], ['you'], ['hai']];
 export const BRANCH_DESTRUCTIONS = [['zi', 'you'], ['chou', 'chen'], ['yin', 'hai'], ['mao', 'wu'], ['si', 'shen'], ['wei', 'xu']];
+export const BRANCH_TRINES = [
+  ['shen', 'zi', 'chen', 'water'], ['hai', 'mao', 'wei', 'wood'], ['yin', 'wu', 'xu', 'fire'], ['si', 'you', 'chou', 'metal']
+];
+export const BRANCH_SEASONAL_MEETINGS = [
+  ['yin', 'mao', 'chen', 'wood'], ['si', 'wu', 'wei', 'fire'], ['shen', 'you', 'xu', 'metal'], ['hai', 'zi', 'chou', 'water']
+];
 export const SEASON_STRENGTH = {
   spring: { branches: ['yin', 'mao', 'chen'], dominant: 'wood' },
   summer: { branches: ['si', 'wu', 'wei'], dominant: 'fire' },
