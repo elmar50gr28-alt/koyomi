@@ -201,12 +201,20 @@ function decideDirection(gender, yearYang, schoolConfig = {}) {
 }
 
 function birthCalculationDate(chartResult) {
-  const corrected = chartResult.calendarCalculation?.trueSolarTime?.date;
-  if (validDate(corrected)) return validDate(corrected);
   const date = chartResult.normalizedInput?.date;
   if (!date) return null;
   const time = chartResult.normalizedInput?.timeUnknown ? '00:00' : chartResult.normalizedInput?.time || '00:00';
-  return validDate(`${date}T${time}:00`);
+  const offset = Number(chartResult.normalizedInput?.place?.utcOffset ?? 9);
+  const base = validDate(`${date}T${time}:00${formatOffset(offset)}`);
+  const solarMinutes = Number(chartResult.calendarCalculation?.trueSolarTime?.minutesOffset || 0);
+  return base ? new Date(base.getTime() + solarMinutes * 60000) : null;
+}
+
+function formatOffset(value) {
+  const totalMinutes = Math.round(Math.abs(value) * 60);
+  const hours = String(Math.floor(totalMinutes / 60)).padStart(2, '0');
+  const minutes = String(totalMinutes % 60).padStart(2, '0');
+  return `${value < 0 ? '-' : '+'}${hours}:${minutes}`;
 }
 
 function surroundingSolarTerms(date) {
