@@ -21,6 +21,7 @@ assert.ok(individual.text.includes('【鑑定結果からの結論】'));
 for(const heading of ['現実に出やすい形','まず、これをおやりなさい','ここで止まりなさい','あとで確かめること'])assert.ok(individual.text.includes(`【${heading}】`));
 assert.ok(individual.text.includes('相手の反応・障害の再発・結果へ向かう変化'));
 assert.equal(individual.scenario.review,'7日');
-const defensive=adapter.concreteScenario({system:'大運・暦',score:32,evidence:['大運 低調'],action:'契約を保留する'});assert.equal(defensive.state,'防御');assert.match(defensive.scene,/警告|損失/);assert.equal(defensive.review,'30日');
-const allSystems=['四柱推命','宿曜','九星気学','西洋占星術','タロット','ルーン','姓名判断','数秘術','カバラ','六星周期','大運・暦'];for(const system of allSystems)assert.ok(adapter.DOMAINS[system],`${system} needs a concrete domain model`);
+const defensive=adapter.concreteScenario({system:'大運・暦',score:32,evidence:['大運 低調'],action:'契約を保留する'});assert.equal(defensive.state,'防御');assert.match(defensive.scene,/予定超過|疲労/);assert.equal(defensive.review,'30日');
+const allSystems=['四柱推命','宿曜','九星気学','西洋占星術','タロット','ルーン','姓名判断','数秘術','カバラ','六星周期','大運・暦'];for(const system of allSystems){assert.ok(adapter.DOMAINS[system],`${system} needs a concrete domain model`);assert.ok(adapter.PLAYBOOKS[system],`${system} needs an actionable playbook`);const scenario=adapter.concreteScenario({system,score:55});assert.match(scenario.action,/\d|一件|一つ|一行|三件|三つ|三列|二列/);assert.match(scenario.go,/期限|時刻|記録|日|費用|件/)}
+assert.match(defensive.stop,/二時間/);
 console.log('Persona conversation adapter passed');
