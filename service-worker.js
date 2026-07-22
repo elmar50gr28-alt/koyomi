@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260722-33';
+const CACHE_VERSION = 'koyomi-foundation-20260722-34';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -14,6 +14,7 @@ const APP_SHELL = [
   './src/shared/menu-routing-core.js',
   './src/persona/conversation-adapter.js',
   './src/persona/sister-renderer.js',
+  './src/persona/sister-lexicon.js',
   './src/data/name-strokes.js',
   './src/shared/calendar-time-compat.js',
   './src/shared/profile-schema-compat.js',

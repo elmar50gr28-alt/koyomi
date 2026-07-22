@@ -57,7 +57,8 @@ context.location.hash = '#unknown';
 routing.writeHash('unknown', { replace: true });
 assert.deepEqual(writes, ['/koyomi/app.html#calendar'], 'unknown hashes must be replaced safely under a Pages subpath');
 
-assert.ok(worker.includes("koyomi-foundation-20260722-33"), 'service worker cache version must be bumped');
+assert.ok(worker.includes("koyomi-foundation-20260722-34"), 'service worker cache version must be bumped');
+assert.ok(worker.includes("'./src/persona/sister-lexicon.js'"));
 assert.ok(worker.includes("'./src/persona/sister-renderer.js'"));
 assert.ok(worker.includes("'./src/persona/conversation-adapter.js'"), 'persona adapter must be available offline');
 assert.ok(worker.includes("'./src/shared/menu-routing-core.js'"), 'routing core must be available offline');
