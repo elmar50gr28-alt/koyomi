@@ -17,6 +17,7 @@ export function calculateFourPillars(normalizedBirthData, settings = {}) {
 export function calculateBaziChart(profile, schoolConfigInput = {}) {
   const {
     schoolConfig,
+    baziSettings,
     normalizedInput,
     birthLocal,
     trueSolarTime,
@@ -32,6 +33,7 @@ export function calculateBaziChart(profile, schoolConfigInput = {}) {
   return {
     input: profile,
     normalizedInput,
+    baziSettings,
     calendarCalculation: {
       timezone: normalizedInput.place.timezone,
       utcOffset: normalizedInput.place.utcOffset,
