@@ -1717,13 +1717,14 @@ function koyomiInstallHome(){
  nav.innerHTML='<h2 class="koyomi-home-heading">今日は何を見ますか？</h2><p class="koyomi-home-lead">目的を一つ選べば、必要な画面だけを開きます。</p><button class="koyomi-main-action" id="koyomiStartReading" type="button">今日を占う</button><div class="koyomi-home-grid"><button class="koyomi-home-card" id="koyomiChoosePerson" type="button"><b>人物を選んで本鑑定</b><span>登録した生年月日と名前から総合結果を出す</span></button><button class="koyomi-home-card" id="koyomiChooseTheme" type="button"><b>悩み別に占う</b><span>仕事・恋愛・お金・健康・時期から選ぶ</span></button><button class="koyomi-home-card" id="koyomiOpenResult" type="button"><b>前回の鑑定結果</b><span>今回のセッションで最後に出した結果へ戻る</span></button></div>';
  first.parentNode.insertBefore(nav,first);
  $('koyomiStartReading').onclick=koyomiStartPersonalReading;
- $('koyomiChoosePerson').onclick=koyomiStartPersonalReading;
+ $('koyomiChoosePerson').onclick=koyomiOpenPersonPicker;
  $('koyomiChooseTheme').onclick=koyomiOpenThemePicker;
  $('koyomiOpenResult').onclick=koyomiOpenLastResult;
  if($('koyomiMobileResult'))$('koyomiMobileResult').onclick=koyomiOpenLastResult;
 }
 
-async function koyomiOpenThemePicker(){const p=await koyomiRequireProfile();if(!p)return;setPage('personal');setTimeout(()=>{$('qFocus')?.scrollIntoView({behavior:'smooth',block:'center'});$('qFocus')?.focus({preventScroll:true})},50)}
+async function koyomiOpenPersonPicker(){setPage('personal');await ledgerOpenSelector('personal')}
+async function koyomiOpenThemePicker(){setPage('personal');setTimeout(()=>{const target=$('qFocus');const panel=target?.closest('details');if(panel)panel.open=true;target?.scrollIntoView({behavior:'smooth',block:'center'});target?.focus({preventScroll:true});if(!target)toast('鑑定テーマを開けませんでした')},50)}
 function koyomiOpenLastResult(){setPage('personal');setTimeout(()=>{$('personalResult')?.scrollIntoView({behavior:'smooth',block:'start'});if(!lastPersonal)toast('この端末ではまだ鑑定結果がありません')},50)}
 function koyomiInstallModeSettings(){
  const settings=document.querySelector('#page-settings .paper .form-grid');
