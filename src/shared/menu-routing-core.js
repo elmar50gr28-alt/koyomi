@@ -5,6 +5,7 @@
   const PAGES = Object.freeze([
     'personal',
     'qimen',
+    'mundane',
     'compat',
     'timeline',
     'calendar',

@@ -18,6 +18,7 @@ const routing = context.KOYOMI_MENU_ROUTING_CORE;
 const expected = {
   personal: '四柱推命・総合鑑定',
   qimen: '奇門遁甲',
+  mundane: 'マンデン',
   compat: '相性',
   timeline: '人生年表',
   calendar: '世界の暦',
@@ -27,7 +28,7 @@ const expected = {
 
 for (const [page, label] of Object.entries(expected)) {
   assert.equal(routing.resolveHash(`#${page}`), page, `${label} hash must resolve`);
-  assert.ok(app.includes(`id="page-${page}"`), `${label} page must exist`);
+  assert.ok(app.includes(`id="page-${page}"`) || app.includes(`page.id='page-${page}'`), `${label} page must exist`);
 }
 assert.ok(index.includes('href="app.html#ledger"'), 'home must keep the person-input destination');
 assert.ok(!index.includes('詳しく見る'), 'home must not show the old detail menu');
@@ -58,7 +59,7 @@ context.location.hash = '#unknown';
 routing.writeHash('unknown', { replace: true });
 assert.deepEqual(writes, ['/koyomi/app.html#calendar'], 'unknown hashes must be replaced safely under a Pages subpath');
 
-assert.ok(worker.includes("koyomi-foundation-20260722-48"), 'service worker cache version must be bumped');
+assert.ok(worker.includes("koyomi-foundation-20260722-49"), 'service worker cache version must be bumped');
 assert.ok(worker.includes("'./src/persona/divination-glossary.js'"));
 assert.ok(worker.includes("'./src/persona/beginner-explainer.js'"));
 assert.ok(worker.includes("'./src/persona/sister-lexicon.js'"));
