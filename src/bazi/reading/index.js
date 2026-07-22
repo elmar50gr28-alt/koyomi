@@ -1,3 +1,5 @@
+import { adaptIntegratedBaziReadingSource } from './adapter.js';
+
 const READING_VERSION = 'bazi-japanese-reading-20260717';
 
 const CATEGORY_DEFS = [
@@ -90,6 +92,8 @@ const GLOSSARY = {
 const PROFESSIONAL_CATEGORIES = new Set(['decadeLuck', 'annualLuck', 'monthlyLuck', 'importantTiming']);
 
 export function buildBaziReading(baziResult, options = {}) {
+  const adapted = adaptIntegratedBaziReadingSource(baziResult, options);
+  baziResult = adapted.result;
   const locale = resolveLocale(options);
   const facts = extractFacts(baziResult, options);
   const sections = Object.fromEntries(CATEGORY_DEFS.map(([id, title, policy]) => [
@@ -109,6 +113,7 @@ export function buildBaziReading(baziResult, options = {}) {
     locale: 'en',
     sourceCalculationVersion: baziResult?.calculationVersion || null,
     sourceIntegratedDataVersion: options.integratedData?.version || baziResult?.integratedReadingData?.version || null,
+    sourceAdapter: adapted.audit,
     personId: facts.personId,
     executiveSummary,
     timingReading,
