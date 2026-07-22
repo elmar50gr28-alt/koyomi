@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260722-52';
+const CACHE_VERSION = 'koyomi-foundation-20260722-53';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -16,6 +16,7 @@ const APP_SHELL = [
   './src/mundane/western/browser-global.js',
   './src/mundane/western/seasonal-ingress-core.js',
   './src/mundane/western/seasonal-interpretation-core.js',
+  './src/mundane/western/monthly-trend-core.js',
   './src/mundane/western/astronomy-engine-adapter.js',
   './src/persona/conversation-adapter.js',
   './src/persona/sister-renderer.js',

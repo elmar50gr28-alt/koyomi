@@ -17,7 +17,11 @@ assert.ok(app.includes('module.synthesizeSeasonalIngressReadings'), 'UI must syn
 assert.ok(app.includes('判断の根拠'), 'seasonal reading must expose its evidence');
 assert.ok(app.includes('年間を通して確認するもの'), 'annual reading must explain what to observe');
 assert.ok(app.includes('現実での備え'), 'seasonal reading must provide concrete preparation');
-for (const path of ['index.js', 'browser-global.js', 'seasonal-ingress-core.js', 'seasonal-interpretation-core.js', 'astronomy-engine-adapter.js']) {
+assert.ok(app.includes('id="mundaneMonthly"'), 'mundane page must provide a monthly visualization');
+assert.ok(app.includes('module.buildMonthlyIngressCharts'), 'UI must calculate twelve monthly charts');
+assert.ok(app.includes('module.buildMonthlyTrend'), 'UI must calculate transparent monthly indices');
+assert.ok(app.includes('数値は出来事の確率ではなく'), 'UI must explain what the indices mean');
+for (const path of ['index.js', 'browser-global.js', 'seasonal-ingress-core.js', 'seasonal-interpretation-core.js', 'monthly-trend-core.js', 'astronomy-engine-adapter.js']) {
   assert.ok(worker.includes(`'./src/mundane/western/${path}'`), `${path} must be available offline`);
 }
 

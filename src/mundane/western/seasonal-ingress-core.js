@@ -7,6 +7,21 @@ export const SEASONAL_INGRESSES = Object.freeze([
   Object.freeze({ id: 'capricorn', nameJa: '冬至図', targetLongitude: 270, startMonth: 11, startDay: 19 })
 ]);
 
+export const MONTHLY_INGRESSES = Object.freeze([
+  Object.freeze({ id: 'aquarius', nameJa: '1月図', targetLongitude: 300, startMonth: 0, startDay: 18, month: 1 }),
+  Object.freeze({ id: 'pisces', nameJa: '2月図', targetLongitude: 330, startMonth: 1, startDay: 16, month: 2 }),
+  Object.freeze({ id: 'aries', nameJa: '3月図', targetLongitude: 0, startMonth: 2, startDay: 18, month: 3 }),
+  Object.freeze({ id: 'taurus', nameJa: '4月図', targetLongitude: 30, startMonth: 3, startDay: 18, month: 4 }),
+  Object.freeze({ id: 'gemini', nameJa: '5月図', targetLongitude: 60, startMonth: 4, startDay: 19, month: 5 }),
+  Object.freeze({ id: 'cancer', nameJa: '6月図', targetLongitude: 90, startMonth: 5, startDay: 19, month: 6 }),
+  Object.freeze({ id: 'leo', nameJa: '7月図', targetLongitude: 120, startMonth: 6, startDay: 20, month: 7 }),
+  Object.freeze({ id: 'virgo', nameJa: '8月図', targetLongitude: 150, startMonth: 7, startDay: 20, month: 8 }),
+  Object.freeze({ id: 'libra', nameJa: '9月図', targetLongitude: 180, startMonth: 8, startDay: 21, month: 9 }),
+  Object.freeze({ id: 'scorpio', nameJa: '10月図', targetLongitude: 210, startMonth: 9, startDay: 21, month: 10 }),
+  Object.freeze({ id: 'sagittarius', nameJa: '11月図', targetLongitude: 240, startMonth: 10, startDay: 20, month: 11 }),
+  Object.freeze({ id: 'capricorn', nameJa: '12月図', targetLongitude: 270, startMonth: 11, startDay: 19, month: 12 })
+]);
+
 const ASPECTS = Object.freeze([
   Object.freeze({ id: 'conjunction', angle: 0, orb: 6 }),
   Object.freeze({ id: 'sextile', angle: 60, orb: 4 }),
@@ -124,4 +139,8 @@ export function buildSeasonalIngressChart({ year, definition, location, ephemeri
 
 export function buildSeasonalIngressCharts(options) {
   return SEASONAL_INGRESSES.map(definition => buildSeasonalIngressChart({ ...options, definition }));
+}
+
+export function buildMonthlyIngressCharts(options) {
+  return MONTHLY_INGRESSES.map(definition => ({ ...buildSeasonalIngressChart({ ...options, definition }), month: definition.month }));
 }
