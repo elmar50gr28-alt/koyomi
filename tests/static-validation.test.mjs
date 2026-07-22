@@ -211,6 +211,7 @@ assert.ok(appHtml.includes("v196RenderMethodSummary(r,'kyusei','kyuseiReading','
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'astrology','astrologyReading','astrologyResultSummary')"), 'Astrology summary adapter is missing');
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'tarot','tarotReading','tarotResultSummary')"), 'Tarot summary adapter is missing');
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'runes','runesReading','runesResultSummary')"), 'Runes summary adapter is missing');
+assert.ok(appHtml.includes("v196RenderMethodSummary(r,'name','nameReading','nameResultSummary')"), 'Name reading summary adapter is missing');
 for (const section of ['【相談とケルト十字】', '【カードごとの読み】', '【十字部分：問題の構造】', '【杖部分：本人から結果まで】', '【相談への回答】', '【現実での確認】']) {
   assert.ok(appHtml.includes(section), `Tarot full reading section is missing: ${section}`);
 }
@@ -224,6 +225,10 @@ for (const section of ['【相談と三つのルーン】', '【現在の核】'
   assert.ok(appHtml.includes(section), `Runes full reading section is missing: ${section}`);
 }
 assert.ok(appHtml.includes("rev===3?'3枚とも反転"), 'Runes reading must handle all-reversed spreads');
+for (const section of ['【相談と姓名判断】', '【姓名の五格】', '【五格の関係】', '【仕事・対人・内面】', '【相談への回答】', '【画数と判定の確度】', '【現実での確認】']) {
+  assert.ok(appHtml.includes(section), `Name full reading section is missing: ${section}`);
+}
+assert.ok(appHtml.includes("filter(ch=>!NAME_STROKES[ch])"), 'Name reading must disclose fallback stroke counts');
 for (const field of ['conclusion', 'evidence', 'action', 'caution', 'confidence']) {
   assert.ok(appHtml.includes(`data-method-summary="${field}"`), `${field} method summary field is missing`);
 }
