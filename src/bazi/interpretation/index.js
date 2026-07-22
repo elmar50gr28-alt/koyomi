@@ -126,7 +126,8 @@ export function buildMitsunomeInput(baziResult) {
       patterns: baziResult.patterns,
       yongshen: baziResult.yongshen,
       luckCycles: baziResult.luckCycles,
-      interpretation: baziResult.interpretation
+      interpretation: baziResult.interpretation,
+      integratedReadingData: baziResult.integratedReadingData || null
     },
     beginnerExplanation: baziResult.beginnerExplanation || buildBeginnerExplanation(baziResult),
     professionalEvidence: baziResult.professionalEvidence || buildProfessionalEvidence(baziResult),
