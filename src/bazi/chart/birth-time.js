@@ -5,6 +5,7 @@ import {
   resolveSchoolConfig
 } from '../calendar/index.js';
 import { applyBirthTimeCorrection } from './time-correction.js';
+import { normalizeBaziSettings, toLegacySchoolConfig } from '../settings/index.js';
 
 /**
  * Prepare the calculation datetime without changing the existing correction
@@ -14,8 +15,11 @@ export function prepareBirthCalculation(
   profile,
   schoolConfigInput = {}
 ) {
+  const baziSettings = normalizeBaziSettings(schoolConfigInput);
   const schoolConfig = resolveSchoolConfig(
-    schoolConfigInput
+    schoolConfigInput?.baziSettings || schoolConfigInput?.calendar
+      ? toLegacySchoolConfig(baziSettings)
+      : schoolConfigInput
   );
 
   const normalizedInput = normalizeProfile(
@@ -52,6 +56,7 @@ export function prepareBirthCalculation(
 
   return {
     schoolConfig,
+    baziSettings,
     normalizedInput,
     birthLocal,
     trueSolarTime,

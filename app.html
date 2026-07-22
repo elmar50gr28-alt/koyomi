@@ -1991,6 +1991,7 @@ function koyomiRenderBaziReading(){
   try{
     const profile=koyomiBaziReadingProfile();
     if(!profile)return;
+    profile.baziSettings=settings();
     const result=KOYOMI_BAZI.calculateBazi(profile);
     const locale=koyomiBaziLocale();
     const reading=KOYOMI_BAZI.buildBaziReading(result,{locale});

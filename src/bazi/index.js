@@ -11,6 +11,7 @@ export { evaluateFollowPatterns, evaluateLegacyPatterns, evaluatePatternCandidat
 export { evaluateFavorableElements, evaluateIntegratedYongshen, evaluateLegacyYongshen, evaluateYongshen, evaluateYongshenByMethod, YONGSHEN_WEIGHTS } from './yongshen/index.js';
 export { buildLuckPeriod, calculateAnnualLuck, calculateLuckCycles, calculateLuckStart, calculateMonthlyLuck } from './luck/index.js';
 export { compareBaziSchools, compareSchools, listSchoolProfiles } from './schools/index.js';
+export { DEFAULT_BAZI_SETTINGS, inspectBaziSettings, normalizeBaziSettings, toLegacySchoolConfig } from './settings/index.js';
 export { explainBaziDecision, explainRule, getEvidence, PHASE3_CLASSICAL_INDEX } from './evidence/index.js';
 export { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
 export { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput, buildProfessionalEvidence, evaluateInterpretationTendencies, evaluateLuckInterpretations } from './interpretation/index.js';
@@ -26,9 +27,13 @@ import { compareBaziSchools, compareSchools } from './schools/index.js';
 import { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput, buildProfessionalEvidence, evaluateInterpretationTendencies, evaluateLuckInterpretations } from './interpretation/index.js';
 import { buildBaziReading, validateBaziReading } from './reading/index.js';
 import { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
+import { inspectBaziSettings, normalizeBaziSettings, toLegacySchoolConfig } from './settings/index.js';
 
-export function calculateBazi(profile, schoolConfig = {}) {
-  const chart = calculateBaziChart(profile, schoolConfig);
+export function calculateBazi(profile, schoolConfig = profile?.baziSettings || {}) {
+  const baziSettings = normalizeBaziSettings(schoolConfig);
+  const normalizedSchoolConfig = toLegacySchoolConfig(baziSettings);
+  const chart = calculateBaziChart(profile, normalizedSchoolConfig);
+  schoolConfig = normalizedSchoolConfig;
   const relations = {
     stems: evaluateStemRelations(chart, schoolConfig),
     branches: evaluateBranchRelations(chart, schoolConfig)
@@ -74,6 +79,8 @@ export function calculateBazi(profile, schoolConfig = {}) {
     luckCycles,
     schoolComparison: compareBaziSchools(profile, [schoolConfig.schoolId || 'koyomi-integrated']),
     interpretationFacts,
+    baziSettings,
+    settingsInspection: inspectBaziSettings(baziSettings),
     calculationVersion: KOYOMI_BAZI_VERSION
   };
   const interpretation = {
