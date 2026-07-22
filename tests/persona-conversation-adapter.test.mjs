@@ -8,4 +8,11 @@ assert.equal(normal.persona.focus,'転職するか迷っています');assert.ok
 const different=adapter.apply(base,{system:'総合鑑定',question:'結婚の時期を知りたい',score:78,mode:'sister'});assert.notEqual(different.persona.opening,normal.persona.opening);
 const danger=adapter.apply(base,{system:'相性鑑定',question:'相手に脅されて怖い',score:30,mode:'zubat',risk:95});assert.equal(danger.persona.serious,true);assert.equal(danger.persona.aside,'');assert.ok(!danger.text.includes('姐さんのひと言'));assert.match(danger.persona.closing,/安全|危険|第三者/);
 for(const key of ['warm','bright','firm','bridge','aside','close'])assert.ok(adapter.BANK[key].length>=6);
+const individual=adapter.applyDivination('【相談への回答】\n条件を確認してください。慎重な判断が必要です。\n\n【判定の確度】\nこの計算は入力値を使います。',{system:'タロット',question:'転職の面接が不安',score:58,mode:'sister',evidence:['最終結果 正位置','障害 逆位置'],action:'面接条件を一つ確認する',variant:3});
+assert.ok(individual.text.startsWith('【タロットを姐さんが読むわ】'));
+assert.ok(individual.text.includes('条件を確認してちょうだい。'));
+assert.ok(individual.text.includes('最終結果 正位置／障害 逆位置'));
+assert.ok(individual.text.includes('最初の一手は「面接条件を一つ確認する」'));
+assert.ok(individual.text.includes('【判定の確度】\nこの計算は入力値を使います。'),'technical evidence must retain neutral wording');
+assert.ok(individual.text.includes('【姐さんの締め】'));
 console.log('Persona conversation adapter passed');
