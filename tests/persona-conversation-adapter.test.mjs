@@ -12,10 +12,15 @@ const individual=adapter.applyDivination('【相談とケルト十字】\n相談
 assert.ok(individual.text.startsWith('【タロットを姐さんが読むわ】'));
 assert.ok(individual.text.includes('条件を確認してちょうだい。'));
 assert.ok(individual.text.includes('最終結果 正位置／障害 逆位置'));
-assert.ok(individual.text.includes('最初の一手は「面接条件を一つ確認する」'));
+assert.ok(individual.text.includes('最初にするのは「面接条件を一つ確認する」'));
 assert.ok(individual.text.includes('【判定の確度】\nこの計算は入力値を使います。'),'technical evidence must retain neutral wording');
 assert.ok(individual.text.includes('【姐さんの締め】'));
 assert.ok(!individual.text.includes('転職の面接が不安'));
 assert.ok(individual.text.includes('【ケルト十字の鑑定結果】'));
 assert.ok(individual.text.includes('【鑑定結果からの結論】'));
+for(const heading of ['現実に出やすい形','進める条件','止める条件','再確認'])assert.ok(individual.text.includes(`【${heading}】`));
+assert.ok(individual.text.includes('相手の反応・障害の再発・結果へ向かう変化'));
+assert.equal(individual.scenario.review,'7日');
+const defensive=adapter.concreteScenario({system:'大運・暦',score:32,evidence:['大運 低調'],action:'契約を保留する'});assert.equal(defensive.state,'防御');assert.match(defensive.scene,/警告|損失/);assert.equal(defensive.review,'30日');
+const allSystems=['四柱推命','宿曜','九星気学','西洋占星術','タロット','ルーン','姓名判断','数秘術','カバラ','六星周期','大運・暦'];for(const system of allSystems)assert.ok(adapter.DOMAINS[system],`${system} needs a concrete domain model`);
 console.log('Persona conversation adapter passed');
