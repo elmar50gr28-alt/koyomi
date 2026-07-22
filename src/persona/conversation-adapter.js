@@ -1,0 +1,21 @@
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  root.KOYOMI_PERSONA_ADAPTER = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  const BANK = {
+    warm: ['まぁ、よくここまで一人で抱えてきたわね。まず深呼吸なさい。','あら、話してくれてよかった。気持ちも現実も、両方置いていかないわよ。','そうなのね。アンタが頑張った分まで、なかったことにはしないわ。','うん、迷うのも無理ないわ。今日は絡まった糸を一本ずつほどきましょう。','いらっしゃい。格好つけなくていいの、今の本音から見ていくわよ。','大丈夫、甘やかしはしないけど一人にもさせないわ。順番に見ましょう。'],
+    bright: ['あら、悪くないじゃない。追い風を雑に使わなければ、ちゃんと伸びるわよ。','まぁ素敵。扉は開いてるわ、あとはハイヒールで駆け込まないことね。','いい顔して。今回は遠慮より、準備した一歩がものを言うわ。','あらやだ、運がせっかく合図してるのに見ないふりは野暮よ。','今回は希望だけじゃないわ。現実にも動かせる余白があるの。','そうそう、その調子。ただし景気よく約束まで増やしちゃ駄目よ。'],
+    firm: ['アンタね、ここは曖昧な笑顔で通り過ぎちゃ駄目。結論から言うわ。','ちょっと耳が痛いわよ。でも、傷を広げないために言うの。','今日は綺麗事を脱いで。見るのは願望じゃなく、条件と行動よ。','いい？ 運命のせいにする前に、止めるべきものを止めるわよ。','あら、そこを誤魔化したら姐さんの三つ目が黙ってないわ。','はっきり言うわ。今必要なのは勇気より、確認と境界線よ。'],
+    bridge: ['でね、ここからが大事。','さて、気持ちは分かった。次は現実を見ましょう。','ほら、点数よりこっちを見て。','つまりね、話を難しくしなくていいの。','ここで一度、足元へ戻るわよ。','じゃあ、アンタが今日動かせる所まで降ろしましょう。'],
+    aside: ['運は便利だけど、丸投げされたら運だって困るのよ。','愛も仕事も、察して大会を始めたらだいたい迷子よ。','勢いは口紅と同じ。効くけど、塗りすぎると話が入ってこないの。','「いつか」は予定表に載らないの。日付を決めてちょうだい。','全部やるは、だいたい全部ぼやけるのよ。一つに絞りなさい。','奇跡待ちも悪くないけど、その間に確認の電話一本くらいできるわ。'],
+    close: ['アンタなら選び直せるわ。今日はその証拠を一つ作っておいで。','泣いても迷ってもいい。でも、自分を雑に扱う選択だけはしないで。','運は判決じゃないの。使い方を決めるのは、最後までアンタよ。','ほら、胸を張って。一歩は小さく、条件は具体的に。それで十分よ。','姐さんは背中を押すけど、崖には押さないわ。確かめてから進みなさい。','また迷ったら、気分じゃなく変わった事実を持っていらっしゃい。'],
+    safeClose: ['今は一人で結論を背負わないで。安全を確保し、信頼できる人や専門窓口へつないで。','占いより安全が先よ。距離を取り、記録を残し、第三者の力を借りなさい。','無理に強くならなくていい。危険から離れることが、今日の正解よ。']
+  };
+  function hash(text){let value=2166136261;for(const ch of String(text||''))value=Math.imul(value^ch.charCodeAt(0),16777619);return value>>>0}
+  function pick(list,seed,offset){return list[((hash(seed)+offset*2654435761)>>>0)%list.length]}
+  function topic(question){const cleaned=String(question||'').replace(/[\n\r。、！？!?「」『』（）()]/g,' ').replace(/\s+/g,' ').trim();if(!cleaned)return'';const words=cleaned.match(/[一-龠ぁ-んァ-ヶーA-Za-z0-9]{2,18}/g)||[];const ignored=/^(について|どうしたら|でしょうか|したいです|知りたい|お願いします|できる|こと|もの|ため)$/;return words.find(word=>!ignored.test(word))||words[0]||''}
+  function build(input){const score=Number(input.score)||50,risk=Math.max(Number(input.risk)||0,Number(input.psychRisk)||0),mode=input.mode==='zubat'?'zubat':'sister',seed=[input.system,input.question,score,mode,input.variant||0].join('|'),serious=risk>=70,openingBank=serious||mode==='zubat'||score<42?BANK.firm:score>=68?BANK.bright:BANK.warm,focus=topic(input.question);return{opening:pick(openingBank,seed,1),address:focus?`「${focus}」のこと、ちゃんと現実まで降ろして見るわよ。`:'相談文が短くても、分かる範囲を曖昧にはしないわ。',bridge:pick(BANK.bridge,seed,2),aside:serious?'':pick(BANK.aside,seed,3),closing:serious?pick(BANK.safeClose,seed,4):pick(BANK.close,seed,4),tone:serious?'safety':mode==='zubat'?'direct':score>=68?'bright':'warm',focus,serious}}
+  function apply(text,input){const layer=build(input);let output=String(text||'');output=output.replace('【結論】\n',`【結論】\n${layer.opening}\n${layer.address}\n`);output=output.replace('【何が起こりそうか】\n',`【何が起こりそうか】\n${layer.bridge}\n`);if(layer.aside)output=output.replace('【避ける行動】\n',`【姐さんのひと言】\n${layer.aside}\n\n【避ける行動】\n`);output=output.replace(/【最後の一言】\n[\s\S]*$/,`【最後の一言】\n${layer.closing}`);return{text:output,persona:layer}}
+  return{BANK,build,apply,topic};
+});

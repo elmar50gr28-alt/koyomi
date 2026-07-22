@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "npm run test:menu-routing && npm run test:bazi && npm run test:bazi-chart-core && npm run test:bazi-birth-time-core && npm run test:bazi-time-correction && npm run test:bazi-derived-info-core && npm run test:bazi-strength-core && npm run test:bazi-pattern-core && npm run test:bazi-yongshen-core && npm run test:architecture && npm run test:calendar-time && npm run test:calendar-time-core && npm run test:profile-schema && npm run test:profile-validation-core && npm run test:profile-normalization-core && npm run test:profile-save-core && npm run test:crypto-compat && npm run test:indexeddb-compat && npm run test:backup-compat && npm run test:compat-integration",
-    "test:menu-routing": "node tests/menu-routing.test.mjs",
+    "test:menu-routing": "node tests/menu-routing.test.mjs && node tests/persona-conversation-adapter.test.mjs",
     "test:bazi": "node tests/bazi-engine.test.mjs && node tests/bazi-common-settings-core.test.mjs && node tests/bazi-integrated-reading-data-core.test.mjs && node tests/bazi-reading-adapter.test.mjs && node tests/bazi-reading-transparency-ui.test.mjs && node tests/bazi-overall-integrated-guidance.test.mjs && node tests/bazi-relations-core.test.mjs && node tests/bazi-luck-period-core.test.mjs && node tests/bazi-risshun-boundary.test.mjs && node tests/bazi-month-boundary.test.mjs",
     "test:bazi-chart-core": "node tests/bazi-chart-core-equivalence.test.mjs",
     "test:bazi-birth-time-core": "node tests/bazi-birth-time-core-equivalence.test.mjs",

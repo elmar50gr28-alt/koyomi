@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import vm from 'node:vm';
+const source=await readFile('src/persona/conversation-adapter.js','utf8'),context={};vm.runInNewContext(source,context);const adapter=context.KOYOMI_PERSONA_ADAPTER;
+const base='【結論】\n慎重に進む。\n\n【何が起こりそうか】\n変化あり。\n\n【避ける行動】\n急がない。\n\n【最後の一言】\n元の締め。';
+const normal=adapter.apply(base,{system:'総合鑑定',question:'転職するか迷っています',score:62,mode:'sister'});
+assert.equal(normal.persona.focus,'転職するか迷っています');assert.ok(normal.text.includes('姐さんのひと言'));assert.ok(normal.text.includes('「転職するか迷っています」'));assert.equal(adapter.apply(base,{system:'総合鑑定',question:'転職するか迷っています',score:62,mode:'sister'}).text,normal.text);
+const different=adapter.apply(base,{system:'総合鑑定',question:'結婚の時期を知りたい',score:78,mode:'sister'});assert.notEqual(different.persona.opening,normal.persona.opening);
+const danger=adapter.apply(base,{system:'相性鑑定',question:'相手に脅されて怖い',score:30,mode:'zubat',risk:95});assert.equal(danger.persona.serious,true);assert.equal(danger.persona.aside,'');assert.ok(!danger.text.includes('姐さんのひと言'));assert.match(danger.persona.closing,/安全|危険|第三者/);
+for(const key of ['warm','bright','firm','bridge','aside','close'])assert.ok(adapter.BANK[key].length>=6);
+console.log('Persona conversation adapter passed');
