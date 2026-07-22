@@ -12,6 +12,7 @@ export { evaluateFavorableElements, evaluateIntegratedYongshen, evaluateLegacyYo
 export { buildLuckPeriod, calculateAnnualLuck, calculateLuckCycles, calculateLuckStart, calculateMonthlyLuck } from './luck/index.js';
 export { compareBaziSchools, compareSchools, listSchoolProfiles } from './schools/index.js';
 export { DEFAULT_BAZI_SETTINGS, inspectBaziSettings, normalizeBaziSettings, toLegacySchoolConfig } from './settings/index.js';
+export { buildIntegratedBaziReadingData, validateIntegratedBaziReadingData } from './integration/index.js';
 export { explainBaziDecision, explainRule, getEvidence, PHASE3_CLASSICAL_INDEX } from './evidence/index.js';
 export { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
 export { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput, buildProfessionalEvidence, evaluateInterpretationTendencies, evaluateLuckInterpretations } from './interpretation/index.js';
@@ -28,6 +29,7 @@ import { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput
 import { buildBaziReading, validateBaziReading } from './reading/index.js';
 import { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
 import { inspectBaziSettings, normalizeBaziSettings, toLegacySchoolConfig } from './settings/index.js';
+import { buildIntegratedBaziReadingData, validateIntegratedBaziReadingData } from './integration/index.js';
 
 export function calculateBazi(profile, schoolConfig = profile?.baziSettings || {}) {
   const baziSettings = normalizeBaziSettings(schoolConfig);
@@ -83,13 +85,15 @@ export function calculateBazi(profile, schoolConfig = profile?.baziSettings || {
     settingsInspection: inspectBaziSettings(baziSettings),
     calculationVersion: KOYOMI_BAZI_VERSION
   };
+  const integratedReadingData = buildIntegratedBaziReadingData(result);
   const interpretation = {
     facts: interpretationFacts,
-    tendencies: evaluateInterpretationTendencies(result),
-    luck: evaluateLuckInterpretations(result)
+    tendencies: evaluateInterpretationTendencies({ ...result, integratedReadingData }),
+    luck: evaluateLuckInterpretations({ ...result, integratedReadingData })
   };
   const phase3Result = {
     ...result,
+    integratedReadingData,
     interpretation,
     beginnerExplanation: buildBeginnerExplanation({ ...result, interpretation }),
     professionalEvidence: buildProfessionalEvidence({ ...result, interpretation })
@@ -142,6 +146,8 @@ export default {
   buildBeginnerExplanation,
   buildProfessionalEvidence,
   buildMitsunomeInput,
+  buildIntegratedBaziReadingData,
+  validateIntegratedBaziReadingData,
   buildBaziReading,
   validateBaziReading
 };

@@ -108,6 +108,7 @@ export function buildBaziReading(baziResult, options = {}) {
     version: READING_VERSION,
     locale: 'en',
     sourceCalculationVersion: baziResult?.calculationVersion || null,
+    sourceIntegratedDataVersion: options.integratedData?.version || baziResult?.integratedReadingData?.version || null,
     personId: facts.personId,
     executiveSummary,
     timingReading,
