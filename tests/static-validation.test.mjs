@@ -208,6 +208,7 @@ assert.ok(appHtml.includes("'sukuyoResultSummary'"), 'Sukuyo result summary is m
 assert.ok(appHtml.includes("'kyuseiResultSummary'"), 'Kyusei result summary is missing');
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'sukuyo','sukuyoReading','sukuyoResultSummary')"), 'Sukuyo summary adapter is missing');
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'kyusei','kyuseiReading','kyuseiResultSummary')"), 'Kyusei summary adapter is missing');
+assert.ok(appHtml.includes("v196RenderMethodSummary(r,'astrology','astrologyReading','astrologyResultSummary')"), 'Astrology summary adapter is missing');
 for (const field of ['conclusion', 'evidence', 'action', 'caution', 'confidence']) {
   assert.ok(appHtml.includes(`data-method-summary="${field}"`), `${field} method summary field is missing`);
 }
