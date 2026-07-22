@@ -33,4 +33,28 @@ assert.ok(browserTrend.slice(1).every(item => Number.isInteger(item.changeIndex)
 assert.ok(browserTrend.every(item => item.plainReading.stance));
 assert.match(browserCore.summarizeMonthlyTrend(browserTrend).headline, /進める候補/);
 
+// The app uses these built-in formulas when app.html is opened directly as a file.
+const mod = (value, divisor) => ((value % divisor) + divisor) % divisor;
+const jd = date => date.getTime() / 86400000 + 2440587.5;
+const appSolarLongitude = date => {
+  const days = jd(date) - 2451545;
+  const mean = mod(280.460 + 0.9856474 * days, 360);
+  const anomaly = mod(357.528 + 0.9856003 * days, 360) * Math.PI / 180;
+  return mod(mean + 1.915 * Math.sin(anomaly) + 0.020 * Math.sin(2 * anomaly), 360);
+};
+const appFallback = {
+  id: 'built-in-fallback', precision: 'fallback', solarLongitude: appSolarLongitude,
+  planetLongitudes(date) {
+    const days = jd(date) - 2451545;
+    return { 太陽: appSolarLongitude(date), 月: mod(218.316 + 13.176396 * days, 360), 水星: mod(252.25 + 4.09233445 * days, 360), 金星: mod(181.98 + 1.60213034 * days, 360), 火星: mod(355.43 + 0.524039 * days, 360), 木星: mod(34.35 + 0.0830868 * days, 360), 土星: mod(50.08 + 0.0334597 * days, 360), 天王星: mod(314.06 + 0.0117313 * days, 360), 海王星: mod(304.35 + 0.005981 * days, 360), 冥王星: mod(238.95 + 0.003964 * days, 360) };
+  }
+};
+const localOptions = { ...options, ephemeris: appFallback };
+const localSeasons = browserCore.buildSeasonalIngressCharts(localOptions);
+const localMonths = browserCore.buildMonthlyIngressCharts(localOptions);
+const localTrend = browserCore.buildMonthlyTrend(localMonths, localMonths.map(browserCore.interpretSeasonalIngressChart));
+assert.equal(localSeasons.length, 4);
+assert.equal(localMonths.length, 12);
+assert.match(browserCore.summarizeMonthlyTrend(localTrend).headline, /月/);
+
 console.log('Mundane classic browser core passed');
