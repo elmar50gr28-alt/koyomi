@@ -20,7 +20,10 @@ assert.ok(app.includes('現実での備え'), 'seasonal reading must provide con
 assert.ok(app.includes('id="mundaneMonthly"'), 'mundane page must provide a monthly visualization');
 assert.ok(app.includes('module.buildMonthlyIngressCharts'), 'UI must calculate twelve monthly charts');
 assert.ok(app.includes('module.buildMonthlyTrend'), 'UI must calculate transparent monthly indices');
-assert.ok(app.includes('数値は出来事の確率ではなく'), 'UI must explain what the indices mean');
+assert.ok(app.includes('この指数だけで事件や市場価格を予測しません'), 'UI must explain what the indices do not mean');
+assert.ok(app.includes('まずここを読む'), 'UI must lead with a plain-language summary');
+assert.ok(app.includes('ひとことで'), 'each month must explain its meaning without requiring index interpretation');
+assert.ok(app.includes('module.summarizeMonthlyTrend'), 'UI must select readable forward, caution, and turning-point months');
 for (const path of ['index.js', 'browser-global.js', 'seasonal-ingress-core.js', 'seasonal-interpretation-core.js', 'monthly-trend-core.js', 'astronomy-engine-adapter.js']) {
   assert.ok(worker.includes(`'./src/mundane/western/${path}'`), `${path} must be available offline`);
 }

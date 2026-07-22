@@ -30,5 +30,7 @@ const browserTrend = browserCore.buildMonthlyTrend(browserMonths, browserMonths.
 assert.equal(browserTrend.length, 12);
 assert.equal(browserTrend[0].changeIndex, null);
 assert.ok(browserTrend.slice(1).every(item => Number.isInteger(item.changeIndex)));
+assert.ok(browserTrend.every(item => item.plainReading.stance));
+assert.match(browserCore.summarizeMonthlyTrend(browserTrend).headline, /進める候補/);
 
 console.log('Mundane classic browser core passed');
