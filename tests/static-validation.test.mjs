@@ -212,6 +212,7 @@ assert.ok(appHtml.includes("v196RenderMethodSummary(r,'astrology','astrologyRead
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'tarot','tarotReading','tarotResultSummary')"), 'Tarot summary adapter is missing');
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'runes','runesReading','runesResultSummary')"), 'Runes summary adapter is missing');
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'name','nameReading','nameResultSummary')"), 'Name reading summary adapter is missing');
+assert.ok(appHtml.includes("v196RenderMethodSummary(r,'numerology','numerologyReading','numerologyResultSummary')"), 'Numerology summary adapter is missing');
 for (const section of ['【相談とケルト十字】', '【カードごとの読み】', '【十字部分：問題の構造】', '【杖部分：本人から結果まで】', '【相談への回答】', '【現実での確認】']) {
   assert.ok(appHtml.includes(section), `Tarot full reading section is missing: ${section}`);
 }
@@ -231,6 +232,10 @@ for (const section of ['【相談と姓名判断】', '【姓名の五格】', '
 assert.ok(appHtml.includes("filter(ch=>!NAME_STROKES[ch])"), 'Name reading must disclose fallback stroke counts');
 assert.ok(appHtml.includes('globalThis.KOYOMI_NAME_STROKES'), 'Name reading must use the generated stroke dictionary');
 assert.ok(appHtml.includes('complete:false,unknownChars'), 'Name reading must withhold incomplete stroke calculations');
+for (const section of ['【相談と数秘術】', '【四つの数】', '【数同士の関係】', '【仕事・対人・内面】', '【相談への回答】', '【判定の確度】', '【現実での確認】']) {
+  assert.ok(appHtml.includes(section), `Numerology full reading section is missing: ${section}`);
+}
+assert.ok(appHtml.includes('coreGap=Math.abs(reduceNumber(lp)-reduceNumber(attitude))'), 'Numerology must compare core and attitude numbers');
 for (const field of ['conclusion', 'evidence', 'action', 'caution', 'confidence']) {
   assert.ok(appHtml.includes(`data-method-summary="${field}"`), `${field} method summary field is missing`);
 }
