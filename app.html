@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#24170f">
+<meta name="koyomi-bazi-view-version" content="2026.07.22-1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="命式暦 v300 Foundation">
 <title>KOYOMI v300 Foundation — 詳細鑑定</title>
@@ -1842,6 +1843,14 @@ function koyomiEnsureBaziReadingStyle(){
     .koyomi-bazi-reading *{box-sizing:border-box;max-width:100%}
     .koyomi-bazi-summary{display:grid;gap:8px;padding:12px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.05)}
     .koyomi-bazi-summary b{display:block;font-size:.92rem;opacity:.78}
+    .koyomi-bazi-view-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .koyomi-bazi-view-head h3{margin:0;font-size:1.08rem}
+    .koyomi-bazi-view-version{padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.12);font-size:.72rem;white-space:nowrap}
+    .koyomi-bazi-guidance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:4px 0}
+    .koyomi-bazi-guidance-card{margin:0;padding:11px;border:1px solid;border-radius:10px;min-height:100px}
+    .koyomi-bazi-guidance-card.support{border-color:rgba(105,211,154,.55);background:rgba(64,174,115,.14)}
+    .koyomi-bazi-guidance-card.caution{border-color:rgba(243,200,111,.58);background:rgba(220,158,54,.14)}
+    .koyomi-bazi-guidance-card.action{border-color:rgba(100,174,255,.58);background:rgba(70,137,220,.16)}
     .koyomi-bazi-transparency{display:grid;gap:8px;padding:12px;border:1px solid rgba(243,200,111,.38);border-radius:12px;background:rgba(243,200,111,.08)}
     .koyomi-bazi-transparency h4{margin:0;font-size:1rem}
     .koyomi-bazi-transparency p{margin:0}
@@ -1852,7 +1861,7 @@ function koyomiEnsureBaziReadingStyle(){
     .koyomi-bazi-section p{margin:.15rem 0}
     .koyomi-bazi-meta{display:flex;flex-wrap:wrap;gap:6px}
     .koyomi-bazi-meta span{padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.08);font-size:.82rem}
-    @media(max-width:640px){.koyomi-bazi-reading{font-size:.95rem}.koyomi-bazi-summary{margin-inline:-2px}}
+    @media(max-width:640px){.koyomi-bazi-reading{font-size:.95rem}.koyomi-bazi-summary{margin-inline:-2px}.koyomi-bazi-guidance-grid{grid-template-columns:1fr}.koyomi-bazi-guidance-card{min-height:0}}
   `;
   document.head.appendChild(style);
 }
@@ -2012,6 +2021,12 @@ function koyomiBaziReadingHtml(reading){
   </div></details>`;
   return `<div class="koyomi-bazi-reading">
     <section class="koyomi-bazi-summary">
+      <div class="koyomi-bazi-view-head"><h3>${ja?'総合ナビ':'Overall guide'}</h3><span class="koyomi-bazi-view-version">Bazi View 2026.07.22-1</span></div>
+      <div class="koyomi-bazi-guidance-grid">
+        <p class="koyomi-bazi-guidance-card support"><b>${ja?'現在の追い風':'Current support'}</b>${koyomiEscapeHtml(guidance.support)}</p>
+        <p class="koyomi-bazi-guidance-card caution"><b>${ja?'注意する圧力':'Current pressure'}</b>${koyomiEscapeHtml(guidance.pressure)}</p>
+        <p class="koyomi-bazi-guidance-card action"><b>${ja?'今やること':'Do now'}</b>${koyomiEscapeHtml(summary.doNow)}</p>
+      </div>
       <p><b>${ja?'\u7dcf\u5408\u7d50\u8ad6':'Overall conclusion'}</b>${koyomiEscapeHtml(summary.centralTheme)}</p>
       <p><b>${ja?'\u4eca\u306e\u91cd\u8981\u30c6\u30fc\u30de':'Important theme'}</b>${koyomiEscapeHtml(summary.currentIssue)}</p>
       <p><b>${ja?'\u73fe\u5728\u306e\u904b':'Current flow'}</b>${koyomiEscapeHtml(summary.currentFlow)}</p>
