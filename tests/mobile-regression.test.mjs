@@ -13,5 +13,12 @@ assert.ok(app.includes('KOYOMI_BAZI'), 'Bazi module hook must be present');
 assert.ok(smoke.includes('bazi engine module'), 'smoke test must include Bazi module check');
 assert.ok(index.includes('app.html') || index.includes('today.html'), 'index navigation must remain present');
 assert.ok(today.includes('app.html') || today.includes('KOYOMI'), 'today page must remain present');
+assert.ok(app.includes('id="koyomiChoosePerson"'), 'home must provide a person-based reading entry');
+assert.ok(app.includes('id="koyomiChooseTheme"'), 'home must provide a theme-based reading entry');
+assert.ok(app.includes('id="koyomiOpenResult"'), 'home must provide a previous-result entry');
+assert.ok(app.includes('id="koyomiMobileResult"'), 'mobile navigation must provide a result destination');
+const mobileNav=app.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0]||'';
+assert.equal((mobileNav.match(/<button/g)||[]).length,4,'mobile navigation must contain exactly four primary destinations');
+for(const label of ['ホーム','鑑定','結果','人物帳'])assert.ok(mobileNav.includes(label),`${label} must remain in mobile navigation`);
 
 console.log('Mobile regression checks passed');
