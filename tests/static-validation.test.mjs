@@ -213,6 +213,7 @@ assert.ok(appHtml.includes("v196RenderMethodSummary(r,'tarot','tarotReading','ta
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'runes','runesReading','runesResultSummary')"), 'Runes summary adapter is missing');
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'name','nameReading','nameResultSummary')"), 'Name reading summary adapter is missing');
 assert.ok(appHtml.includes("v196RenderMethodSummary(r,'numerology','numerologyReading','numerologyResultSummary')"), 'Numerology summary adapter is missing');
+assert.ok(appHtml.includes("v196RenderMethodSummary(r,'kabbalah','kabbalahReading','kabbalahResultSummary')"), 'Kabbalah summary adapter is missing');
 for (const section of ['【相談とケルト十字】', '【カードごとの読み】', '【十字部分：問題の構造】', '【杖部分：本人から結果まで】', '【相談への回答】', '【現実での確認】']) {
   assert.ok(appHtml.includes(section), `Tarot full reading section is missing: ${section}`);
 }
@@ -236,6 +237,10 @@ for (const section of ['【相談と数秘術】', '【四つの数】', '【数
   assert.ok(appHtml.includes(section), `Numerology full reading section is missing: ${section}`);
 }
 assert.ok(appHtml.includes('coreGap=Math.abs(reduceNumber(lp)-reduceNumber(attitude))'), 'Numerology must compare core and attitude numbers');
+for (const section of ['【カバラ・ゲマトリアは判定保留】', '【相談とカバラ・ゲマトリア】', '【三つの名前数】', '【生年月日と名前の橋】', '【外向きの役割と内面】', '【相談への回答】', '【判定の確度】', '【現実での確認】']) {
+  assert.ok(appHtml.includes(section), `Kabbalah full reading section is missing: ${section}`);
+}
+assert.ok(appHtml.includes("if(!clean)return`【カバラ・ゲマトリアは判定保留】"), 'Kabbalah must withhold readings without romanized names');
 for (const field of ['conclusion', 'evidence', 'action', 'caution', 'confidence']) {
   assert.ok(appHtml.includes(`data-method-summary="${field}"`), `${field} method summary field is missing`);
 }
