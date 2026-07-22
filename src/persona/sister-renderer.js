@@ -13,7 +13,7 @@
  registerSection('opening',c=>`【${c.system}を姐さんが読むわ】\n${line(c.opening)}\n${line(c.axis)}`);
  registerSection('result',c=>`【${c.voice.result}】\n${c.phrase(c.scenario?.state==='前進'?'forward':c.scenario?.state==='防御'?'defense':'trial')}\n${line(c.result,c.scenario?.scene)}`);
  registerSection('scenario',c=>`【現実に出やすい形】\n${line(c.scenario?.scene)}わ。見るのは「${line(c.scenario?.observable,'進捗と負担')}」よ。`);
- registerSection('beginner',c=>c.beginner?`【簡単にいうと】\n${c.beginner.meaning}\n\n【今日の具体例】\n${c.beginner.example}\n${c.beginner.alternative}`:'');
+ registerSection('beginner',c=>c.beginner?`【簡単にいうと】\n${c.beginner.meaning}\n\n【今日の具体例】\n${c.beginner.example}\n\n${c.beginner.alternative}`:'');
  registerSection('action',c=>`【${c.voice.action}】\n${c.phrase('transition')} ${line(c.scenario?.action)}。進める条件は、${line(c.scenario?.go)}。`);
  registerSection('stop',c=>`【${c.voice.stop}】\n${line(c.scenario?.stop)}。一つでも出たら、運の点数より現実を優先するの。`);
  registerSection('review',c=>`【${c.voice.review}】\n${line(c.scenario?.review,'14日')}後に、始めた数・終えた数・負担・相手の行動から二つを比べてちょうだい。`);
