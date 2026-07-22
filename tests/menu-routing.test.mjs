@@ -36,7 +36,13 @@ assert.equal(routing.resolveHash('#unknown'), 'calendar', 'unknown hash must use
 assert.equal(routing.resolveHash('#oracle'), 'oracle');
 assert.ok(index.includes('href="app.html#oracle"'), 'tarot/rune must have a dedicated route');
 assert.doesNotMatch(index, /href="app\.html#personal"[^>]*>[^<]*<span[^>]*>牌/);
-assert.ok(app.includes('id="page-oracle"'));
+assert.ok(app.includes('id="page-oracle"'), 'tarot/rune route must remain available');
+assert.ok(!app.includes('古代メソポタミア神託 × ミツノメ神字・音環占'));
+assert.ok(!app.includes('id="reading-mesopotamia"'));
+assert.ok(!app.includes('id="reading-onkan"'));
+assert.ok(app.includes('buildDivinationReadings=function(c){return v192BuildDivinationsBase(c)}'), 'retired oracles must not enter integrated readings');
+assert.ok(app.includes('compatibility=function(){return v192CompatibilityBase()}'), 'retired oracles must not affect compatibility scores');
+assert.ok(app.includes('collectState=function(){return v192CollectBase()}'), 'retired oracle inputs must not enter saved state');
 assert.ok(app.includes('専用画面は準備中です'));
 assert.ok(app.includes("window.addEventListener('hashchange'"), 'hashchange must drive routing');
 assert.ok(app.includes('applyHashPage({replaceUnknown:true})'), 'initial load must apply the hash');
@@ -51,7 +57,7 @@ context.location.hash = '#unknown';
 routing.writeHash('unknown', { replace: true });
 assert.deepEqual(writes, ['/koyomi/app.html#calendar'], 'unknown hashes must be replaced safely under a Pages subpath');
 
-assert.ok(worker.includes("koyomi-foundation-20260722-27"), 'service worker cache version must be bumped');
+assert.ok(worker.includes("koyomi-foundation-20260722-28"), 'service worker cache version must be bumped');
 assert.ok(worker.includes("'./src/shared/menu-routing-core.js'"), 'routing core must be available offline');
 assert.ok(worker.includes("fetch(request, { cache: 'no-store' })"), 'HTML navigation must bypass stale browser caches');
 
