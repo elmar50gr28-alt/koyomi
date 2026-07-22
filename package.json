@@ -14,7 +14,7 @@
     "test:bazi-strength-core": "node tests/bazi-strength-core-refinement.test.mjs",
     "test:bazi-pattern-core": "node tests/bazi-pattern-core-refinement.test.mjs",
     "test:bazi-yongshen-core": "node tests/bazi-yongshen-core-refinement.test.mjs",
-    "test:static": "node tests/static-validation.test.mjs",
+    "test:static": "node tests/static-validation.test.mjs && node tests/name-strokes-data.test.mjs",
     "test:mobile": "node tests/mobile-regression.test.mjs",
     "test:architecture": "node tests/architecture-contract.test.mjs",
     "test:calendar-time": "node tests/calendar-time-compat.test.mjs",
