@@ -11,6 +11,6 @@ assert.ok(app.includes('断定を控えた内容'), 'withheld claims label missi
 assert.ok(app.includes('活用方法'), 'practical-use label missing');
 assert.ok(app.includes('koyomiEscapeHtml(agreement)'), 'agreement output must be escaped');
 assert.ok(app.includes('koyomiEscapeHtml(uncertaintyText)'), 'uncertainty output must be escaped');
-assert.ok(app.includes('${transparency}\n    ${detailHtml}'), 'transparency panel must appear before detailed sections');
+assert.match(app, /\$\{transparency\}\r?\n    \$\{detailHtml\}/, 'transparency panel must appear before detailed sections');
 
 console.log('Bazi reading transparency UI passed');

@@ -30,7 +30,11 @@ assert.ok(app.includes("await ledgerOpenSelector('personal')"),'concern selectio
 assert.ok(app.includes('id="koyomiOpenResult"'), 'home must provide a previous-result entry');
 assert.ok(app.includes('id="koyomiMobileResult"'), 'mobile navigation must provide a result destination');
 const mobileNav=app.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0]||'';
-assert.equal((mobileNav.match(/<button/g)||[]).length,4,'mobile navigation must contain exactly four primary destinations');
-for(const label of ['ホーム','鑑定','結果','人物帳'])assert.ok(mobileNav.includes(label),`${label} must remain in mobile navigation`);
+assert.equal((mobileNav.match(/<button/g)||[]).length,5,'mobile navigation must contain exactly five primary destinations');
+for(const label of ['ホーム','本鑑定','鑑定結果','奇門','人物入力'])assert.ok(mobileNav.includes(label),`${label} must remain in mobile navigation`);
+assert.ok(mobileNav.includes('data-page="qimen"'),'mobile Qimen button must route to the Qimen entry');
+assert.ok(app.includes("nav.querySelector('[data-page=\"personal\"]').onclick=()=>koyomiOpenMobilePage('personal')"),'mobile reading button must have an explicit route');
+assert.ok(app.includes("nav.querySelector('[data-page=\"ledger\"]').onclick=()=>koyomiOpenMobilePage('ledger')"),'mobile person button must have an explicit route');
+assert.ok(app.includes("$('koyomiMobileResult').onclick=koyomiOpenLastResult"),'mobile result button must have an explicit route');
 
 console.log('Mobile regression checks passed');
