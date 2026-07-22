@@ -12,6 +12,10 @@ assert.ok(app.includes('visualViewport') || app.includes('VisualViewport'), 'mob
 assert.ok(app.includes('KOYOMI_BAZI'), 'Bazi module hook must be present');
 assert.ok(smoke.includes('bazi engine module'), 'smoke test must include Bazi module check');
 assert.ok(index.includes('app.html') || index.includes('today.html'), 'index navigation must remain present');
+assert.ok(!index.includes('KOYOMIの約束'),'home must not show nonessential explanatory copy');
+assert.ok(!app.includes('迷ったら本鑑定へ。'),'app home must not repeat guidance before the main choice');
+assert.ok(!app.includes('四柱推命を主軸に、宿曜・九星'),'pre-reading screen must not list every divination method');
+assert.ok(app.includes('<summary>話し方を選ぶ</summary>'),'optional voice settings must use progressive disclosure');
 assert.ok(today.includes('app.html') || today.includes('KOYOMI'), 'today page must remain present');
 assert.ok(app.includes('id="koyomiChoosePerson"'), 'home must provide a person-based reading entry');
 assert.ok(app.includes('id="koyomiChooseTheme"'), 'home must provide a theme-based reading entry');

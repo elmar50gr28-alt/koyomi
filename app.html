@@ -146,12 +146,10 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 </style>
 </head>
 <body class="read-standard">
-<div class="koyomi-foundation-banner" role="note"><a href="index.html">← KOYOMIホーム</a><span><b>端末内で利用</b>：標準では入力内容を運営者へ送信しません。</span><label class="top-reading-mode">表示モード<select id="readingModeQuick" aria-label="表示モード" onchange="setReadingMode(this.value);saveState(false)"><option value="beginner">初心者</option><option value="standard">標準</option><option value="detail">詳細</option></select></label></div>
+<div class="koyomi-foundation-banner" role="note"><a href="index.html">← ホーム</a><span>端末内で利用</span><label class="top-reading-mode">表示<select id="readingModeQuick" aria-label="表示モード" onchange="setReadingMode(this.value);saveState(false)"><option value="beginner">初心者</option><option value="standard">標準</option><option value="detail">詳細</option></select></label></div>
 
 <div class="app">
-<header class="topbar"><div><div class="eyebrow">MITSUNOME CALENDARIUM</div><h1>KOYOMI</h1><p class="subtitle">暦と占術を、今日の判断と具体的な行動へ翻訳します。</p></div><div class="status"><i class="status-dot"></i><span id="syncStatus">Asia/Tokyo 同期中</span></div></header>
-<div class="current-guide"><p><b>迷ったら本鑑定へ。</b> 生年月日を入力すると、追い風・注意点・今やることをまとめて確認できます。</p><a href="#personal">本鑑定を始める</a></div>
-<div class="oracle-banner"><div class="oracle-eye">◉</div><div><b>ミツノメ姐さん、三つの眼で鑑定中</b><span>一の眼は命式、二の眼は暦と星、三の眼は現実。難しい術語は生活の言葉へ訳し、曖昧な励ましでは終わらせません。</span></div></div>
+<header class="topbar"><div><div class="eyebrow">MITSUNOME CALENDARIUM</div><h1>KOYOMI</h1></div><div class="status"><i class="status-dot"></i><span id="syncStatus">Asia/Tokyo 同期中</span></div></header>
 <nav class="tabs" aria-label="画面切替">
 <button class="tab active" data-page="calendar">暦盤・複雑時計</button><button class="tab" data-page="personal">本鑑定</button><button class="tab" data-page="compat">相性</button><button class="tab" data-page="timeline">人生年表</button><button class="tab" data-page="history">世界史照合</button><button class="tab ledger-tab" data-page="ledger">鑑定人物台帳</button><button class="tab qimen-tab" data-page="qimen">運命航法盤</button><button class="tab" data-page="settings">流派・診断</button>
 </nav>
@@ -168,8 +166,8 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 </section>
 
 <section id="page-personal" class="page">
-<section class="paper"><h2>本鑑定入力</h2><p class="lead">四柱推命を主軸に、宿曜・九星・西洋占星術・タロット・ルーン・姓名判断・数秘術・カバラ／ゲマトリア・六星周期・当日の暦を補助統合します。</p><div class="ledger-inline"><div><b>保存プロフィールから選択</b><small>人物台帳から出生・姓名情報だけをこの鑑定へ呼び出します。</small></div><span class="ledger-selection">選択中：<span id="ledgerPersonalSelected">未選択</span></span><button class="ledger-btn" type="button" id="ledgerSelectPersonal">人物を選ぶ</button><button class="ledger-btn" type="button" id="ledgerCreatePersonal">現在入力を台帳へ</button></div>
-<div class="oracle-mode-panel"><h3>ミツノメ姐さんの鑑定口調</h3><p>同じ計算結果を、伝え方と踏み込み方を変えて出します。ズバッとモードは占術上の吉凶を明言し、保留・撤退・実行をはっきり示します。</p><div class="oracle-mode-buttons"><button class="oracle-mode-btn active" type="button" data-oracle-mode="sister">姐さん本鑑定<small>辛口だが理由と救い道を示す</small></button><button class="oracle-mode-btn" type="button" data-oracle-mode="zubat">ズバッとモード<small>忖度なし・吉凶明言・結論先出し</small></button></div><div class="oracle-caution">ズバッとモードも、医療・法律・安全・相手の内心を断定しません。強い言い切りは占術上の判定に限ります。</div></div>
+<section class="paper"><h2>本鑑定</h2><div class="ledger-inline"><span class="ledger-selection">人物：<span id="ledgerPersonalSelected">未選択</span></span><button class="ledger-btn" type="button" id="ledgerSelectPersonal">人物を選ぶ</button><button class="ledger-btn" type="button" id="ledgerCreatePersonal">人物を登録</button></div>
+<details class="oracle-mode-panel"><summary>話し方を選ぶ</summary><div class="oracle-mode-buttons"><button class="oracle-mode-btn active" type="button" data-oracle-mode="sister">姐さん本鑑定</button><button class="oracle-mode-btn" type="button" data-oracle-mode="zubat">ズバッと</button></div><div class="oracle-caution">医療・法律・安全や相手の内心は断定しません。</div></details>
 <form id="personalForm">
 <details class="detail-box" open><summary>基本情報</summary><div class="detail-content"><div class="form-grid">
 <div class="field"><label for="surname">姓</label><input id="surname" autocomplete="family-name" placeholder="山田"></div>
