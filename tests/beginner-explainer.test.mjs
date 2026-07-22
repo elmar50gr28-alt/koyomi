@@ -11,4 +11,7 @@ const variants = new Set(Array.from({length:7}, (_,i) => explainer.explain(model
 assert.ok(variants.size > 1);
 assert.equal(JSON.stringify(first.unchanged), JSON.stringify({state:'試行',evidence:['最終結果 正位置'],stop:'約束違反',review:'7日'}));
 for (const system of Object.keys(explainer.examples)) assert.ok(explainer.examples[system].length >= 4);
+for (const label of ['いつ：','使うもの：','やること：','完了の目印：']) assert.ok(first.example.includes(label));
+assert.ok(first.alternative.startsWith('難しい場合：'));
+assert.equal(Object.keys(explainer.guides).length, Object.keys(explainer.examples).length);
 console.log('Beginner explainer passed');
