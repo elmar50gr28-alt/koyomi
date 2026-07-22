@@ -58,7 +58,7 @@ context.location.hash = '#unknown';
 routing.writeHash('unknown', { replace: true });
 assert.deepEqual(writes, ['/koyomi/app.html#calendar'], 'unknown hashes must be replaced safely under a Pages subpath');
 
-assert.ok(worker.includes("koyomi-foundation-20260722-42"), 'service worker cache version must be bumped');
+assert.ok(worker.includes("koyomi-foundation-20260722-43"), 'service worker cache version must be bumped');
 assert.ok(worker.includes("'./src/persona/divination-glossary.js'"));
 assert.ok(worker.includes("'./src/persona/beginner-explainer.js'"));
 assert.ok(worker.includes("'./src/persona/sister-lexicon.js'"));
