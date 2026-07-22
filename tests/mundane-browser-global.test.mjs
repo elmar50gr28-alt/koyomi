@@ -24,5 +24,11 @@ assert.equal(browserCharts.length, 4);
 const readings = browserCharts.map(browserCore.interpretSeasonalIngressChart);
 assert.ok(readings.every(reading => reading.narrative && reading.recommendedActions.length));
 assert.match(browserCore.synthesizeSeasonalIngressReadings(readings).narrative, /年間判断では/);
+const browserMonths = browserCore.buildMonthlyIngressCharts(options);
+assert.equal(browserMonths.length, 12);
+const browserTrend = browserCore.buildMonthlyTrend(browserMonths, browserMonths.map(browserCore.interpretSeasonalIngressChart));
+assert.equal(browserTrend.length, 12);
+assert.equal(browserTrend[0].changeIndex, null);
+assert.ok(browserTrend.slice(1).every(item => Number.isInteger(item.changeIndex)));
 
 console.log('Mundane classic browser core passed');

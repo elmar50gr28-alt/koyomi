@@ -8,6 +8,12 @@
     { id: 'libra', nameJa: '秋分図', targetLongitude: 180, startMonth: 8, startDay: 21 },
     { id: 'capricorn', nameJa: '冬至図', targetLongitude: 270, startMonth: 11, startDay: 19 }
   ];
+  const MONTH_DEFINITIONS = [
+    ['aquarius', '1月図', 300, 0, 18], ['pisces', '2月図', 330, 1, 16], ['aries', '3月図', 0, 2, 18],
+    ['taurus', '4月図', 30, 3, 18], ['gemini', '5月図', 60, 4, 19], ['cancer', '6月図', 90, 5, 19],
+    ['leo', '7月図', 120, 6, 20], ['virgo', '8月図', 150, 7, 20], ['libra', '9月図', 180, 8, 21],
+    ['scorpio', '10月図', 210, 9, 21], ['sagittarius', '11月図', 240, 10, 20], ['capricorn', '12月図', 270, 11, 19]
+  ].map((item, index) => ({ id: item[0], nameJa: item[1], targetLongitude: item[2], startMonth: item[3], startDay: item[4], month: index + 1 }));
   const ASPECTS = [{ id: 'conjunction', angle: 0, orb: 6 }, { id: 'sextile', angle: 60, orb: 4 }, { id: 'square', angle: 90, orb: 5 }, { id: 'trine', angle: 120, orb: 5 }, { id: 'opposition', angle: 180, orb: 6 }];
   const HOUSES = {
     1: ['国民生活と社会の空気', '世論調査、生活実感、消費者心理の変化', '数字と街の声を併記し、一部の大きな声だけで全体を判断しない'],
@@ -72,6 +78,7 @@
   }
 
   function buildSeasonalIngressCharts(options) { return DEFINITIONS.map(definition => buildChart(options, definition)); }
+  function buildMonthlyIngressCharts(options) { return MONTH_DEFINITIONS.map(definition => ({ ...buildChart(options, definition), month: definition.month })); }
 
   function interpretSeasonalIngressChart(chart) {
     const focus = new Map();
@@ -96,5 +103,20 @@
     return { schemaId: 'koyomi-mundane-seasonal-summary-v1', conclusion, narrative: `${conclusion}最も繰り返し現れるのは「${focusAreas[0].topic}」です。年間判断では、${HOUSES[focusAreas[0].house][1]}を継続して比べてください。`, focusAreas, observationPoints: focusAreas.map(item => ({ house: item.house, topic: item.topic, text: HOUSES[item.house][1] })), supportCount, pressureCount, uncertainties: [...new Set(readings.flatMap(item => item.uncertainties || []))], disclaimer: '社会全体の傾向を読む材料です。具体的な出来事を断定するものではありません。' };
   }
 
-  root.KOYOMI_MUNDANE_BROWSER_CORE = Object.freeze({ buildSeasonalIngressCharts, interpretSeasonalIngressChart, synthesizeSeasonalIngressReadings });
+  function buildMonthlyTrend(charts, readings) {
+    const orbLimit = { sextile: 4, trine: 5, square: 5, opposition: 6 };
+    const indexOf = items => Math.min(100, Math.round(items.reduce((sum, item) => sum + Math.max(0, 1 - item.orb / (orbLimit[item.aspect] || 6)) * 100, 0) / 3));
+    const sign = item => `${[...item.bodies].sort().join('-')}:${item.type}`;
+    return charts.map((chart, index) => {
+      const reading = readings[index], previous = charts[index - 1]; let changeIndex = null;
+      if (previous) {
+        const bodies = Object.keys(chart.placements).filter(body => previous.placements[body]), moved = bodies.filter(body => chart.placements[body].house !== previous.placements[body].house).length;
+        const current = new Set(chart.aspects.map(sign)), prior = new Set(previous.aspects.map(sign)), union = new Set([...current, ...prior]), changed = [...union].filter(value => current.has(value) !== prior.has(value)).length;
+        changeIndex = Math.round(Math.min(1, (bodies.length ? moved / bodies.length : 0) * 0.6 + (union.size ? changed / union.size : 0) * 0.4) * 100);
+      }
+      return { month: chart.month, nameJa: chart.nameJa, supportIndex: indexOf(reading.supports), pressureIndex: indexOf(reading.pressures), changeIndex, dominantTopic: reading.focusAreas[0]?.topic || '複数分野', narrative: reading.narrative, observationPoints: reading.observationPoints, recommendedActions: reading.recommendedActions, basis: { supportiveAspects: reading.supports.length, pressureAspects: reading.pressures.length, formula: '角度の許容範囲への近さを各100として合計し、3件相当で100に換算。変動は前月からハウスが変わった天体60%と主要角の入れ替わり40%。' } };
+    });
+  }
+
+  root.KOYOMI_MUNDANE_BROWSER_CORE = Object.freeze({ buildSeasonalIngressCharts, buildMonthlyIngressCharts, interpretSeasonalIngressChart, synthesizeSeasonalIngressReadings, buildMonthlyTrend });
 })(typeof window === 'undefined' ? globalThis : window);
