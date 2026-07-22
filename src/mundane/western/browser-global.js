@@ -114,9 +114,25 @@
         const current = new Set(chart.aspects.map(sign)), prior = new Set(previous.aspects.map(sign)), union = new Set([...current, ...prior]), changed = [...union].filter(value => current.has(value) !== prior.has(value)).length;
         changeIndex = Math.round(Math.min(1, (bodies.length ? moved / bodies.length : 0) * 0.6 + (union.size ? changed / union.size : 0) * 0.4) * 100);
       }
-      return { month: chart.month, nameJa: chart.nameJa, supportIndex: indexOf(reading.supports), pressureIndex: indexOf(reading.pressures), changeIndex, dominantTopic: reading.focusAreas[0]?.topic || '複数分野', narrative: reading.narrative, observationPoints: reading.observationPoints, recommendedActions: reading.recommendedActions, basis: { supportiveAspects: reading.supports.length, pressureAspects: reading.pressures.length, formula: '角度の許容範囲への近さを各100として合計し、3件相当で100に換算。変動は前月からハウスが変わった天体60%と主要角の入れ替わり40%。' } };
+      const supportIndex = indexOf(reading.supports), pressureIndex = indexOf(reading.pressures);
+      return { month: chart.month, nameJa: chart.nameJa, supportIndex, pressureIndex, changeIndex, plainReading: describeMonthlyIndex(supportIndex, pressureIndex, changeIndex), dominantTopic: reading.focusAreas[0]?.topic || '複数分野', narrative: reading.narrative, observationPoints: reading.observationPoints, recommendedActions: reading.recommendedActions, basis: { supportiveAspects: reading.supports.length, pressureAspects: reading.pressures.length, formula: '角度の許容範囲への近さを各100として合計し、3件相当で100に換算。変動は前月からハウスが変わった天体60%と主要角の入れ替わり40%。' } };
     });
   }
 
-  root.KOYOMI_MUNDANE_BROWSER_CORE = Object.freeze({ buildSeasonalIngressCharts, buildMonthlyIngressCharts, interpretSeasonalIngressChart, synthesizeSeasonalIngressReadings, buildMonthlyTrend });
+  function describeMonthlyIndex(support, pressure, change) {
+    const supportLevel = support < 25 ? '小さい' : support < 50 ? 'やや目立つ' : support < 75 ? '強い' : '非常に強い', pressureLevel = pressure < 25 ? '小さい' : pressure < 50 ? 'やや目立つ' : pressure < 75 ? '強い' : '非常に強い', changeLabel = change === null ? '年間比較の起点' : change < 35 ? '前月の流れを引き継ぐ' : change < 65 ? '前月から変化あり' : '流れの切り替わりが大きい';
+    let stance = '様子を見る', summary = '追い風と圧力の差が小さいため、条件を確認しながら小さく進める月です。';
+    if (support >= 60 && pressure >= 60) { stance = '動く前に条件確認'; summary = '動きは大きい一方で衝突も増えやすいため、進める条件と止める条件を先に決める月です。'; }
+    else if (support - pressure >= 20) { stance = '準備済みなら進める'; summary = '圧力より追い風が目立ちます。準備済みの計画を一段進める候補月です。'; }
+    else if (pressure - support >= 20) { stance = '確認と調整を優先'; summary = '追い風より圧力が目立ちます。新規拡大より、費用・安全・責任の確認を優先する月です。'; }
+    else if (support < 25 && pressure < 25) { stance = '急がず土台を整える'; summary = '強い追い風も圧力も少ないため、準備・整理・情報収集に使いやすい月です。'; }
+    return { stance, summary, supportLevel, pressureLevel, changeLabel };
+  }
+
+  function summarizeMonthlyTrend(trend) {
+    const forward = [...trend].sort((a, b) => (b.supportIndex - b.pressureIndex) - (a.supportIndex - a.pressureIndex))[0], caution = [...trend].sort((a, b) => (b.pressureIndex - b.supportIndex) - (a.pressureIndex - a.supportIndex))[0], change = [...trend].filter(item => item.changeIndex !== null).sort((a, b) => b.changeIndex - a.changeIndex)[0];
+    return { headline: `${forward.month}月は準備済みの計画を進める候補、${caution.month}月は確認と調整を優先する候補です。`, forward: { month: forward.month, reason: `追い風${forward.supportIndex}、圧力${forward.pressureIndex}` }, caution: { month: caution.month, reason: `圧力${caution.pressureIndex}、追い風${caution.supportIndex}` }, turningPoint: change ? { month: change.month, reason: `前月からの変動${change.changeIndex}` } : null, note: '候補月は行動の保証ではありません。各月の「確認」と「備え」を現実の判断に使ってください。' };
+  }
+
+  root.KOYOMI_MUNDANE_BROWSER_CORE = Object.freeze({ buildSeasonalIngressCharts, buildMonthlyIngressCharts, interpretSeasonalIngressChart, synthesizeSeasonalIngressReadings, buildMonthlyTrend, describeMonthlyIndex, summarizeMonthlyTrend });
 })(typeof window === 'undefined' ? globalThis : window);

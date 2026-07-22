@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { buildMonthlyIngressCharts, buildMonthlyTrend, createAstronomyEngineAdapter, interpretSeasonalIngressChart, MONTHLY_INGRESSES } from '../src/mundane/western/index.js';
+import { buildMonthlyIngressCharts, buildMonthlyTrend, createAstronomyEngineAdapter, describeMonthlyIndex, interpretSeasonalIngressChart, MONTHLY_INGRESSES, summarizeMonthlyTrend } from '../src/mundane/western/index.js';
 
 const YEAR_START = Date.UTC(2026, 0, 1), tropicalYear = 365.2422 * 86400000;
 const ephemeris = {
@@ -21,8 +21,18 @@ for (const item of trend) {
   assert.ok(item.pressureIndex >= 0 && item.pressureIndex <= 100);
   if (item.changeIndex !== null) assert.ok(item.changeIndex >= 0 && item.changeIndex <= 100);
   assert.match(item.basis.formula, /天体60%/);
+  assert.ok(item.plainReading.stance);
+  assert.ok(item.plainReading.summary);
 }
 assert.ok(new Set(trend.map(item => `${item.supportIndex}:${item.pressureIndex}:${item.changeIndex}`)).size > 4, 'monthly results must show meaningful variation');
+assert.equal(describeMonthlyIndex(80, 20, 10).stance, '準備済みなら進める');
+assert.equal(describeMonthlyIndex(20, 80, 70).stance, '確認と調整を優先');
+assert.equal(describeMonthlyIndex(80, 80, 50).stance, '動く前に条件確認');
+assert.equal(describeMonthlyIndex(10, 10, null).stance, '急がず土台を整える');
+const summary = summarizeMonthlyTrend(trend);
+assert.match(summary.headline, /進める候補/);
+assert.ok(summary.turningPoint.month >= 2);
+assert.throws(() => summarizeMonthlyTrend([]), /required/);
 assert.throws(() => buildMonthlyTrend(charts, readings.slice(1)), /matching/);
 assert.throws(() => createAstronomyEngineAdapter({}), /unavailable/);
 
