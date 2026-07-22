@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260722-16';
+const CACHE_VERSION = 'koyomi-foundation-20260722-17';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 

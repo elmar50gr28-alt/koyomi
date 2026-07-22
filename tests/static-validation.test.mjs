@@ -204,12 +204,15 @@ for (const action of ['do', 'stop', 'homework']) {
 }
 assert.ok(appHtml.includes("e.preventDefault();const target=document.getElementById(link.getAttribute('href').slice(1))"), 'reading index must bypass page hash routing');
 assert.ok(appHtml.includes("target.open=true;target.scrollIntoView"), 'reading index must open and scroll to its result');
-assert.ok(appHtml.includes('id="sukuyoResultSummary"'), 'Sukuyo result summary is missing');
+assert.ok(appHtml.includes("'sukuyoResultSummary'"), 'Sukuyo result summary is missing');
+assert.ok(appHtml.includes("'kyuseiResultSummary'"), 'Kyusei result summary is missing');
+assert.ok(appHtml.includes("v196RenderMethodSummary(r,'sukuyo','sukuyoReading','sukuyoResultSummary')"), 'Sukuyo summary adapter is missing');
+assert.ok(appHtml.includes("v196RenderMethodSummary(r,'kyusei','kyuseiReading','kyuseiResultSummary')"), 'Kyusei summary adapter is missing');
 for (const field of ['conclusion', 'evidence', 'action', 'caution', 'confidence']) {
-  assert.ok(appHtml.includes(`data-sukuyo-summary="${field}"`), `Sukuyo ${field} summary field is missing`);
+  assert.ok(appHtml.includes(`data-method-summary="${field}"`), `${field} method summary field is missing`);
 }
-assert.ok(appHtml.includes("v191zMethodScore('sukuyo',r)"), 'Sukuyo summary must reuse the existing method score');
-assert.ok(appHtml.includes("v191zMethodPlan('sukuyo',r)"), 'Sukuyo summary must reuse the existing action plan');
+assert.ok(appHtml.includes('v191zMethodScore(key,r)'), 'method summaries must reuse the existing method score');
+assert.ok(appHtml.includes('v191zMethodPlan(key,r)'), 'method summaries must reuse the existing action plan');
 
 console.log(
   `Static validation passed: workflows=${requiredWorkflows.length}, data=${requiredData.length}`
