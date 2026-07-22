@@ -28,6 +28,6 @@ assert.ok(app.includes('name="koyomi-bazi-view-version" content="2026.07.22-1"')
 assert.ok(app.includes('koyomiEscapeHtml(summary.doNow)'), 'action card content must be escaped');
 
 const serviceWorker = await readFile('service-worker.js', 'utf8');
-assert.ok(serviceWorker.includes("koyomi-foundation-20260722-13"), 'cache generation must change for the visible rollout');
+assert.ok(serviceWorker.includes("koyomi-foundation-20260722-14"), 'cache generation must change for the visible rollout');
 
 console.log('Bazi overall integrated guidance passed');
