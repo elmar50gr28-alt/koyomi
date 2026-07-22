@@ -20,5 +20,14 @@ const app = await readFile('app.html', 'utf8');
 for (const field of ['strength', 'support', 'pressure']) {
   assert.ok(app.includes(`koyomiEscapeHtml(guidance.${field})`), `${field} display must be present and escaped`);
 }
+for (const className of ['support', 'caution', 'action']) {
+  assert.ok(app.includes(`koyomi-bazi-guidance-card ${className}`), `${className} guidance card must be present`);
+}
+assert.ok(app.includes('Bazi View 2026.07.22-1'), 'visible Bazi view version must be present');
+assert.ok(app.includes('name="koyomi-bazi-view-version" content="2026.07.22-1"'), 'deploy-verifiable Bazi view version must be present');
+assert.ok(app.includes('koyomiEscapeHtml(summary.doNow)'), 'action card content must be escaped');
+
+const serviceWorker = await readFile('service-worker.js', 'utf8');
+assert.ok(serviceWorker.includes("koyomi-foundation-20260722-12"), 'cache generation must change for the visible rollout');
 
 console.log('Bazi overall integrated guidance passed');
