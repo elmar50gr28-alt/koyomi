@@ -114,6 +114,7 @@ export function buildBaziReading(baziResult, options = {}) {
     sourceCalculationVersion: baziResult?.calculationVersion || null,
     sourceIntegratedDataVersion: options.integratedData?.version || baziResult?.integratedReadingData?.version || null,
     sourceAdapter: adapted.audit,
+    sourceGuardrails: facts.guardrails,
     personId: facts.personId,
     executiveSummary,
     timingReading,
@@ -774,6 +775,7 @@ function extractFacts(result = {}, options = {}) {
     currentCycle: cycles[0] || null,
     tendencies,
     luck,
+    guardrails: result.readingGuardrails || { conflicts: [], uncertainties: [], suppressedClaims: [], priorities: [], evidence: [] },
     evidence: [...new Set(evidence)],
     warnings: result.warnings || [],
     confidence,
@@ -822,6 +824,7 @@ function buildSection(id, title, policy, facts) {
     sourceIds,
     schoolIds: facts.schoolIds,
     reviewStatus,
+    guardrailReviewRequired: Boolean(facts.guardrails.conflicts.length || facts.guardrails.suppressedClaims.length),
     warnings: warningsFor(id, facts),
     unresolvedFactors,
     beginnerSummary,
@@ -1012,6 +1015,7 @@ function unresolvedFactorsFor(id, facts, confidence) {
   if (facts.precision === 'partial-without-hour-pillar') items.push('birth-time-unknown');
   if (PROFESSIONAL_CATEGORIES.has(id)) items.push('luck-overlay-school-review');
   if (facts.patterns.length > 1) items.push('pattern-candidate-competition');
+  items.push(...facts.guardrails.conflicts, ...facts.guardrails.uncertainties, ...facts.guardrails.suppressedClaims);
   return unique(items);
 }
 
@@ -1053,7 +1057,7 @@ function sourceIdsFor(id, facts) {
     annualLuck: facts.luck.annual?.[0]?.sourceIds,
     monthlyLuck: facts.luck.monthly?.[0]?.sourceIds
   }[id] || [];
-  const merged = [...fromTendency, ...facts.evidence].filter(Boolean);
+  const merged = [...fromTendency, ...facts.evidence, ...facts.guardrails.evidence].filter(Boolean);
   return [...new Set(merged.length ? merged : ['src-yuanhai-ziping-biblio'])];
 }
 
@@ -1069,6 +1073,7 @@ function warningsFor(id, facts) {
   if (id === 'health') warnings.push('not-medical-advice');
   if (['annualLuck', 'monthlyLuck', 'importantTiming'].includes(id)) warnings.push('luck-interpretation-review-required');
   if (facts.occupation) warnings.push('occupation-used-for-wording-only');
+  warnings.push(...facts.guardrails.uncertainties, ...facts.guardrails.suppressedClaims.map(id => `claim-suppressed:${id}`));
   return unique(warnings);
 }
 

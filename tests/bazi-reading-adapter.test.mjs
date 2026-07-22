@@ -46,4 +46,20 @@ uncertainData.summary.uncertainties.push({ value: 'adapter-test-uncertainty' });
 const uncertain = adaptIntegratedBaziReadingSource(calculated, { integratedData: uncertainData });
 assert.ok(uncertain.result.warnings.includes('adapter-test-uncertainty'));
 
+const guardedData = structuredClone(calculated.integratedReadingData);
+guardedData.summary.conflicts.push({ id: 'adapter-test-conflict' });
+guardedData.summary.uncertainties.push({ id: 'uncertainty-adapter-test', value: 'adapter-test-uncertainty' });
+guardedData.summary.suppressedClaims.push({ id: 'adapter-test-claim' });
+guardedData.summary.evidence.push({ id: 'adapter-test-evidence' });
+const guardedReading = buildBaziReading(calculated, { locale: 'en', integratedData: guardedData });
+assert.ok(guardedReading.sourceGuardrails.conflicts.includes('adapter-test-conflict'));
+assert.ok(guardedReading.sourceGuardrails.suppressedClaims.includes('adapter-test-claim'));
+assert.ok(guardedReading.sections.overall.unresolvedFactors.includes('adapter-test-conflict'));
+assert.ok(guardedReading.sections.overall.unresolvedFactors.includes('adapter-test-uncertainty'));
+assert.ok(guardedReading.sections.overall.unresolvedFactors.includes('adapter-test-claim'));
+assert.ok(guardedReading.sections.overall.warnings.includes('claim-suppressed:adapter-test-claim'));
+assert.ok(guardedReading.sections.overall.sourceIds.includes('adapter-test-evidence'));
+assert.equal(guardedReading.sections.overall.guardrailReviewRequired, true);
+assert.deepEqual(guardedReading.mitsunomeInput.readingSections.overall.unresolvedFactors, guardedReading.sections.overall.unresolvedFactors);
+
 console.log('Bazi reading adapter passed');
