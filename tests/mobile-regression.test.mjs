@@ -15,7 +15,9 @@ assert.ok(index.includes('app.html') || index.includes('today.html'), 'index nav
 assert.ok(!index.includes('KOYOMIの約束'),'home must not show nonessential explanatory copy');
 assert.ok(!app.includes('迷ったら本鑑定へ。'),'app home must not repeat guidance before the main choice');
 assert.ok(!app.includes('四柱推命を主軸に、宿曜・九星'),'pre-reading screen must not list every divination method');
-assert.ok(app.includes('<summary>話し方を選ぶ</summary>'),'optional voice settings must use progressive disclosure');
+assert.ok(!/<button[^>]+data-oracle-mode=/.test(app),'reading pages must not expose voice selection controls');
+assert.ok(app.includes('<label for="oracleModeSetting">鑑定口調</label>'),'voice selection must live in settings');
+assert.ok(app.includes('<option value="sister">ミツノメ姐さん本鑑定</option>'),'sister reading must be the standard setting');
 assert.ok(today.includes('<h1>今日の暦</h1>'), 'today page must remain present');
 assert.ok(app.includes('id="koyomiChoosePerson"'), 'home must provide a person-based reading entry');
 assert.ok(app.includes('id="koyomiChooseTheme"'), 'home must provide a theme-based reading entry');
@@ -33,6 +35,10 @@ assert.ok(app.indexOf('id="koyomiStartReading"') < app.indexOf('id="koyomiChoose
 assert.ok(app.includes('id="koyomiReadingDate" type="date"'), 'date-specific reading must use a date picker');
 assert.ok(app.includes('selectedDate=startOfDay(date);renderCalendar()'), 'selected date must update the existing reading date before calculation');
 assert.ok(app.includes("['koyomiStartReading','koyomiStartDateReading']"), 'selected-date reading must refresh the structured reading output');
+assert.ok(app.includes('<summary>ほかの占い方</summary>'),'secondary reading choices must use progressive disclosure');
+assert.ok(index.includes('class="brand sol-home-brand"'),'home must use the Canva-aligned calendar mechanism visual');
+assert.ok(index.includes('href="app.html#calendar">今日の結論を見る</a>'),'home must offer a direct today conclusion route');
+assert.ok(index.includes('href="today.html">今日の暦を開く</a>'),'home must offer a direct calendar instrument route');
 const mobileNav=app.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0]||'';
 assert.equal((mobileNav.match(/<button/g)||[]).length,6,'shared mobile navigation must contain exactly six primary destinations');
 for(const label of ['今日','占う','記録','暦','社会運','設定'])assert.ok(mobileNav.includes(label),`${label} must remain in mobile navigation`);
