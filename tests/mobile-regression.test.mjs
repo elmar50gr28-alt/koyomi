@@ -52,5 +52,8 @@ for(const [page,target] of [['personal','personalForm'],['qimen','qm-panel-purpo
 const readingChoiceHandler=app.slice(app.indexOf('function koyomiBindReadingChoices'),app.indexOf('function koyomiBindMobileNavigation'));
 assert.ok(readingChoiceHandler.indexOf('setPage(page)')<readingChoiceHandler.indexOf('requestAnimationFrame'),'reading cards must route before scrolling');
 assert.ok(app.includes("if(page==='qimen')qmdjSetPanel('purpose')"),'Qimen card must reveal its purpose panel before scrolling');
+assert.ok(!today.includes('今日の今日の暦機構'),'today navigation label must not be duplicated');
+assert.ok(today.includes('<button><b>⚙</b>設定</button>'),'settings navigation must use a distinct icon and label');
+assert.ok(today.includes('.bottomnav button{font-size:11px;min-height:48px}'),'today mobile navigation text must remain readable');
 
 console.log('Mobile regression checks passed');
