@@ -45,5 +45,12 @@ assert.ok(app.includes("$('solMobileAlmanac').onclick=()=>{window.location.href=
 for(const id of ['solTodayConclusion','solTodayAction','solTodayTime','solTodayCaution'])assert.ok(app.includes(`id="${id}"`),`${id} must be visible in the SOL today summary`);
 assert.ok(app.indexOf('class="sol-today-summary"')<app.indexOf('class="dashboard"'),'the four-item summary must appear before the detailed calendar instrument');
 assert.ok(app.includes('function solTodaySummary'),'today summary must be derived from the selected date');
+for(const [page,target] of [['personal','personalForm'],['qimen','qm-panel-purpose'],['compat','compatForm'],['mundane','mundaneGenerate']]){
+  assert.ok(app.includes(`data-sol-reading-page="${page}" data-sol-reading-target="${target}"`),`${page} card must point to its existing destination`);
+  assert.ok(app.includes(`id="${target}"`)||app.includes(`id='${target}'`),`${page} destination must exist`);
+}
+const readingChoiceHandler=app.slice(app.indexOf('function koyomiBindReadingChoices'),app.indexOf('function koyomiBindMobileNavigation'));
+assert.ok(readingChoiceHandler.indexOf('setPage(page)')<readingChoiceHandler.indexOf('requestAnimationFrame'),'reading cards must route before scrolling');
+assert.ok(app.includes("if(page==='qimen')qmdjSetPanel('purpose')"),'Qimen card must reveal its purpose panel before scrolling');
 
 console.log('Mobile regression checks passed');
