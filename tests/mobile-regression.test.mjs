@@ -16,7 +16,7 @@ assert.ok(!index.includes('KOYOMIの約束'),'home must not show nonessential ex
 assert.ok(!app.includes('迷ったら本鑑定へ。'),'app home must not repeat guidance before the main choice');
 assert.ok(!app.includes('四柱推命を主軸に、宿曜・九星'),'pre-reading screen must not list every divination method');
 assert.ok(app.includes('<summary>話し方を選ぶ</summary>'),'optional voice settings must use progressive disclosure');
-assert.ok(today.includes('app.html') || today.includes('KOYOMI'), 'today page must remain present');
+assert.ok(today.includes('<h1>今日の暦</h1>'), 'today page must remain present');
 assert.ok(app.includes('id="koyomiChoosePerson"'), 'home must provide a person-based reading entry');
 assert.ok(app.includes('id="koyomiChooseTheme"'), 'home must provide a theme-based reading entry');
 assert.ok(app.includes("$('koyomiChoosePerson').onclick=koyomiOpenPersonPicker"), 'person entry must open the profile selector');
@@ -55,5 +55,11 @@ assert.ok(app.includes("if(page==='qimen')qmdjSetPanel('purpose')"),'Qimen card 
 assert.ok(!today.includes('今日の今日の暦機構'),'today navigation label must not be duplicated');
 assert.ok(today.includes('<button><b>⚙</b>設定</button>'),'settings navigation must use a distinct icon and label');
 assert.ok(today.includes('.bottomnav button{font-size:11px;min-height:48px}'),'today mobile navigation text must remain readable');
+assert.ok(today.includes('<h1>今日の暦</h1>'),'today page must use the concise title');
+assert.ok(today.includes('id="reloadBtn"'),'today page must expose a reload action');
+assert.ok(today.includes("$('#reloadBtn').onclick=()=>window.location.reload()"),'reload action must refresh the page');
+assert.ok(today.includes('syncCalendarDate(new Date());renderText()'),'today page must replace its sample date at startup');
+assert.ok(today.includes('function localDateIso'),'today date must use local calendar components rather than UTC slicing');
+assert.ok(today.includes('id="labyrinthWorks"'),'calendar clock must include the labyrinth gear layer');
 
 console.log('Mobile regression checks passed');
