@@ -34,13 +34,14 @@ assert.ok(app.includes('id="koyomiReadingDate" type="date"'), 'date-specific rea
 assert.ok(app.includes('selectedDate=startOfDay(date);renderCalendar()'), 'selected date must update the existing reading date before calculation');
 assert.ok(app.includes("['koyomiStartReading','koyomiStartDateReading']"), 'selected-date reading must refresh the structured reading output');
 const mobileNav=app.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0]||'';
-assert.equal((mobileNav.match(/<button/g)||[]).length,5,'SOL mobile navigation must contain exactly five primary destinations');
-for(const label of ['今日','占う','記録','暦','設定'])assert.ok(mobileNav.includes(label),`${label} must remain in mobile navigation`);
+assert.equal((mobileNav.match(/<button/g)||[]).length,6,'shared mobile navigation must contain exactly six primary destinations');
+for(const label of ['今日','占う','記録','暦','社会運','設定'])assert.ok(mobileNav.includes(label),`${label} must remain in mobile navigation`);
 assert.ok(!mobileNav.includes('data-page="qimen"'),'specialist methods must move out of primary navigation');
-assert.ok(!mobileNav.includes('data-page="mundane"'),'mundane must move out of primary navigation');
+assert.ok(mobileNav.includes('data-page="mundane"'),'mundane must be available from primary navigation');
 assert.ok(app.includes("nav.querySelector('[data-page=\"personal\"]').onclick=()=>koyomiOpenMobilePage('personal')"),'mobile reading button must have an explicit route');
 assert.ok(app.includes("nav.querySelector('[data-page=\"ledger\"]').onclick=()=>koyomiOpenMobilePage('ledger')"),'mobile person button must have an explicit route');
 assert.ok(app.includes("nav.querySelector('[data-page=\"settings\"]').onclick=()=>koyomiOpenMobilePage('settings')"),'mobile settings button must have an explicit route');
+assert.ok(app.includes("nav.querySelector('[data-page=\"mundane\"]').onclick=()=>koyomiOpenMobilePage('mundane')"),'mobile social forecast button must have an explicit route');
 assert.ok(app.includes("$('solMobileAlmanac').onclick=()=>{window.location.href='today.html'}"),'mobile almanac button must open the existing calendar instrument');
 for(const id of ['solTodayConclusion','solTodayAction','solTodayTime','solTodayCaution'])assert.ok(app.includes(`id="${id}"`),`${id} must be visible in the SOL today summary`);
 assert.ok(app.indexOf('class="sol-today-summary"')<app.indexOf('class="dashboard"'),'the four-item summary must appear before the detailed calendar instrument');
@@ -61,7 +62,8 @@ assert.ok(today.includes("$('#reloadBtn').onclick=()=>window.location.reload()")
 assert.ok(today.includes('syncCalendarDate(new Date());renderText()'),'today page must replace its sample date at startup');
 assert.ok(today.includes('function localDateIso'),'today date must use local calendar components rather than UTC slicing');
 assert.ok(today.includes('id="labyrinthWorks"'),'calendar clock must include the labyrinth gear layer');
-for(const route of ['calendar','timeline','compat','ledger','settings'])assert.ok(today.includes(`href="app.html#${route}"`),`${route} must have a real bottom navigation route`);
+for(const route of ['calendar','personal','ledger','mundane','settings'])assert.ok(today.includes(`href="app.html#${route}"`),`${route} must have a real shared navigation route`);
+assert.ok(today.includes('<a class="home-return" href="index.html">← こよみホームへ戻る</a>'),'today page must provide a home return link');
 assert.ok(!today.includes("$$('.bottomnav button')"),'today navigation must not use placeholder drawer handlers');
 
 console.log('Mobile regression checks passed');
