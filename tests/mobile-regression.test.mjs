@@ -33,15 +33,14 @@ assert.ok(app.indexOf('id="koyomiStartReading"') < app.indexOf('id="koyomiChoose
 assert.ok(app.includes('id="koyomiReadingDate" type="date"'), 'date-specific reading must use a date picker');
 assert.ok(app.includes('selectedDate=startOfDay(date);renderCalendar()'), 'selected date must update the existing reading date before calculation');
 assert.ok(app.includes("['koyomiStartReading','koyomiStartDateReading']"), 'selected-date reading must refresh the structured reading output');
-assert.ok(app.includes('id="koyomiMobileResult"'), 'mobile navigation must provide a result destination');
 const mobileNav=app.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0]||'';
-assert.equal((mobileNav.match(/<button/g)||[]).length,6,'mobile navigation must contain exactly six primary destinations');
-for(const label of ['ホーム','本鑑定','鑑定結果','奇門','世情','人物入力'])assert.ok(mobileNav.includes(label),`${label} must remain in mobile navigation`);
-assert.ok(mobileNav.includes('data-page="qimen"'),'mobile Qimen button must route to the Qimen entry');
-assert.ok(mobileNav.includes('data-page="mundane"'),'mobile mundane button must route to the mundane entry');
+assert.equal((mobileNav.match(/<button/g)||[]).length,5,'SOL mobile navigation must contain exactly five primary destinations');
+for(const label of ['今日','占う','記録','暦','設定'])assert.ok(mobileNav.includes(label),`${label} must remain in mobile navigation`);
+assert.ok(!mobileNav.includes('data-page="qimen"'),'specialist methods must move out of primary navigation');
+assert.ok(!mobileNav.includes('data-page="mundane"'),'mundane must move out of primary navigation');
 assert.ok(app.includes("nav.querySelector('[data-page=\"personal\"]').onclick=()=>koyomiOpenMobilePage('personal')"),'mobile reading button must have an explicit route');
 assert.ok(app.includes("nav.querySelector('[data-page=\"ledger\"]').onclick=()=>koyomiOpenMobilePage('ledger')"),'mobile person button must have an explicit route');
-assert.ok(app.includes("nav.querySelector('[data-page=\"mundane\"]').onclick=()=>koyomiOpenMobilePage('mundane')"),'mobile mundane button must have an explicit route');
-assert.ok(app.includes("$('koyomiMobileResult').onclick=koyomiOpenLastResult"),'mobile result button must have an explicit route');
+assert.ok(app.includes("nav.querySelector('[data-page=\"settings\"]').onclick=()=>koyomiOpenMobilePage('settings')"),'mobile settings button must have an explicit route');
+assert.ok(app.includes("$('solMobileAlmanac').onclick=()=>{window.location.href='today.html'}"),'mobile almanac button must open the existing calendar instrument');
 
 console.log('Mobile regression checks passed');
