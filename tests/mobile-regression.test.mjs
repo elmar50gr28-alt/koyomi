@@ -56,7 +56,7 @@ assert.ok(app.includes("nav.querySelector('[data-page=\"personal\"]').onclick=()
 assert.ok(app.includes("nav.querySelector('[data-page=\"ledger\"]').onclick=()=>koyomiOpenMobilePage('ledger')"),'mobile person button must have an explicit route');
 assert.ok(app.includes("nav.querySelector('[data-page=\"settings\"]').onclick=()=>koyomiOpenMobilePage('settings')"),'mobile settings button must have an explicit route');
 assert.ok(app.includes("nav.querySelector('[data-page=\"mundane\"]').onclick=()=>koyomiOpenMobilePage('mundane')"),'mobile social forecast button must have an explicit route');
-assert.ok(app.includes("$('solMobileAlmanac').onclick=()=>{window.location.href='today.html'}"),'mobile almanac button must open the existing calendar instrument');
+assert.ok(app.includes("$('solMobileAlmanac').onclick=()=>{koyomiStoreTodayLayerData();window.location.href='today.html'}"),'mobile almanac button must hand off the reading and open the existing calendar instrument');
 for(const id of ['solTodayConclusion','solTodayAction','solTodayTime','solTodayCaution'])assert.ok(app.includes(`id="${id}"`),`${id} must be visible in the SOL today summary`);
 assert.ok(app.indexOf('class="sol-today-summary"')<app.indexOf('class="dashboard"'),'the four-item summary must appear before the detailed calendar instrument');
 assert.ok(app.includes('function solTodaySummary'),'today summary must be derived from the selected date');
