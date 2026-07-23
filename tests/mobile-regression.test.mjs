@@ -53,13 +53,15 @@ const readingChoiceHandler=app.slice(app.indexOf('function koyomiBindReadingChoi
 assert.ok(readingChoiceHandler.indexOf('setPage(page)')<readingChoiceHandler.indexOf('requestAnimationFrame'),'reading cards must route before scrolling');
 assert.ok(app.includes("if(page==='qimen')qmdjSetPanel('purpose')"),'Qimen card must reveal its purpose panel before scrolling');
 assert.ok(!today.includes('今日の今日の暦機構'),'today navigation label must not be duplicated');
-assert.ok(today.includes('<button><b>⚙</b>設定</button>'),'settings navigation must use a distinct icon and label');
-assert.ok(today.includes('.bottomnav button{font-size:11px;min-height:48px}'),'today mobile navigation text must remain readable');
+assert.ok(today.includes('<a href="app.html#settings"><b>⚙</b>設定</a>'),'settings navigation must use a distinct icon and real route');
+assert.ok(today.includes('.bottomnav a{font-size:11px;min-height:48px}'),'today mobile navigation text must remain readable');
 assert.ok(today.includes('<h1>今日の暦</h1>'),'today page must use the concise title');
 assert.ok(today.includes('id="reloadBtn"'),'today page must expose a reload action');
 assert.ok(today.includes("$('#reloadBtn').onclick=()=>window.location.reload()"),'reload action must refresh the page');
 assert.ok(today.includes('syncCalendarDate(new Date());renderText()'),'today page must replace its sample date at startup');
 assert.ok(today.includes('function localDateIso'),'today date must use local calendar components rather than UTC slicing');
 assert.ok(today.includes('id="labyrinthWorks"'),'calendar clock must include the labyrinth gear layer');
+for(const route of ['calendar','timeline','compat','ledger','settings'])assert.ok(today.includes(`href="app.html#${route}"`),`${route} must have a real bottom navigation route`);
+assert.ok(!today.includes("$$('.bottomnav button')"),'today navigation must not use placeholder drawer handlers');
 
 console.log('Mobile regression checks passed');
