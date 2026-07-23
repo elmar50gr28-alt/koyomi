@@ -1,0 +1,14 @@
+:root{--sol-night:#07111b;--sol-night-2:#101c27;--sol-gold:#c9a45d;--sol-gold-soft:#ead49c;--sol-bronze:#735b36;--sol-paper:#f5edde;--sol-ink:#241a11;--sol-muted:#aeb7b5;--sol-line:rgba(201,164,93,.34);--sol-radius:18px;--sol-shadow:0 16px 38px rgba(0,0,0,.28)}
+body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:radial-gradient(circle at 50% -14%,rgba(65,101,116,.26),transparent 30rem),linear-gradient(180deg,var(--sol-night),#05090e 72%);letter-spacing:.01em}
+:focus-visible{outline:3px solid var(--sol-gold)!important;outline-offset:3px}
+body .paper{background:var(--sol-paper);color:var(--sol-ink);border:1px solid #b99b66;border-radius:var(--sol-radius);box-shadow:var(--sol-shadow);padding:clamp(14px,2.4vw,22px)}
+body .paper h2{border-bottom:1px solid #c8ad7c;padding-bottom:10px;font-family:Georgia,"Yu Mincho",serif}body .paper h3{border-left:3px solid var(--sol-bronze);padding-left:10px}
+body .field input,body .field select,body .field textarea,body .ledger-form input,body .ledger-form select,body .ledger-form textarea{border:1px solid #a78a5b;border-radius:12px;background:#fffdf8;box-shadow:inset 0 1px 3px rgba(54,36,17,.08)}
+body button,body .action,body .ledger-btn{border-radius:12px;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}body button:active,body .action:active,body .ledger-btn:active{transform:translateY(1px)}
+body .action.primary,body .ledger-btn.primary{background:linear-gradient(180deg,#302319,#17110d);color:#fff4d8;border-color:#17110d}body .detail-box,body .result-card,body .reading-hero{border-color:#aa8b58;border-width:1px;border-radius:14px;box-shadow:0 7px 18px rgba(55,37,18,.08)}
+body .today,body .plate,body .action-panel,body .v200-panel,body .card{border-color:var(--sol-line);border-radius:var(--sol-radius);box-shadow:var(--sol-shadow)}
+body .topbar,body .brand{color:#f2e7cc}body .eyebrow{color:var(--sol-gold);letter-spacing:.18em}body h1{font-family:Georgia,"Yu Mincho",serif}
+body .mobile-nav,body .bottomnav,body .bottom{background:rgba(5,10,16,.95);border-top:1px solid var(--sol-line);backdrop-filter:blur(18px)}body .mobile-nav button,body .bottomnav a,body .bottom a{color:#c9ceca}body .mobile-nav button b,body .bottomnav a b,body .bottom b{color:var(--sol-gold)}
+body .mobile-nav button.active,body .bottomnav a.active{color:#fff5d9;background:rgba(201,164,93,.09);border-radius:10px}
+@media(max-width:760px){body .paper{margin:10px 0}button,a{touch-action:manipulation}body .mobile-nav button,body .bottomnav a{min-height:52px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.001ms!important}}

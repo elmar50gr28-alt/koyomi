@@ -5,6 +5,14 @@ const app = await readFile('app.html', 'utf8');
 const smoke = await readFile('smoke-test.html', 'utf8');
 const index = await readFile('index.html', 'utf8');
 const today = await readFile('today.html', 'utf8');
+const solTheme = await readFile('src/ui/sol-theme.css', 'utf8');
+
+for (const [name, html] of [['home', index], ['today', today], ['app', app]]) {
+  assert.ok(html.includes('@import url("src/ui/sol-theme.css")'), `${name} must load the shared SOL theme`);
+}
+for (const token of ['--sol-night', '--sol-gold', '--sol-paper', '--sol-radius']) {
+  assert.ok(solTheme.includes(token), `${token} must remain in the shared SOL theme`);
+}
 
 assert.ok(app.includes('koyomiEditOwnProfile'), 'own profile edit route must remain present');
 assert.ok(app.includes('koyomiApplyPrimaryProfile'), 'primary profile selection must remain present');
