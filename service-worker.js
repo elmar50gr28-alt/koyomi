@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260723-66';
+const CACHE_VERSION = 'koyomi-foundation-20260728-67';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -9,6 +9,7 @@ const APP_SHELL = [
   './app.html',
   './src/ui/sol-theme.css',
   './src/ui/today-layer-renderer.js',
+  './src/ui/today-personal-location.js',
   './src/shared/calendar-time-core.js',
   './src/shared/profile-validation-core.js',
   './src/shared/profile-normalization-core.js',

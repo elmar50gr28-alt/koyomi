@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import vm from 'node:vm';
+const context={};
+vm.runInNewContext(await readFile('src/ui/today-personal-location.js','utf8'),context);
+const api=context.KOYOMI_TODAY_PERSONAL_LOCATION;
+assert.equal(api.sunSign('2000-01-02'),'山羊座');
+assert.equal(api.sunSign('2000-07-23'),'獅子座');
+assert.match(api.sukuyo('2000-01-02').lodge,/宿$/);
+assert.equal(api.timeBranch(new Date(2026,6,28,23,30)),'子');
+assert.equal(api.solarCorrectionMinutes(139.75,new Date(2026,6,28)),19);
+const today=await readFile('today.html','utf8'),worker=await readFile('service-worker.js','utf8');
+assert.ok(today.includes('src/ui/today-personal-location.js'));
+assert.ok(today.includes("await window.KOYOMI_TODAY_PERSONAL_LOCATION?.prepare(data,layer)"));
+assert.ok(worker.includes("'./src/ui/today-personal-location.js'"));
+console.log('Today personal and GPS layer passed');
