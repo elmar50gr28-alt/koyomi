@@ -79,5 +79,12 @@ assert.ok(today.includes('id="labyrinthWorks"'),'calendar clock must include the
 for(const route of ['calendar','personal','ledger','mundane','settings'])assert.ok(today.includes(`href="app.html#${route}"`),`${route} must have a real shared navigation route`);
 assert.ok(today.includes('<a class="home-return" href="index.html">← こよみホームへ戻る</a>'),'today page must provide a home return link');
 assert.ok(!today.includes("$$('.bottomnav button')"),'today navigation must not use placeholder drawer handlers');
+assert.ok(app.includes('function koyomiBaziChartTableHtml(pillars)'), 'Bazi results must render a structured chart table');
+for (const label of ['天通変', '蔵干', '地通変', '十二運']) {
+  assert.ok(app.includes(label), `${label} must remain visible in the Bazi chart table`);
+}
+assert.ok(app.includes('#pillarGrid{display:block}'), 'the Bazi chart table must use the full result width');
+assert.ok(app.includes('.bazi-chart-wrap{width:100%;overflow-x:hidden}'), 'the Bazi chart table must not require horizontal swiping');
+assert.ok(app.includes("role==='day'?'日主'"), 'the day stem must be labelled as the day master');
 
 console.log('Mobile regression checks passed');
