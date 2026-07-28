@@ -136,6 +136,11 @@ for (const shellFile of requiredShellFiles) {
 }
 
 assert.ok(
+  serviceWorker.includes('./src/bazi/reading/chart-interpretation.js'),
+  'Bazi chart interpretation must be included in the offline shell'
+);
+
+assert.ok(
   app.includes('koyomi-bazi-summary'),
   'app.html must render practical Bazi summary first'
 );
