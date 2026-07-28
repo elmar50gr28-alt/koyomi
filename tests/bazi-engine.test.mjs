@@ -84,7 +84,7 @@ assert.ok(getHiddenStems('chou').some(x => x.role === 'main'), 'chou hidden stem
 const profile = {
   displayName: 'Phase1',
   birthData: {
-    date: '1984-02-04',
+    date: '1984-02-05',
     time: '12:00',
     place: { label: 'Tokyo', longitude: 139.767, utcOffset: 9, timezone: 'Asia/Tokyo' }
   }

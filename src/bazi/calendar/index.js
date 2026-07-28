@@ -1,4 +1,5 @@
 import { BRANCHES, SCHOOL_PROFILES, STEMS } from '../data.js';
+import { calculateSetsuBoundaries } from '../astronomy/solar-term-core.js';
 
 const branchById = Object.fromEntries(
   BRANCHES.map(branch => [branch.id, branch])
@@ -163,21 +164,6 @@ const MONTH_BOUNDARIES_JST_BY_YEAR = Object.freeze({
   ])
 });
 
-const fallbackMonthBoundaries = [
-  { m: 2, d: 4, branch: 'yin' },
-  { m: 3, d: 6, branch: 'mao' },
-  { m: 4, d: 5, branch: 'chen' },
-  { m: 5, d: 6, branch: 'si' },
-  { m: 6, d: 6, branch: 'wu' },
-  { m: 7, d: 7, branch: 'wei' },
-  { m: 8, d: 8, branch: 'shen' },
-  { m: 9, d: 8, branch: 'you' },
-  { m: 10, d: 8, branch: 'xu' },
-  { m: 11, d: 7, branch: 'hai' },
-  { m: 12, d: 7, branch: 'zi' },
-  { m: 1, d: 6, branch: 'chou' }
-];
-
 const monthStemStartByYearStem = {
   jia: 3,
   ji: 3,
@@ -294,49 +280,57 @@ function getJstYear(date) {
 }
 
 function getRisshunBoundary(year) {
-  const officialBoundary =
-    RISSHUN_BOUNDARIES_JST[year];
-
+  const officialBoundary = RISSHUN_BOUNDARIES_JST[year];
   if (officialBoundary) {
     return {
       date: new Date(officialBoundary),
       datetime: officialBoundary,
+      timezone: 'Asia/Tokyo',
       precision: 'official-minute',
       sourceId: `naoj-rekiyou-${year}`,
-      dataPath:
-        'data/bazi/solar-term-boundaries.json',
+      dataPath: 'data/bazi/solar-term-boundaries.json',
       warning: null
     };
   }
 
-  const fallbackDatetime =
-    `${year}-02-04T00:00:00+09:00`;
+  const boundary = calculateSetsuBoundaries(year)
+    .find(term => term.termId === 'risshun');
 
   return {
-    date: new Date(fallbackDatetime),
-    datetime: fallbackDatetime,
-    precision: 'fallback-fixed-day',
-    sourceId: null,
+    ...boundary,
     dataPath: null,
-    warning:
-      'risshun-official-boundary-missing'
+    warning: null
   };
 }
 
 function getOfficialMonthBoundary(date) {
   const year = getJstYear(date);
-  const boundaries =
-    MONTH_BOUNDARIES_JST_BY_YEAR[year];
-
-  if (!boundaries) {
-    return null;
-  }
+  const official = MONTH_BOUNDARIES_JST_BY_YEAR[year];
+  const current = official
+    ? official.map(boundary => ({
+        ...boundary,
+        date: new Date(boundary.datetime),
+        timezone: 'Asia/Tokyo',
+        precision: 'official-minute',
+        sourceId: `naoj-rekiyou-${year}`
+      }))
+    : calculateSetsuBoundaries(year);
+  const previous = MONTH_BOUNDARIES_JST_BY_YEAR[year - 1]?.at(-1);
+  const previousBoundary = previous
+    ? {
+        ...previous,
+        date: new Date(previous.datetime),
+        timezone: 'Asia/Tokyo',
+        precision: 'official-minute',
+        sourceId: `naoj-rekiyou-${year - 1}`
+      }
+    : calculateSetsuBoundaries(year - 1).at(-1);
+  const boundaries = [previousBoundary, ...current];
 
   let selectedBoundary = null;
 
   for (const boundary of boundaries) {
-    const boundaryDate =
-      new Date(boundary.datetime);
+    const boundaryDate = boundary.date;
 
     if (date >= boundaryDate) {
       selectedBoundary = {
@@ -350,40 +344,6 @@ function getOfficialMonthBoundary(date) {
   }
 
   return selectedBoundary;
-}
-
-function getFallbackMonthBranch(date) {
-  const key =
-    date.getMonth() + 1 === 1 &&
-    date.getDate() < 6
-      ? new Date(
-          date.getFullYear() - 1,
-          11,
-          7
-        )
-      : date;
-
-  let branch = 'chou';
-
-  for (const boundary of fallbackMonthBoundaries) {
-    const boundaryYear =
-      boundary.m === 1
-        ? key.getFullYear() + 1
-        : key.getFullYear();
-
-    const boundaryDate =
-      new Date(
-        boundaryYear,
-        boundary.m - 1,
-        boundary.d
-      );
-
-    if (key >= boundaryDate) {
-      branch = boundary.branch;
-    }
-  }
-
-  return branch;
 }
 
 function buildMonthPillar(
@@ -491,54 +451,28 @@ export function calculateSolarTerms(
   );
 
   const year = getJstYear(date);
-  const officialBoundaries =
-    MONTH_BOUNDARIES_JST_BY_YEAR[year];
-
+  const officialBoundaries = MONTH_BOUNDARIES_JST_BY_YEAR[year];
   if (officialBoundaries) {
-    return officialBoundaries.map(
-      boundary => ({
-        termId: boundary.termId,
-        name: boundary.nameJa,
-        branchId: boundary.branchId,
-        datetime: boundary.datetime,
-        timezone: 'Asia/Tokyo',
-        precision: 'official-minute',
-        sourceId: `naoj-rekiyou-${year}`
-      })
-    );
+    return officialBoundaries.map(boundary => ({
+      termId: boundary.termId,
+      name: boundary.nameJa,
+      branchId: boundary.branchId,
+      datetime: boundary.datetime,
+      timezone: 'Asia/Tokyo',
+      precision: 'official-minute',
+      sourceId: `naoj-rekiyou-${year}`
+    }));
   }
 
-  return fallbackMonthBoundaries.map(
-    (boundary, index) => ({
-      termId:
-        `term-${String(
-          index + 1
-        ).padStart(2, '0')}`,
-
-      name:
-        `${branchById[
-          boundary.branch
-        ].kanji}月節入`,
-
-      branchId:
-        boundary.branch,
-
-      datetime:
-        `${year}-` +
-        `${String(
-          boundary.m
-        ).padStart(2, '0')}-` +
-        `${String(
-          boundary.d
-        ).padStart(2, '0')}` +
-        'T00:00:00',
-
+  return calculateSetsuBoundaries(year).map(
+    boundary => ({
+      termId: boundary.termId,
+      name: boundary.nameJa,
+      branchId: boundary.branchId,
+      datetime: boundary.datetime,
       timezone,
-
-      precision:
-        'fallback-fixed-day',
-
-      sourceId: null
+      precision: boundary.precision,
+      sourceId: boundary.sourceId
     })
   );
 }
@@ -595,7 +529,7 @@ export function calculateYearPillar(date) {
       datetime:
         boundary.datetime,
       timezone:
-        'Asia/Tokyo',
+        boundary.timezone,
       precision:
         boundary.precision,
       sourceId:
@@ -617,55 +551,29 @@ export function calculateMonthPillar(
     'calculateMonthPillar'
   );
 
-  const officialBoundary =
+  const boundary =
     getOfficialMonthBoundary(
       validDate
     );
 
-  if (officialBoundary) {
-    return buildMonthPillar(
-      officialBoundary.branchId,
-      yearStemId,
-      {
-        termId:
-          officialBoundary.termId,
-        nameJa:
-          officialBoundary.nameJa,
-        datetime:
-          officialBoundary.datetime,
-        timezone:
-          'Asia/Tokyo',
-        precision:
-          'official-minute',
-        sourceId:
-          `naoj-rekiyou-${officialBoundary.year}`,
-        dataPath:
-          'data/bazi/solar-term-boundaries.json',
-        warning: null
-      }
-    );
-  }
-
-  const fallbackBranch =
-    getFallbackMonthBranch(
-      validDate
-    );
-
   return buildMonthPillar(
-    fallbackBranch,
+    boundary.branchId,
     yearStemId,
     {
-      termId: null,
-      nameJa: null,
-      datetime: null,
+      termId:
+        boundary.termId,
+      nameJa:
+        boundary.nameJa,
+      datetime:
+        boundary.datetime,
       timezone:
-        'Asia/Tokyo',
+        boundary.timezone,
       precision:
-        'fallback-fixed-day',
-      sourceId: null,
+        boundary.precision,
+      sourceId:
+        boundary.sourceId,
       dataPath: null,
-      warning:
-        'month-boundary-official-data-missing'
+      warning: null
     }
   );
 }

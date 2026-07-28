@@ -133,14 +133,14 @@ const fallback = calculateYearPillar(
 
 assert.equal(
   fallback.boundary.precision,
-  'fallback-fixed-day',
-  '公式立春データ未登録年は暫定精度を表示すること'
+  'calculated-minute',
+  '公式立春データ未登録年も太陽黄経から分単位で計算すること'
 );
 
 assert.equal(
   fallback.boundary.warning,
-  'risshun-official-boundary-missing',
-  '公式立春データ未登録年は警告を表示すること'
+  null,
+  '固定日近似へ戻らないこと'
 );
 
 assert.throws(
