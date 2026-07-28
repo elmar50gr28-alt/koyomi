@@ -18,6 +18,7 @@
  registerSection('stop',c=>`【${c.voice.stop}】\n${line(c.scenario?.stop)}。一つでも出たら、運の点数より現実を優先するの。`);
  registerSection('review',c=>`【${c.voice.review}】\n${line(c.scenario?.review,'14日')}後に、始めた数・終えた数・負担・相手の行動から二つを比べてちょうだい。`);
  registerSection('evidence',c=>{const raw=(c.evidence||[]).filter(Boolean).join('／')||'算出結果を確認済み',glossary=globalThis.KOYOMI_DIVINATION_GLOSSARY;if(c.level==='beginner'){if(glossary){const g=glossary.beginner(raw);return`【${c.voice.evidence}】\n占いの結果を普通の言葉に直すと、${g.plain}。${g.notes.length?`\n\n【専門用語と読み】\n${g.notes.join('\n')}`:''}`}return`【${c.voice.evidence}】\n占いの結果を普通の言葉に直すと、${c.plain(raw)}。`}return`【${c.voice.evidence}】\n${c.phrase('evidence')}\n${glossary?glossary.annotate(raw):raw}。`});
+ registerSection('analysis',c=>{const items=Array.isArray(c.analysis)?c.analysis:[];if(!items.length)return'';return items.map((item,index)=>`【${line(item.title,'命式の読み')}】\n${index?'次はここよ。':'まず、ここを見なさい。'}${line(item.reading)}\nつまり、${line(item.meaning)}ってこと。${item.example?`\n現実ではね、${line(item.example)}`:''}${item.action?`\n姐さんからの宿題：${line(item.action)}`:''}`).join('\n\n')});
  registerSection('closing',c=>`【${c.voice.closing}】\n${line(c.closing)}`);
  return api
 });

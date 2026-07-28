@@ -17,6 +17,7 @@ export { explainBaziDecision, explainRule, getEvidence, PHASE3_CLASSICAL_INDEX }
 export { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
 export { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput, buildProfessionalEvidence, evaluateInterpretationTendencies, evaluateLuckInterpretations } from './interpretation/index.js';
 export { buildBaziBeginnerReading, buildBaziMitsunomeReadingInput, buildBaziProfessionalReading, buildBaziReading, validateBaziReading } from './reading/index.js';
+export { buildBaziChartInterpretation } from './reading/chart-interpretation.js';
 export { adaptIntegratedBaziReadingSource } from './reading/adapter.js';
 
 import { calculateBaziChart, calculateFourPillars, calculateTenGod, calculateTwelveStage, getHiddenStems } from './chart/index.js';

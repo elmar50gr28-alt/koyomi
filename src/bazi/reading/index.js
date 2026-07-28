@@ -1,4 +1,5 @@
 import { adaptIntegratedBaziReadingSource } from './adapter.js';
+import { buildBaziChartInterpretation } from './chart-interpretation.js';
 
 const READING_VERSION = 'bazi-japanese-reading-20260717';
 
@@ -94,6 +95,7 @@ const PROFESSIONAL_CATEGORIES = new Set(['decadeLuck', 'annualLuck', 'monthlyLuc
 export function buildBaziReading(baziResult, options = {}) {
   const adapted = adaptIntegratedBaziReadingSource(baziResult, options);
   baziResult = adapted.result;
+  const chartInterpretation = buildBaziChartInterpretation(baziResult);
   const locale = resolveLocale(options);
   const facts = extractFacts(baziResult, options);
   const sections = Object.fromEntries(CATEGORY_DEFS.map(([id, title, policy]) => [
@@ -118,6 +120,7 @@ export function buildBaziReading(baziResult, options = {}) {
     personId: facts.personId,
     executiveSummary,
     timingReading,
+    chartInterpretation,
     glossary: GLOSSARY,
     uiLabels: buildReadingUiLabels('en'),
     uiModel: buildUiModel(sections, executiveSummary, timingReading),
@@ -127,7 +130,7 @@ export function buildBaziReading(baziResult, options = {}) {
     text,
     beginnerText: text,
     professionalText,
-    mitsunomeInput,
+    mitsunomeInput: { ...mitsunomeInput, chartInterpretation },
     mitsunome: mitsunomeInput.voiceDrafts,
     quality: inspectReadingQuality(sections, text, professionalText),
     sourcePolicy: {
@@ -292,7 +295,10 @@ function localizeBaziReadingJa(reading, facts, options = {}) {
   }));
   const beginnerText = renderReadingTextJa(sections, 'beginner', executiveSummary, timingReading);
   const professionalText = renderReadingTextJa(sections, 'professional', executiveSummary, timingReading);
-  const mitsunomeInput = buildMitsunomeInputJa(facts, sections, beginnerText, professionalText, executiveSummary, timingReading, options);
+  const mitsunomeInput = {
+    ...buildMitsunomeInputJa(facts, sections, beginnerText, professionalText, executiveSummary, timingReading, options),
+    chartInterpretation: reading.chartInterpretation
+  };
   return {
     ...reading,
     locale: 'ja',

@@ -242,7 +242,7 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <section class="paper" id="personalResult"><h2>本鑑定結果</h2><div class="reading-hero"><div class="score-ring" id="personalScore">--</div><div><div class="verdict" id="personalVerdict">入力後に鑑定結果を表示します</div><div class="verdict-note" id="personalVerdictNote">四柱と複数占術を重ねて読みます。</div></div></div><div class="result-grid" id="personalMetrics"><div class="result-card"><b>日主</b><strong id="metricDayMaster">--</strong><small id="metricDayMasterNote">--</small></div><div class="result-card"><b>用神・喜忌</b><strong id="metricUseful">--</strong><small id="metricUsefulNote">--</small></div><div class="result-card"><b>宿曜・九星</b><strong id="metricSukuyo">--</strong><small id="metricSukuyoNote">--</small></div><div class="result-card"><b>現在運</b><strong id="metricCurrentLuck">--</strong><small id="metricCurrentLuckNote">--</small></div></div><div class="precision-note" id="precisionSummary"><b>精密判定：</b>鑑定後に、占術ごとの吉凶・一致度・入力データ確度を表示します。</div><div class="judgment-grid" id="methodJudgmentGrid"></div><h3>ミツノメ姐さんの三層鑑定</h3><div class="reading" id="overallReading">まだ鑑定していません。</div><div class="reading-length" id="readingLength">鑑定後に文章量と使用占術を表示します。</div><div class="actions" style="margin-top:10px"><button class="action" type="button" id="ledgerSavePersonalReading">この鑑定を人物台帳へ記録</button></div>
 <h3>各占術の本鑑定</h3><p class="compact-note">計算値の羅列ではなく、各占術をそれぞれ独立した鑑定文として読み、その後に統合鑑定へまとめます。</p>
 <nav class="reading-index"><a href="#reading-shichu">四柱推命</a><a href="#reading-sukuyo">宿曜</a><a href="#reading-kyusei">九星気学</a><a href="#reading-astrology">西洋占星術</a><a href="#reading-tarot">タロット</a><a href="#reading-runes">ルーン</a><a href="#reading-name">姓名判断</a><a href="#reading-numerology">数秘術</a><a href="#reading-kabbalah">カバラ・ゲマトリア</a><a href="#reading-rokusei">六星占術系</a><a href="#reading-timing">暦・時期</a></nav>
-<details class="divination-box" id="reading-shichu" open><summary>四柱推命 本鑑定</summary><div class="divination-reading" id="shichuReading">本鑑定後に表示します。</div><div class="divination-meta" id="shichuMeta"></div></details>
+<details class="divination-box" id="reading-shichu" open><summary>四柱推命 本鑑定</summary><details class="detail-box" open><summary>命式・五行・通変星</summary><div class="detail-content"><div class="pillar-grid" id="pillarGrid"></div><h4>五行バランス</h4><div class="element-bars" id="elementBars"></div><div class="kv-grid" id="shichuDetails"></div></div></details><div class="divination-reading" id="shichuReading">本鑑定後に表示します。</div><div class="divination-meta" id="shichuMeta"></div></details>
 <details class="divination-box" id="reading-sukuyo"><summary>宿曜占星術 本鑑定</summary><div class="divination-reading" id="sukuyoReading">本鑑定後に表示します。</div><div class="divination-meta" id="sukuyoMeta"></div></details>
 <details class="divination-box" id="reading-kyusei"><summary>九星気学 本鑑定</summary><div class="divination-reading" id="kyuseiReading">本鑑定後に表示します。</div><div class="divination-meta" id="kyuseiMeta"></div></details>
 <details class="divination-box" id="reading-astrology"><summary>西洋占星術 本鑑定（出生図・12ハウス・トランジット）</summary><div class="divination-reading" id="astrologyReading">本鑑定後に表示します。</div><div class="divination-meta" id="astrologyMeta"></div></details>
@@ -253,7 +253,6 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <details class="divination-box" id="reading-kabbalah"><summary>カバラ・ゲマトリア 本鑑定</summary><div class="divination-reading" id="kabbalahReading">本鑑定後に表示します。</div><div class="divination-meta" id="kabbalahMeta"></div></details>
 <details class="divination-box" id="reading-rokusei"><summary>六星占術系 周期本鑑定</summary><div class="divination-reading" id="rokuseiReading">本鑑定後に表示します。</div><div class="divination-meta" id="rokuseiMeta"></div><p class="compact-note">六星占術の公式サービスではなく、生年月日の60周期と12運命周期を用いた本アプリ独自の参考計算です。公式の運命星判定と一致することを保証しません。</p></details>
 <details class="divination-box" id="reading-timing"><summary>大運・流年・世界暦 本鑑定</summary><div class="divination-reading" id="timingReading">本鑑定後に表示します。</div><div class="divination-meta" id="timingMeta"></div></details>
-<details class="detail-box" open><summary>命式・五行・通変星</summary><div class="detail-content"><div class="pillar-grid" id="pillarGrid"></div><h4>五行バランス</h4><div class="element-bars" id="elementBars"></div><div class="kv-grid" id="shichuDetails"></div></div></details>
 <details class="detail-box"><summary>大運・流年・月運</summary><div class="detail-content"><div class="kv-grid" id="luckDetails"></div><div class="scale-wrap"><table class="scale-table"><thead><tr><th>区分</th><th>期間</th><th>干支</th><th>信号</th><th>読み</th></tr></thead><tbody id="luckTable"></tbody></table></div></div></details>
 <details class="detail-box"><summary>宿曜・九星・姓名・ゲマトリア</summary><div class="detail-content"><div class="kv-grid" id="auxDetails"></div></div></details>
 <details class="detail-box" open><summary>西洋占星術・出生図／ハウス／トランジット</summary><div class="detail-content"><div class="accuracy-note">出生時刻・緯度経度・UTC時差からASC／MCと12ハウスを近似計算します。天体位置は単体HTML向け低精度天文計算で、専門エフェメリスほどの精度はありません。</div><div class="astro-summary-grid" id="astroAngles"></div><h4>天体配置</h4><div class="astro-wheel-list" id="astroDetails"></div><div class="astro-panel" id="astroBalance"></div><h4>出生図アスペクト</h4><div id="aspectList"></div><h4>12ハウスと入室天体</h4><div class="scale-wrap"><table class="astro-house-table"><thead><tr><th>室</th><th>カスプ</th><th>主題</th><th>天体</th></tr></thead><tbody id="astroHouseTable"></tbody></table></div><h4>選択日のトランジット</h4><div id="transitList"></div></div></details>
@@ -2084,6 +2083,7 @@ function koyomiBaziGuardrailHtml(reading,ja){
 }
 function koyomiBaziReadingHtml(reading){
   const summary=reading.executiveSummary||{};
+  const guidance=summary.integratedGuidance||{};
   const sections=reading.sections||{};
   const overview=sections.overall?.publicDisplay||{};
   const labels=koyomiBaziLabels(reading);
@@ -2119,6 +2119,21 @@ function koyomiBaziReadingHtml(reading){
     <p><b>${ja?'\u8a08\u7b97\u30d0\u30fc\u30b8\u30e7\u30f3':'Calculation version'}</b> ${koyomiEscapeHtml(calculationVersion)}</p>
     <pre style="white-space:pre-wrap;overflow-wrap:anywhere">${koyomiEscapeHtml(technicalRows)}</pre>
   </div></details>`;
+  const chart=reading.chartInterpretation;
+  const sisterText=chart&&window.KOYOMI_PERSONA_RENDERER?.render({
+    system:'四柱推命の命式',
+    opening:chart.introduction,
+    axis:'記号を一つずつ、現実でどう使うかまで読むわよ。',
+    result:chart.conclusion,
+    analysis:chart.items,
+    evidence:chart.evidence,
+    closing:chart.closing,
+    order:['opening','result','analysis','evidence','closing']
+  },{
+    voice:(document.getElementById('oracleModeSetting')?.value==='zubat'?'zubat':'sister'),
+    level:document.getElementById('readingModeSetting')?.value||'standard'
+  });
+  const chartReading=sisterText?`<details open class="koyomi-bazi-chart-reading"><summary>${koyomiEscapeHtml(chart.title)}</summary><div class="koyomi-bazi-section" style="white-space:pre-wrap">${koyomiEscapeHtml(sisterText)}</div></details>`:'';
   return `<div class="koyomi-bazi-reading">
     <section class="koyomi-bazi-summary">
       <div class="koyomi-bazi-view-head"><h3>${ja?'四柱推命の要点':'Bazi at a glance'}</h3></div>
@@ -2133,6 +2148,7 @@ function koyomiBaziReadingHtml(reading){
       ${guidance.strength?`<p><b>${ja?'\u6d3b\u304b\u305b\u308b\u5f37\u307f':'Usable strength'}</b>${koyomiEscapeHtml(guidance.strength)}</p>`:''}
     </section>
     ${transparency}
+    ${chartReading}
     ${detailHtml}
     ${professional}
   </div>`;
