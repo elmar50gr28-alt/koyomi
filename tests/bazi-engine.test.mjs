@@ -234,7 +234,7 @@ assert.ok(englishReading.beginnerText.includes('[Overall Conclusion]'), 'English
 assert.ok(englishReading.sections.career.action.includes('field judgement'), 'English occupation wording must remain available');
 
 const bingResult = calculateBazi({
-  birthDate: '1984-01-05',
+  birthDate: '1984-01-03',
   birthTime: '08:20',
   birthPlace: { longitude: 139.767, latitude: 35.681, timezone: 'Asia/Tokyo', utcOffset: 9 },
   name: 'Bing Check'

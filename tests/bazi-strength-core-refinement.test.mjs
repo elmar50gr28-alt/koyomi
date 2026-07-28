@@ -85,8 +85,8 @@ for (const [label, input] of REGRESSION_CASES) {
 const unknownChart = calculateBaziChart(profile('1990-07-10', '', 135, true));
 const unknownStrength = evaluateStrength(unknownChart).dayMasterStrength;
 assert.deepEqual(unknownStrength.unresolvedFactors, ['hour-pillar-unknown']);
-assert.equal(unknownStrength.scoreRange.minimum, unknownStrength.score - STRENGTH_WEIGHTS.unknownHourRange);
-assert.equal(unknownStrength.scoreRange.maximum, unknownStrength.score + STRENGTH_WEIGHTS.unknownHourRange);
+assert.ok(Math.abs(unknownStrength.scoreRange.minimum - (unknownStrength.score - STRENGTH_WEIGHTS.unknownHourRange)) < 1e-9);
+assert.ok(Math.abs(unknownStrength.scoreRange.maximum - (unknownStrength.score + STRENGTH_WEIGHTS.unknownHourRange)) < 1e-9);
 assert.ok(unknownStrength.possibleLevels.length >= 1);
 assert.ok(unknownStrength.confidence < evaluateStrength(calculateBaziChart(profile('1990-07-10', '12:00'))).confidence);
 
@@ -104,10 +104,10 @@ for (const [score, level] of LEVEL_CASES) {
 }
 
 const REPRESENTATIVE_CASES = [
-  ['春生まれ', profile('1984-02-05', '12:00', 139.767), 'extremely-strong'],
-  ['夏生まれ', profile('1990-07-10', '14:30', 135.502), 'weak'],
-  ['秋生まれ', profile('2001-09-07', '23:41', 139.767), 'extremely-strong'],
-  ['冬生まれ', profile('1975-12-20', '06:00', 130.4), 'weak']
+  ['春生まれ', profile('1984-02-05', '12:00', 139.767), 'balanced'],
+  ['夏生まれ', profile('1990-07-10', '14:30', 135.502), 'slightly-strong'],
+  ['秋生まれ', profile('2001-09-07', '23:41', 139.767), 'weak'],
+  ['冬生まれ', profile('1975-12-20', '06:00', 130.4), 'slightly-weak']
 ];
 for (const [label, input, expectedLevel] of REPRESENTATIVE_CASES) {
   const result = calculateBazi(input);

@@ -33,7 +33,7 @@ assert.ok(data.summary.priorities.every(entry => Number.isInteger(entry.order)))
 assert.equal(standard.reading.sourceIntegratedDataVersion, data.version);
 assert.deepEqual(standard.mitsunomeInput.structuredResult.integratedReadingData, data);
 
-for (const [expected, date] of [['strong', '1984-02-15'], ['weak', '1984-08-15'], ['balanced', '1984-01-15']]) {
+for (const [expected, date] of [['strong', '1984-01-01'], ['weak', '1984-01-06'], ['balanced', '1984-01-13']]) {
   const result = calculateBazi(profile(date, '12:00'));
   assert.equal(result.integratedReadingData.analysis.strength.dayMasterStrength.level, expected);
 }

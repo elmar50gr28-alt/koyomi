@@ -532,7 +532,7 @@ function solarTerm(d){const lon=solarLongitude(d),idx=mod(Math.floor(lon/15),24)
 function seventyTwo(d){const t=solarTerm(d),q=Math.floor(mod(t.lon,15)/5),idx=mod(t.index*3+q,72);return{name:KO72[idx],phase:q+1,term:t.name}}
 function mayan(d){const count=jdn(d)-584283,tzNum=mod(count+3,13)+1,tzNames=['イミシュ','イク','アクバル','カン','チッカン','キミ','マニク','ラマト','ムルク','オク','チュエン','エブ','ベン','イシュ','メン','キブ','カバン','エツナブ','カワク','アハウ'],haabNames=['ポプ','ウォ','シプ','ソツ','セック','シュル','ヤシュキン','モル','チェン','ヤシュ','サク','ケフ','マク','カンキン','ムアン','パシュ','カヤブ','クムク','ワイェブ'],tzName=tzNames[mod(count+19,20)];let h=mod(count+348,365),mi=Math.min(18,Math.floor(h/20)),day=mi===18?h-360:h%20;return{tz:`${tzNum} ${tzName}`,haab:`${day} ${haabNames[mi]}`,angle:mod(count,260)/260*360}}
 function zodiacFromLongitude(lon){return ZODIAC[Math.floor(mod(lon,360)/30)]}function zodiac(d){return zodiacFromLongitude(solarLongitude(d))}function decan(d){const lon=solarLongitude(d),sign=Math.floor(lon/30),dec=Math.floor(mod(lon,30)/10)+1;return `${ZODIAC[sign]} 第${dec}デカン`}
-function dayPillar(d){const idx=mod(jdn(d)+49,60);return{index:idx,text:STEMS[idx%10]+BRANCHES[idx%12],stem:STEMS[idx%10],branch:BRANCHES[idx%12],stemIndex:idx%10,branchIndex:idx%12}}
+function dayPillar(d){const civilDate=new Date(d.getFullYear(),d.getMonth(),d.getDate(),12);const idx=mod(jdn(civilDate)+49,60);return{index:idx,text:STEMS[idx%10]+BRANCHES[idx%12],stem:STEMS[idx%10],branch:BRANCHES[idx%12],stemIndex:idx%10,branchIndex:idx%12}}
 function yearPillar(d){const y=solarLongitude(d)<315?d.getFullYear()-1:d.getFullYear(),idx=mod(y-4,60);return{index:idx,text:STEMS[idx%10]+BRANCHES[idx%12],stem:STEMS[idx%10],branch:BRANCHES[idx%12],stemIndex:idx%10,branchIndex:idx%12,year:y}}
 function monthPillar(d){const y=yearPillar(d),mNo=Math.floor(mod(solarLongitude(d)-315,360)/30),branchIndex=mod(2+mNo,12),stemIndex=mod((y.stemIndex%5)*2+2+mNo,10),idx=mod(stemIndex+branchIndex*10,60);return{index:idx,text:STEMS[stemIndex]+BRANCHES[branchIndex],stem:STEMS[stemIndex],branch:BRANCHES[branchIndex],stemIndex,branchIndex,monthNo:mNo}}
 function settings(){return{boundary:+($('schoolDayBoundary')?.value||0),hidden:$('schoolHidden')?.value||'weighted',kuubo:$('schoolKuubo')?.value||'jun',solar:$('schoolSolar')?.value||'true',term:$('schoolTerm')?.value||'longitude'}}
@@ -2144,6 +2144,20 @@ function koyomiRenderBaziReading(){
     const locale=koyomiBaziLocale();
     const reading=KOYOMI_BAZI.buildBaziReading(result,{locale});
     window.KOYOMI_LAST_BAZI_READING={result,reading};
+    const pillars=result.chart?.pillars||{};
+    const pillarOrder=[['year','年柱'],['month','月柱'],['day','日柱'],['hour','時柱']];
+    const pillarGrid=document.getElementById('pillarGrid');
+    if(pillarGrid){
+      pillarGrid.innerHTML=pillarOrder.map(([role,name])=>{
+        const pillar=pillars[role];
+        if(!pillar)return `<div class="pillar"><div class="cap">${name}</div><div class="kanji">不明</div></div>`;
+        const tenGodLabel=pillar.stem?.tenGod?.kanji||'日主';
+        const stageLabel=pillar.branch?.twelveStage?.stageId||'';
+        return `<div class="pillar"><div class="cap">${name}</div><div class="kanji">${koyomiEscapeHtml(pillar.label)}</div><div class="sub">${koyomiEscapeHtml(tenGodLabel)}${stageLabel?`／${koyomiEscapeHtml(stageLabel)}`:''}</div></div>`;
+      }).join('');
+    }
+    const dayMaster=document.getElementById('metricDayMaster');
+    if(dayMaster&&pillars.day?.stem?.kanji)dayMaster.textContent=pillars.day.stem.kanji;
     const shichu=document.getElementById('shichuReading');
     if(shichu){
       koyomiEnsureBaziReadingStyle();
