@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 
-import { calculateTrueSolarTime } from '../src/bazi/calendar/index.js';
+import {
+  calculateEquationOfTimeMinutes,
+  calculateTrueSolarTime
+} from '../src/bazi/calendar/index.js';
 import { prepareBirthCalculation } from '../src/bazi/chart/birth-time.js';
 import { applyBirthTimeCorrection } from '../src/bazi/chart/time-correction.js';
 
@@ -9,6 +12,8 @@ const birthLocal = new Date('2026-03-06T00:05:00+09:00');
 const missingLongitude = calculateTrueSolarTime(birthLocal, null, 9);
 assert.equal(missingLongitude.date.getTime(), birthLocal.getTime());
 assert.equal(missingLongitude.minutesOffset, 0);
+assert.equal(missingLongitude.longitudeMinutes, 0);
+assert.equal(missingLongitude.equationOfTimeMinutes, 0);
 assert.equal(missingLongitude.precision, 'timezone-only');
 assert.equal(missingLongitude.warning, 'longitude-missing');
 
@@ -26,8 +31,23 @@ const solar = applyBirthTimeCorrection(
   { longitude: 122.94, utcOffset: 9 },
   'true'
 );
-assert.equal(solar.minutesOffset, (122.94 - 135) * 4);
+assert.equal(solar.longitudeMinutes, (122.94 - 135) * 4);
+assert.equal(
+  solar.minutesOffset,
+  solar.longitudeMinutes + solar.equationOfTimeMinutes
+);
+assert.equal(solar.precision, 'longitude-equation-of-time');
 assert.ok(solar.date.getTime() < birthLocal.getTime());
+
+const februaryEquation = calculateEquationOfTimeMinutes(
+  new Date('1980-02-05T02:00:00+09:00'),
+  9
+);
+assert.ok(
+  februaryEquation < -13 &&
+    februaryEquation > -15,
+  'February equation of time is close to its annual negative maximum'
+);
 
 const profile = {
   birthData: {

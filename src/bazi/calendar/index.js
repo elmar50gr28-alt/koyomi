@@ -413,6 +413,63 @@ export function julianDay(date) {
   );
 }
 
+export function calculateEquationOfTimeMinutes(
+  datetime,
+  timezoneOffset = 9
+) {
+  const base = requireValidDate(
+    datetime,
+    'calculateEquationOfTimeMinutes'
+  );
+  const offsetHours = Number.isFinite(Number(timezoneOffset))
+    ? Number(timezoneOffset)
+    : 9;
+  const local = new Date(
+    base.getTime() +
+    offsetHours * 3600000
+  );
+  const year = local.getUTCFullYear();
+  const start = Date.UTC(year, 0, 1);
+  const dayOfYear =
+    Math.floor(
+      (
+        Date.UTC(
+          year,
+          local.getUTCMonth(),
+          local.getUTCDate()
+        ) -
+        start
+      ) / 86400000
+    ) + 1;
+  const daysInYear =
+    Date.UTC(year + 1, 0, 1) -
+      start ===
+    366 * 86400000
+      ? 366
+      : 365;
+  const hour =
+    local.getUTCHours() +
+    local.getUTCMinutes() / 60 +
+    local.getUTCSeconds() / 3600;
+  const gamma =
+    2 *
+    Math.PI /
+    daysInYear *
+    (
+      dayOfYear -
+      1 +
+      (hour - 12) / 24
+    );
+
+  return 229.18 * (
+    0.000075 +
+    0.001868 * Math.cos(gamma) -
+    0.032077 * Math.sin(gamma) -
+    0.014615 * Math.cos(2 * gamma) -
+    0.040849 * Math.sin(2 * gamma)
+  );
+}
+
 export function calculateTrueSolarTime(
   datetime,
   longitude,
@@ -433,6 +490,8 @@ export function calculateTrueSolarTime(
   ) {
     return {
       date: base,
+      longitudeMinutes: 0,
+      equationOfTimeMinutes: 0,
       minutesOffset: 0,
       precision: 'timezone-only',
       warning: 'longitude-missing'
@@ -442,19 +501,29 @@ export function calculateTrueSolarTime(
   const standardLongitude =
     Number(timezoneOffset) * 15;
 
-  const minutesOffset =
+  const longitudeMinutes =
     (
       Number(longitude) -
       standardLongitude
     ) * 4;
+  const equationOfTimeMinutes =
+    calculateEquationOfTimeMinutes(
+      base,
+      timezoneOffset
+    );
+  const minutesOffset =
+    longitudeMinutes +
+    equationOfTimeMinutes;
 
   return {
     date: new Date(
       base.getTime() +
       minutesOffset * 60000
     ),
+    longitudeMinutes,
+    equationOfTimeMinutes,
     minutesOffset,
-    precision: 'longitude',
+    precision: 'longitude-equation-of-time',
     warning: null
   };
 }
