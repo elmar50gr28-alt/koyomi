@@ -28,6 +28,11 @@ assert.deepEqual(
   ['庚申', '戊寅', '戊申', '癸丑'],
   '1980年2月5日2時・長野県中野市は四柱すべてを正しく算出すること'
 );
+assert.equal(result.normalizedInput.place.longitude,138.366667,'中野市の経度を計算入力に保持すること');
+assert.ok(Math.abs(result.calendarCalculation.trueSolarTime.longitudeMinutes-13.466668)<0.0001,'中野市では日本標準子午線との差を+13分28秒として補正すること');
+assert.ok(Math.abs(result.calendarCalculation.trueSolarTime.equationOfTimeMinutes-(-13.6756059))<0.0001,'1980年2月5日の均時差を約-13分41秒として補正すること');
+assert.ok(Math.abs(result.calendarCalculation.trueSolarTime.minutesOffset-(-0.2089379))<0.0001,'経度差と均時差を合算した真太陽時補正を保持すること');
+assert.equal(result.calendarCalculation.trueSolarTime.date.toISOString(),'1980-02-04T16:59:47.463Z','入力02:00を真太陽時01:59:47へ補正すること');
 
 for (const time of ['00:30:00', '02:00:00', '12:00:00', '22:30:00']) {
   assert.equal(
@@ -66,5 +71,10 @@ assert.ok(
   appSource.includes("pillarOrder=[['year','年柱'],['month','月柱'],['day','日柱'],['hour','時柱']]"),
   '画面に年・月・日・時の順で共通計算結果を表示すること'
 );
+assert.ok(appSource.includes('async function ensureBirthPlaceCoordinates()'),'出生地名から座標を確定する入力ガードがあること');
+assert.ok(appSource.includes("if(!await ensureBirthPlaceCoordinates())return"),'座標未確定のまま本鑑定を実行しないこと');
+assert.ok(appSource.includes("window.KOYOMI_BAZI_READING?.render()"),'座標確定後に共通四柱コアを再計算すること');
+assert.ok(!appSource.includes("longitude:Number(value('longitude'))||135"),'共通四柱コアへ不明な経度を135度として渡さないこと');
+assert.ok(!appSource.includes("lon:isFinite(lon)?lon:135"),'旧鑑定でも不明な経度を135度として扱わないこと');
 
 console.log('Bazi four-pillar regression passed: Nakano fixture, civil day, month stems, hour stem and UI source');

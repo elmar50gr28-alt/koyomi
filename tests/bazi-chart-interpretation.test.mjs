@@ -5,7 +5,7 @@ import { calculateBazi, buildBaziReading } from '../src/bazi/index.js';
 
 const result=calculateBazi({
   displayName:'命式解説確認',
-  birthData:{date:'1980-02-05',time:'02:00',timeZone:'Asia/Tokyo',latitude:36.7419,longitude:138.3694,timeUnknown:false}
+  birthData:{date:'1980-02-05',time:'02:00',timeUnknown:false,place:{timeZone:'Asia/Tokyo',utcOffset:9,latitude:36.7419,longitude:138.3694}}
 });
 const reading=buildBaziReading(result,{locale:'ja'});
 const chart=reading.chartInterpretation;
@@ -34,7 +34,7 @@ assert.ok(text.includes('【柱同士の関係】'));
 
 const unknown=calculateBazi({
   displayName:'時刻不明確認',
-  birthData:{date:'1980-02-05',time:'',timeZone:'Asia/Tokyo',latitude:36.7419,longitude:138.3694,timeUnknown:true}
+  birthData:{date:'1980-02-05',time:'',timeUnknown:true,place:{timeZone:'Asia/Tokyo',utcOffset:9,latitude:36.7419,longitude:138.3694}}
 });
 const unknownHour=buildBaziReading(unknown,{locale:'ja'}).chartInterpretation.items.find(item=>item.id==='pillar-hour');
 assert.match(unknownHour.reading,/出生時刻が不明/);
