@@ -116,10 +116,12 @@ function uncertainties(result) {
   if (result.normalizedInput?.timeUnknown) values.push('birth-time-unknown');
   const time = String(result.normalizedInput?.time || '');
   if (/^(23|00):/.test(time)) values.push('day-boundary-proximity');
-  const corrected = correctedBirthDateTime(result);
-  const correctedTime = corrected ? new Date(corrected).getTime() : NaN;
-  if (Number.isFinite(correctedTime) && array(result.calendarCalculation?.solarTerms).some(term =>
-    Math.abs(new Date(term.datetime).getTime() - correctedTime) <= 60 * 60 * 1000
+  const boundaryMoment =
+    isoDateTime(result.calendarCalculation?.boundaryDate) ||
+    correctedBirthDateTime(result);
+  const boundaryTime = boundaryMoment ? new Date(boundaryMoment).getTime() : NaN;
+  if (Number.isFinite(boundaryTime) && array(result.calendarCalculation?.solarTerms).some(term =>
+    Math.abs(new Date(term.datetime).getTime() - boundaryTime) <= 60 * 60 * 1000
   )) values.push('solar-term-boundary-proximity');
   return unique(values).map(value => item(`uncertainty-${value}`, value, 'integration', 'uncertainty', {
     certainty: 'reference', evidence: [value]
