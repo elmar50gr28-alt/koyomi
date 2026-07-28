@@ -64,6 +64,9 @@ export function prepareBirthCalculation(
       trueSolarTime?.date ||
       birthLocal ||
       new Date(),
+    boundaryCalculationDate:
+      birthLocal ||
+      new Date(),
     solarTerms: birthLocal
       ? calculateSolarTerms(
           birthLocal,

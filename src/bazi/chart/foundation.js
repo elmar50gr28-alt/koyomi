@@ -16,15 +16,16 @@ export function calculatePillarFoundation(
 ) {
   const {
     timeUnknown = false,
-    schoolConfig = {}
+    schoolConfig = {},
+    yearMonthDate = calculationDate
   } = options;
 
   const year = calculateYearPillar(
-    calculationDate
+    yearMonthDate
   );
 
   const month = calculateMonthPillar(
-    calculationDate,
+    yearMonthDate,
     year.stem.id
   );
 

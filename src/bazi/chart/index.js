@@ -22,12 +22,14 @@ export function calculateBaziChart(profile, schoolConfigInput = {}) {
     birthLocal,
     trueSolarTime,
     calculationDate,
+    boundaryCalculationDate,
     solarTerms,
     warnings
   } = prepareBirthCalculation(profile, schoolConfigInput);
   const { year, month, day, hour } = calculatePillarFoundation(calculationDate, {
     timeUnknown: normalizedInput.timeUnknown,
-    schoolConfig
+    schoolConfig,
+    yearMonthDate: boundaryCalculationDate
   });
   const derived = buildDerivedChartInfo({ year, month, day, hour });
   return {
@@ -38,6 +40,11 @@ export function calculateBaziChart(profile, schoolConfigInput = {}) {
       timezone: normalizedInput.place.timezone,
       utcOffset: normalizedInput.place.utcOffset,
       trueSolarTime,
+      boundaryDate: boundaryCalculationDate.toISOString(),
+      pillarTimeBasis: {
+        yearMonth: 'astronomical-instant',
+        dayHour: trueSolarTime?.precision || 'standard-time'
+      },
       solarTerms
     },
     chart: {

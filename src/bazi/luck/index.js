@@ -201,6 +201,10 @@ function decideDirection(gender, yearYang, schoolConfig = {}) {
 }
 
 function birthCalculationDate(chartResult) {
+  const boundaryDate = validDate(
+    chartResult.calendarCalculation?.boundaryDate
+  );
+  if (boundaryDate) return boundaryDate;
   const date = chartResult.normalizedInput?.date;
   if (!date) return null;
   const time = chartResult.normalizedInput?.timeUnknown ? '00:00' : chartResult.normalizedInput?.time || '00:00';

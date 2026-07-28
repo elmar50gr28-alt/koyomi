@@ -1,4 +1,4 @@
-export { calculateEquationOfTimeMinutes, calculateSolarTerms, calculateTrueSolarTime, julianDay } from './calendar/index.js';
+export { calculateEquationOfTimeMinutes, calculateMonthPillar, calculateSolarTerms, calculateTrueSolarTime, calculateYearPillar, julianDay } from './calendar/index.js';
 export { calculatePillarFoundation } from './chart/foundation.js';
 export { prepareBirthCalculation } from './chart/birth-time.js';
 export { applyBirthTimeCorrection } from './chart/time-correction.js';
