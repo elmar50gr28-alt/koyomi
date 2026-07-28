@@ -80,6 +80,7 @@ for(const route of ['calendar','personal','ledger','mundane','settings'])assert.
 assert.ok(today.includes('<a class="home-return" href="index.html">← こよみホームへ戻る</a>'),'today page must provide a home return link');
 assert.ok(!today.includes("$$('.bottomnav button')"),'today navigation must not use placeholder drawer handlers');
 assert.ok(app.includes('function koyomiBaziChartTableHtml(pillars)'), 'Bazi results must render a structured chart table');
+assert.match(app, /id="reading-shichu"[\s\S]*id="pillarGrid"[\s\S]*id="shichuReading"/, 'Bazi chart and prose must share the Bazi reading frame, with chart first');
 for (const label of ['天通変', '蔵干', '地通変', '十二運']) {
   assert.ok(app.includes(label), `${label} must remain visible in the Bazi chart table`);
 }
