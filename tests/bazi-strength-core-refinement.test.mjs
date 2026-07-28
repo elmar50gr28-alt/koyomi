@@ -104,7 +104,7 @@ for (const [score, level] of LEVEL_CASES) {
 }
 
 const REPRESENTATIVE_CASES = [
-  ['春生まれ', profile('1984-02-04', '12:00', 139.767), 'extremely-strong'],
+  ['春生まれ', profile('1984-02-05', '12:00', 139.767), 'extremely-strong'],
   ['夏生まれ', profile('1990-07-10', '14:30', 135.502), 'weak'],
   ['秋生まれ', profile('2001-09-07', '23:41', 139.767), 'extremely-strong'],
   ['冬生まれ', profile('1975-12-20', '06:00', 130.4), 'weak']

@@ -160,14 +160,14 @@ const fallback = calculateMonthPillar(
 
 assert.equal(
   fallback.boundary.precision,
-  'fallback-fixed-day',
-  '正式データ未登録年は暫定精度を表示すること'
+  'calculated-minute',
+  '正式データ未登録年も太陽黄経から分単位で計算すること'
 );
 
 assert.equal(
   fallback.boundary.warning,
-  'month-boundary-official-data-missing',
-  '正式データ未登録年は警告を表示すること'
+  null,
+  '固定日近似へ戻らないこと'
 );
 
 assert.throws(
