@@ -196,7 +196,17 @@ export function buildIntegratedBaziReadingData(result, options = {}) {
       unresolved: dedupe([...array(strengthDetails.unresolvedFactors).map((value, index) => item(`strength-unresolved-${index}`, value, 'strength', 'unresolved-factor')), ...conflictItems])
     },
     luck: {
-      direction: result.luckCycles?.direction || null, start: clone({ age: result.luckCycles?.startAge, date: result.luckCycles?.startDate, boundary: result.luckCycles?.startBoundary }),
+      direction: result.luckCycles?.direction || null,
+      directionBasis: clone(result.luckCycles?.directionBasis || null),
+      start: clone({
+        age: result.luckCycles?.startAge,
+        detail: result.luckCycles?.startAgeDetail,
+        date: result.luckCycles?.startDate,
+        boundary: result.luckCycles?.startBoundary,
+        method: result.luckCycles?.startMethod,
+        range: result.luckCycles?.startAgeRange,
+        conversion: result.luckCycles?.startConversion
+      }),
       decades: clone(cycles), currentDecade: periodData(activeDecade, favorable, unfavorable), annual: clone(result.luckCycles?.annual || []),
       currentAnnual: periodData(annual, favorable, unfavorable), monthly: clone(result.luckCycles?.monthly || []), currentMonthly: periodData(monthly, favorable, unfavorable)
     },
