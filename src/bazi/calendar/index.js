@@ -195,6 +195,15 @@ const JST_YEAR_FORMATTER = new Intl.DateTimeFormat('en-US', {
   year: 'numeric'
 });
 
+const JST_DATE_TIME_FORMATTER = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Asia/Tokyo',
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  hourCycle: 'h23'
+});
+
 export function resolveSchoolConfig(config = {}) {
   const schoolId = config.schoolId || 'koyomi-integrated';
 
@@ -276,6 +285,15 @@ function requireValidDate(value, functionName) {
 function getJstYear(date) {
   return Number(
     JST_YEAR_FORMATTER.format(date)
+  );
+}
+
+function getJstDateTimeParts(date) {
+  return Object.fromEntries(
+    JST_DATE_TIME_FORMATTER
+      .formatToParts(date)
+      .filter(part => part.type !== 'literal')
+      .map(part => [part.type, Number(part.value)])
   );
 }
 
@@ -363,11 +381,11 @@ function buildMonthPillar(
     (
       stemStart -
       1 +
-      (
+      ((
         branchOrder -
         3 +
         12
-      )
+      ) % 12)
     ) % 10;
 
   const stem = STEMS[stemIndex];
@@ -584,25 +602,25 @@ export function calculateDayPillar(date) {
     'calculateDayPillar'
   );
 
-  const base =
-    new Date(1984, 1, 2);
-
-  const days = Math.floor(
-    (
-      Date.UTC(
-        validDate.getFullYear(),
-        validDate.getMonth(),
-        validDate.getDate()
-      ) -
-      Date.UTC(
-        base.getFullYear(),
-        base.getMonth(),
-        base.getDate()
-      )
-    ) / 86400000
+  const { year, month, day } =
+    getJstDateTimeParts(validDate);
+  const a = Math.floor(
+    (14 - month) / 12
   );
+  const y = year + 4800 - a;
+  const m = month + 12 * a - 3;
+  const civilJulianDay =
+    day +
+    Math.floor((153 * m + 2) / 5) +
+    365 * y +
+    Math.floor(y / 4) -
+    Math.floor(y / 100) +
+    Math.floor(y / 400) -
+    32045;
 
-  return cyclePillar(days);
+  return cyclePillar(
+    civilJulianDay + 49
+  );
 }
 
 export function calculateHourPillar(
@@ -619,8 +637,8 @@ export function calculateHourPillar(
     'calculateHourPillar'
   );
 
-  const hour =
-    validDate.getHours();
+  const { hour } =
+    getJstDateTimeParts(validDate);
 
   const branchIndex =
     hour === 23
@@ -667,8 +685,25 @@ export function buildBirthDateTime(
   const time =
     normalized.time ||
     '00:00';
+  const [year, month, day] =
+    normalized.date
+      .split('-')
+      .map(Number);
+  const [hour, minute] =
+    time
+      .split(':')
+      .map(Number);
+  const utcOffset =
+    Number(normalized.place?.utcOffset ?? 9);
 
   return new Date(
-    `${normalized.date}T${time}:00`
+    Date.UTC(
+      year,
+      month - 1,
+      day,
+      hour,
+      minute
+    ) -
+    utcOffset * 3600000
   );
 }
