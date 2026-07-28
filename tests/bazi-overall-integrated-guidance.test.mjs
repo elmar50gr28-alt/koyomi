@@ -26,6 +26,6 @@ for (const field of ['conclusion', 'evidenceSummary', 'recommendation', 'caution
 assert.ok(!app.includes('Bazi View 2026.07.22-1'), 'obsolete visible Bazi version must be removed');
 
 const serviceWorker = await readFile('service-worker.js', 'utf8');
-assert.ok(serviceWorker.includes("koyomi-foundation-20260728-68"), 'cache generation must include the solar-term rollout');
+assert.ok(serviceWorker.includes("koyomi-foundation-20260728-69"), 'cache generation must include the Bazi chart interpretation rollout');
 
 console.log('Bazi overall integrated guidance passed');
