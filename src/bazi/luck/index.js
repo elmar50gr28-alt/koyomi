@@ -4,7 +4,8 @@ import { calculateTenGod, calculateTwelveStage, getHiddenStems } from '../chart/
 import { evaluateBranchRelationSet, evaluateStemRelationSet } from '../relations/index.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const MONTHS_PER_TERM_DAY = 4;
+const TRADITIONAL_DAYS_PER_YEAR = 3;
+const TROPICAL_YEAR_DAYS = 365.2425;
 
 export function calculateLuckCycles(chartResult, profileOrSchoolConfig = {}, maybeSchoolConfig = {}) {
   const profile = profileOrSchoolConfig?.birthData || profileOrSchoolConfig?.gender ? profileOrSchoolConfig : chartResult.input || {};
@@ -22,10 +23,10 @@ export function calculateLuckCycles(chartResult, profileOrSchoolConfig = {}, may
     return buildLuckPeriod(chartResult, pillar, {
       scope: 'decade',
       index: index + 1,
-      startAge: round(start.startAge + index * 10, 2),
-      endAge: round(start.startAge + index * 10 + 9, 2),
+      startAge: round(start.startAge + index * 10, 4),
+      endAge: round(start.startAge + (index + 1) * 10, 4),
       startDate,
-      endDate: nextStartDate ? new Date(nextStartDate.getTime() - DAY_MS) : null,
+      endDate: nextStartDate ? new Date(nextStartDate.getTime() - 1) : null,
       confidence: directionInfo.confidence,
       warnings: start.warnings
     });
@@ -43,10 +44,14 @@ export function calculateLuckCycles(chartResult, profileOrSchoolConfig = {}, may
     schoolId: schoolConfig.schoolId || chartResult.chart?.schoolId,
     direction: directionInfo.direction,
     directionRule: directionInfo.ruleId,
+    directionBasis: directionInfo.basis,
     startAge: start.startAge,
     startAgeDetail: start.startAgeDetail,
-    startDate: isoDate(start.startDate),
+    startDate: isoDateTime(start.startDate),
     startBoundary: start.boundary,
+    startMethod: start.method,
+    startAgeRange: start.startAgeRange,
+    startConversion: start.conversion,
     cycles,
     annual,
     monthly,
@@ -73,9 +78,11 @@ export function calculateLuckStart(chartResult, direction = 'forward') {
     };
   }
   const terms = surroundingSolarTerms(birthDate);
-  const boundary = direction === 'reverse'
-    ? [...terms].reverse().find(term => term.date <= birthDate)
-    : terms.find(term => term.date >= birthDate);
+  const boundary = selectLuckStartBoundary(
+    birthDate,
+    terms,
+    direction
+  );
   if (!boundary) {
     return {
       startAge: 0,
@@ -85,20 +92,24 @@ export function calculateLuckStart(chartResult, direction = 'forward') {
       warnings: ['luck-start-solar-term-missing']
     };
   }
-  const distanceDays = Math.abs(boundary.date.getTime() - birthDate.getTime()) / DAY_MS;
-  // The configured schools use the traditional conversion: three days to one
-  // year. Expressing it as four months per day keeps boundary rounding explicit.
-  const totalMonths = Math.round(distanceDays * MONTHS_PER_TERM_DAY);
-  const startDate = addMonths(birthDate, totalMonths);
+  const resolved = resolveLuckStart(
+    birthDate,
+    boundary
+  );
   const warning = boundary.precision === 'official-minute' ? null : 'luck-start-boundary-fallback';
+  const startAgeRange = chartResult.normalizedInput?.timeUnknown
+    ? calculateUnknownTimeRange(
+        chartResult,
+        direction
+      )
+    : null;
   return {
-    startAge: round(totalMonths / 12, 2),
-    startAgeDetail: {
-      years: Math.floor(totalMonths / 12),
-      months: totalMonths % 12,
-      distanceDays: round(distanceDays, 4)
-    },
-    startDate,
+    startAge: resolved.startAge,
+    startAgeDetail: resolved.startAgeDetail,
+    startDate: resolved.startDate,
+    startAgeRange,
+    method: 'solar-term-distance-three-days-one-year',
+    conversion: resolved.conversion,
     boundary: publicBoundary(boundary),
     warnings: unique([
       ...(chartResult.normalizedInput?.timeUnknown ? ['luck-start-birth-time-unknown'] : []),
@@ -190,14 +201,140 @@ export function buildLuckPeriod(chartResult, pillar, options = {}) {
 }
 
 function decideDirection(gender, yearYang, schoolConfig = {}) {
-  if (!gender) return { direction: schoolConfig.defaultLuckDirection || 'forward', ruleId: 'luck-direction-unknown-gender-school-default', confidence: 0.35 };
   const male = gender === 'male' || gender === '\u7537\u6027';
-  const forward = (yearYang && male) || (!yearYang && !male);
+  const female = gender === 'female' || gender === '\u5973\u6027';
+  if (!male && !female) {
+    const direction = schoolConfig.defaultLuckDirection || 'forward';
+    return {
+      direction,
+      ruleId: 'luck-direction-unknown-gender-school-default',
+      confidence: 0.35,
+      basis: {
+        gender: gender || 'unknown',
+        yearStemYinYang: yearYang ? 'yang' : 'yin',
+        usedDefault: true
+      }
+    };
+  }
+  const forward = (yearYang && male) || (!yearYang && female);
   return {
     direction: forward ? 'forward' : 'reverse',
     ruleId: forward ? 'luck-direction-yang-male-yin-female-forward' : 'luck-direction-yang-female-yin-male-reverse',
-    confidence: 0.62
+    confidence: 0.82,
+    basis: {
+      gender: male ? 'male' : 'female',
+      yearStemYinYang: yearYang ? 'yang' : 'yin',
+      usedDefault: false
+    }
   };
+}
+
+function selectLuckStartBoundary(birthDate, terms, direction) {
+  return direction === 'reverse'
+    ? [...terms].reverse().find(term => term.date <= birthDate)
+    : terms.find(term => term.date >= birthDate);
+}
+
+function resolveLuckStart(birthDate, boundary) {
+  const distanceMilliseconds = Math.abs(
+    boundary.date.getTime() -
+    birthDate.getTime()
+  );
+  const distanceDays =
+    distanceMilliseconds / DAY_MS;
+  const startAgeExact =
+    distanceDays /
+    TRADITIONAL_DAYS_PER_YEAR;
+  const startOffsetDays =
+    startAgeExact *
+    TROPICAL_YEAR_DAYS;
+  const startDate = new Date(
+    birthDate.getTime() +
+    startOffsetDays * DAY_MS
+  );
+  const years = Math.floor(startAgeExact);
+  const totalMonths =
+    (startAgeExact - years) * 12;
+  const months = Math.floor(totalMonths);
+  const daysExact =
+    (totalMonths - months) *
+    TROPICAL_YEAR_DAYS / 12;
+  const totalMinutes = Math.round(
+    daysExact * 24 * 60
+  );
+  const days = Math.floor(
+    totalMinutes / (24 * 60)
+  );
+  const remainingMinutes =
+    totalMinutes - days * 24 * 60;
+  const hours = Math.floor(
+    remainingMinutes / 60
+  );
+  const minutes = remainingMinutes % 60;
+
+  return {
+    startAge: round(startAgeExact, 4),
+    startAgeDetail: {
+      years,
+      months,
+      days,
+      hours,
+      minutes,
+      distanceDays: round(distanceDays, 6)
+    },
+    startDate,
+    conversion: {
+      distanceMilliseconds,
+      distanceDays: round(distanceDays, 6),
+      traditionalDaysPerYear: TRADITIONAL_DAYS_PER_YEAR,
+      startOffsetDays: round(startOffsetDays, 4),
+      calendarYearDays: TROPICAL_YEAR_DAYS
+    }
+  };
+}
+
+function calculateUnknownTimeRange(
+  chartResult,
+  direction
+) {
+  const input = chartResult.normalizedInput || {};
+  if (!input.date) return null;
+  const offset = Number(input.place?.utcOffset ?? 9);
+  const candidates = [
+    localDateTime(input.date, '00:00:00', offset),
+    localDateTime(input.date, '23:59:59', offset)
+  ].map(moment => {
+    const terms = surroundingSolarTerms(moment);
+    const boundary = selectLuckStartBoundary(
+      moment,
+      terms,
+      direction
+    );
+    if (!boundary) return null;
+    const resolved = resolveLuckStart(moment, boundary);
+    return {
+      startAge: resolved.startAge,
+      startDate: isoDateTime(resolved.startDate),
+      boundary: publicBoundary(boundary)
+    };
+  }).filter(Boolean);
+  if (!candidates.length) return null;
+  const dates = candidates
+    .map(value => value.startDate)
+    .sort();
+  return {
+    minimum: Math.min(...candidates.map(value => value.startAge)),
+    maximum: Math.max(...candidates.map(value => value.startAge)),
+    earliestDate: dates[0],
+    latestDate: dates.at(-1),
+    candidates
+  };
+}
+
+function localDateTime(date, time, offset) {
+  return new Date(
+    `${date}T${time}${formatOffset(offset)}`
+  );
 }
 
 function birthCalculationDate(chartResult) {
@@ -269,12 +406,6 @@ function publicBoundary(boundary) {
   return result;
 }
 
-function addMonths(date, months) {
-  const result = new Date(date.getTime());
-  result.setMonth(result.getMonth() + months);
-  return result;
-}
-
 function addYears(date, years) {
   const result = new Date(date.getTime());
   result.setFullYear(result.getFullYear() + years);
@@ -291,10 +422,6 @@ function requireDate(value, functionName) {
   const result = validDate(value);
   if (!result) throw new TypeError(`${functionName} requires a valid date`);
   return result;
-}
-
-function isoDate(value) {
-  return value ? value.toISOString().slice(0, 10) : null;
 }
 
 function isoDateTime(value) {

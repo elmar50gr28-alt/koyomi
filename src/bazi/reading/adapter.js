@@ -45,9 +45,14 @@ export function adaptIntegratedBaziReadingSource(result = {}, options = {}) {
   const luckCycles = {
     ...(result.luckCycles || {}),
     direction: integratedData.luck?.direction,
+    directionBasis: integratedData.luck?.directionBasis,
     startAge: integratedData.luck?.start?.age,
+    startAgeDetail: integratedData.luck?.start?.detail,
     startDate: integratedData.luck?.start?.date,
     startBoundary: integratedData.luck?.start?.boundary,
+    startMethod: integratedData.luck?.start?.method,
+    startAgeRange: integratedData.luck?.start?.range,
+    startConversion: integratedData.luck?.start?.conversion,
     cycles: integratedData.luck?.decades,
     annual: integratedData.luck?.annual,
     monthly: integratedData.luck?.monthly

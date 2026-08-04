@@ -1964,7 +1964,17 @@ function koyomiEnsureBaziReadingStyle(){
     .koyomi-bazi-section p{margin:.15rem 0}
     .koyomi-bazi-meta{display:flex;flex-wrap:wrap;gap:6px}
     .koyomi-bazi-meta span{padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.08);font-size:.82rem}
+    .koyomi-bazi-luck-start{display:grid;gap:10px;padding:12px;border:2px solid rgba(202,169,101,.62);border-radius:12px;background:rgba(202,169,101,.09)}
+    .koyomi-bazi-luck-start h3,.koyomi-bazi-luck-start p{margin:0}
+    .koyomi-bazi-luck-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .koyomi-bazi-luck-fact{padding:9px;border:1px solid rgba(255,255,255,.17);border-radius:9px;background:rgba(255,255,255,.05)}
+    .koyomi-bazi-luck-fact b{display:block;font-size:.78rem;opacity:.75}
+    .koyomi-bazi-cycle-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+    .koyomi-bazi-cycle{display:grid;grid-template-columns:3.5em 3.5em 1fr;gap:5px;padding:7px;border-radius:8px;background:rgba(255,255,255,.06);font-size:.86rem}
+    .koyomi-bazi-cycle b{font-size:1rem}
+    .koyomi-bazi-luck-note{font-size:.84rem;opacity:.82}
     @media(max-width:640px){.koyomi-bazi-reading{font-size:.95rem}.koyomi-bazi-summary{margin-inline:-2px}.koyomi-bazi-guidance-grid{grid-template-columns:1fr}.koyomi-bazi-guidance-card{min-height:0}}
+    @media(max-width:640px){.koyomi-bazi-luck-facts,.koyomi-bazi-cycle-list{grid-template-columns:1fr}}
   `;
   document.head.appendChild(style);
 }
@@ -2177,6 +2187,48 @@ function koyomiBaziChartTableHtml(pillars){
     </table>
   </div><p class="bazi-chart-note">蔵干は上から本気・中気・余気。右側に、それぞれの日主との関係を示す地通変を表示しています。</p>`;
 }
+function koyomiBaziLuckStartHtml(luck,locale='ja'){
+  if(!luck)return '';
+  const ja=locale!=='en';
+  const direction=luck.direction==='reverse'?(ja?'逆行':'Reverse'):(ja?'順行':'Forward');
+  const basis=luck.directionBasis||{};
+  const genderLabels={male:ja?'男性':'Male',female:ja?'女性':'Female',unknown:ja?'未指定':'Unknown',other:ja?'その他':'Other'};
+  const yinYang=basis.yearStemYinYang==='yang'?(ja?'陽':'Yang'):(ja?'陰':'Yin');
+  const detail=luck.startAgeDetail||{};
+  const ageText=ja
+    ?`${detail.years||0}歳${detail.months||0}か月${detail.days||0}日ごろ`
+    :`about ${detail.years||0}y ${detail.months||0}m ${detail.days||0}d`;
+  const dateText=value=>{
+    const date=new Date(value);
+    return Number.isNaN(date.getTime())?'—':new Intl.DateTimeFormat(ja?'ja-JP':'en-US',{
+      timeZone:'Asia/Tokyo',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'
+    }).format(date);
+  };
+  const termLabels={risshun:'立春',keichitsu:'啓蟄',seimei:'清明',rikka:'立夏',boshu:'芒種',shosho:'小暑',risshu:'立秋',hakuro:'白露',kanro:'寒露',ritto:'立冬',taisetsu:'大雪',shokan:'小寒'};
+  const boundary=luck.startBoundary||{};
+  const boundaryName=ja?(termLabels[boundary.termId]||boundary.name||boundary.termId||'節入り'):(boundary.name||boundary.termId||'solar term');
+  const reason=basis.usedDefault
+    ?(ja?`${genderLabels[basis.gender]||basis.gender||'未指定'}のため設定の既定値を使用`:`Configured default used for ${basis.gender||'unknown'} gender`)
+    :(ja?`${yinYang}年生まれ・${genderLabels[basis.gender]||basis.gender}`:`${yinYang} year / ${genderLabels[basis.gender]||basis.gender}`);
+  const range=luck.startAgeRange;
+  const rangeHtml=range?`<p class="koyomi-bazi-luck-note"><b>${ja?'出生時刻不明による幅':'Range caused by unknown birth time'}</b> ${
+    ja?`${Number(range.minimum).toFixed(2)}〜${Number(range.maximum).toFixed(2)}歳（${dateText(range.earliestDate)}〜${dateText(range.latestDate)}）`
+      :`${Number(range.minimum).toFixed(2)}–${Number(range.maximum).toFixed(2)} years`
+  }</p>`:'';
+  const cycles=(luck.cycles||[]).slice(0,8).map(cycle=>`<div class="koyomi-bazi-cycle"><b>${koyomiEscapeHtml(cycle.label)}</b><span>${Number(cycle.startAge).toFixed(2)}${ja?'歳':'y'}</span><span>${koyomiEscapeHtml(dateText(cycle.startDate))}</span></div>`).join('');
+  return `<section class="koyomi-bazi-luck-start">
+    <h3>${ja?'大運の始まりと進み方':'Luck-cycle start and direction'}</h3>
+    <div class="koyomi-bazi-luck-facts">
+      <div class="koyomi-bazi-luck-fact"><b>${ja?'進み方':'Direction'}</b>${koyomiEscapeHtml(direction)}（${koyomiEscapeHtml(reason)}）</div>
+      <div class="koyomi-bazi-luck-fact"><b>${ja?'起運':'Start age'}</b>${koyomiEscapeHtml(ageText)} / ${Number(luck.startAge||0).toFixed(4)}${ja?'歳':' years'}</div>
+      <div class="koyomi-bazi-luck-fact"><b>${ja?'基準にした節入り':'Solar-term boundary'}</b>${koyomiEscapeHtml(boundaryName)} ${koyomiEscapeHtml(dateText(boundary.datetime))}</div>
+      <div class="koyomi-bazi-luck-fact"><b>${ja?'大運開始日時':'First cycle starts'}</b>${koyomiEscapeHtml(dateText(luck.startDate))}</div>
+    </div>
+    <p class="koyomi-bazi-luck-note">${ja?'出生時刻から順行は次、逆行は前の節入りまでの実時間を測り、「3日を1年」として換算しています。':'The real interval to the next/previous solar term is converted using the configured three-days-to-one-year rule.'}</p>
+    ${rangeHtml}
+    <div class="koyomi-bazi-cycle-list">${cycles}</div>
+  </section>`;
+}
 function koyomiRenderBaziReading(){
   try{
     const profile=koyomiBaziReadingProfile();
@@ -2194,7 +2246,7 @@ function koyomiRenderBaziReading(){
     const shichu=document.getElementById('shichuReading');
     if(shichu){
       koyomiEnsureBaziReadingStyle();
-      shichu.innerHTML=koyomiBaziReadingHtml(reading);
+      shichu.innerHTML=koyomiBaziLuckStartHtml(result.luckCycles,locale)+koyomiBaziReadingHtml(reading);
     }
     const meta=document.getElementById('shichuMeta');
     if(meta){

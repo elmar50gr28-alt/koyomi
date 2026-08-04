@@ -36,13 +36,40 @@ const femaleLuck = calculateBazi(female).luckCycles;
 
 assert.equal(maleLuck.direction, 'forward', 'yang-year male should run forward');
 assert.equal(femaleLuck.direction, 'reverse', 'yang-year female should run reverse');
+const yinMaleLuck = calculateBazi(profile('1985-07-10', '12:00', 'male')).luckCycles;
+const yinFemaleLuck = calculateBazi(profile('1985-07-10', '12:00', 'female')).luckCycles;
+assert.equal(yinMaleLuck.direction, 'reverse', 'yin-year male should run reverse');
+assert.equal(yinFemaleLuck.direction, 'forward', 'yin-year female should run forward');
+const otherProfile = profile('1984-07-10', '12:00', 'other');
+const otherLuck = calculateLuckCycles(calculateBaziChart(otherProfile), otherProfile, { defaultLuckDirection: 'reverse' });
+assert.equal(otherLuck.direction, 'reverse', 'unrecognized gender must use the configured default');
+assert.equal(otherLuck.directionBasis.usedDefault, true, 'default direction use must remain auditable');
 assert.notEqual(maleLuck.cycles[0].label, femaleLuck.cycles[0].label, 'forward/reverse first pillars must differ');
 assert.ok(maleLuck.cycles.every(period => period.startDate && period.endDate), 'decade periods need date ranges');
+assert.match(maleLuck.startDate, /T/, 'luck start must retain the exact time');
+assert.equal(maleLuck.startDate, maleLuck.cycles[0].startDate, 'top-level and first-cycle starts must agree');
+for (let index = 0; index < maleLuck.cycles.length - 1; index += 1) {
+  assert.equal(
+    Date.parse(maleLuck.cycles[index].endDate) + 1,
+    Date.parse(maleLuck.cycles[index + 1].startDate),
+    `decade ${index + 1} must connect to the next without a gap`
+  );
+}
+assert.equal(maleLuck.startConversion.traditionalDaysPerYear, 3);
+assert.equal(maleLuck.startMethod, 'solar-term-distance-three-days-one-year');
 
 const boundaryChart = calculateBaziChart(profile('2025-02-03', '23:10'));
 const exactStart = calculateLuckStart(boundaryChart, 'forward');
 assert.equal(exactStart.startAge, 0, 'birth exactly at a solar-term boundary starts at zero');
 assert.equal(exactStart.boundary.termId, 'risshun', 'start boundary should retain the term');
+assert.equal(exactStart.startDate.toISOString(), boundaryChart.calendarCalculation.boundaryDate, 'zero-distance start must equal the corrected birth instant');
+
+const twoDaysBeforeChart = calculateBaziChart(profile('2025-02-01', '23:10'));
+const twoDaysBeforeStart = calculateLuckStart(twoDaysBeforeChart, 'forward');
+assert.equal(twoDaysBeforeStart.startAge, 0.6667, 'two days to a term converts to two-thirds of a year');
+assert.equal(twoDaysBeforeStart.startAgeDetail.years, 0);
+assert.equal(twoDaysBeforeStart.startAgeDetail.months, 8);
+assert.equal(twoDaysBeforeStart.conversion.distanceDays, 2);
 
 const beforeRisshun = calculateAnnualLuck(boundaryChart, '2025-02-03T23:09:00+09:00');
 const atRisshun = calculateAnnualLuck(boundaryChart, '2025-02-03T23:10:00+09:00');
@@ -64,6 +91,9 @@ for (const time of ['23:00', '00:00']) {
 const unknown = profile('1990-07-10', '', 'male', true);
 const unknownLuck = calculateLuckCycles(calculateBaziChart(unknown), unknown, { referenceDate: '2026-07-10T12:00:00+09:00' });
 assert.ok(unknownLuck.warnings.includes('luck-start-birth-time-unknown'));
+assert.ok(unknownLuck.startAgeRange, 'unknown birth time must expose a possible start-age range');
+assert.ok(unknownLuck.startAgeRange.minimum < unknownLuck.startAgeRange.maximum);
+assert.ok(unknownLuck.startAge >= unknownLuck.startAgeRange.minimum && unknownLuck.startAge <= unknownLuck.startAgeRange.maximum);
 assert.ok(unknownLuck.annual[0].warnings.includes('annual-birth-time-unknown'));
 assert.ok(unknownLuck.monthly[0].warnings.includes('monthly-birth-time-unknown'));
 
@@ -78,5 +108,6 @@ assert.ok('natalYongshen' in connected.evaluationMaterials, 'yongshen material s
 const appHtml = fs.readFileSync(new URL('../app.html', import.meta.url), 'utf8');
 assert.match(appHtml, /function calcLuck\(/, 'legacy visible luck model remains for display compatibility');
 assert.match(appHtml, /window\.lastPersonal\.luckCycles=result\.luckCycles/, 'structured luck core is connected without changing UI text');
+assert.match(appHtml, /function koyomiBaziLuckStartHtml\(/, 'auditable luck-start details must be rendered in the main Bazi result');
 
 console.log('Bazi luck period core tests passed');
