@@ -1,0 +1,1 @@
+(function(root){'use strict';function build(core,input={}){return{year:Number(input.year)||new Date().getFullYear(),available:Boolean(core?.natal?.placements?.太陽),themeHouses:input.themeHouses||[],note:'誕生日から次の誕生日までの一年を読む補助図'}}root.WesternSolarReturnV1={build};})(globalThis);

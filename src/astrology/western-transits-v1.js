@@ -1,0 +1,1 @@
+(function(root){'use strict';function build(core,input={}){const rows=(input.transits||[]).map(x=>({...x,importance:Math.max(0,Math.round(100-(Number(x.orb)||0)*15))}));return{date:input.date||new Date().toISOString().slice(0,10),items:rows,highlights:rows.slice().sort((a,b)=>b.importance-a.importance).slice(0,5),periodDays:31}}root.WesternTransitsV1={build};})(globalThis);

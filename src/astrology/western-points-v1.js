@@ -1,0 +1,1 @@
+(function(root){'use strict';function build(core,input={}){const known=['ドラゴンヘッド','ドラゴンテイル','キロン','セレス','パラス','ジュノー','ベスタ','Part of Fortune','Vertex'];return{items:known.map(name=>({name,available:Number.isFinite(input[name]),lon:Number.isFinite(input[name])?input[name]:null})),note:'未計算の感受点は推測値を表示しない'}}root.WesternPointsV1={build};})(globalThis);

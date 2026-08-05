@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -30,6 +30,18 @@ const APP_SHELL = [
   './src/persona/beginner-explainer.js',
   './src/persona/divination-glossary.js',
   './src/data/name-strokes.js',
+  './src/astrology/western-core-v1.js',
+  './src/astrology/western-transits-v1.js',
+  './src/astrology/western-synastry-v1.js',
+  './src/astrology/western-solar-return-v1.js',
+  './src/astrology/western-progressions-v1.js',
+  './src/astrology/western-dignities-v1.js',
+  './src/astrology/western-points-v1.js',
+  './src/astrology/western-patterns-v1.js',
+  './src/astrology/western-composite-v1.js',
+  './src/astrology/western-professional-v1.js',
+  './src/astrology/western-reading-v1.js',
+  './src/astrology/western-suite-loader.js',
   './src/shared/calendar-time-compat.js',
   './src/shared/profile-schema-compat.js',
   './src/shared/crypto-compat.js',
