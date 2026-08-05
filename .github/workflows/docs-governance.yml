@@ -1,0 +1,25 @@
+name: Docs Governance
+
+on:
+  pull_request:
+  push:
+    branches: [main, feature/koyomi-roadmap-v1]
+
+jobs:
+  docs-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check required project documents
+        run: |
+          test -f VISION.md
+          test -f ROADMAP.md
+          test -f ARCHITECTURE.md
+          test -f PROJECT_MANAGER.md
+          test -f DECISIONS.md
+          test -f AI_RULES.md
+          test -f CONTRIBUTING.md
+          test -f docs/PROJECT_STATUS.md
+          test -f docs/RELEASE_PLAN.md
+          test -f docs/EPICS.md
+          test -f docs/DEFINITION_OF_DONE.md
