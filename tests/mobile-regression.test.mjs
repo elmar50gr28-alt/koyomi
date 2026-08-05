@@ -60,6 +60,9 @@ assert.ok(app.includes("$('solMobileAlmanac').onclick=()=>{koyomiStoreTodayLayer
 for(const id of ['solTodayConclusion','solTodayAction','solTodayTime','solTodayCaution'])assert.ok(app.includes(`id="${id}"`),`${id} must be visible in the SOL today summary`);
 assert.ok(app.indexOf('class="sol-today-summary"')<app.indexOf('class="dashboard"'),'the four-item summary must appear before the detailed calendar instrument');
 assert.ok(app.includes('function solTodaySummary'),'today summary must be derived from the selected date');
+assert.ok(app.includes('世界タイムマシン'), 'world time machine route label must be visible');
+assert.ok(today.includes('data-layer="solar"'), 'today must expose the solar activity layer');
+assert.ok(today.includes('太陽活動'), 'today solar activity layer label must be visible');
 for(const [page,target] of [['personal','personalForm'],['qimen','qm-panel-purpose'],['compat','compatForm'],['mundane','mundaneGenerate']]){
   assert.ok(app.includes(`data-sol-reading-page="${page}" data-sol-reading-target="${target}"`),`${page} card must point to its existing destination`);
   assert.ok(app.includes(`id="${target}"`)||app.includes(`id='${target}'`),`${page} destination must exist`);
