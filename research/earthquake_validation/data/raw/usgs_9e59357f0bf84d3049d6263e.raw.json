@@ -1,0 +1,1 @@
+{"type":"FeatureCollection","metadata":{"generated":1786019374000,"url":"https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2018-03-12T00%3A00%3A00Z&endtime=2018-04-11T00%3A00%3A00Z&latitude=38.0&longitude=37.0&maxradiuskm=500&minmagnitude=4.5","title":"USGS Earthquakes","status":200,"api":"2.7.0","count":0},"features":[]}

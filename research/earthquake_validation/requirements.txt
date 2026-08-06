@@ -1,0 +1,3 @@
+# The validation runner works with Python standard library only.
+# Optional for xlsx output:
+openpyxl>=3.1

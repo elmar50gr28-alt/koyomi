@@ -1,0 +1,32 @@
+{
+  "schemaId": "koyomi-earthquake-validation-summary-v1",
+  "sources": [
+    "USGS ComCat FDSN Event API"
+  ],
+  "fetchedEventCount": 11651,
+  "excludedEventCount": 0,
+  "cohortProcessed": 20,
+  "cohortFailed": 0,
+  "windowResultCount": 2800,
+  "controlPeriodCount": 18,
+  "statisticalTestCount": 1,
+  "effectSummary": {
+    "testId": "primary_500km_7d_m45_score_count_correlation",
+    "method": "exploratory Pearson-style correlation normal approximation",
+    "n": 20,
+    "effectSize": -0.0237,
+    "pValueApprox": 0.922173,
+    "multipleComparisonAdjusted": "not_claimed",
+    "interpretation": "research_only_no_probability_claim"
+  },
+  "conclusion": "研究継続。探索コホートと標準ライブラリ基盤では採用判断を行わず、独立ホールドアウトと多重比較補正後の再現性確認が必要です。",
+  "koyomiDecision": "検証が独立データで十分に確認されるまでは、KOYOMI本体へ地震予知・警報・確率表示として搭載しません。研究表示を行う場合も公的機関情報を優先する注意書きを必須にします。",
+  "openIssues": [
+    "ISC/ISC-GEM/JMA fallback ingestion is scaffolded but not yet implemented.",
+    "Finite fault polygons and slab-depth classification require external geologic datasets.",
+    "Poisson regression, ROC-AUC, PR-AUC, calibration, and FDR correction require the next statistics phase.",
+    "Event cohort seed values are re-confirmed by catalog search where USGS returns candidates; remaining not_confirmed cases need human review."
+  ],
+  "errors": [],
+  "xlsxStatus": "written"
+}
