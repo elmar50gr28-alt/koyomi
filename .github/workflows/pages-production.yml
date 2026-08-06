@@ -34,10 +34,8 @@ jobs:
             ./ _site/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
       - id: deployment
-        uses: actions/deploy-pages@v5
-        with:
-          timeout: 1800000
+        uses: actions/deploy-pages@v4
