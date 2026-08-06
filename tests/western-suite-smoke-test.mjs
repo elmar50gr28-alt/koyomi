@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import vm from 'node:vm';
+const files=['western-core-v1.js','western-transits-v1.js','western-synastry-v1.js','western-solar-return-v1.js','western-progressions-v1.js','western-dignities-v1.js','western-points-v1.js','western-patterns-v1.js','western-composite-v1.js','western-professional-v1.js','western-reading-v1.js','western-suite-loader.js'];
+const listeners={};
+const context={console,Date,setTimeout,document:{readyState:'loading',addEventListener:(name,fn)=>listeners[name]=fn,getElementById:()=>null}};
+context.globalThis=context;
+for(const file of files)vm.runInNewContext(await readFile(`src/astrology/${file}`,'utf8'),context,{filename:file});
+assert.equal(context.WesternAstrologySuite.ready(),true);
+const result=context.WesternAstrologySuite.buildResult({placements:{太陽:15,月:52,水星:18,金星:130,火星:194},angles:{asc:20,mc:290},birthTimeKnown:true,transits:[{tp:'木星',np:'太陽',name:'トライン',orb:.4}]});
+assert.equal(result.natal.placements.太陽.sign,'牡羊座');
+assert.ok(Array.isArray(result.consensusTags));
+assert.equal(result.professional.offlineCapable,true);
+assert.ok(result.interpretation.summary.includes('太陽'));
+console.log('Western astrology suite smoke test passed');

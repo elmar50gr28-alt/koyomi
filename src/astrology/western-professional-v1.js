@@ -1,0 +1,1 @@
+(function(root){'use strict';function build(core,input={}){const known=core?.calculationMeta?.birthTimeKnown!==false;return{houseSystem:input.houseSystem||'equal',zodiac:'tropical',rulership:'modern',confidence:known?'standard':'limited',warnings:known?[]:['出生時刻不明のためASC・MC・ハウスは参考値です'],offlineCapable:true}}root.WesternProfessionalV1={build};})(globalThis);
