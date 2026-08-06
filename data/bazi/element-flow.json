@@ -1,0 +1,7 @@
+{
+  "version": "phase2-1",
+  "flows": [
+    {"from":"wood","to":"fire","type":"generates"},{"from":"fire","to":"earth","type":"generates"},{"from":"earth","to":"metal","type":"generates"},{"from":"metal","to":"water","type":"generates"},{"from":"water","to":"wood","type":"generates"},
+    {"from":"wood","to":"earth","type":"controls"},{"from":"earth","to":"water","type":"controls"},{"from":"water","to":"fire","type":"controls"},{"from":"fire","to":"metal","type":"controls"},{"from":"metal","to":"wood","type":"controls"}
+  ]
+}

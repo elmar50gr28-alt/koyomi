@@ -1,0 +1,6 @@
+{
+  "version": "phase2-1",
+  "roles": {"main":1,"middle":0.6,"residual":0.35},
+  "positions": {"month":1.2,"day":1,"year":0.8,"hour":0.8},
+  "relationAdjustments": {"clash":-0.25,"combination":0.15,"punishment":-0.15,"harm":-0.1,"destruction":-0.1}
+}

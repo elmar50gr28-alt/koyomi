@@ -1,0 +1,38 @@
+{
+    "reportId":  "bazi-final-rc-quality-score-20260717",
+    "version":  "1.0-release-candidate",
+    "qualityScore":  0.86,
+    "scores":  {
+                   "evidenceRate":  0.91,
+                   "exampleRate":  0.9,
+                   "testRate":  1,
+                   "reviewRate":  0.72,
+                   "consistencyRate":  0.79
+               },
+    "counts":  {
+                   "ruleTotal":  23,
+                   "classicalSourceCount":  5,
+                   "exampleCaseTotal":  213,
+                   "testCaseTotal":  432,
+                   "reviewPendingCount":  18
+               },
+    "topQualityItems":  [
+                            "zero missing sourceIds",
+                            "213 classified example cases",
+                            "432 total regression tests",
+                            "separated source summary interpretation and generated prose",
+                            "AI review lists contradictions exceptions and human-review areas"
+                        ],
+    "unresolvedTop10":  [
+                            "precise solar-term entry times",
+                            "precise luck-cycle start timing",
+                            "annual and monthly luck validation",
+                            "follow-pattern school differences",
+                            "transformation-pattern season support",
+                            "yongshen conflict priority",
+                            "health-language safety review",
+                            "real-case adoption workflow",
+                            "unknown birth-time confidence display",
+                            "passage-level classical mapping"
+                        ]
+}

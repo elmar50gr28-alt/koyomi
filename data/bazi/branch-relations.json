@@ -1,0 +1,6 @@
+{
+  "sixCombinations":[["zi","chou","earth"],["yin","hai","wood"],["mao","xu","fire"],["chen","you","metal"],["si","shen","water"],["wu","wei","earth"]],
+  "threeCombinations":[["shen","zi","chen","water"],["hai","mao","wei","wood"],["yin","wu","xu","fire"],["si","you","chou","metal"]],
+  "directionalCombinations":[["hai","zi","chou","water"],["yin","mao","chen","wood"],["si","wu","wei","fire"],["shen","you","xu","metal"]],
+  "clashes":[["zi","wu"],["chou","wei"],["yin","shen"],["mao","you"],["chen","xu"],["si","hai"]]
+}

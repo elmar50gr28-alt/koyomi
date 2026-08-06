@@ -1,0 +1,28 @@
+{
+  "auditId": "bazi-quality-phase4-20260717",
+  "scope": "bazi-knowledge-database-only",
+  "summary": {
+    "implementationRate": 0.78,
+    "ruleTotal": 23,
+    "reviewPendingCount": 14,
+    "exampleCaseTotal": 108,
+    "testCaseTotal": 112,
+    "sourceLinkedRuleCount": 23,
+    "sourceMissingRuleCount": 0,
+    "lowConfidenceCount": 12,
+    "duplicateRuleGroups": 3,
+    "contradictionCandidates": 6
+  },
+  "consistencyChecks": [
+    {"checkId":"source-separation","status":"pass","details":"Classical index, excerpt summary, modern interpretation, and generated prose policy are separated."},
+    {"checkId":"modern-copyright","status":"pass","details":"No modern copyrighted body text is stored."},
+    {"checkId":"school-coverage","status":"partial","details":"Core schools are indexed; school-specific rule density remains uneven."},
+    {"checkId":"formal-evidence","status":"partial","details":"All rules have sourceIds, but many are classical-index references rather than reviewed passages."}
+  ],
+  "reviewStatusUpdates": [
+    {"target":"classical-index","from":"seeded","to":"reviewed-index","reason":"bibliographic records only, no quoted text"},
+    {"target":"interpretation-rules","from":"phase3-seed","to":"review-pending-evidence-depth","reason":"sourceIds exist but exact classical passage mapping remains pending"},
+    {"target":"luck-month-flow","from":"human-review-required","to":"human-review-required","reason":"monthly luck calculation is schema-ready only"},
+    {"target":"transformation-pattern-rules","from":"human-review-required","to":"human-review-required","reason":"strict transformation criteria require school review"}
+  ]
+}

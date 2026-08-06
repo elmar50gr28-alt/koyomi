@@ -1,0 +1,16 @@
+{
+  "schema":"dayStemId -> ordered stages over 12 branches",
+  "stages":["changsheng","muyu","guandai","jianlu","diwang","shuai","bing","si","mu","jue","tai","yang"],
+  "tables":{
+    "jia":["muyu","guandai","jianlu","diwang","shuai","bing","si","mu","jue","tai","yang","changsheng"],
+    "yi":["bing","shuai","diwang","jianlu","guandai","muyu","changsheng","yang","tai","jue","mu","si"],
+    "bing":["tai","yang","changsheng","muyu","guandai","jianlu","diwang","shuai","bing","si","mu","jue"],
+    "ding":["jue","mu","si","bing","shuai","diwang","jianlu","guandai","muyu","changsheng","yang","tai"],
+    "wu":["tai","yang","changsheng","muyu","guandai","jianlu","diwang","shuai","bing","si","mu","jue"],
+    "ji":["jue","mu","si","bing","shuai","diwang","jianlu","guandai","muyu","changsheng","yang","tai"],
+    "geng":["si","mu","jue","tai","yang","changsheng","muyu","guandai","jianlu","diwang","shuai","bing"],
+    "xin":["changsheng","yang","tai","jue","mu","si","bing","shuai","diwang","jianlu","guandai","muyu"],
+    "ren":["diwang","shuai","bing","si","mu","jue","tai","yang","changsheng","muyu","guandai","jianlu"],
+    "gui":["jianlu","guandai","muyu","changsheng","yang","tai","jue","mu","si","bing","shuai","diwang"]
+  }
+}

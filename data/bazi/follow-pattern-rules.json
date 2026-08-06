@@ -1,0 +1,3 @@
+[
+  {"ruleId":"follow-weak-candidate","name":"Follow weak candidate","category":"follow-pattern","description":"Very weak day master with no reliable roots becomes a follow-pattern candidate.","conditions":["day-master-extremely-weak","no-reliable-root"],"exclusions":["resource-visible","peer-rooted"],"priority":75,"result":"follow-weak-candidate","schoolIds":["ditian-sui","koyomi-integrated"],"sourceIds":["src-ditian-sui-biblio"],"evidenceLevel":"classical-index","confidence":0.5,"reviewStatus":"human-review-required","version":"1.0.0","notes":"Not established by weakness alone."}
+]

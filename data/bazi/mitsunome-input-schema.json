@@ -1,0 +1,12 @@
+{
+  "schemaId":"mitsunome-bazi-phase3-input",
+  "version":"1.0.0",
+  "required":["personContext","structuredResult","beginnerExplanation","professionalEvidence","sourcePolicy"],
+  "properties":{
+    "personContext":{"type":"object","description":"No additional profile re-entry; references existing personId when available."},
+    "structuredResult":{"type":"object","description":"Bazi calculation facts and interpretation tendencies."},
+    "beginnerExplanation":{"type":"array","description":"Plain explanation blocks with confidence and conditions."},
+    "professionalEvidence":{"type":"array","description":"Evidence blocks with sourceIds, schoolIds, reviewStatus."},
+    "sourcePolicy":{"type":"object","description":"Classical text, summary, modern interpretation, and AI prose separation."}
+  }
+}

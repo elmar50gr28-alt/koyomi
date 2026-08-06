@@ -1,0 +1,11 @@
+{
+  "reportId": "bazi-contradiction-phase4",
+  "contradictions": [
+    {"id":"contradiction-001","area":"yongshen","rules":["yongshen-support-weak-resource","yongshen-climate-season"],"type":"method-disagreement","resolution":"return separate method results; do not force one final yongshen","reviewStatus":"accepted-design"},
+    {"id":"contradiction-002","area":"pattern","rules":["follow-weak-candidate","pattern-month-ten-god-candidate"],"type":"candidate-conflict","resolution":"regular pattern and follow pattern remain competing candidates","reviewStatus":"human-review-required"},
+    {"id":"contradiction-003","area":"luck","rules":["luck-direction-yang-male-yin-female-forward","luck-direction-unknown-gender-school-default"],"type":"input-precision-conflict","resolution":"unknown gender returns school default with low confidence","reviewStatus":"accepted-design"},
+    {"id":"contradiction-004","area":"strength","rules":["strength-month-root-support","exposed-stem-peer-support"],"type":"support-vs-pressure-mixed","resolution":"preserve supporting and opposing factors separately","reviewStatus":"accepted-design"},
+    {"id":"contradiction-005","area":"health","rules":["interp-health-climate"],"type":"medical-risk","resolution":"mark as lifestyle tendency, not medical diagnosis","reviewStatus":"accepted-design"},
+    {"id":"contradiction-006","area":"transformation","rules":["transformation-stem-combination-candidate"],"type":"strict-vs-permissive","resolution":"strict and permissive results are separated","reviewStatus":"human-review-required"}
+  ]
+}

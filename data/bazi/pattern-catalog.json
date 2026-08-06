@@ -1,0 +1,16 @@
+{
+  "version": "phase2-1",
+  "patterns": [
+    {"patternId":"zheng-guan","name":"direct-officer","category":"regular","monthTenGodId":"zheng_guan"},
+    {"patternId":"qi-sha","name":"seven-killing","category":"regular","monthTenGodId":"qi_sha"},
+    {"patternId":"zheng-cai","name":"direct-wealth","category":"regular","monthTenGodId":"zheng_cai"},
+    {"patternId":"pian-cai","name":"indirect-wealth","category":"regular","monthTenGodId":"pian_cai"},
+    {"patternId":"zheng-yin","name":"direct-resource","category":"regular","monthTenGodId":"zheng_yin"},
+    {"patternId":"pian-yin","name":"indirect-resource","category":"regular","monthTenGodId":"pian_yin"},
+    {"patternId":"shi-shen","name":"eating-god","category":"regular","monthTenGodId":"shi_shen"},
+    {"patternId":"shang-guan","name":"hurting-officer","category":"regular","monthTenGodId":"shang_guan"},
+    {"patternId":"follow-strong","name":"follow-strong","category":"special"},
+    {"patternId":"follow-weak","name":"follow-weak","category":"special"},
+    {"patternId":"transformation","name":"transformation","category":"special"}
+  ]
+}

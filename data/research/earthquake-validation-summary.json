@@ -1,0 +1,29 @@
+{
+  "schemaId": "koyomi-earthquake-validation-summary-v1",
+  "title": "地震活動・マンデン仮説 過去検証",
+  "sources": [
+    "USGS ComCat FDSN Event API"
+  ],
+  "fetchedEventCount": 11651,
+  "cohortProcessed": 20,
+  "cohortFailed": 0,
+  "windowResultCount": 2800,
+  "controlPeriodCount": 18,
+  "statisticalTestCount": 1,
+  "effectSummary": {
+    "testId": "primary_500km_7d_m45_score_count_correlation",
+    "method": "探索的な相関検査",
+    "n": 20,
+    "effectSize": -0.0237,
+    "pValueApprox": 0.922173,
+    "interpretation": "研究用。発生確率や警報としては扱わない。"
+  },
+  "conclusion": "現時点の探索的コホートと標準ライブラリ基盤では、地震活動とマンデン指標の採用判断は行いません。研究継続とし、外部データ、対照期間、多重比較補正、再現性確認を追加します。",
+  "koyomiDecision": "KOYOMI本体では、地震予測、警報、確率表示として公開しません。公開画面では、マンデン研究の検証状況と限界を示す研究レイヤーとして扱います。",
+  "openIssues": [
+    "ISC、ISC-GEM、JMAデータの追加照合は未完了です。",
+    "断層ポリゴン、プレート深度、スラブ分類には外部地質データが必要です。",
+    "Poisson回帰、ROC-AUC、PR-AUC、校正、FDR補正は次フェーズです。",
+    "一部の実在イベントは人間レビュー待ちです。"
+  ]
+}

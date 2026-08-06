@@ -1,0 +1,3 @@
+[
+  {"ruleId":"pattern-month-ten-god-candidate","name":"Month ten god pattern candidate","category":"pattern","description":"The month stem ten god may produce a regular pattern candidate.","conditions":["month-stem-ten-god-present"],"exclusions":["month-command-contradiction-unreviewed"],"priority":60,"result":"regular-pattern-candidate","schoolIds":["yuanhai-ziping","ziping-zhenquan","koyomi-integrated"],"sourceIds":["src-yuanhai-ziping-biblio"],"evidenceLevel":"classical-index","confidence":0.56,"reviewStatus":"phase2-seed","version":"1.0.0","notes":"Candidate only; establishment requires rescue/break review."}
+]

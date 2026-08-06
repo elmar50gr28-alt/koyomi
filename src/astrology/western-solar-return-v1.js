@@ -1,0 +1,7 @@
+(function(root){
+'use strict';
+function signed(a,b){return root.WesternCoreV1.mod(a-b+180)-180}
+function find(target,year,ephemeris){if(typeof ephemeris!=='function'||!Number.isFinite(target))return null;let best=null;const start=Date.UTC(year,0,1);for(let h=0;h<8784;h+=6){const date=new Date(start+h*3600000),sun=ephemeris(date)?.太陽;if(!Number.isFinite(sun))continue;const delta=Math.abs(signed(sun,target));if(!best||delta<best.delta)best={date,delta}}if(!best)return null;let lo=best.date.getTime()-12*3600000,hi=best.date.getTime()+12*3600000;for(let i=0;i<32;i++){const a=new Date(lo),m=new Date((lo+hi)/2),sa=signed(ephemeris(a)?.太陽,target),sm=signed(ephemeris(m)?.太陽,target);if(Math.sign(sa)===Math.sign(sm))lo=m.getTime();else hi=m.getTime()}return new Date((lo+hi)/2)}
+function build(core,input={}){const year=Number(input.year)||new Date(input.targetDate||Date.now()).getFullYear(),target=core?.natal?.placements?.太陽?.lon,date=find(target,year,input.ephemeris),raw=date&&input.ephemeris(date),placements={};Object.entries(raw||{}).forEach(([k,lon])=>{if(Number.isFinite(lon))placements[k]={lon:root.WesternCoreV1.mod(lon),sign:root.WesternCoreV1.signOf(lon),degree:root.WesternCoreV1.degreeOf(lon)}});return{year,available:Boolean(date),returnDate:date?.toISOString()||null,placements,aspects:root.WesternCoreV1.aspects(placements),note:'出生太陽黄経への回帰時刻を反復探索'}}
+root.WesternSolarReturnV1={build,find};
+})(globalThis);

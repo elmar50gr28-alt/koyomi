@@ -1,0 +1,18 @@
+{
+  "reportId": "bazi-low-confidence-phase4",
+  "threshold": 0.5,
+  "items": [
+    {"entityId":"interp-health-climate","confidence":0.38,"reason":"lifestyle only; not medical diagnosis"},
+    {"entityId":"interp-family-roots","confidence":0.40,"reason":"requires context and human review"},
+    {"entityId":"interp-relationship-balance","confidence":0.42,"reason":"relationship interpretation depends on compatibility context"},
+    {"entityId":"luck-month-flow","confidence":0.32,"reason":"monthly luck schema only"},
+    {"entityId":"luck-year-conflict","confidence":0.42,"reason":"annual pillar expansion pending"},
+    {"entityId":"follow-weak-candidate","confidence":0.50,"reason":"special pattern strict review pending"},
+    {"entityId":"transformation-stem-combination-candidate","confidence":0.50,"reason":"seasonal transformation support pending"},
+    {"entityId":"pattern-resource-rescue","confidence":0.48,"reason":"candidate rescue only"},
+    {"entityId":"yongshen-mediation","confidence":0.42,"reason":"conflict mediation rule density low"},
+    {"entityId":"yongshen-illness-medicine","confidence":0.45,"reason":"excess/deficiency disease-medicine mapping pending"},
+    {"entityId":"luck-direction-unknown-gender-school-default","confidence":0.35,"reason":"missing gender input"},
+    {"entityId":"monthly-flow-schema","confidence":0.28,"reason":"future calculation target"}
+  ]
+}

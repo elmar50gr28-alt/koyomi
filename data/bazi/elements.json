@@ -1,0 +1,7 @@
+{
+  "wood":{"kanji":"\u6728","generates":"fire","controls":"earth"},
+  "fire":{"kanji":"\u706b","generates":"earth","controls":"metal"},
+  "earth":{"kanji":"\u571f","generates":"metal","controls":"water"},
+  "metal":{"kanji":"\u91d1","generates":"water","controls":"wood"},
+  "water":{"kanji":"\u6c34","generates":"wood","controls":"fire"}
+}

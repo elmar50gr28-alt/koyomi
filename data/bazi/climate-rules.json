@@ -1,0 +1,7 @@
+{
+  "version": "phase2-1",
+  "rules": [
+    {"ruleId":"climate-winter-needs-fire","name":"Winter chart climate need","category":"climate","description":"Winter command may need warmth as a separate climate result.","conditions":["seasonalPhase=winter"],"exclusions":[],"priority":70,"result":{"primaryNeed":"warmth","candidateElements":["fire"]},"schoolIds":["qiongtong-baojian","koyomi-integrated"],"sourceIds":["src-qiongtong-baojian-biblio"],"evidenceLevel":"classical-index","confidence":0.62,"reviewStatus":"phase2-seed","version":"1.0.0","notes":"Climate yongshen is not merged into balance yongshen."},
+    {"ruleId":"climate-summer-needs-water","name":"Summer chart climate need","category":"climate","description":"Summer command may need cooling/moisture as a separate climate result.","conditions":["seasonalPhase=summer"],"exclusions":[],"priority":70,"result":{"primaryNeed":"cooling","candidateElements":["water"]},"schoolIds":["qiongtong-baojian","koyomi-integrated"],"sourceIds":["src-qiongtong-baojian-biblio"],"evidenceLevel":"classical-index","confidence":0.62,"reviewStatus":"phase2-seed","version":"1.0.0","notes":"Climate yongshen is not merged into balance yongshen."}
+  ]
+}

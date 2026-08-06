@@ -1,0 +1,6 @@
+{
+  "defaultSchoolId":"koyomi-integrated",
+  "profilesFile":"schools.json",
+  "phase1Settings":["standard-time","local-mean-time","true-solar-time","zi-23-split","zi-00-boundary"],
+  "manualApprovalRequired":true
+}

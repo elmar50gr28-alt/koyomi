@@ -1,0 +1,7 @@
+{
+  "version": "phase2-1",
+  "levels":["extremely-weak","weak","slightly-weak","balanced","slightly-strong","strong","extremely-strong","indeterminate"],
+  "rules": [
+    {"ruleId":"strength-month-root-support","name":"Month command and roots support","category":"strength","description":"Month command plus roots form supporting evidence for day master strength.","conditions":["month-command-support","root-support"],"exclusions":[],"priority":80,"result":"supporting-strength-candidate","schoolIds":["traditional-ziping","koyomi-integrated"],"sourceIds":["src-yuanhai-ziping-biblio"],"evidenceLevel":"classical-index","confidence":0.68,"reviewStatus":"phase2-seed","version":"1.0.0","notes":"Returns evidence, not a single absolute score."}
+  ]
+}

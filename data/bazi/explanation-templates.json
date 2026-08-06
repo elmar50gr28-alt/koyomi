@@ -1,0 +1,13 @@
+{
+  "version":"phase3-1",
+  "beginner":{
+    "tone":"plain-japanese-ready",
+    "rules":["avoid-fatalism","show-condition","show-confidence","show-missing-data"],
+    "sections":["today-context","core-tendency","timing","care-points"]
+  },
+  "professional":{
+    "tone":"evidence-first",
+    "rules":["show-sourceIds","show-schoolDifferences","show-reviewStatus","separate-classical-summary-modern-interpretation"],
+    "sections":["chart-facts","strength","patterns","yongshen","luck","sources"]
+  }
+}

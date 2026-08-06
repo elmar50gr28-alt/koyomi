@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KOYOMI Smoke Test</title>
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;background:#101820;color:#f5f1e8}
+main{max-width:920px;margin:auto;padding:18px}
+h1{font-size:1.45rem;margin:0 0 12px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+button,a{border:1px solid #c7a45b;border-radius:8px;background:#20170f;color:#ffe4a6;padding:9px 12px;font-weight:800;text-decoration:none}
+.row{display:grid;grid-template-columns:96px 1fr;gap:8px;align-items:start;border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:10px;margin:8px 0;background:rgba(255,255,255,.04)}
+.ok{color:#8ef0c0}.ng{color:#ff9a9a}.wait{color:#ffd37a}
+iframe{width:100%;height:420px;border:1px solid rgba(255,255,255,.2);border-radius:8px;background:white;margin-top:12px}
+small{color:#cfc7b7}
+</style>
+</head>
+<body>
+<main>
+<h1>KOYOMI Smoke Test</h1>
+<p>主要ページの起動と、app.html内の主要タブ遷移を確認します。外部通信は使いません。</p>
+<div class="toolbar">
+  <button id="runBtn">テスト実行</button>
+  <a href="index.html">index.htmlを開く</a>
+  <a href="today.html">today.htmlを開く</a>
+  <a href="app.html#calendar">app.htmlを開く</a>
+</div>
+<div id="results"></div>
+<iframe id="frame" title="KOYOMI smoke test frame"></iframe>
+<p><small>注意: Service Worker更新確認は、通常ページを再読み込みしてから行ってください。iPhone Safariでは一度タブを閉じて開き直すと反映確認しやすくなります。</small></p>
+</main>
+<script>
+const tests=[
+  {name:'index.html',url:'index.html',check:d=>!!d.querySelector('a[href="today.html"]')&&!!d.querySelector('a[href^="app.html"]')},
+  {name:'today.html',url:'today.html',check:d=>!!d.getElementById('kikan')&&!!d.getElementById('dateText')},
+  {name:'app calendar or first setup',url:'app.html#calendar',check:d=>['page-calendar','page-ledger'].includes(d.querySelector('.page.active')?.id)},
+  {name:'home destiny navigator',url:'app.html#calendar',check:d=>!!d.getElementById('koyomiStartReading')&&d.querySelectorAll('#koyomiHomeNav [data-koyomi-shortcut]').length>=9},
+  {name:'personal mode hides ledger nav',url:'app.html#calendar',check:d=>d.body.classList.contains('koyomi-mode-personal')&&getComputedStyle(d.querySelector('.mobile-nav [data-page="ledger"]')).display==='none'},
+  {name:'app personal',url:'app.html#personal',check:d=>d.querySelector('.page.active')?.id==='page-personal'},
+  {name:'app compat',url:'app.html#compat',check:d=>d.querySelector('.page.active')?.id==='page-compat'},
+  {name:'app ledger',url:'app.html#ledger',check:d=>d.querySelector('.page.active')?.id==='page-ledger'},
+  {name:'mobile profile quick fields',url:'app.html#ledger',check:d=>{
+    const quick=d.querySelector('#ledgerQuickGrid');
+    return !!quick&&['lpDisplayName','lpReading','lpBirthDate','lpBirthTime','lpTimeUnknown','lpBirthPlaceLabel','lpGender','lpOccupationMajor'].every(id=>quick.querySelector('#'+id));
+  }},
+  {name:'mobile profile has only initial-use normal groups',url:'app.html#ledger',check:d=>d.querySelector('#ledgerQuickGrid')?.children.length===7},
+  {name:'world name detailed fields',url:'app.html#ledger',check:d=>['lpMiddleName','lpCompoundSurname','lpRomanizedName','lpOriginalSpelling','lpVariantGlyph','lpDivinationGlyph','lpTransliterationSystem'].every(id=>d.getElementById(id))},
+  {name:'world birthplace metadata fields',url:'app.html#ledger',check:d=>['lpPlacePrecision','lpPlaceSource'].every(id=>d.getElementById(id))},
+  {name:'profile detailed settings folded',url:'app.html#ledger',check:d=>!!d.querySelector('details.ledger-profile-advanced:not([open])')&&d.querySelector('details.ledger-profile-advanced summary')?.textContent.includes('姓名・各占術設定')},
+  {name:'readiness confidence visible',url:'app.html#ledger',check:d=>d.querySelectorAll('#ledgerReadiness .ledger-ready-row').length>=6&&d.querySelector('#ledgerReadiness')?.textContent.includes('confidence')},
+  {name:'general management buttons hidden',url:'app.html#ledger',check:d=>{
+    const ids=['sampleBtn','saveBtn','copyBtn','clearBtn','compatSample','compatCopy','ledgerCreatePersonal','ledgerSavePersonalReading','ledgerSaveCompatReading','ledgerDuplicateCurrent','ledgerSaveProfile','ledgerBulkDelete'];
+    return ids.every(id=>{const el=d.getElementById(id);return !el||getComputedStyle(el).display==='none'||el.closest('[hidden]')});
+  }},
+  {name:'app qimen',url:'app.html#qimen',check:d=>d.querySelector('.page.active')?.id==='page-qimen'},
+  {name:'app settings',url:'app.html#settings',check:d=>d.querySelector('.page.active')?.id==='page-settings'},
+  {name:'mode settings visible',url:'app.html#settings',check:d=>!!d.getElementById('koyomiAppMode')&&['personal','family','pro'].every(v=>d.querySelector(`#koyomiAppMode option[value="${v}"]`))},
+  {name:'own profile settings entry',url:'app.html#settings',check:d=>!!d.getElementById('koyomiOwnProfileCard')&&!!d.getElementById('koyomiEditOwnProfile')&&d.body.textContent.includes('あなたのプロフィール')},
+  {name:'bazi engine module',url:'src/bazi/validation/bazi-test.html',check:d=>d.getElementById('result')?.textContent.includes('/5 passed')},
+  {name:'production service worker cache',url:'service-worker.js',check:d=>d.body?.textContent.includes('koyomi-bazi-japanese-reading-20260717-1')}
+];
+const frame=document.getElementById('frame'),results=document.getElementById('results');
+function row(name,state,msg){const el=document.createElement('div');el.className='row';el.innerHTML=`<b class="${state}">${state.toUpperCase()}</b><div><strong>${name}</strong><br><small>${msg}</small></div>`;results.append(el)}
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+function bust(url){const [path,hash='']=url.split('#');return `${path}?smoke=${Date.now()}${hash?'#'+hash:''}`}
+async function loadTest(t){
+  row(t.name,'wait','読み込み中');
+  await new Promise(resolve=>{
+    const done=()=>resolve();
+    frame.onload=done;
+    frame.src=bust(t.url);
+    setTimeout(done,5000);
+  });
+  await wait(900);
+  try{
+    const d=frame.contentDocument;
+    const ok=!!d&&t.check(d);
+    row(t.name,ok?'ok':'ng',ok?'起動確認OK':'期待した画面状態を確認できません');
+  }catch(e){
+    row(t.name,'ng',e.message||'iframe確認に失敗');
+  }
+}
+async function run(){
+  results.innerHTML='';
+  for(const t of tests)await loadTest(t);
+}
+document.getElementById('runBtn').onclick=run;
+run();
+</script>
+</body>
+</html>

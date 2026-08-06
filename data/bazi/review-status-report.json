@@ -1,0 +1,21 @@
+{
+  "reportId": "bazi-review-status-phase4",
+  "counts": {
+    "reviewed-index": 8,
+    "phase2-seed": 8,
+    "phase3-seed": 8,
+    "review-pending-evidence-depth": 5,
+    "human-review-required": 14,
+    "accepted-design": 4
+  },
+  "humanReviewRequired": [
+    "final-pattern-establishment",
+    "follow-pattern-strict-establishment",
+    "transformation-pattern-strict-establishment",
+    "final-yongshen-when-methods-conflict",
+    "annual-luck-interpretation",
+    "monthly-luck-interpretation",
+    "health-tendency-language",
+    "real-case-adoption"
+  ]
+}

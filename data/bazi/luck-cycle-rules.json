@@ -1,0 +1,15 @@
+{
+  "version":"phase3-1",
+  "directionRules":[
+    {"ruleId":"luck-direction-yang-male-yin-female-forward","conditions":["yang-year-and-male","yin-year-and-female"],"direction":"forward","confidence":0.82},
+    {"ruleId":"luck-direction-yang-female-yin-male-reverse","conditions":["yang-year-and-female","yin-year-and-male"],"direction":"reverse","confidence":0.82},
+    {"ruleId":"luck-direction-unknown-gender-school-default","conditions":["gender-unknown"],"direction":"school-default","confidence":0.35}
+  ],
+  "startAgePolicy":"solar-term-distance-three-days-one-year-exact-time",
+  "conversion":{
+    "traditionalDaysPerYear":3,
+    "calendarYearDays":365.2425,
+    "rounding":"retain-millisecond-boundary-and-report-age-to-four-decimals"
+  },
+  "warnings":["Calculated solar-term times remain identifiable as calculated-minute when an official-minute boundary is unavailable."]
+}

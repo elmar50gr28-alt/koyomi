@@ -1,0 +1,290 @@
+{
+    "auditId":  "bazi-final-rc-classical-audit-20260717",
+    "classicalSourceCount":  5,
+    "rules":  [
+                  {
+                      "ruleId":  "month-command",
+                      "sourceIds":  [
+                                        "src-yuanhai-ziping-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "traditional-ziping",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "root-strength",
+                      "sourceIds":  [
+                                        "src-sanming-tonghui-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "modern-score",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "exposed-stems",
+                      "sourceIds":  [
+                                        "src-ditian-sui-biblio"
+                                    ],
+                      "schoolIds":  "koyomi-integrated",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "element-flow",
+                      "sourceIds":  [
+                                        "src-ziping-zhenquan-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "qiongtong-baojian",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "human-review-required"
+                  },
+                  {
+                      "ruleId":  "climate",
+                      "sourceIds":  [
+                                        "src-qiongtong-baojian-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "ziping-zhenquan",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "strength",
+                      "sourceIds":  [
+                                        "src-yuanhai-ziping-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "traditional-ziping",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "pattern-candidate",
+                      "sourceIds":  [
+                                        "src-sanming-tonghui-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "modern-score",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "pattern-rescue",
+                      "sourceIds":  [
+                                        "src-ditian-sui-biblio"
+                                    ],
+                      "schoolIds":  "koyomi-integrated",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "human-review-required"
+                  },
+                  {
+                      "ruleId":  "follow-pattern",
+                      "sourceIds":  [
+                                        "src-ziping-zhenquan-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "qiongtong-baojian",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "transformation-pattern",
+                      "sourceIds":  [
+                                        "src-qiongtong-baojian-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "ziping-zhenquan",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "yongshen-support-control",
+                      "sourceIds":  [
+                                        "src-yuanhai-ziping-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "traditional-ziping",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "yongshen-climate",
+                      "sourceIds":  [
+                                        "src-sanming-tonghui-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "modern-score",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "human-review-required"
+                  },
+                  {
+                      "ruleId":  "yongshen-mediation",
+                      "sourceIds":  [
+                                        "src-ditian-sui-biblio"
+                                    ],
+                      "schoolIds":  "koyomi-integrated",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "yongshen-illness-medicine",
+                      "sourceIds":  [
+                                        "src-ziping-zhenquan-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "qiongtong-baojian",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "favorable-unfavorable",
+                      "sourceIds":  [
+                                        "src-qiongtong-baojian-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "ziping-zhenquan",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "luck-direction",
+                      "sourceIds":  [
+                                        "src-yuanhai-ziping-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "traditional-ziping",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "human-review-required"
+                  },
+                  {
+                      "ruleId":  "luck-cycle",
+                      "sourceIds":  [
+                                        "src-sanming-tonghui-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "modern-score",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "luck-start",
+                      "sourceIds":  [
+                                        "src-ditian-sui-biblio"
+                                    ],
+                      "schoolIds":  "koyomi-integrated",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "career-interpretation",
+                      "sourceIds":  [
+                                        "src-ziping-zhenquan-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "qiongtong-baojian",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "finance-interpretation",
+                      "sourceIds":  [
+                                        "src-qiongtong-baojian-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "ziping-zhenquan",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "human-review-required"
+                  },
+                  {
+                      "ruleId":  "relationship-interpretation",
+                      "sourceIds":  [
+                                        "src-yuanhai-ziping-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "traditional-ziping",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "family-interpretation",
+                      "sourceIds":  [
+                                        "src-sanming-tonghui-biblio"
+                                    ],
+                      "schoolIds":  [
+                                        "modern-score",
+                                        "koyomi-integrated"
+                                    ],
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  },
+                  {
+                      "ruleId":  "health-interpretation",
+                      "sourceIds":  [
+                                        "src-ditian-sui-biblio"
+                                    ],
+                      "schoolIds":  "koyomi-integrated",
+                      "adoptionReason":  "Adopted because the rule can be represented as deterministic structure while keeping evidence and opposing views separate.",
+                      "opposingViews":  "Schools differ on establishment conditions, priority, and interpretation language; KOYOMI preserves differences instead of unifying them.",
+                      "reviewStatus":  "reviewed-index"
+                  }
+              ]
+}

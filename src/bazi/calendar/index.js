@@ -1,0 +1,778 @@
+import { BRANCHES, SCHOOL_PROFILES, STEMS } from '../data.js';
+import { calculateSetsuBoundaries } from '../astronomy/solar-term-core.js';
+
+const branchById = Object.fromEntries(
+  BRANCHES.map(branch => [branch.id, branch])
+);
+
+const RISSHUN_BOUNDARIES_JST = Object.freeze({
+  2024: '2024-02-04T17:27:00+09:00',
+  2025: '2025-02-03T23:10:00+09:00',
+  2026: '2026-02-04T05:02:00+09:00',
+  2027: '2027-02-04T10:46:00+09:00'
+});
+
+const MONTH_BOUNDARIES_JST_BY_YEAR = Object.freeze({
+  2025: Object.freeze([
+    {
+      termId: 'shokan',
+      nameJa: '小寒',
+      branchId: 'chou',
+      datetime: '2025-01-05T11:33:00+09:00'
+    },
+    {
+      termId: 'risshun',
+      nameJa: '立春',
+      branchId: 'yin',
+      datetime: '2025-02-03T23:10:00+09:00'
+    },
+    {
+      termId: 'keichitsu',
+      nameJa: '啓蟄',
+      branchId: 'mao',
+      datetime: '2025-03-05T17:07:00+09:00'
+    },
+    {
+      termId: 'seimei',
+      nameJa: '清明',
+      branchId: 'chen',
+      datetime: '2025-04-04T21:49:00+09:00'
+    },
+    {
+      termId: 'rikka',
+      nameJa: '立夏',
+      branchId: 'si',
+      datetime: '2025-05-05T14:57:00+09:00'
+    },
+    {
+      termId: 'boshu',
+      nameJa: '芒種',
+      branchId: 'wu',
+      datetime: '2025-06-05T18:57:00+09:00'
+    },
+    {
+      termId: 'shosho',
+      nameJa: '小暑',
+      branchId: 'wei',
+      datetime: '2025-07-07T05:05:00+09:00'
+    },
+    {
+      termId: 'risshu',
+      nameJa: '立秋',
+      branchId: 'shen',
+      datetime: '2025-08-07T14:52:00+09:00'
+    },
+    {
+      termId: 'hakuro',
+      nameJa: '白露',
+      branchId: 'you',
+      datetime: '2025-09-07T17:52:00+09:00'
+    },
+    {
+      termId: 'kanro',
+      nameJa: '寒露',
+      branchId: 'xu',
+      datetime: '2025-10-08T09:41:00+09:00'
+    },
+    {
+      termId: 'ritto',
+      nameJa: '立冬',
+      branchId: 'hai',
+      datetime: '2025-11-07T13:04:00+09:00'
+    },
+    {
+      termId: 'taisetsu',
+      nameJa: '大雪',
+      branchId: 'zi',
+      datetime: '2025-12-07T06:05:00+09:00'
+    }
+  ]),
+
+  2026: Object.freeze([
+    {
+      termId: 'shokan',
+      nameJa: '小寒',
+      branchId: 'chou',
+      datetime: '2026-01-05T17:23:00+09:00'
+    },
+    {
+      termId: 'risshun',
+      nameJa: '立春',
+      branchId: 'yin',
+      datetime: '2026-02-04T05:02:00+09:00'
+    },
+    {
+      termId: 'keichitsu',
+      nameJa: '啓蟄',
+      branchId: 'mao',
+      datetime: '2026-03-05T22:59:00+09:00'
+    },
+    {
+      termId: 'seimei',
+      nameJa: '清明',
+      branchId: 'chen',
+      datetime: '2026-04-05T03:40:00+09:00'
+    },
+    {
+      termId: 'rikka',
+      nameJa: '立夏',
+      branchId: 'si',
+      datetime: '2026-05-05T20:49:00+09:00'
+    },
+    {
+      termId: 'boshu',
+      nameJa: '芒種',
+      branchId: 'wu',
+      datetime: '2026-06-06T00:48:00+09:00'
+    },
+    {
+      termId: 'shosho',
+      nameJa: '小暑',
+      branchId: 'wei',
+      datetime: '2026-07-07T10:57:00+09:00'
+    },
+    {
+      termId: 'risshu',
+      nameJa: '立秋',
+      branchId: 'shen',
+      datetime: '2026-08-07T20:43:00+09:00'
+    },
+    {
+      termId: 'hakuro',
+      nameJa: '白露',
+      branchId: 'you',
+      datetime: '2026-09-07T23:41:00+09:00'
+    },
+    {
+      termId: 'kanro',
+      nameJa: '寒露',
+      branchId: 'xu',
+      datetime: '2026-10-08T15:29:00+09:00'
+    },
+    {
+      termId: 'ritto',
+      nameJa: '立冬',
+      branchId: 'hai',
+      datetime: '2026-11-07T18:52:00+09:00'
+    },
+    {
+      termId: 'taisetsu',
+      nameJa: '大雪',
+      branchId: 'zi',
+      datetime: '2026-12-07T11:53:00+09:00'
+    }
+  ])
+});
+
+const monthStemStartByYearStem = {
+  jia: 3,
+  ji: 3,
+  yi: 5,
+  geng: 5,
+  bing: 7,
+  xin: 7,
+  ding: 9,
+  ren: 9,
+  wu: 1,
+  gui: 1
+};
+
+const hourStemStartByDayStem = {
+  jia: 1,
+  ji: 1,
+  yi: 3,
+  geng: 3,
+  bing: 5,
+  xin: 5,
+  ding: 7,
+  ren: 7,
+  wu: 9,
+  gui: 9
+};
+
+const JST_YEAR_FORMATTER = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Asia/Tokyo',
+  year: 'numeric'
+});
+
+const JST_DATE_TIME_FORMATTER = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Asia/Tokyo',
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  hourCycle: 'h23'
+});
+
+export function resolveSchoolConfig(config = {}) {
+  const schoolId = config.schoolId || 'koyomi-integrated';
+
+  return {
+    schoolId,
+    ...SCHOOL_PROFILES[schoolId],
+    ...config
+  };
+}
+
+export function normalizeProfile(profile = {}) {
+  const birth = profile.birthData || profile.birth || {};
+  const place = birth.place || profile.birthPlace || {};
+  const date = birth.date || profile.birthDate || profile.date;
+  const timeUnknown = Boolean(
+    birth.timeUnknown || profile.timeUnknown
+  );
+
+  return {
+    personId: profile.personId || profile.id || null,
+    name: profile.displayName || profile.name || '',
+    date,
+    time: timeUnknown
+      ? ''
+      : (birth.time || profile.birthTime || ''),
+    timeUnknown,
+    place: {
+      label:
+        place.label ||
+        place.city ||
+        profile.birthPlace ||
+        '',
+      latitude: numberOrNull(
+        place.latitude ?? profile.latitude
+      ),
+      longitude: numberOrNull(
+        place.longitude ?? profile.longitude
+      ),
+      timezone:
+        place.timezone ||
+        profile.timezone ||
+        'Asia/Tokyo',
+      utcOffset: Number(
+        place.utcOffset ??
+        profile.utcOffset ??
+        9
+      )
+    }
+  };
+}
+
+function numberOrNull(value) {
+  if (value === '' || value == null) {
+    return null;
+  }
+
+  const number = Number(value);
+
+  return Number.isFinite(number)
+    ? number
+    : null;
+}
+
+function requireValidDate(value, functionName) {
+  const date =
+    value instanceof Date
+      ? new Date(value.getTime())
+      : new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    throw new TypeError(
+      `${functionName} requires a valid date`
+    );
+  }
+
+  return date;
+}
+
+function getJstYear(date) {
+  return Number(
+    JST_YEAR_FORMATTER.format(date)
+  );
+}
+
+function getJstDateTimeParts(date) {
+  return Object.fromEntries(
+    JST_DATE_TIME_FORMATTER
+      .formatToParts(date)
+      .filter(part => part.type !== 'literal')
+      .map(part => [part.type, Number(part.value)])
+  );
+}
+
+function getRisshunBoundary(year) {
+  const officialBoundary = RISSHUN_BOUNDARIES_JST[year];
+  if (officialBoundary) {
+    return {
+      date: new Date(officialBoundary),
+      datetime: officialBoundary,
+      timezone: 'Asia/Tokyo',
+      precision: 'official-minute',
+      sourceId: `naoj-rekiyou-${year}`,
+      dataPath: 'data/bazi/solar-term-boundaries.json',
+      warning: null
+    };
+  }
+
+  const boundary = calculateSetsuBoundaries(year)
+    .find(term => term.termId === 'risshun');
+
+  return {
+    ...boundary,
+    dataPath: null,
+    warning: null
+  };
+}
+
+function getOfficialMonthBoundary(date) {
+  const year = getJstYear(date);
+  const official = MONTH_BOUNDARIES_JST_BY_YEAR[year];
+  const current = official
+    ? official.map(boundary => ({
+        ...boundary,
+        date: new Date(boundary.datetime),
+        timezone: 'Asia/Tokyo',
+        precision: 'official-minute',
+        sourceId: `naoj-rekiyou-${year}`
+      }))
+    : calculateSetsuBoundaries(year);
+  const previous = MONTH_BOUNDARIES_JST_BY_YEAR[year - 1]?.at(-1);
+  const previousBoundary = previous
+    ? {
+        ...previous,
+        date: new Date(previous.datetime),
+        timezone: 'Asia/Tokyo',
+        precision: 'official-minute',
+        sourceId: `naoj-rekiyou-${year - 1}`
+      }
+    : calculateSetsuBoundaries(year - 1).at(-1);
+  const boundaries = [previousBoundary, ...current];
+
+  let selectedBoundary = null;
+
+  for (const boundary of boundaries) {
+    const boundaryDate = boundary.date;
+
+    if (date >= boundaryDate) {
+      selectedBoundary = {
+        ...boundary,
+        year,
+        date: boundaryDate
+      };
+    } else {
+      break;
+    }
+  }
+
+  return selectedBoundary;
+}
+
+function buildMonthPillar(
+  branchId,
+  yearStemId,
+  boundary
+) {
+  const branchOrder =
+    branchById[branchId].order;
+
+  const stemStart =
+    monthStemStartByYearStem[
+      yearStemId
+    ] || 1;
+
+  const stemIndex =
+    (
+      stemStart -
+      1 +
+      ((
+        branchOrder -
+        3 +
+        12
+      ) % 12)
+    ) % 10;
+
+  const stem = STEMS[stemIndex];
+  const branch = branchById[branchId];
+
+  return {
+    stem,
+    branch,
+    index: null,
+    label: `${stem.kanji}${branch.kanji}`,
+    boundary
+  };
+}
+
+export function julianDay(date) {
+  const validDate = requireValidDate(
+    date,
+    'julianDay'
+  );
+
+  return (
+    validDate.getTime() /
+    86400000 +
+    2440587.5
+  );
+}
+
+export function calculateEquationOfTimeMinutes(
+  datetime,
+  timezoneOffset = 9
+) {
+  const base = requireValidDate(
+    datetime,
+    'calculateEquationOfTimeMinutes'
+  );
+  const offsetHours = Number.isFinite(Number(timezoneOffset))
+    ? Number(timezoneOffset)
+    : 9;
+  const local = new Date(
+    base.getTime() +
+    offsetHours * 3600000
+  );
+  const year = local.getUTCFullYear();
+  const start = Date.UTC(year, 0, 1);
+  const dayOfYear =
+    Math.floor(
+      (
+        Date.UTC(
+          year,
+          local.getUTCMonth(),
+          local.getUTCDate()
+        ) -
+        start
+      ) / 86400000
+    ) + 1;
+  const daysInYear =
+    Date.UTC(year + 1, 0, 1) -
+      start ===
+    366 * 86400000
+      ? 366
+      : 365;
+  const hour =
+    local.getUTCHours() +
+    local.getUTCMinutes() / 60 +
+    local.getUTCSeconds() / 3600;
+  const gamma =
+    2 *
+    Math.PI /
+    daysInYear *
+    (
+      dayOfYear -
+      1 +
+      (hour - 12) / 24
+    );
+
+  return 229.18 * (
+    0.000075 +
+    0.001868 * Math.cos(gamma) -
+    0.032077 * Math.sin(gamma) -
+    0.014615 * Math.cos(2 * gamma) -
+    0.040849 * Math.sin(2 * gamma)
+  );
+}
+
+export function calculateTrueSolarTime(
+  datetime,
+  longitude,
+  timezoneOffset = 9
+) {
+  const base = requireValidDate(
+    datetime,
+    'calculateTrueSolarTime'
+  );
+
+  if (
+    longitude === null ||
+    longitude === undefined ||
+    longitude === '' ||
+    !Number.isFinite(
+      Number(longitude)
+    )
+  ) {
+    return {
+      date: base,
+      longitudeMinutes: 0,
+      equationOfTimeMinutes: 0,
+      minutesOffset: 0,
+      precision: 'timezone-only',
+      warning: 'longitude-missing'
+    };
+  }
+
+  const standardLongitude =
+    Number(timezoneOffset) * 15;
+
+  const longitudeMinutes =
+    (
+      Number(longitude) -
+      standardLongitude
+    ) * 4;
+  const equationOfTimeMinutes =
+    calculateEquationOfTimeMinutes(
+      base,
+      timezoneOffset
+    );
+  const minutesOffset =
+    longitudeMinutes +
+    equationOfTimeMinutes;
+
+  return {
+    date: new Date(
+      base.getTime() +
+      minutesOffset * 60000
+    ),
+    longitudeMinutes,
+    equationOfTimeMinutes,
+    minutesOffset,
+    precision: 'longitude-equation-of-time',
+    warning: null
+  };
+}
+
+export function calculateSolarTerms(
+  datetime,
+  timezone = 'Asia/Tokyo'
+) {
+  const date = requireValidDate(
+    datetime,
+    'calculateSolarTerms'
+  );
+
+  const year = getJstYear(date);
+  const officialBoundaries = MONTH_BOUNDARIES_JST_BY_YEAR[year];
+  if (officialBoundaries) {
+    return officialBoundaries.map(boundary => ({
+      termId: boundary.termId,
+      name: boundary.nameJa,
+      branchId: boundary.branchId,
+      datetime: boundary.datetime,
+      timezone: 'Asia/Tokyo',
+      precision: 'official-minute',
+      sourceId: `naoj-rekiyou-${year}`
+    }));
+  }
+
+  return calculateSetsuBoundaries(year).map(
+    boundary => ({
+      termId: boundary.termId,
+      name: boundary.nameJa,
+      branchId: boundary.branchId,
+      datetime: boundary.datetime,
+      timezone,
+      precision: boundary.precision,
+      sourceId: boundary.sourceId
+    })
+  );
+}
+
+function cyclePillar(index) {
+  const normalizedIndex =
+    ((index % 60) + 60) % 60;
+
+  const stem =
+    STEMS[normalizedIndex % 10];
+
+  const branch =
+    BRANCHES[normalizedIndex % 12];
+
+  return {
+    stem,
+    branch,
+    index:
+      normalizedIndex + 1,
+    label:
+      `${stem.kanji}${branch.kanji}`
+  };
+}
+
+export function calculateYearPillar(date) {
+  const validDate = requireValidDate(
+    date,
+    'calculateYearPillar'
+  );
+
+  const calendarYear =
+    getJstYear(validDate);
+
+  const boundary =
+    getRisshunBoundary(
+      calendarYear
+    );
+
+  const pillarYear =
+    validDate < boundary.date
+      ? calendarYear - 1
+      : calendarYear;
+
+  return {
+    ...cyclePillar(
+      pillarYear - 1984
+    ),
+
+    pillarYear,
+
+    boundary: {
+      termId: 'risshun',
+      nameJa: '立春',
+      datetime:
+        boundary.datetime,
+      timezone:
+        boundary.timezone,
+      precision:
+        boundary.precision,
+      sourceId:
+        boundary.sourceId,
+      dataPath:
+        boundary.dataPath,
+      warning:
+        boundary.warning
+    }
+  };
+}
+
+export function calculateMonthPillar(
+  date,
+  yearStemId
+) {
+  const validDate = requireValidDate(
+    date,
+    'calculateMonthPillar'
+  );
+
+  const boundary =
+    getOfficialMonthBoundary(
+      validDate
+    );
+
+  return buildMonthPillar(
+    boundary.branchId,
+    yearStemId,
+    {
+      termId:
+        boundary.termId,
+      nameJa:
+        boundary.nameJa,
+      datetime:
+        boundary.datetime,
+      timezone:
+        boundary.timezone,
+      precision:
+        boundary.precision,
+      sourceId:
+        boundary.sourceId,
+      dataPath: null,
+      warning: null
+    }
+  );
+}
+
+export function calculateDayPillar(date) {
+  const validDate = requireValidDate(
+    date,
+    'calculateDayPillar'
+  );
+
+  const { year, month, day } =
+    getJstDateTimeParts(validDate);
+  const a = Math.floor(
+    (14 - month) / 12
+  );
+  const y = year + 4800 - a;
+  const m = month + 12 * a - 3;
+  const civilJulianDay =
+    day +
+    Math.floor((153 * m + 2) / 5) +
+    365 * y +
+    Math.floor(y / 4) -
+    Math.floor(y / 100) +
+    Math.floor(y / 400) -
+    32045;
+
+  return cyclePillar(
+    civilJulianDay + 49
+  );
+}
+
+export function calculateHourPillar(
+  date,
+  dayStemId,
+  schoolConfig = {}
+) {
+  if (!date) {
+    return null;
+  }
+
+  const validDate = requireValidDate(
+    date,
+    'calculateHourPillar'
+  );
+
+  const { hour } =
+    getJstDateTimeParts(validDate);
+
+  const branchIndex =
+    hour === 23
+      ? 0
+      : Math.floor(
+          (hour + 1) / 2
+        ) % 12;
+
+  const stemStart =
+    hourStemStartByDayStem[
+      dayStemId
+    ] || 1;
+
+  const stem =
+    STEMS[
+      (
+        stemStart -
+        1 +
+        branchIndex
+      ) % 10
+    ];
+
+  const branch =
+    BRANCHES[branchIndex];
+
+  return {
+    stem,
+    branch,
+    index: null,
+    label:
+      `${stem.kanji}${branch.kanji}`,
+    ziHourPolicy:
+      schoolConfig.ziHour
+  };
+}
+
+export function buildBirthDateTime(
+  normalized
+) {
+  if (!normalized.date) {
+    return null;
+  }
+
+  const time =
+    normalized.time ||
+    '00:00';
+  const [year, month, day] =
+    normalized.date
+      .split('-')
+      .map(Number);
+  const [hour, minute] =
+    time
+      .split(':')
+      .map(Number);
+  const utcOffset =
+    Number(normalized.place?.utcOffset ?? 9);
+
+  return new Date(
+    Date.UTC(
+      year,
+      month - 1,
+      day,
+      hour,
+      minute
+    ) -
+    utcOffset * 3600000
+  );
+}

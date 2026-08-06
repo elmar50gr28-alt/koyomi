@@ -1,0 +1,4 @@
+[
+  {"sourceId":"src-yuanhai-ziping-biblio","title":"Yuanhai Ziping","author":"Xu Dasheng attributed","era":"Song/Yuan tradition","chapter":"","section":"","originalText":"","normalizedText":"","japaneseSummary":"Classical bibliographic seed for Ziping rules.","conceptIds":["pattern","ten-gods","strength"],"schoolIds":["yuanhai-ziping","traditional-ziping"],"sourceType":"bibliographic","copyrightStatus":"public-domain-bibliographic","reviewStatus":"seeded"},
+  {"sourceId":"src-qiongtong-baojian-biblio","title":"Qiongtong Baojian","author":"classical compilation","era":"Ming/Qing tradition","chapter":"","section":"","originalText":"","normalizedText":"","japaneseSummary":"Classical bibliographic seed for climate yongshen rules.","conceptIds":["climate","yongshen"],"schoolIds":["qiongtong-baojian","koyomi-integrated"],"sourceType":"bibliographic","copyrightStatus":"public-domain-bibliographic","reviewStatus":"seeded"}
+]

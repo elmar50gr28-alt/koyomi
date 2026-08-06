@@ -1,0 +1,4 @@
+[
+  {"caseId":"phase2-known-time-winter","profile":{"displayName":"Winter","birthData":{"date":"1990-12-20","time":"06:30","place":{"label":"Tokyo","longitude":139.767,"utcOffset":9,"timezone":"Asia/Tokyo"}}},"expects":{"hasStrength":true,"hasClimate":true,"hasLuckCycles":true}},
+  {"caseId":"phase2-unknown-time-partial","profile":{"displayName":"Partial","birthData":{"date":"1990-07-10","timeUnknown":true,"place":{"label":"Osaka","longitude":135.502,"utcOffset":9,"timezone":"Asia/Tokyo"}}},"expects":{"hourUnknown":true,"hasYongshenMethods":true}}
+]
