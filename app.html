@@ -2252,7 +2252,7 @@ function koyomiBaziLuckStartHtml(luck,locale='ja'){
 }
 function koyomiCommonPrimaryReadingHtml(common,legacyText,locale='ja'){
   if(!common?.available)return '';
-  const ja=locale!=='en',categories=common.categories||{},top=common.items?.[0]||{};
+  const ja=locale!=='en',categories=common.categories||{},top=common.items?.[0]||{},answer=common.answer||{};
   const rows=[
     [ja?'\u4ed5\u4e8b':'Work',categories.work],
     [ja?'\u604b\u611b':'Love',categories.love],
@@ -2260,6 +2260,14 @@ function koyomiCommonPrimaryReadingHtml(common,legacyText,locale='ja'){
     [ja?'\u5065\u5eb7':'Health',categories.health]
   ].filter(([,text])=>text);
   return `<section class="koyomi-common-primary" aria-label="${ja?'\u5171\u901a\u9451\u5b9a':'Common reading'}">
+    ${answer.available?`<div class="koyomi-bazi-view-head"><h3>${ja?'\u76f8\u8ac7\u3078\u306e\u7b54\u3048':'Answer to your question'}</h3></div>
+    ${answer.question?`<p><b>${ja?'\u76f8\u8ac7\u5185\u5bb9':'Question'}</b>${koyomiEscapeHtml(answer.question)}</p>`:''}
+    <p class="koyomi-bazi-guidance-card conclusion"><b>${ja?'\u7d50\u8ad6':'Conclusion'}</b>${koyomiEscapeHtml(answer.directAnswer)}</p>
+    <p class="koyomi-bazi-guidance-card evidence"><b>${ja?'\u7406\u7531':'Reason'}</b>${koyomiEscapeHtml(answer.reason)}</p>
+    <div class="koyomi-bazi-guidance-grid">${(answer.actionPlan||[]).map(step=>`<p class="koyomi-bazi-guidance-card action"><b>${koyomiEscapeHtml(step.when)}</b>${koyomiEscapeHtml(step.action)}</p>`).join('')}</div>
+    <p class="koyomi-bazi-guidance-card caution"><b>${ja?'\u3084\u3081\u308b\u3053\u3068':'Stop'}</b>${koyomiEscapeHtml(answer.stop)}</p>
+    <p><b>${ja?'\u898b\u76f4\u3057\u57fa\u6e96':'Review point'}</b>${koyomiEscapeHtml(answer.review)}</p>
+    ${answer.disclaimer?`<p class="koyomi-bazi-guidance-card caution">${koyomiEscapeHtml(answer.disclaimer)}</p>`:''}`:''}
     <div class="koyomi-bazi-view-head"><h3>${ja?'\u4eca\u65e5\u306e\u4e2d\u5fc3\u30c6\u30fc\u30de':'Today’s central theme'}</h3></div>
     <p class="koyomi-bazi-guidance-card conclusion"><b>${koyomiEscapeHtml(top.themeName||'')}</b>${koyomiEscapeHtml(common.summary)}</p>
     <div class="koyomi-bazi-guidance-grid">${rows.map(([label,text])=>`<p class="koyomi-bazi-guidance-card"><b>${koyomiEscapeHtml(label)}</b>${koyomiEscapeHtml(text)}</p>`).join('')}</div>
@@ -2276,7 +2284,8 @@ async function koyomiRenderBaziReading(){
     profile.baziSettings=window.KOYOMI_BAZI_SETTINGS?.()||{};
     const result=KOYOMI_BAZI.calculateBazi(profile);
     const locale=koyomiBaziLocale();
-    const commonReading=KOYOMI_BAZI.buildCommonReading(result,{tone:'mitsunome',maxThemes:4});
+    const question=document.getElementById('question')?.value||document.getElementById('memo')?.value||document.getElementById('consultation')?.value||'';
+    const commonReading=KOYOMI_BAZI.buildCommonReading(result,{tone:'mitsunome',maxThemes:4,question});
     result.commonReading=commonReading;
     const reading={...KOYOMI_BAZI.buildBaziReading(result,{locale}),commonReading};
     window.KOYOMI_LAST_BAZI_READING={result,reading};
@@ -2325,7 +2334,7 @@ async function koyomiRenderBaziReading(){
         if(stopNode)stopNode.textContent=commonReading.avoidAction;
         if(homeworkNode)homeworkNode.textContent=commonReading.items?.[0]?.themeName||'';
       }
-      if(personalResult)personalResult.reading=[commonReading.summary,...Object.values(commonReading.categories||{}),commonReading.todayAction,commonReading.avoidAction].filter(Boolean).join('\n');
+      if(personalResult)personalResult.reading=[commonReading.answer?.directAnswer,commonReading.answer?.reason,...(commonReading.answer?.actionPlan||[]).map(step=>`${step.when}: ${step.action}`),commonReading.answer?.stop,commonReading.summary,...Object.values(commonReading.categories||{})].filter(Boolean).join('\n');
     }
   }catch(error){
     console.error('[KOYOMI_BAZI_READING] render failed',error);
