@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v1';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -24,6 +24,12 @@ const APP_SHELL = [
   './src/mundane/western/astronomy-engine-adapter.js',
   './src/bazi/astronomy/solar-term-core.js',
   './src/bazi/reading/chart-interpretation.js',
+  './src/reading/index.js',
+  './src/reading/reading-engine.js',
+  './src/reading/theme-loader.js',
+  './src/reading/theme-selector.js',
+  './src/reading/sentence-composer.js',
+  './data/reading/common_reading_themes.json',
   './src/persona/conversation-adapter.js',
   './src/persona/sister-renderer.js',
   './src/persona/sister-lexicon.js',
