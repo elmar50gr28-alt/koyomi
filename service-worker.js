@@ -33,7 +33,6 @@ const APP_SHELL = [
   './src/reading/concrete-answer-composer.js',
   './src/reading/universal-reading-engine.js',
   './data/reading/common_reading_themes.json',
-  './data/research/earthquake-validation-summary.json',
   './src/persona/conversation-adapter.js',
   './src/persona/sister-renderer.js',
   './src/persona/sister-lexicon.js',
