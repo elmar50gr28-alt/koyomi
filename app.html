@@ -2250,6 +2250,24 @@ function koyomiBaziLuckStartHtml(luck,locale='ja'){
     <div class="koyomi-bazi-cycle-list">${cycles}</div>
   </section>`;
 }
+function koyomiCommonPrimaryReadingHtml(common,legacyText,locale='ja'){
+  if(!common?.available)return '';
+  const ja=locale!=='en',categories=common.categories||{},top=common.items?.[0]||{};
+  const rows=[
+    [ja?'\u4ed5\u4e8b':'Work',categories.work],
+    [ja?'\u604b\u611b':'Love',categories.love],
+    [ja?'\u5bfe\u4eba\u95a2\u4fc2':'Relationships',categories.relationship],
+    [ja?'\u5065\u5eb7':'Health',categories.health]
+  ].filter(([,text])=>text);
+  return `<section class="koyomi-common-primary" aria-label="${ja?'\u5171\u901a\u9451\u5b9a':'Common reading'}">
+    <div class="koyomi-bazi-view-head"><h3>${ja?'\u4eca\u65e5\u306e\u4e2d\u5fc3\u30c6\u30fc\u30de':'Today’s central theme'}</h3></div>
+    <p class="koyomi-bazi-guidance-card conclusion"><b>${koyomiEscapeHtml(top.themeName||'')}</b>${koyomiEscapeHtml(common.summary)}</p>
+    <div class="koyomi-bazi-guidance-grid">${rows.map(([label,text])=>`<p class="koyomi-bazi-guidance-card"><b>${koyomiEscapeHtml(label)}</b>${koyomiEscapeHtml(text)}</p>`).join('')}</div>
+    <p class="koyomi-bazi-guidance-card action"><b>${ja?'\u4eca\u65e5\u306e\u4e00\u624b':'Action today'}</b>${koyomiEscapeHtml(common.todayAction)}</p>
+    <p class="koyomi-bazi-guidance-card caution"><b>${ja?'\u907f\u3051\u305f\u3044\u884c\u52d5':'Avoid'}</b>${koyomiEscapeHtml(common.avoidAction)}</p>
+    <details><summary>${ja?'\u5f93\u6765\u306e\u7dcf\u5408\u9451\u5b9a\u3092\u898b\u308b':'Show legacy integrated reading'}</summary><div style="white-space:pre-wrap">${koyomiEscapeHtml(legacyText||'')}</div></details>
+  </section>`;
+}
 async function koyomiRenderBaziReading(){
   try{
     const profile=koyomiBaziReadingProfile();
@@ -2258,7 +2276,9 @@ async function koyomiRenderBaziReading(){
     profile.baziSettings=window.KOYOMI_BAZI_SETTINGS?.()||{};
     const result=KOYOMI_BAZI.calculateBazi(profile);
     const locale=koyomiBaziLocale();
-    const reading={...KOYOMI_BAZI.buildBaziReading(result,{locale}),commonReading:result.commonReading};
+    const commonReading=KOYOMI_BAZI.buildCommonReading(result,{tone:'mitsunome',maxThemes:4});
+    result.commonReading=commonReading;
+    const reading={...KOYOMI_BAZI.buildBaziReading(result,{locale}),commonReading};
     window.KOYOMI_LAST_BAZI_READING={result,reading};
     const pillars=result.chart?.pillars||{};
     const pillarGrid=document.getElementById('pillarGrid');
@@ -2281,10 +2301,30 @@ async function koyomiRenderBaziReading(){
       ].map(x=>`<span>${x}</span>`).join('');
     }
     if(window.lastPersonal){
+      const legacyReading=window.lastPersonal.reading||'';
       window.lastPersonal.baziReading=reading;
       window.lastPersonal.baziStructuredResult=result;
       window.lastPersonal.luckCycles=result.luckCycles;
       if(window.lastPersonal.divinations)window.lastPersonal.divinations.shichu=reading.beginnerText;
+      if(commonReading.available){
+        const overall=document.getElementById('overallReading');
+        if(overall)overall.innerHTML=koyomiCommonPrimaryReadingHtml(commonReading,legacyReading,locale);
+        const verdict=document.getElementById('personalVerdict');
+        if(verdict)verdict.textContent=`${locale==='en'?'Today’s theme':'\u4eca\u65e5\u306e\u30c6\u30fc\u30de'}\uff1a${commonReading.items?.[0]?.themeName||''}`;
+        const verdictNote=document.getElementById('personalVerdictNote');
+        if(verdictNote)verdictNote.textContent=commonReading.summary;
+        const actionSummary=document.getElementById('personalActionSummary');
+        if(actionSummary){
+          actionSummary.hidden=false;
+          const doNode=actionSummary.querySelector('[data-personal-action="do"]');
+          const stopNode=actionSummary.querySelector('[data-personal-action="stop"]');
+          const homeworkNode=actionSummary.querySelector('[data-personal-action="homework"]');
+          if(doNode)doNode.textContent=commonReading.todayAction;
+          if(stopNode)stopNode.textContent=commonReading.avoidAction;
+          if(homeworkNode)homeworkNode.textContent=commonReading.items?.[0]?.themeName||'';
+        }
+        window.lastPersonal.reading=[commonReading.summary,...Object.values(commonReading.categories||{}),commonReading.todayAction,commonReading.avoidAction].filter(Boolean).join('\n');
+      }
     }
   }catch(error){
     console.error('[KOYOMI_BAZI_READING] render failed',error);

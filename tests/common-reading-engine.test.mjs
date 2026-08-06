@@ -34,6 +34,9 @@ assert.equal(reading.available, true);
 assert.equal(reading.items.length, 6);
 assert.ok(reading.summary.length > 0);
 assert.ok(reading.todayAction.length > 0);
+for (const category of ['overall', 'work', 'love', 'relationship', 'health']) {
+  assert.ok(reading.categories[category]?.length > 0, `primary category missing: ${category}`);
+}
 assert.deepEqual(reading.sourcePolicy, { existingCalculationResultsOnly: true, offlineDataOnly: true });
 
 const empty = buildCommonReading({ chart: { pillars: {} } });
