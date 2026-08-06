@@ -1,0 +1,41 @@
+{
+  "schemaId": "koyomi-earthquake-validation-config-v1",
+  "primaryCatalog": "usgs_comcat",
+  "catalogFallbacks": ["isc_bulletin", "isc_gem", "jma"],
+  "cacheTtlDays": 3650,
+  "userAgent": "KOYOMI earthquake validation research; no prediction use",
+  "mainshockSearch": {
+    "daysBefore": 2,
+    "daysAfter": 2,
+    "radiusKm": 500,
+    "minMagnitude": 6.0
+  },
+  "catalogQuery": {
+    "minMagnitude": 4.0,
+    "maxRadiusKm": 1200,
+    "maxDaysAfter": 30
+  },
+  "primaryTimeWindowsDays": [1, 3, 7, 14, 30],
+  "exploratoryTimeWindowsHours": [6, 12],
+  "exploratoryTimeWindowsDays": [60, 90],
+  "radiusWindowsKm": [100, 300, 500, 1000],
+  "ruptureLengthMultipliers": [1, 2, 3],
+  "magnitudeThresholds": [4.0, 4.5, 5.0, 6.0],
+  "primaryMagnitudeThreshold": 4.5,
+  "falseAlarmScan": {
+    "enabled": true,
+    "years": [2018, 2019, 2020, 2021, 2022, 2023],
+    "regions": [
+      {"id": "japan_trench", "label": "Japan trench region", "latitude": 38.0, "longitude": 142.0},
+      {"id": "sumatra", "label": "Sumatra region", "latitude": 2.0, "longitude": 96.0},
+      {"id": "turkey", "label": "Turkey region", "latitude": 38.0, "longitude": 37.0}
+    ],
+    "topPeriodsPerRegion": 4,
+    "lowPeriodsPerRegion": 2,
+    "minMagnitudeForMajor": 6.5
+  },
+  "safetyLanguage": {
+    "forbiddenLabels": ["地震発生確率", "地震予知", "日時指定地震予測", "安全宣言", "独自警報"],
+    "researchLabel": "研究用地震活動指標"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "source": "USGS ComCat FDSN Event API",
+  "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2012-04-09T08%3A38%3A37Z&endtime=2012-04-13T08%3A38%3A37Z&latitude=2.327&longitude=93.063&maxradiuskm=500&minmagnitude=6.0",
+  "retrievedAt": "2026-08-06T12:29:13Z",
+  "params": {
+    "format": "geojson",
+    "orderby": "time-asc",
+    "starttime": "2012-04-09T08:38:37Z",
+    "endtime": "2012-04-13T08:38:37Z",
+    "latitude": 2.327,
+    "longitude": 93.063,
+    "maxradiuskm": 500,
+    "minmagnitude": 6.0
+  }
+}

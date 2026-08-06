@@ -1,0 +1,2 @@
+catalogEventId,cohortId,combinedScore,confirmationStatus,depthKm,latitude,longitude,magnitude,magnitudeType,mundaneSymbolicScore,nameJa,originTime,randomScore,source,sourceUrl,tectonicType,tidalLunarScore
+usp000h60h,haiti_2010,36.919,confirmed_by_catalog,13.0,18.443,-72.571,7.0,mwc,32.452,2010年 ハイチ地震,2010-01-12T21:53:10Z,80.614,USGS ComCat,https://earthquake.usgs.gov/earthquakes/eventpage/usp000h60h,strike_slip,23.525

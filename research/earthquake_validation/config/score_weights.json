@@ -1,0 +1,26 @@
+{
+  "schemaId": "koyomi-earthquake-mundane-score-weights-v1",
+  "modelId": "fixed-pre-holdout-baseline-v1",
+  "lockedBeforeHoldout": true,
+  "weights": {
+    "syzygy": 0.22,
+    "lunarDistance": 0.18,
+    "tidalProxy": 0.2,
+    "outerHardAspect": 0.16,
+    "lunarTrigger": 0.14,
+    "regionalAngle": 0.1
+  },
+  "comparisonModels": [
+    "tidal_lunar_only",
+    "mundane_symbolic_only",
+    "combined",
+    "random_seeded",
+    "season_region_baseline",
+    "past_activity_baseline"
+  ],
+  "notes": [
+    "This is a research-only score.",
+    "Physical tide proxies and symbolic mundane factors are stored separately.",
+    "Weights must not be tuned after seeing validation outcomes unless the result is marked exploratory."
+  ]
+}
