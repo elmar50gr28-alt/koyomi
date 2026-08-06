@@ -161,6 +161,11 @@ main{width:min(1180px,100%);margin:auto;padding:12px 12px 20px;display:grid;gap:
 
 <div class="glossary-pop" id="glossaryPop"><div class="glossary-box"><button id="glossaryClose">×</button><h2 id="glossaryTitle"></h2><p id="glossaryLife"></p><p class="expert-note" id="glossaryExpert"></p><button class="ruby-toggle" id="speakTerm" style="float:none;width:auto;height:auto">読み上げ</button></div></div>
 <div class="error" id="errorBox"></div>
+<style>
+.universal-reading-answer{margin:18px 0;padding:15px;border:1px solid #8f7a4c;border-radius:12px;background:rgba(24,29,37,.92);color:#f3e8c5;line-height:1.75}
+.universal-reading-answer h3{margin:0 0 10px;color:#f2d67f}.universal-reading-answer p{margin:8px 0}.universal-reading-answer p>b,.universal-reading-answer li>b{display:block;color:#e3c56f}.universal-reading-answer ol{padding-left:1.4em}.universal-reading-answer small{display:block;color:#c7b88e}
+</style>
+<script src="src/reading/universal-reading-engine.js"></script>
 <script src="src/ui/today-personal-location.js"></script>
 <script src="src/ui/today-layer-renderer.js"></script>
 <script>
@@ -237,6 +242,13 @@ function bind(){$('#drawerClose').onclick=()=>$('#drawer').classList.remove('ope
 }
 function init(){try{syncCalendarDate(new Date());loadSavedBaziLayerData();renderText();renderStatic();bindInputViewport();bind();$('#reloadBtn').onclick=()=>window.location.reload();$('#gestureArea').addEventListener('dblclick',()=>{syncCalendarDate(new Date());renderText();renderStatic()});requestAnimationFrame(updateClock)}catch(e){console.error(e);showError('今日の暦を起動できませんでした：'+e.message)}}
 init();
+</script>
+<script id="universal-today-reading">
+'use strict';
+function renderUniversalTodayReading(){const engine=window.KOYOMI_UNIVERSAL_READING,target=document.getElementById('lifeTranslation');if(!engine||!target)return;const actions=(data.recommendedAction||[]).slice(0,2),answer=engine.build({type:'today',subject:data.dailyTheme,score:Number(data.dayPillar?.strength)||50,evidence:[data.dailySummary,data.themeDetail,`${data.strongElement}が強く、${data.weakElement}が不足`],actions,caution:(data.avoidAction||[]).join('／'),review:'今夜',disclaimer:'今日の運勢は行動を整える目安です。健康・法律・お金の重要判断は専門情報を優先してください。'});engine.renderBefore(target,answer)}
+const universalTodayRenderTextBase=renderText;
+renderText=function(){const result=universalTodayRenderTextBase();renderUniversalTodayReading();return result};
+renderUniversalTodayReading();
 </script>
 
 <script id="v200-script">

@@ -19,7 +19,7 @@ assert.ok(app.indexOf('if(commonReading.available){') > app.indexOf("const perso
 assert.ok(app.includes("const question=document.getElementById('question')?.value"), 'consultation question must reach the common engine');
 assert.ok(app.includes("common.answer||{}"), 'concrete answer must be rendered in the primary result');
 assert.ok(app.includes("'\\u76f8\\u8ac7\\u3078\\u306e\\u7b54\\u3048'"), 'answer-to-question heading missing');
-assert.ok(serviceWorker.includes("common-reading-v4-concrete-sister"), 'concrete sister release must bump the offline cache');
+assert.ok(serviceWorker.includes("common-reading-v5-universal"), 'universal reading release must bump the offline cache');
 for (const file of [
   './src/reading/index.js',
   './src/reading/reading-engine.js',
