@@ -19,6 +19,7 @@ export { buildBeginnerExplanation, buildInterpretationFacts, buildMitsunomeInput
 export { buildBaziBeginnerReading, buildBaziMitsunomeReadingInput, buildBaziProfessionalReading, buildBaziReading, validateBaziReading } from './reading/index.js';
 export { buildBaziChartInterpretation } from './reading/chart-interpretation.js';
 export { adaptIntegratedBaziReadingSource } from './reading/adapter.js';
+export { buildCommonReading, prepareCommonReadingThemes } from '../reading/index.js';
 
 import { calculateBaziChart, calculateFourPillars, calculateTenGod, calculateTwelveStage, getHiddenStems } from './chart/index.js';
 import { evaluateBasicBranchRelations, evaluateBasicStemRelations, evaluateBranchRelations, evaluateStemRelations } from './relations/index.js';
@@ -32,6 +33,7 @@ import { buildBaziReading, validateBaziReading } from './reading/index.js';
 import { validateBaziPhase2Result, validateBaziPhase3Result, validateBaziResult, validateChartResult } from './validation/index.js';
 import { inspectBaziSettings, normalizeBaziSettings, toLegacySchoolConfig } from './settings/index.js';
 import { buildIntegratedBaziReadingData, validateIntegratedBaziReadingData } from './integration/index.js';
+import { buildCommonReading } from '../reading/index.js';
 
 export function calculateBazi(profile, schoolConfig = profile?.baziSettings || {}) {
   const baziSettings = normalizeBaziSettings(schoolConfig);
@@ -104,9 +106,14 @@ export function calculateBazi(profile, schoolConfig = profile?.baziSettings || {
     ...phase3Result,
     mitsunomeInput: buildMitsunomeInput(phase3Result)
   };
-  const reading = buildBaziReading(finalResult);
+  const commonReading = buildCommonReading(finalResult, { tone: 'mitsunome' });
+  const reading = {
+    ...buildBaziReading(finalResult),
+    commonReading
+  };
   return {
     ...finalResult,
+    commonReading,
     reading,
     readingValidation: validateBaziReading(reading),
     validation: validateBaziResult(finalResult),
@@ -150,6 +157,7 @@ export default {
   buildMitsunomeInput,
   buildIntegratedBaziReadingData,
   validateIntegratedBaziReadingData,
+  buildCommonReading,
   buildBaziReading,
   validateBaziReading
 };
