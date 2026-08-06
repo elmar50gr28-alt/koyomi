@@ -13,7 +13,10 @@ assert.ok(app.includes('function koyomiCommonPrimaryReadingHtml(common,legacyTex
 assert.ok(app.includes("document.getElementById('overallReading')"), 'common reading must update the integrated reading area');
 assert.ok(app.includes("document.getElementById('personalVerdict')"), 'common theme must update the primary verdict');
 assert.ok(app.includes("actionSummary.querySelector('[data-personal-action=\"do\"]')"), 'common action must update the primary action card');
-assert.ok(serviceWorker.includes("common-reading-v2-primary"), 'primary reading release must bump the offline cache');
+assert.ok(!app.includes('if(window.lastPersonal)'), 'primary rendering must not depend on a window property hidden by global lexical state');
+assert.ok(app.includes("const personalResult=typeof lastPersonal!=='undefined'?lastPersonal:null;"), 'legacy personal result must be accessed safely');
+assert.ok(app.indexOf('if(commonReading.available){') > app.indexOf("const personalResult=typeof lastPersonal!=='undefined'?lastPersonal:null;"), 'primary rendering must run independently of the legacy personal result');
+assert.ok(serviceWorker.includes("common-reading-v3-primary-render"), 'primary render fix must bump the offline cache');
 for (const file of [
   './src/reading/index.js',
   './src/reading/reading-engine.js',

@@ -107,7 +107,7 @@ assert.ok('natalYongshen' in connected.evaluationMaterials, 'yongshen material s
 
 const appHtml = fs.readFileSync(new URL('../app.html', import.meta.url), 'utf8');
 assert.match(appHtml, /function calcLuck\(/, 'legacy visible luck model remains for display compatibility');
-assert.match(appHtml, /window\.lastPersonal\.luckCycles=result\.luckCycles/, 'structured luck core is connected without changing UI text');
+assert.match(appHtml, /personalResult\.luckCycles=result\.luckCycles/, 'structured luck core is connected through the safe personal result reference');
 assert.match(appHtml, /function koyomiBaziLuckStartHtml\(/, 'auditable luck-start details must be rendered in the main Bazi result');
 
 console.log('Bazi luck period core tests passed');
