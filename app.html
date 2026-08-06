@@ -437,6 +437,16 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <div class="ledger-status-toast" id="ledgerStatusToast"></div>
 
 <div class="toast" id="toast"></div>
+<style>
+.universal-reading-answer{margin:14px 0;padding:15px;border:3px double #8a6b3d;border-radius:8px;background:#fff9ed;color:#2d2419;line-height:1.75}
+.universal-reading-answer h3{margin:0 0 10px;border-bottom:2px solid #8a6b3d;padding-bottom:7px}
+.universal-reading-answer p{margin:8px 0}.universal-reading-answer p>b{display:block;color:#652b26}
+.universal-reading-answer ol{margin:8px 0;padding-left:1.5em}.universal-reading-answer li{margin:6px 0}
+.universal-reading-answer li>b{display:inline-block;margin-right:.55em;color:#652b26}.universal-reading-answer small{display:block;margin-top:9px;color:#6e5a3e}
+.universal-reading-answer .conclusion{padding:10px;border-left:5px solid #8f3e32;background:#f7edd8;font-weight:850}
+.timeline-summary+.universal-reading-answer,.timeline-summary .universal-reading-answer{grid-column:1/-1}
+@media(max-width:640px){.universal-reading-answer{padding:12px;margin:10px 0}}
+</style>
 <script src="./src/shared/calendar-time-core.js"></script>
 <script src="./src/shared/profile-validation-core.js"></script>
 <script src="./src/shared/profile-normalization-core.js"></script>
@@ -449,6 +459,7 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <script src="./src/persona/divination-glossary.js"></script>
 <script src="./src/persona/sister-renderer.js"></script>
 <script src="./src/persona/conversation-adapter.js"></script>
+<script src="./src/reading/universal-reading-engine.js"></script>
 <script src="./src/data/name-strokes.js"></script>
 <script src="./src/astrology/western-core-v1.js"></script>
 <script src="./src/astrology/western-transits-v1.js"></script>
@@ -1902,12 +1913,24 @@ const koyomiLedgerSavePrivacyBase=ledgerSavePrivacy;
 ledgerSavePrivacy=async function(){await koyomiLedgerSavePrivacyBase();if($('koyomiAppMode')){LedgerState.settings.appMode=$('koyomiAppMode').value;await ledgerSaveAppSettings()}koyomiApplyMode()}
 const koyomiInitBase=init;
 init=async function(){await koyomiInitBase();await initStep('koyomiUiUx',()=>koyomiFinalizeUi())}
+function v201Answer(input,target){const engine=window.KOYOMI_UNIVERSAL_READING;if(!engine)return null;const answer=engine.build(input);engine.renderBefore(target,answer);return answer}
+const v201RenderCompatBase=renderCompat;
+renderCompat=function(r){const result=v201RenderCompatBase(r);if(r)v201Answer({type:'compatibility',question:$('relationQuestion')?.value||'',subject:'二人の関係',score:r.score,evidence:[`相性素質 ${r.symbolic}`,`現実運用 ${r.operation}`,`摩擦警報 ${r.axes?.摩擦??'未算出'}`],actions:r.danger?['一人で抱えず、信頼できる人や相談窓口へ状況を共有する','安全な距離と連絡方法を決める']:['事実・希望・お願いを一つずつ伝える','次に話す日時を二人で決める'],caution:r.danger?'暴言・脅し・監視・金銭支配・強要を我慢しないこと':'相手の気持ちを推測だけで決めつけないこと'},$('compatReading'));return result};
+const v201RenderTimelineBase=renderTimeline;
+renderTimeline=function(filter){const result=v201RenderTimelineBase(filter);if(lastTimeline.length){const current=lastTimeline.find(x=>x.year===new Date().getFullYear())||lastTimeline[0],best=[...lastTimeline].sort((a,b)=>b.score-a.score)[0],caution=[...lastTimeline].sort((a,b)=>a.score-b.score)[0];v201Answer({type:'timeline',subject:'これからの長期計画',score:current.score,evidence:[`現在地 ${current.year}年・${current.state} ${current.score}点`,`追い風の候補 ${best.year}年 ${best.score}点`,`調整候補 ${caution.year}年 ${caution.score}点`],actions:[current.advice,`${best.year}年までに必要な準備を一つ書き出す`],caution:'点数だけで進学・転職・結婚・投資を決めないこと'},$('timelineSummary'))}return result};
+const v201RunOracleBase=v192RunOracle;
+v192RunOracle=function(){const result=v201RunOracleBase();const source=window.V192_LAST_ORACLE;if(source){const score=Math.round((Number.parseFloat($('mesoOmenFill')?.style.width)||50));const answer=v201Answer({type:'oracle',question:$('oracleQuestion')?.value||'',subject:'今なすべき一手',score,evidence:[$('mesoOracleReading')?.textContent?.split('\n').find(Boolean),$('onkanOracleReading')?.textContent?.split('\n').find(Boolean)],actions:['神託が示した一手を、今日できる大きさまで小さくする','実行後の事実を一行で残す'],caution:'象徴表現を未来の確定事項として扱わないこと',disclaimer:'古代神託は歴史資料・復元計算・現代的解釈を重ねた参考情報です。'},$('ancientIntegratedReading'));if(answer){$('ancientIntegratedReading').textContent=`${window.KOYOMI_UNIVERSAL_READING.toText(answer)}\n\n${source.integrated}`;window.V192_LAST_ORACLE.integrated=$('ancientIntegratedReading').textContent}}return result};
+const v201QimenGenerateBase=qmdjGenerate;
+qmdjGenerate=function(){const result=v201QimenGenerateBase();if(QMDJ_LAST){const state=QMDJ_LAST,answer=v201Answer({type:'qimen',question:state.input.question||$('qmQuestion')?.value||'',subject:state.input.purpose?.label||'今回の行動',score:state.ev.overall,evidence:[`${state.chart.dun}${state.chart.ju}局・${state.chart.term.name}`,`最良 ${state.ev.best.dir} ${state.ev.best.rank.label}`,`注意 ${state.ev.worst.dir} ${state.ev.worst.rank.label}`],actions:[`${state.text.bestRange}に${state.input.purpose.action}`,`${state.ev.best.dir}を使う場合は移動条件と安全を先に確認する`],window:state.text.bestRange,caution:state.input.purpose.avoid||'悪い方位を恐れて現実の安全確認を省かないこと'},$('qmCenterVerdict'));if(answer)$('qmCenterVerdict').textContent=window.KOYOMI_UNIVERSAL_READING.toText(answer)}return result};
+const v201MundaneGenerateBase=mundaneGenerate;
+mundaneGenerate=async function(){const result=await v201MundaneGenerateBase();const box=$('mundaneReading');if(box&&!box.hidden){const facts=[...box.querySelectorAll('p')].map(x=>x.textContent).filter(Boolean);v201Answer({type:'mundane',subject:`${$('mundaneYear')?.value||''}年の社会の流れ`,score:55,evidence:facts.slice(0,2),actions:['公的資料と一次情報で、関係する指標を月に一度確認する','予測ではなく、備えられる費用・期限・代替案を決める'],caution:'事件・景気・市場価格を占星術だけで断定しないこと',disclaimer:'社会占星術は傾向を整理する補助です。事実確認と専門情報を優先してください。'},box)}return result};
+function v201Init(){FEATURES.push('全鑑定共通回答','結論・根拠・具体策・注意・見直し統一','相性回答','人生年表回答','古代神託回答','運命航法盤回答','マンデン回答','今日の運勢回答');renderFeatures();window.V201={answer:v201Answer,engine:window.KOYOMI_UNIVERSAL_READING}}
 window.KOYOMI_CALENDAR_TIME_LEGACY=Object.freeze({formatLocalDate:fmtIso,parseLocalDate:safeDate,startOfLocalDay:startOfDay,formatCalendarDate:calendarFormat});
 window.KOYOMI_PROFILE_SCHEMA_LEGACY=Object.freeze({normalizeProfile:ledgerNormalizeProfile,validateProfile:ledgerValidateProfile});
 window.KOYOMI_CRYPTO_LEGACY=Object.freeze({deriveKey:ledgerDeriveKey,encryptObject:ledgerEncryptObject,decryptObject:ledgerDecryptObject});
 window.KOYOMI_INDEXEDDB_LEGACY=Object.freeze({list:ledgerList,get:ledgerGet,put:ledgerPut,delete:ledgerRawDelete,clear:ledgerRawClear});
 window.KOYOMI_BACKUP_LEGACY=Object.freeze({createEnvelope:ledgerEnvelope,exportJson:ledgerExportJson,exportCsv:ledgerExportCsv,exportEncrypted:ledgerExportEncrypted,exportProfile:ledgerExportOne,parseCsv:ledgerParseCsv,importBackup:ledgerImport});
-window.V191={setPage,renderCalendar,buildPersonal,compatibility,generateTimeline,diagnostics,openGuide,refreshHistory,setOracleMode:v191zSetMode};window.V192={mesopotamianDate:v192MesopotamianDate,onkanProfile:v192OnkanProfile,runOracle:v192RunOracle};window.V193={qimenChart:qmdjChart,qimenEvaluate:qmdjEvaluate,qimenGenerate:qmdjGenerate,diagnostics:qmdjDiagnostics};Promise.resolve().then(()=>initStep('persona',()=>v195Init())).then(()=>initStep('lifeTranslator',()=>v196Init())).then(()=>init()).catch(e=>console.error('[KOYOMI] boot failed',e));
+window.V191={setPage,renderCalendar,buildPersonal,compatibility,generateTimeline,diagnostics,openGuide,refreshHistory,setOracleMode:v191zSetMode};window.V192={mesopotamianDate:v192MesopotamianDate,onkanProfile:v192OnkanProfile,runOracle:v192RunOracle};window.V193={qimenChart:qmdjChart,qimenEvaluate:qmdjEvaluate,qimenGenerate:qmdjGenerate,diagnostics:qmdjDiagnostics};Promise.resolve().then(()=>initStep('persona',()=>v195Init())).then(()=>initStep('lifeTranslator',()=>v196Init())).then(()=>initStep('universalReading',()=>v201Init())).then(()=>init()).catch(e=>console.error('[KOYOMI] boot failed',e));
 })();
 </script>
 <script type="module">
