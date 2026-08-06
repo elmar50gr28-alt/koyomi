@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v6-mundane-research';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -33,6 +33,7 @@ const APP_SHELL = [
   './src/reading/concrete-answer-composer.js',
   './src/reading/universal-reading-engine.js',
   './data/reading/common_reading_themes.json',
+  './data/research/earthquake-validation-summary.json',
   './src/persona/conversation-adapter.js',
   './src/persona/sister-renderer.js',
   './src/persona/sister-lexicon.js',
