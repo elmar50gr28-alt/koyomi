@@ -30,6 +30,9 @@ assert.ok(health.safetyNotice.includes('医療機関'));
 const ordinary = core.generate({ profileId: 'bold', date: '2026-05-01', dayKey: 'high', dailyScore: 90, themeCategory: 'work' }, []);
 assert.equal(ordinary.safetyNotice, '', 'ordinary work advice must not be weakened by a generic disclaimer');
 assert.ok(ordinary.conclusion.length > 20 && !ordinary.conclusion.includes('かもしれません'));
+assert.ok(readings.every(item => item.blocks.find(block => block.role === 'caution')?.label === '気をつけること'));
+assert.ok(readings.every(item => item.blocks.find(block => block.role === 'action')?.label === '今日やること'));
+assert.ok(readings.every(item => !item.conclusion.includes('そこ、勢いで決めないの')));
 
 const sameA = core.generate({ profileId: 'stable', date: '2026-05-02', dayKey: 'same', dailyScore: 72, themeCategory: 'love' }, []);
 const sameB = core.generate({ profileId: 'stable', date: '2026-05-02', dayKey: 'same', dailyScore: 72, themeCategory: 'love' }, []);

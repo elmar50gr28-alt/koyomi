@@ -1999,6 +1999,25 @@ function koyomiEnsureBaziReadingStyle(){
     .koyomi-bazi-guidance-card.caution{border-color:rgba(243,200,111,.58);background:rgba(220,158,54,.14)}
     .koyomi-bazi-guidance-card.action{border-color:rgba(100,174,255,.58);background:rgba(70,137,220,.16)}
     .koyomi-bazi-guidance-card.confidence{min-height:0;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}
+    .koyomi-daily-one-click{display:grid;gap:18px}
+    .koyomi-daily-one-click .koyomi-bazi-view-head{align-items:flex-start;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.14)}
+    .koyomi-daily-one-click .koyomi-bazi-view-head small{line-height:1.5;text-align:right;opacity:.76}
+    .koyomi-daily-hero{padding:18px;border:1px solid rgba(105,211,154,.58);border-radius:14px;background:linear-gradient(145deg,rgba(64,174,115,.2),rgba(64,174,115,.07))}
+    .koyomi-daily-label{display:block;margin:0 0 9px;color:#d8ffea;font-size:.82rem;font-weight:800;letter-spacing:.08em}
+    .koyomi-daily-text{margin:0;font-size:1.08rem;line-height:1.82;font-weight:650}
+    .koyomi-daily-priorities{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .koyomi-daily-priority{padding:15px;border:1px solid;border-radius:12px}
+    .koyomi-daily-priority.action{border-color:rgba(100,174,255,.58);background:rgba(70,137,220,.14)}
+    .koyomi-daily-priority.caution{border-color:rgba(243,200,111,.58);background:rgba(220,158,54,.12)}
+    .koyomi-daily-priority h4{margin:0 0 9px;font-size:.9rem;line-height:1.4}
+    .koyomi-daily-priority p{margin:0;line-height:1.75}
+    .koyomi-daily-context{display:grid;gap:0;border-block:1px solid rgba(255,255,255,.13)}
+    .koyomi-daily-context-item{display:grid;grid-template-columns:minmax(7.5rem,.35fr) 1fr;gap:14px;padding:13px 2px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .koyomi-daily-context-item:last-child{border-bottom:0}
+    .koyomi-daily-context-item h4,.koyomi-daily-context-item p{margin:0}
+    .koyomi-daily-context-item h4{font-size:.84rem;opacity:.78}
+    .koyomi-daily-context-item p{line-height:1.7}
+    .koyomi-daily-evidence{margin-top:0}
     .koyomi-bazi-transparency{display:grid;gap:8px;padding:12px;border:1px solid rgba(243,200,111,.38);border-radius:12px;background:rgba(243,200,111,.08)}
     .koyomi-bazi-transparency h4{margin:0;font-size:1rem}
     .koyomi-bazi-transparency p{margin:0}
@@ -2018,7 +2037,7 @@ function koyomiEnsureBaziReadingStyle(){
     .koyomi-bazi-cycle{display:grid;grid-template-columns:3.5em 3.5em 1fr;gap:5px;padding:7px;border-radius:8px;background:rgba(255,255,255,.06);font-size:.86rem}
     .koyomi-bazi-cycle b{font-size:1rem}
     .koyomi-bazi-luck-note{font-size:.84rem;opacity:.82}
-    @media(max-width:640px){.koyomi-bazi-reading{font-size:.95rem}.koyomi-bazi-summary{margin-inline:-2px}.koyomi-bazi-guidance-grid{grid-template-columns:1fr}.koyomi-bazi-guidance-card{min-height:0}}
+    @media(max-width:640px){.koyomi-bazi-reading{font-size:.95rem}.koyomi-bazi-summary{margin-inline:-2px}.koyomi-bazi-guidance-grid{grid-template-columns:1fr}.koyomi-bazi-guidance-card{min-height:0}.koyomi-daily-one-click{gap:15px}.koyomi-daily-one-click .koyomi-bazi-view-head{display:grid}.koyomi-daily-one-click .koyomi-bazi-view-head small{text-align:left}.koyomi-daily-hero{padding:16px}.koyomi-daily-text{font-size:1.02rem}.koyomi-daily-priorities{grid-template-columns:1fr}.koyomi-daily-context-item{grid-template-columns:1fr;gap:5px}.koyomi-daily-priority,.koyomi-daily-one-click summary{min-height:44px}}
     @media(max-width:640px){.koyomi-bazi-luck-facts,.koyomi-bazi-cycle-list{grid-template-columns:1fr}}
   `;
   document.head.appendChild(style);
@@ -2312,15 +2331,22 @@ function koyomiCommonPrimaryReadingHtml(common,legacyText,locale='ja'){
 function koyomiDailyReadingHtml(reading,source='generated',locale='ja',subjectName=''){
   if(!reading)return '';
   const ja=locale!=='en';
-  const blockClass={conclusion:'conclusion',action:'action',caution:'caution',difference:'evidence',time:'',review:''};
-  const blocks=Array.isArray(reading.blocks)&&reading.blocks.length?reading.blocks.map(block=>`<p class="koyomi-bazi-guidance-card ${blockClass[block.role]||''}"><b>${koyomiEscapeHtml(block.label)}</b>${koyomiEscapeHtml(block.text)}</p>`).join(''):`<p class="koyomi-bazi-guidance-card conclusion"><b>${ja?'今日の結論':'Conclusion'}</b>${koyomiEscapeHtml(reading.conclusion)}</p>
-    <p><b>${ja?'前回との違い':'Difference'}</b>${koyomiEscapeHtml(reading.difference)}</p>
-    <div class="koyomi-bazi-guidance-grid"><p class="koyomi-bazi-guidance-card action"><b>${ja?'今日やること':'Action'}</b>${koyomiEscapeHtml(reading.action)}</p><p class="koyomi-bazi-guidance-card caution"><b>${ja?'控えること':'Avoid'}</b>${koyomiEscapeHtml(reading.caution)}</p></div>`;
+  const sourceBlocks=Array.isArray(reading.blocks)?reading.blocks:[];
+  const blockByRole=Object.fromEntries(sourceBlocks.map(block=>[block.role,block]));
+  const value=(role,fallback='')=>blockByRole[role]?.text||reading[role]||fallback;
+  const label=(role,fallback)=>blockByRole[role]?.label||fallback;
+  const sentence=(role,text)=>{const clean=String(text||'').trim();if(!clean)return'';if(/[。！？!?]$/.test(clean))return clean;if(role==='caution')return`${clean}のは、今日は控えておきなさい。`;return`${clean}。`};
+  const contextRoles=['difference','time','review'].filter(role=>value(role));
   return `<section class="koyomi-common-primary koyomi-daily-one-click" aria-label="${ja?'今日のワンクリック鑑定':'One-click daily reading'}">
     <div class="koyomi-bazi-view-head"><h3>${ja?'今日の本鑑定':'Today’s full reading'}</h3><small>${koyomiEscapeHtml([subjectName,reading.date].filter(Boolean).join('・'))} / ${source==='cache'?(ja?'本日の保存済み結果':'Saved today'):(ja?'本日の新しい結果':'New today')}</small></div>
-    <div class="koyomi-bazi-guidance-grid">${blocks}</div>
-    ${reading.safetyNotice?`<p class="koyomi-bazi-guidance-card caution"><b>${ja?'大切な注意':'Important'}</b>${koyomiEscapeHtml(reading.safetyNotice)}</p>`:''}
-    <details><summary>${ja?'今日の根拠':'Evidence'}</summary><ul>${(reading.evidence||[]).map(item=>`<li>${koyomiEscapeHtml(item)}</li>`).join('')}</ul></details>
+    <article class="koyomi-daily-hero"><span class="koyomi-daily-label">${koyomiEscapeHtml(label('conclusion',ja?'今日の読み':'Today’s reading'))}</span><p class="koyomi-daily-text">${koyomiEscapeHtml(sentence('conclusion',value('conclusion',reading.conclusion)))}</p></article>
+    <div class="koyomi-daily-priorities">
+      <section class="koyomi-daily-priority action"><h4>${koyomiEscapeHtml(label('action',ja?'今日やること':'Action today'))}</h4><p>${koyomiEscapeHtml(sentence('action',value('action',reading.action)))}</p></section>
+      <section class="koyomi-daily-priority caution"><h4>${koyomiEscapeHtml(label('caution',ja?'気をつけること':'Take care'))}</h4><p>${koyomiEscapeHtml(sentence('caution',value('caution',reading.caution)))}</p></section>
+    </div>
+    ${contextRoles.length?`<section class="koyomi-daily-context" aria-label="${ja?'今日の流れと確認':'Context'}">${contextRoles.map(role=>`<div class="koyomi-daily-context-item"><h4>${koyomiEscapeHtml(label(role,{difference:'流れの変化',time:'動く頃合い',review:'今夜の確認'}[role]))}</h4><p>${koyomiEscapeHtml(sentence(role,value(role)))}</p></div>`).join('')}</section>`:''}
+    ${reading.safetyNotice?`<section class="koyomi-daily-priority caution"><h4>${ja?'大切な注意':'Important'}</h4><p>${koyomiEscapeHtml(reading.safetyNotice)}</p></section>`:''}
+    <details class="koyomi-daily-evidence"><summary>${ja?'占いの根拠・専門資料':'Evidence and details'}</summary><ul>${(reading.evidence||[]).map(item=>`<li>${koyomiEscapeHtml(item)}</li>`).join('')}</ul></details>
   </section>`;
 }
 function koyomiDailyProfileKey(profile){let value=JSON.stringify({personId:profile.personId||'',name:profile.displayName||'',birth:profile.birthData||{}}),hash=2166136261;for(const char of value)hash=Math.imul(hash^char.charCodeAt(0),16777619);return`profile-${(hash>>>0).toString(16)}`}
