@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
-const source=await readFile('src/persona/conversation-adapter.js','utf8'),context={};vm.runInNewContext(await readFile('src/persona/sister-renderer.js','utf8'),context);vm.runInNewContext(source,context);const adapter=context.KOYOMI_PERSONA_ADAPTER;
+const source=await readFile('src/persona/conversation-adapter.js','utf8'),context={};vm.runInNewContext(await readFile('src/persona/sister-renderer.js','utf8'),context);vm.runInNewContext(await readFile('src/persona/reading-structure-planner.js','utf8'),context);vm.runInNewContext(source,context);const adapter=context.KOYOMI_PERSONA_ADAPTER;
 const base='【結論】\n慎重に進む。\n\n【何が起こりそうか】\n変化あり。\n\n【避ける行動】\n急がない。\n\n【最後の一言】\n元の締め。';
 const normal=adapter.apply(base,{system:'総合鑑定',question:'転職するか迷っています',score:62,mode:'sister',reasons:['追い風は四柱推命・宿曜']});
 assert.equal(normal.persona.focus,'追い風は四柱推命・宿曜');assert.ok(normal.text.includes('姐さんのひと言'));assert.ok(normal.text.includes('「追い風は四柱推命・宿曜」'));assert.equal(adapter.apply(base,{system:'総合鑑定',question:'別の相談文',score:62,mode:'sister',reasons:['追い風は四柱推命・宿曜']}).text,normal.text,'free-form consultation text must not affect the reading');
@@ -20,7 +20,8 @@ assert.ok(individual.text.includes('【最後に姐さんから】'));
 assert.ok(!individual.text.includes('転職の面接が不安'));
 assert.ok(individual.text.includes('【ケルト十字の鑑定結果】'));
 assert.ok(individual.text.includes('【鑑定結果からの結論】'));
-for(const heading of ['現実に出やすい形','まず、これをおやりなさい','ここで止まりなさい','あとで確かめること'])assert.ok(individual.text.includes(`【${heading}】`));
+assert.ok(individual.structure?.structureId,'standard readings must receive a deterministic structure plan');
+assert.ok(!['現実に出やすい形','まず、これをおやりなさい','ここで止まりなさい','あとで確かめること'].every(heading=>individual.text.includes(`【${heading}】`)),'all fixed headings must not be forced into every reading');
 assert.ok(individual.text.includes('相手の反応・障害の再発・結果へ向かう変化'));
 assert.equal(individual.scenario.review,'7日');
 const defensive=adapter.concreteScenario({system:'大運・暦',score:32,evidence:['大運 低調'],action:'契約を保留する'});assert.equal(defensive.state,'防御');assert.match(defensive.scene,/予定超過|疲労/);assert.equal(defensive.review,'30日');
