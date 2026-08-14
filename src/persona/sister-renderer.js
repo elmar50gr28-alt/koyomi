@@ -12,12 +12,12 @@
  registerVoice('beginner',{address:'あなた',result:'まず結論',evidence:'そう判断した理由',action:'今日すること',stop:'やめておくこと',review:'あとで確認すること',closing:'覚えておいてほしいこと'});
  registerSection('opening',c=>`【${c.system}を姐さんが読むわ】\n${line(c.opening)}\n${line(c.axis)}`);
  registerSection('result',c=>`【${c.voice.result}】\n${c.phrase(c.scenario?.state==='前進'?'forward':c.scenario?.state==='防御'?'defense':'trial')}\n${line(c.result,c.scenario?.scene)}`);
- registerSection('scenario',c=>`【現実に出やすい形】\n${line(c.scenario?.scene)}わ。見るのは「${line(c.scenario?.observable,'進捗と負担')}」よ。`);
+ registerSection('scenario',c=>`【${line(c.headings?.scenario,'現実に出やすい形')}】\n${line(c.scenario?.scene)}わ。目に見える変化なら、${line(c.scenario?.observable,'進み具合や負担')}に出てくるわよ。`);
  registerSection('beginner',c=>c.beginner?`【簡単にいうと】\n${c.beginner.meaning}\n\n【今日の具体例】\n${c.beginner.example}\n\n${c.beginner.alternative}`:'');
- registerSection('action',c=>`【${c.voice.action}】\n${c.phrase('transition')} ${line(c.scenario?.action)}。進める条件は、${line(c.scenario?.go)}。`);
- registerSection('stop',c=>`【${c.voice.stop}】\n${line(c.scenario?.stop)}。一つでも出たら、運の点数より現実を優先するの。`);
- registerSection('review',c=>`【${c.voice.review}】\n${line(c.scenario?.review,'14日')}後に、始めた数・終えた数・負担・相手の行動から二つを比べてちょうだい。`);
- registerSection('evidence',c=>{const raw=(c.evidence||[]).filter(Boolean).join('／')||'算出結果を確認済み',glossary=globalThis.KOYOMI_DIVINATION_GLOSSARY;if(c.level==='beginner'){if(glossary){const g=glossary.beginner(raw);return`【${c.voice.evidence}】\n占いの結果を普通の言葉に直すと、${g.plain}。${g.notes.length?`\n\n【専門用語と読み】\n${g.notes.join('\n')}`:''}`}return`【${c.voice.evidence}】\n占いの結果を普通の言葉に直すと、${c.plain(raw)}。`}return`【${c.voice.evidence}】\n${c.phrase('evidence')}\n${glossary?glossary.annotate(raw):raw}。`});
+ registerSection('action',c=>`【${line(c.headings?.action,c.voice.action)}】\n${c.phrase('transition')} ${line(c.scenario?.action)}。${line(c.scenario?.go)}なら、そのまま続けていいわ。`);
+ registerSection('stop',c=>`【${line(c.headings?.stop,c.voice.stop)}】\n${line(c.scenario?.stop)}。そうなったら、いったん手を放して立て直しなさい。`);
+ registerSection('review',c=>`【${line(c.headings?.review,c.voice.review)}】\n${line(c.scenario?.review,'14日')}ほど経った頃に、負担が減ったか、相手や状況が実際に動いたかを見てちょうだい。`);
+ registerSection('evidence',c=>{const raw=(c.evidence||[]).filter(Boolean).join('／')||'算出結果を確認済み',glossary=globalThis.KOYOMI_DIVINATION_GLOSSARY;if(c.level==='beginner'){if(glossary){const g=glossary.beginner(raw);return`【${c.voice.evidence}】\n占いの結果を普通の言葉に直すと、${g.plain}。${g.notes.length?`\n\n【専門用語と読み】\n${g.notes.join('\n')}`:''}`}return`【${c.voice.evidence}】\n占いの結果を普通の言葉に直すと、${c.plain(raw)}。`}return`【${line(c.headings?.evidence,c.voice.evidence)}】\n${c.phrase('evidence')}\n${glossary?glossary.annotate(raw):raw}。`});
  registerSection('analysis',c=>{const items=Array.isArray(c.analysis)?c.analysis:[];if(!items.length)return'';return items.map((item,index)=>`【${line(item.title,'命式の読み')}】\n${index?'次はここよ。':'まず、ここを見なさい。'}${line(item.reading)}\nつまり、${line(item.meaning)}ってこと。${item.example?`\n現実ではね、${line(item.example)}`:''}${item.action?`\n姐さんからの宿題：${line(item.action)}`:''}`).join('\n\n')});
  registerSection('closing',c=>`【${c.voice.closing}】\n${line(c.closing)}`);
  return api
