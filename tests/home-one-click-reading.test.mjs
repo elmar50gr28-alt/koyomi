@@ -22,5 +22,5 @@ assert.ok(app.includes("sessionStorage.setItem('koyomi.pending-reading.v1','toda
 assert.ok(app.includes("sessionStorage.getItem('koyomi.pending-reading.v1')==='today'&&p.birthData?.date"), 'saving initial details must resume automatically');
 assert.ok(app.includes('body.koyomi-profile-ready #personalForm .personal-actions{display:none}'), 'saved users must not face a redundant start button');
 assert.ok(!app.includes('今日の私を占う'));
-assert.ok(worker.includes('daily-reading-ux-v1'));
+assert.ok(worker.includes('legacy-overall-only-v1'));
 console.log('home one-click reading: ok');

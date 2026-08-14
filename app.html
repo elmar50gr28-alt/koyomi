@@ -1665,7 +1665,7 @@ const v197LedgerApplyPersonalBase=ledgerApplyPersonal;
 ledgerApplyPersonal=function(p){v197LedgerApplyPersonalBase(p);const n=p.nameData||{};if($('romaji'))$('romaji').value=n.romanizedName||n.originalSpelling||''}
 const v197LedgerCreateFromPersonalBase=ledgerCreateFromPersonal;
 ledgerCreateFromPersonal=function(){v197LedgerCreateFromPersonalBase();if($('lpRomanizedName'))$('lpRomanizedName').value=$('romaji')?.value||''}
-renderPersonal=function(r){v196RenderPersonalBase(r);if(!r)return;const q=$('question')?.value||$('memo')?.value||$('consultation')?.value||'',adapter=window.KOYOMI_PERSONA_ADAPTER,historyCount=v195History().length,psych=v195Psych(q,r.score||50);if(adapter)Object.keys(r.divinations||{}).forEach((key,index)=>{const method=v191zMethodScore(key,r),plan=v191zMethodPlan(key,r),layered=adapter.applyDivination(r.divinations[key],{system:V191Z_METHOD_LABEL[key]||key,question:q,score:method.score,mode:v191zMode(),psychRisk:psych.risk,evidence:method.factors,action:plan[0],variant:historyCount+index});r.divinations[key]=layered.text;const target=$(key+'Reading');if(target)target.textContent=layered.text});const g=v196Generate({system:'総合鑑定',question:q,score:r.score||50,grade:r.grade?.label||'',mode:v191zMode(),reasons:v195PersonalReasons(r),name:$('name')?.value,usefulElement:r.use?.useful});r.reading=g.text;lastPersonal=r;if($('overallReading'))$('overallReading').textContent=g.text;if($('personalVerdictNote'))$('personalVerdictNote').innerHTML=`<span class="zubat-seal">${v191zMode()==='zubat'?'ズバッと':'人生翻訳'}</span> ${v196Feel(g.context.score)}／今日の宿題：${g.life.homework}`;const actionSummary=$('personalActionSummary');if(actionSummary){actionSummary.hidden=false;actionSummary.querySelector('[data-personal-action="do"]').textContent=g.life.do;actionSummary.querySelector('[data-personal-action="stop"]').textContent=g.life.stop;actionSummary.querySelector('[data-personal-action="homework"]').textContent=g.life.homework}v196RenderSukuyoSummary(r);v196RenderKyuseiSummary(r);v196RenderAstrologySummary(r);v196RenderTarotSummary(r);v196RenderRunesSummary(r);v196RenderNameSummary(r);v196RenderNumerologySummary(r);v196RenderKabbalahSummary(r);v196RenderRokuseiSummary(r);v196RenderTimingSummary(r)}
+renderPersonal=function(r){v196RenderPersonalBase(r);if(!r)return;const q=$('question')?.value||$('memo')?.value||$('consultation')?.value||'',adapter=window.KOYOMI_PERSONA_ADAPTER,historyCount=v195History().length,psych=v195Psych(q,r.score||50);if(adapter)Object.keys(r.divinations||{}).forEach((key,index)=>{const method=v191zMethodScore(key,r),plan=v191zMethodPlan(key,r),layered=adapter.applyDivination(r.divinations[key],{system:V191Z_METHOD_LABEL[key]||key,question:q,score:method.score,mode:v191zMode(),psychRisk:psych.risk,evidence:method.factors,action:plan[0],variant:historyCount+index});r.divinations[key]=layered.text;const target=$(key+'Reading');if(target)target.textContent=layered.text});const g=v196Generate({system:'総合鑑定',question:q,score:r.score||50,grade:r.grade?.label||'',mode:v191zMode(),reasons:v195PersonalReasons(r),name:$('name')?.value,usefulElement:r.use?.useful});r.reading=g.text;lastPersonal=r;if($('overallReading'))$('overallReading').textContent=g.text;if($('personalVerdictNote'))$('personalVerdictNote').innerHTML=`<span class="zubat-seal">${v191zMode()==='zubat'?'ズバッと':'人生翻訳'}</span> ${v196Feel(g.context.score)}／今日の宿題：${g.life.homework}`;v196RenderSukuyoSummary(r);v196RenderKyuseiSummary(r);v196RenderAstrologySummary(r);v196RenderTarotSummary(r);v196RenderRunesSummary(r);v196RenderNameSummary(r);v196RenderNumerologySummary(r);v196RenderKabbalahSummary(r);v196RenderRokuseiSummary(r);v196RenderTimingSummary(r)}
 const v199ResultDrivenRenderBase=renderPersonal;
 renderPersonal=function(r){const fields=['question','memo','consultation'].map(id=>$(id)).filter(Boolean),values=fields.map(el=>el.value);try{fields.forEach(el=>el.value='');return v199ResultDrivenRenderBase(r)}finally{fields.forEach((el,index)=>el.value=values[index])}};
 const v200FuriganaRenderBase=renderPersonal;
@@ -1675,7 +1675,7 @@ const v196RenderCompatBase=renderCompat;
 renderCompat=function(r){v196RenderCompatBase(r);if(!r)return;const q=$('relationQuestion')?.value||'';const reasons=[`相性素質${r.symbolic}`,`現実運用${r.operation}`,`摩擦警報${r.axes?.摩擦??'—'}`,r.flags?.length?`安全旗${r.flags.length}件`:'安全旗なし'];const g=v196Generate({system:'相性鑑定',question:q,score:r.score||50,grade:r.grade?.label||'',mode:v191zMode(),reasons,risk:r.flags?.length?95:(r.operation<40?70:20),bestTime:'落ち着いて二人で話せる時間'});r.reading=g.text;lastCompat=r;if($('compatReading'))$('compatReading').textContent=g.text}
 const v196QmdjRenderBase=qmdjRender;
 qmdjRender=function(state){v196QmdjRenderBase(state);if(!state)return;const best=state.ev.best,door=best.door;const reasons=[`${best.dir}の${door}`,`最良時間${state.text.bestRange}`,state.chart.fuyin?'伏吟あり':'伏吟なし',state.chart.fanyin?'反吟あり':'反吟なし'];const g=v196Generate({system:'奇門遁甲',question:state.input.question||state.input.purpose.label,score:state.ev.overall,grade:state.ev.rank.label,mode:state.input.mode,reasons,risk:state.ev.metrics?.['金銭安全度']<40?70:20,direction:best.dir,time:state.text.bestRange,door});state.text.reading=g.text;QMDJ_LAST=state;if($('qmReading'))$('qmReading').textContent=g.text;qmdjGuidedRender(state)}
-function v196AddUi(){document.title='こよみ — 暦と鑑定';const h=document.querySelector('h1');if(h)h.textContent='こよみ';const sub=document.querySelector('.subtitle');if(sub)sub.textContent='占術を先に語らず、今日の結論・起こりそうなこと・具体行動・宿題へ翻訳します。';const banner=document.querySelector('.oracle-banner span');if(banner)banner.textContent='占術を覚えなくていいの。今日は何をして、何をやめるか。それだけ持って帰りなさい。根拠は必要な分だけ、姐さんが生活の言葉で話すわ。';const info=document.getElementById('v195PersonaInfo');if(info)info.innerHTML='<b>人生翻訳AI稼働中：</b>専門用語から話し始めません。結論、理由、今日の一手を読みやすい順番で伝えます。';const overall=document.getElementById('overallReading');if(overall&&!document.getElementById('personalActionSummary'))overall.insertAdjacentHTML('beforebegin','<div class="personal-action-summary" id="personalActionSummary" hidden><article class="support"><b>今日やること</b><p data-personal-action="do"></p></article><article class="caution"><b>今日やめること</b><p data-personal-action="stop"></p></article><article class="homework"><b>今日の宿題</b><p data-personal-action="homework"></p></article></div>');document.querySelector('.reading-index')?.addEventListener('click',e=>{const link=e.target.closest('a[href^="#reading-"]');if(!link)return;e.preventDefault();const target=document.getElementById(link.getAttribute('href').slice(1));if(!target)return;target.open=true;target.scrollIntoView({behavior:'smooth',block:'start'});target.querySelector('summary')?.focus({preventScroll:true})})}
+function v196AddUi(){document.title='こよみ — 暦と鑑定';const h=document.querySelector('h1');if(h)h.textContent='こよみ';const sub=document.querySelector('.subtitle');if(sub)sub.textContent='占術を先に語らず、今日の結論・起こりそうなこと・具体行動・宿題へ翻訳します。';const banner=document.querySelector('.oracle-banner span');if(banner)banner.textContent='占術を覚えなくていいの。今日は何をして、何をやめるか。それだけ持って帰りなさい。根拠は必要な分だけ、姐さんが生活の言葉で話すわ。';const info=document.getElementById('v195PersonaInfo');if(info)info.innerHTML='<b>人生翻訳AI稼働中：</b>専門用語から話し始めません。結論、理由、今日の一手を読みやすい順番で伝えます。';document.querySelector('.reading-index')?.addEventListener('click',e=>{const link=e.target.closest('a[href^="#reading-"]');if(!link)return;e.preventDefault();const target=document.getElementById(link.getAttribute('href').slice(1));if(!target)return;target.open=true;target.scrollIntoView({behavior:'smooth',block:'start'});target.querySelector('summary')?.focus({preventScroll:true})})}
 function v196Diagnostics(){const sample=v196Generate({system:'奇門遁甲',question:'仕事の契約を今日してよいか',score:38,mode:'zubat',reasons:['空亡','伏吟'],door:'杜門',direction:'東',time:'15時〜17時'});return[['生活語から開始',sample.text.indexOf('【結論】')===0],['自然な順序',/結論[\s\S]*何が起こりそうか[\s\S]*なぜそう読むのか[\s\S]*今日どう行動するか[\s\S]*避ける行動[\s\S]*今日の一手[\s\S]*最後の一言/.test(sample.text)],['行動を三点に限定',/最初にすること[\s\S]*動く時間[\s\S]*動く場所/.test(sample.text)],['不要な説明項目なし',!sample.text.includes(['【占術','の意味】'].join(''))],['根拠を理由へ統合',sample.text.indexOf('空亡')>sample.text.indexOf('【なぜそう読むのか】')],['門の生活翻訳',Object.keys(V196_LIFE_MAP.doors).length===8]]}
 const v196DiagnosticsBase=diagnostics;
 diagnostics=async function(){await v196DiagnosticsBase();const checks=v196Diagnostics();$('diagnostic').textContent+='\n'+checks.map(x=>`${x[1]?'✓':'×'} 人生翻訳 ${x[0]}: ${x[1]?'OK':'NG'}`).join('\n')+'\nV196 みつのめ姉さん 人生翻訳アルゴリズム'};
@@ -1999,25 +1999,6 @@ function koyomiEnsureBaziReadingStyle(){
     .koyomi-bazi-guidance-card.caution{border-color:rgba(243,200,111,.58);background:rgba(220,158,54,.14)}
     .koyomi-bazi-guidance-card.action{border-color:rgba(100,174,255,.58);background:rgba(70,137,220,.16)}
     .koyomi-bazi-guidance-card.confidence{min-height:0;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}
-    .koyomi-daily-one-click{display:grid;gap:18px}
-    .koyomi-daily-one-click .koyomi-bazi-view-head{align-items:flex-start;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.14)}
-    .koyomi-daily-one-click .koyomi-bazi-view-head small{line-height:1.5;text-align:right;opacity:.76}
-    .koyomi-daily-hero{padding:18px;border:1px solid rgba(105,211,154,.58);border-radius:14px;background:linear-gradient(145deg,rgba(64,174,115,.2),rgba(64,174,115,.07))}
-    .koyomi-daily-label{display:block;margin:0 0 9px;color:#d8ffea;font-size:.82rem;font-weight:800;letter-spacing:.08em}
-    .koyomi-daily-text{margin:0;font-size:1.08rem;line-height:1.82;font-weight:650}
-    .koyomi-daily-priorities{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .koyomi-daily-priority{padding:15px;border:1px solid;border-radius:12px}
-    .koyomi-daily-priority.action{border-color:rgba(100,174,255,.58);background:rgba(70,137,220,.14)}
-    .koyomi-daily-priority.caution{border-color:rgba(243,200,111,.58);background:rgba(220,158,54,.12)}
-    .koyomi-daily-priority h4{margin:0 0 9px;font-size:.9rem;line-height:1.4}
-    .koyomi-daily-priority p{margin:0;line-height:1.75}
-    .koyomi-daily-context{display:grid;gap:0;border-block:1px solid rgba(255,255,255,.13)}
-    .koyomi-daily-context-item{display:grid;grid-template-columns:minmax(7.5rem,.35fr) 1fr;gap:14px;padding:13px 2px;border-bottom:1px solid rgba(255,255,255,.1)}
-    .koyomi-daily-context-item:last-child{border-bottom:0}
-    .koyomi-daily-context-item h4,.koyomi-daily-context-item p{margin:0}
-    .koyomi-daily-context-item h4{font-size:.84rem;opacity:.78}
-    .koyomi-daily-context-item p{line-height:1.7}
-    .koyomi-daily-evidence{margin-top:0}
     .koyomi-bazi-transparency{display:grid;gap:8px;padding:12px;border:1px solid rgba(243,200,111,.38);border-radius:12px;background:rgba(243,200,111,.08)}
     .koyomi-bazi-transparency h4{margin:0;font-size:1rem}
     .koyomi-bazi-transparency p{margin:0}
@@ -2037,7 +2018,7 @@ function koyomiEnsureBaziReadingStyle(){
     .koyomi-bazi-cycle{display:grid;grid-template-columns:3.5em 3.5em 1fr;gap:5px;padding:7px;border-radius:8px;background:rgba(255,255,255,.06);font-size:.86rem}
     .koyomi-bazi-cycle b{font-size:1rem}
     .koyomi-bazi-luck-note{font-size:.84rem;opacity:.82}
-    @media(max-width:640px){.koyomi-bazi-reading{font-size:.95rem}.koyomi-bazi-summary{margin-inline:-2px}.koyomi-bazi-guidance-grid{grid-template-columns:1fr}.koyomi-bazi-guidance-card{min-height:0}.koyomi-daily-one-click{gap:15px}.koyomi-daily-one-click .koyomi-bazi-view-head{display:grid}.koyomi-daily-one-click .koyomi-bazi-view-head small{text-align:left}.koyomi-daily-hero{padding:16px}.koyomi-daily-text{font-size:1.02rem}.koyomi-daily-priorities{grid-template-columns:1fr}.koyomi-daily-context-item{grid-template-columns:1fr;gap:5px}.koyomi-daily-priority,.koyomi-daily-one-click summary{min-height:44px}}
+    @media(max-width:640px){.koyomi-bazi-reading{font-size:.95rem}.koyomi-bazi-summary{margin-inline:-2px}.koyomi-bazi-guidance-grid{grid-template-columns:1fr}.koyomi-bazi-guidance-card{min-height:0}}
     @media(max-width:640px){.koyomi-bazi-luck-facts,.koyomi-bazi-cycle-list{grid-template-columns:1fr}}
   `;
   document.head.appendChild(style);
@@ -2302,53 +2283,6 @@ function koyomiBaziLuckStartHtml(luck,locale='ja'){
     <div class="koyomi-bazi-cycle-list">${cycles}</div>
   </section>`;
 }
-function koyomiCommonPrimaryReadingHtml(common,legacyText,locale='ja'){
-  if(!common?.available)return '';
-  const ja=locale!=='en',categories=common.categories||{},top=common.items?.[0]||{},answer=common.answer||{};
-  const rows=[
-    [ja?'\u4ed5\u4e8b':'Work',categories.work],
-    [ja?'\u604b\u611b':'Love',categories.love],
-    [ja?'\u5bfe\u4eba\u95a2\u4fc2':'Relationships',categories.relationship],
-    [ja?'\u5065\u5eb7':'Health',categories.health]
-  ].filter(([,text])=>text);
-  return `<section class="koyomi-common-primary" aria-label="${ja?'\u5171\u901a\u9451\u5b9a':'Common reading'}">
-    ${answer.available?`<div class="koyomi-bazi-view-head"><h3>${ja?'\u76f8\u8ac7\u3078\u306e\u7b54\u3048':'Answer to your question'}</h3></div>
-    ${answer.question?`<p><b>${ja?'\u76f8\u8ac7\u5185\u5bb9':'Question'}</b>${koyomiEscapeHtml(answer.question)}</p>`:''}
-    <p class="koyomi-bazi-guidance-card conclusion"><b>${ja?'\u7d50\u8ad6':'Conclusion'}</b>${koyomiEscapeHtml(answer.directAnswer)}</p>
-    <p class="koyomi-bazi-guidance-card evidence"><b>${ja?'\u7406\u7531':'Reason'}</b>${koyomiEscapeHtml(answer.reason)}</p>
-    <div class="koyomi-bazi-guidance-grid">${(answer.actionPlan||[]).map(step=>`<p class="koyomi-bazi-guidance-card action"><b>${koyomiEscapeHtml(step.when)}</b>${koyomiEscapeHtml(step.action)}</p>`).join('')}</div>
-    <p class="koyomi-bazi-guidance-card caution"><b>${ja?'\u3084\u3081\u308b\u3053\u3068':'Stop'}</b>${koyomiEscapeHtml(answer.stop)}</p>
-    <p><b>${ja?'\u898b\u76f4\u3057\u57fa\u6e96':'Review point'}</b>${koyomiEscapeHtml(answer.review)}</p>
-    ${answer.disclaimer?`<p class="koyomi-bazi-guidance-card caution">${koyomiEscapeHtml(answer.disclaimer)}</p>`:''}`:''}
-    <div class="koyomi-bazi-view-head"><h3>${ja?'\u4eca\u65e5\u306e\u4e2d\u5fc3\u30c6\u30fc\u30de':'Today’s central theme'}</h3></div>
-    <p class="koyomi-bazi-guidance-card conclusion"><b>${koyomiEscapeHtml(top.themeName||'')}</b>${koyomiEscapeHtml(common.summary)}</p>
-    <div class="koyomi-bazi-guidance-grid">${rows.map(([label,text])=>`<p class="koyomi-bazi-guidance-card"><b>${koyomiEscapeHtml(label)}</b>${koyomiEscapeHtml(text)}</p>`).join('')}</div>
-    <p class="koyomi-bazi-guidance-card action"><b>${ja?'\u4eca\u65e5\u306e\u4e00\u624b':'Action today'}</b>${koyomiEscapeHtml(common.todayAction)}</p>
-    <p class="koyomi-bazi-guidance-card caution"><b>${ja?'\u907f\u3051\u305f\u3044\u884c\u52d5':'Avoid'}</b>${koyomiEscapeHtml(common.avoidAction)}</p>
-    <details><summary>${ja?'\u5f93\u6765\u306e\u7dcf\u5408\u9451\u5b9a\u3092\u898b\u308b':'Show legacy integrated reading'}</summary><div style="white-space:pre-wrap">${koyomiEscapeHtml(legacyText||'')}</div></details>
-  </section>`;
-}
-function koyomiDailyReadingHtml(reading,source='generated',locale='ja',subjectName=''){
-  if(!reading)return '';
-  const ja=locale!=='en';
-  const sourceBlocks=Array.isArray(reading.blocks)?reading.blocks:[];
-  const blockByRole=Object.fromEntries(sourceBlocks.map(block=>[block.role,block]));
-  const value=(role,fallback='')=>blockByRole[role]?.text||reading[role]||fallback;
-  const label=(role,fallback)=>blockByRole[role]?.label||fallback;
-  const sentence=(role,text)=>{const clean=String(text||'').trim();if(!clean)return'';if(/[。！？!?]$/.test(clean))return clean;if(role==='caution')return`${clean}のは、今日は控えておきなさい。`;return`${clean}。`};
-  const contextRoles=['difference','time','review'].filter(role=>value(role));
-  return `<section class="koyomi-common-primary koyomi-daily-one-click" aria-label="${ja?'今日のワンクリック鑑定':'One-click daily reading'}">
-    <div class="koyomi-bazi-view-head"><h3>${ja?'今日の本鑑定':'Today’s full reading'}</h3><small>${koyomiEscapeHtml([subjectName,reading.date].filter(Boolean).join('・'))} / ${source==='cache'?(ja?'本日の保存済み結果':'Saved today'):(ja?'本日の新しい結果':'New today')}</small></div>
-    <article class="koyomi-daily-hero"><span class="koyomi-daily-label">${koyomiEscapeHtml(label('conclusion',ja?'今日の読み':'Today’s reading'))}</span><p class="koyomi-daily-text">${koyomiEscapeHtml(sentence('conclusion',value('conclusion',reading.conclusion)))}</p></article>
-    <div class="koyomi-daily-priorities">
-      <section class="koyomi-daily-priority action"><h4>${koyomiEscapeHtml(label('action',ja?'今日やること':'Action today'))}</h4><p>${koyomiEscapeHtml(sentence('action',value('action',reading.action)))}</p></section>
-      <section class="koyomi-daily-priority caution"><h4>${koyomiEscapeHtml(label('caution',ja?'気をつけること':'Take care'))}</h4><p>${koyomiEscapeHtml(sentence('caution',value('caution',reading.caution)))}</p></section>
-    </div>
-    ${contextRoles.length?`<section class="koyomi-daily-context" aria-label="${ja?'今日の流れと確認':'Context'}">${contextRoles.map(role=>`<div class="koyomi-daily-context-item"><h4>${koyomiEscapeHtml(label(role,{difference:'流れの変化',time:'動く頃合い',review:'今夜の確認'}[role]))}</h4><p>${koyomiEscapeHtml(sentence(role,value(role)))}</p></div>`).join('')}</section>`:''}
-    ${reading.safetyNotice?`<section class="koyomi-daily-priority caution"><h4>${ja?'大切な注意':'Important'}</h4><p>${koyomiEscapeHtml(reading.safetyNotice)}</p></section>`:''}
-    <details class="koyomi-daily-evidence"><summary>${ja?'占いの根拠・専門資料':'Evidence and details'}</summary><ul>${(reading.evidence||[]).map(item=>`<li>${koyomiEscapeHtml(item)}</li>`).join('')}</ul></details>
-  </section>`;
-}
 function koyomiDailyProfileKey(profile){let value=JSON.stringify({personId:profile.personId||'',name:profile.displayName||'',birth:profile.birthData||{}}),hash=2166136261;for(const char of value)hash=Math.imul(hash^char.charCodeAt(0),16777619);return`profile-${(hash>>>0).toString(16)}`}
 async function koyomiRenderBaziReading(){
   try{
@@ -2401,26 +2335,6 @@ async function koyomiRenderBaziReading(){
       personalResult.baziStructuredResult=result;
       personalResult.luckCycles=result.luckCycles;
       if(personalResult.divinations)personalResult.divinations.shichu=reading.beginnerText;
-    }
-    if(commonReading.available){
-      const overall=document.getElementById('overallReading');
-      const legacyReading=personalResult?.reading||overall?.innerText||'';
-      if(overall)overall.innerHTML=koyomiDailyReadingHtml(dailyReading,dailyPack?.source,locale,profile.displayName)+koyomiCommonPrimaryReadingHtml(commonReading,legacyReading,locale);
-      const verdict=document.getElementById('personalVerdict');
-      if(verdict)verdict.textContent=`${locale==='en'?'Today’s theme':'\u4eca\u65e5\u306e\u30c6\u30fc\u30de'}\uff1a${commonReading.items?.[0]?.themeName||''}`;
-      const verdictNote=document.getElementById('personalVerdictNote');
-      if(verdictNote)verdictNote.textContent=commonReading.summary;
-      const actionSummary=document.getElementById('personalActionSummary');
-      if(actionSummary){
-        actionSummary.hidden=false;
-        const doNode=actionSummary.querySelector('[data-personal-action="do"]');
-        const stopNode=actionSummary.querySelector('[data-personal-action="stop"]');
-        const homeworkNode=actionSummary.querySelector('[data-personal-action="homework"]');
-        if(doNode)doNode.textContent=dailyReading?.action||commonReading.todayAction;
-        if(stopNode)stopNode.textContent=dailyReading?.caution||commonReading.avoidAction;
-        if(homeworkNode)homeworkNode.textContent=dailyReading?.focusLabel||commonReading.items?.[0]?.themeName||'';
-      }
-      if(personalResult)personalResult.reading=[dailyReading?.conclusion,dailyReading?.difference,dailyReading?.action,dailyReading?.caution,commonReading.answer?.directAnswer,commonReading.answer?.reason,...(commonReading.answer?.actionPlan||[]).map(step=>`${step.when}: ${step.action}`),commonReading.answer?.stop,commonReading.summary,...Object.values(commonReading.categories||{})].filter(Boolean).join('\n');
     }
   }catch(error){
     console.error('[KOYOMI_BAZI_READING] render failed',error);
