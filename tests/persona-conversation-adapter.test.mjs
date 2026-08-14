@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
-const source=await readFile('src/persona/conversation-adapter.js','utf8'),context={};vm.runInNewContext(await readFile('src/persona/sister-renderer.js','utf8'),context);vm.runInNewContext(await readFile('src/persona/reading-structure-planner.js','utf8'),context);vm.runInNewContext(source,context);const adapter=context.KOYOMI_PERSONA_ADAPTER;
+const source=await readFile('src/persona/conversation-adapter.js','utf8'),context={};vm.runInNewContext(await readFile('src/persona/sister-renderer.js','utf8'),context);vm.runInNewContext(await readFile('src/persona/reading-structure-planner.js','utf8'),context);vm.runInNewContext(await readFile('src/persona/persona-policy.js','utf8'),context);vm.runInNewContext(source,context);const adapter=context.KOYOMI_PERSONA_ADAPTER;
 const base='【結論】\n慎重に進む。\n\n【何が起こりそうか】\n変化あり。\n\n【避ける行動】\n急がない。\n\n【最後の一言】\n元の締め。';
 const normal=adapter.apply(base,{system:'総合鑑定',question:'転職するか迷っています',score:62,mode:'sister',reasons:['追い風は四柱推命・宿曜']});
 assert.equal(normal.persona.focus,'追い風は四柱推命・宿曜');assert.ok(normal.text.includes('姐さんのひと言'));assert.ok(normal.text.includes('「追い風は四柱推命・宿曜」'));assert.equal(adapter.apply(base,{system:'総合鑑定',question:'別の相談文',score:62,mode:'sister',reasons:['追い風は四柱推命・宿曜']}).text,normal.text,'free-form consultation text must not affect the reading');
