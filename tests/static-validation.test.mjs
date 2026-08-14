@@ -203,10 +203,8 @@ assert.ok(!appHtml.includes('<h1>KOYOMI <span'), 'legacy version label must not 
 assert.ok(appHtml.includes('<h1>こよみ</h1>'), 'current product heading is missing');
 assert.ok(appHtml.includes("nav.id='koyomiHomeNav'"), 'minimal home guidance entry point is missing');
 assert.ok(appHtml.includes('id="koyomiChooseTheme"'), 'concern-based reading entry point is missing');
-assert.ok(appHtml.includes('id="personalActionSummary"'), 'visible personal action summary is missing');
-for (const action of ['do', 'stop', 'homework']) {
-  assert.ok(appHtml.includes(`data-personal-action="${action}"`), `${action} action summary field is missing`);
-}
+assert.ok(!appHtml.includes('personalActionSummary'), 'the superseded action cards must not be created');
+assert.ok(!appHtml.includes('data-personal-action='), 'superseded action-card fields must not remain');
 assert.ok(appHtml.includes("e.preventDefault();const target=document.getElementById(link.getAttribute('href').slice(1))"), 'reading index must bypass page hash routing');
 assert.ok(appHtml.includes("target.open=true;target.scrollIntoView"), 'reading index must open and scroll to its result');
 assert.ok(appHtml.includes("'sukuyoResultSummary'"), 'Sukuyo result summary is missing');
