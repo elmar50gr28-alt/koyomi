@@ -22,8 +22,10 @@ for (let day = 2; day <= 14; day++) {
 }
 assert.ok(new Set(readings.map(item => item.focusId)).size >= 8, '14 days should expose at least eight focuses');
 for (let index = 1; index < readings.length; index++) assert.notEqual(readings[index].focusId, readings[index - 1].focusId, 'focus must not repeat on consecutive days');
-assert.ok(readings.slice(1).every(item => item.difference.includes('昨日の中心')));
+assert.ok(readings.slice(1).every(item => item.difference.includes('昨日の')));
 assert.ok(readings.every(item => item.action && item.caution && item.recommendedTime && item.evidence.length));
+assert.ok(readings.every(item => item.blocks.length === 6 && item.structureId));
+assert.ok(new Set(readings.map(item => item.structureId)).size >= 6, 'composition itself should vary, not only wording');
 
 const changed = controller.getOrCreate({ ...base, date: '2026-08-01', settingsHash: 'profile-v2' }, { storage });
 assert.equal(changed.source, 'generated', 'profile changes must invalidate the same-day cache');

@@ -2309,16 +2309,14 @@ function koyomiCommonPrimaryReadingHtml(common,legacyText,locale='ja'){
 function koyomiDailyReadingHtml(reading,source='generated',locale='ja'){
   if(!reading)return '';
   const ja=locale!=='en';
+  const blockClass={conclusion:'conclusion',action:'action',caution:'caution',difference:'evidence',time:'',review:''};
+  const blocks=Array.isArray(reading.blocks)&&reading.blocks.length?reading.blocks.map(block=>`<p class="koyomi-bazi-guidance-card ${blockClass[block.role]||''}"><b>${koyomiEscapeHtml(block.label)}</b>${koyomiEscapeHtml(block.text)}</p>`).join(''):`<p class="koyomi-bazi-guidance-card conclusion"><b>${ja?'今日の結論':'Conclusion'}</b>${koyomiEscapeHtml(reading.conclusion)}</p>
+    <p><b>${ja?'前回との違い':'Difference'}</b>${koyomiEscapeHtml(reading.difference)}</p>
+    <div class="koyomi-bazi-guidance-grid"><p class="koyomi-bazi-guidance-card action"><b>${ja?'今日やること':'Action'}</b>${koyomiEscapeHtml(reading.action)}</p><p class="koyomi-bazi-guidance-card caution"><b>${ja?'控えること':'Avoid'}</b>${koyomiEscapeHtml(reading.caution)}</p></div>`;
   return `<section class="koyomi-common-primary koyomi-daily-one-click" aria-label="${ja?'今日のワンクリック鑑定':'One-click daily reading'}">
     <div class="koyomi-bazi-view-head"><h3>${ja?'今日の私へ':'For me today'}</h3><small>${source==='cache'?(ja?'本日の保存済み結果':'Saved today'):(ja?'本日の新しい結果':'New today')}</small></div>
-    <p class="koyomi-bazi-guidance-card conclusion"><b>${ja?'今日の結論':'Conclusion'}</b>${koyomiEscapeHtml(reading.conclusion)}</p>
-    <p><b>${ja?'前回との違い':'Difference'}</b>${koyomiEscapeHtml(reading.difference)}</p>
-    <div class="koyomi-bazi-guidance-grid">
-      <p class="koyomi-bazi-guidance-card action"><b>${ja?'今日やること':'Action'}</b>${koyomiEscapeHtml(reading.action)}</p>
-      <p class="koyomi-bazi-guidance-card caution"><b>${ja?'控えること':'Avoid'}</b>${koyomiEscapeHtml(reading.caution)}</p>
-      <p class="koyomi-bazi-guidance-card"><b>${ja?'おすすめ時間':'Time'}</b>${koyomiEscapeHtml(reading.recommendedTime)}</p>
-      <p class="koyomi-bazi-guidance-card"><b>${ja?'今夜の見直し':'Review'}</b>${koyomiEscapeHtml(reading.review)}</p>
-    </div>
+    <div class="koyomi-bazi-guidance-grid">${blocks}</div>
+    ${reading.safetyNotice?`<p class="koyomi-bazi-guidance-card caution"><b>${ja?'大切な注意':'Important'}</b>${koyomiEscapeHtml(reading.safetyNotice)}</p>`:''}
     <details><summary>${ja?'今日の根拠':'Evidence'}</summary><ul>${(reading.evidence||[]).map(item=>`<li>${koyomiEscapeHtml(item)}</li>`).join('')}</ul></details>
   </section>`;
 }
