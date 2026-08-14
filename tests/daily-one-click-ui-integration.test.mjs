@@ -13,5 +13,5 @@ assert.ok(app.includes('reading.blocks'));
 assert.ok(app.includes('reading.safetyNotice'));
 assert.ok(app.includes('function koyomiRenderHomeResult'));
 assert.ok(app.includes('function koyomiGeneratePersonalOnce'));
-assert.ok(worker.includes('home-one-click-v1'));
+assert.ok(worker.includes('home-one-click-v2'));
 console.log('daily one-click UI integration: ok');
