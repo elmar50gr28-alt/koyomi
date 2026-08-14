@@ -5,6 +5,8 @@ const source=await readFile('src/persona/conversation-adapter.js','utf8'),contex
 const base='【結論】\n慎重に進む。\n\n【何が起こりそうか】\n変化あり。\n\n【避ける行動】\n急がない。\n\n【最後の一言】\n元の締め。';
 const normal=adapter.apply(base,{system:'総合鑑定',question:'転職するか迷っています',score:62,mode:'sister',reasons:['追い風は四柱推命・宿曜']});
 assert.equal(normal.persona.focus,'追い風は四柱推命・宿曜');assert.ok(normal.text.includes('姐さんのひと言'));assert.ok(normal.text.includes('「追い風は四柱推命・宿曜」'));assert.equal(adapter.apply(base,{system:'総合鑑定',question:'別の相談文',score:62,mode:'sister',reasons:['追い風は四柱推命・宿曜']}).text,normal.text,'free-form consultation text must not affect the reading');
+assert.ok(!normal.text.includes('を軸に'),'mechanical axis phrasing must not appear in readings');
+assert.ok(adapter.BANK.address.length>=6);
 const different=adapter.apply(base,{system:'総合鑑定',score:78,mode:'sister',reasons:['警戒はタロット']});assert.notEqual(different.persona.opening,normal.persona.opening);
 const danger=adapter.apply(base,{system:'相性鑑定',question:'相手に脅されて怖い',score:30,mode:'zubat',risk:95});assert.equal(danger.persona.serious,true);assert.equal(danger.persona.aside,'');assert.ok(!danger.text.includes('姐さんのひと言'));assert.match(danger.persona.closing,/安全|危険|第三者/);
 for(const key of ['warm','bright','firm','bridge','aside','close'])assert.ok(adapter.BANK[key].length>=6);
