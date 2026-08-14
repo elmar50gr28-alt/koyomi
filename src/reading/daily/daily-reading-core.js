@@ -77,7 +77,7 @@
       'verdict-first': `結論から言うわ。今日は「${focus.label}」を選ぶ日。${forward ? '遠慮せず一歩進めて。' : quiet ? '広げず、効く一点だけ整えなさい。' : '大勝負より小さな実行で確かめて。'}`,
       'evidence-turn': `流れを読むと、今日の鍵は派手な幸運ではなく「${focus.label}」。ここを扱える人から状況が動くわ。`,
       'action-first': `考え続けるより、今日は「${focus.label}」を形にしなさい。動いた後の情報の方が役に立つ日よ。`,
-      'warning-first': `そこ、勢いで決めないの。今日守るべき中心は「${focus.label}」よ。`,
+      'warning-first': `今日は勢いだけで決めないこと。いま大切にしたいのは「${focus.label}」よ。`,
       'timeline': `今日の流れは後半ほど輪郭が出るわ。「${focus.label}」に時間を残しておきなさい。`,
       'contrast': `昨日までの正解を続けるだけでは足りないわ。今日は「${focus.label}」へ重心を移す番。`,
       'quiet-read': `静かだけれど見逃せない日ね。運は「${focus.label}」という小さな選択に出ているわ。`,
@@ -112,7 +112,7 @@
     const difference = yesterday ? `昨日の「${yesterday.focusLabel}」を引きずるより、今日は「${focus.label}」へ切り替えると流れが通るわ。` : '履歴がたまると、昨日との違いもここで読み分けるわね。';
     const recommendedTime = input.recommendedTime || (score >= 70 ? '午前中。動けるうちに最初の一手を。' : score < 45 ? '夕方以降。材料が揃ってから。' : '昼過ぎ。周囲の反応を一度見てから。');
     const review = ['できた量ではなく、状況がどう変わったかを一つ確認して。', '今夜は、予想と実際の違いを一行だけ残して。', '相手の反応ではなく、自分が決められたことを確かめて。'][hash(`${input.date}|review`) % 3];
-    const labels = { conclusion: '今日の読み', difference: '流れの変化', action: '具体策', caution: '落とし穴', time: '動く頃合い', review: '今夜の確認' };
+    const labels = { conclusion: '今日の読み', difference: '流れの変化', action: '今日やること', caution: '気をつけること', time: '動く頃合い', review: '今夜の確認' };
     const texts = { conclusion: conclusionFor(structure.id, focus, score), difference, action, caution, time: recommendedTime, review };
     const evidence = (input.evidence || []).filter(Boolean).slice(0, 3);
     const safetyNotice = safetyFor(input, focus);
