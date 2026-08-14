@@ -9,5 +9,7 @@ assert.ok(app.includes('function koyomiDailyReadingHtml'));
 assert.ok(app.includes("source==='cache'"));
 assert.ok(app.includes('dailyReading?.action||commonReading.todayAction'));
 for (const path of ['./src/reading/daily/daily-reading-core.js', './src/reading/daily/daily-reading-controller.js']) assert.ok(worker.includes(path));
-assert.ok(worker.includes('daily-one-click-v1'));
+assert.ok(app.includes('reading.blocks'));
+assert.ok(app.includes('reading.safetyNotice'));
+assert.ok(worker.includes('daily-reading-engine-v2'));
 console.log('daily one-click UI integration: ok');
