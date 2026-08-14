@@ -460,6 +460,8 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <script src="./src/persona/sister-renderer.js"></script>
 <script src="./src/persona/conversation-adapter.js"></script>
 <script src="./src/reading/universal-reading-engine.js"></script>
+<script src="./src/reading/daily/daily-reading-core.js"></script>
+<script src="./src/reading/daily/daily-reading-controller.js"></script>
 <script src="./src/data/name-strokes.js"></script>
 <script src="./src/astrology/western-core-v1.js"></script>
 <script src="./src/astrology/western-transits-v1.js"></script>
@@ -1793,7 +1795,7 @@ function koyomiInstallHome(){
  const nav=document.createElement('section');
  nav.id='koyomiHomeNav';
  nav.className='koyomi-home-nav';
- nav.innerHTML='<h2 class="koyomi-home-heading">今日の結論</h2><p class="koyomi-home-lead">登録済みの人物で、すぐ本鑑定します。</p><button class="koyomi-main-action" id="koyomiStartReading" type="button">今すぐ本鑑定する</button><details class="koyomi-more-actions"><summary>ほかの占い方</summary><div class="koyomi-more-body"><button class="koyomi-date-action" id="koyomiChooseReadingDate" type="button" aria-expanded="false" aria-controls="koyomiDatePicker">日付を選んで鑑定する</button><div class="koyomi-date-picker" id="koyomiDatePicker" hidden><label for="koyomiReadingDate">鑑定する日</label><input id="koyomiReadingDate" type="date"><button id="koyomiStartDateReading" type="button">この日を鑑定</button></div><div class="koyomi-home-grid"><button class="koyomi-home-card" id="koyomiChoosePerson" type="button"><b>人物を選ぶ</b></button><button class="koyomi-home-card" id="koyomiChooseTheme" type="button" aria-expanded="false" aria-controls="koyomiThemePanel"><b>テーマを選ぶ</b></button><button class="koyomi-home-card" id="koyomiOpenResult" type="button"><b>前回の結果</b></button></div><div class="koyomi-theme-panel" id="koyomiThemePanel" aria-live="polite" hidden></div></div></details>';
+ nav.innerHTML='<h2 class="koyomi-home-heading">今日の結論</h2><p class="koyomi-home-lead">初回登録後は、保存済みの本人プロフィールで毎日すぐ占えます。</p><button class="koyomi-main-action" id="koyomiStartReading" type="button">今日の私を占う</button><p class="compact-note" id="koyomiDailyReadingNote">同じ日は同じ結果。行動結果の入力は不要です。</p><details class="koyomi-more-actions"><summary>ほかの占い方</summary><div class="koyomi-more-body"><button class="koyomi-date-action" id="koyomiChooseReadingDate" type="button" aria-expanded="false" aria-controls="koyomiDatePicker">日付を選んで鑑定する</button><div class="koyomi-date-picker" id="koyomiDatePicker" hidden><label for="koyomiReadingDate">鑑定する日</label><input id="koyomiReadingDate" type="date"><button id="koyomiStartDateReading" type="button">この日を鑑定</button></div><div class="koyomi-home-grid"><button class="koyomi-home-card" id="koyomiChoosePerson" type="button"><b>人物を選ぶ</b></button><button class="koyomi-home-card" id="koyomiChooseTheme" type="button" aria-expanded="false" aria-controls="koyomiThemePanel"><b>テーマを選ぶ</b></button><button class="koyomi-home-card" id="koyomiOpenResult" type="button"><b>前回の結果</b></button></div><div class="koyomi-theme-panel" id="koyomiThemePanel" aria-live="polite" hidden></div></div></details>';
  first.parentNode.insertBefore(nav,first);
  $('koyomiStartReading').onclick=koyomiStartPersonalReading;
  $('koyomiChooseReadingDate').onclick=koyomiToggleDatePicker;
@@ -2304,6 +2306,23 @@ function koyomiCommonPrimaryReadingHtml(common,legacyText,locale='ja'){
     <details><summary>${ja?'\u5f93\u6765\u306e\u7dcf\u5408\u9451\u5b9a\u3092\u898b\u308b':'Show legacy integrated reading'}</summary><div style="white-space:pre-wrap">${koyomiEscapeHtml(legacyText||'')}</div></details>
   </section>`;
 }
+function koyomiDailyReadingHtml(reading,source='generated',locale='ja'){
+  if(!reading)return '';
+  const ja=locale!=='en';
+  return `<section class="koyomi-common-primary koyomi-daily-one-click" aria-label="${ja?'今日のワンクリック鑑定':'One-click daily reading'}">
+    <div class="koyomi-bazi-view-head"><h3>${ja?'今日の私へ':'For me today'}</h3><small>${source==='cache'?(ja?'本日の保存済み結果':'Saved today'):(ja?'本日の新しい結果':'New today')}</small></div>
+    <p class="koyomi-bazi-guidance-card conclusion"><b>${ja?'今日の結論':'Conclusion'}</b>${koyomiEscapeHtml(reading.conclusion)}</p>
+    <p><b>${ja?'前回との違い':'Difference'}</b>${koyomiEscapeHtml(reading.difference)}</p>
+    <div class="koyomi-bazi-guidance-grid">
+      <p class="koyomi-bazi-guidance-card action"><b>${ja?'今日やること':'Action'}</b>${koyomiEscapeHtml(reading.action)}</p>
+      <p class="koyomi-bazi-guidance-card caution"><b>${ja?'控えること':'Avoid'}</b>${koyomiEscapeHtml(reading.caution)}</p>
+      <p class="koyomi-bazi-guidance-card"><b>${ja?'おすすめ時間':'Time'}</b>${koyomiEscapeHtml(reading.recommendedTime)}</p>
+      <p class="koyomi-bazi-guidance-card"><b>${ja?'今夜の見直し':'Review'}</b>${koyomiEscapeHtml(reading.review)}</p>
+    </div>
+    <details><summary>${ja?'今日の根拠':'Evidence'}</summary><ul>${(reading.evidence||[]).map(item=>`<li>${koyomiEscapeHtml(item)}</li>`).join('')}</ul></details>
+  </section>`;
+}
+function koyomiDailyProfileKey(profile){let value=JSON.stringify({personId:profile.personId||'',name:profile.displayName||'',birth:profile.birthData||{}}),hash=2166136261;for(const char of value)hash=Math.imul(hash^char.charCodeAt(0),16777619);return`profile-${(hash>>>0).toString(16)}`}
 async function koyomiRenderBaziReading(){
   try{
     const profile=koyomiBaziReadingProfile();
@@ -2314,7 +2333,17 @@ async function koyomiRenderBaziReading(){
     const locale=koyomiBaziLocale();
     const question=document.getElementById('question')?.value||document.getElementById('memo')?.value||document.getElementById('consultation')?.value||'';
     const commonReading=KOYOMI_BAZI.buildCommonReading(result,{tone:'mitsunome',maxThemes:4,question});
+    const dateKey=fmtIso(selectedDate||new Date()),legacyDaily=dailySignal(selectedDate||new Date());
+    const dailyPack=window.KOYOMI_DAILY_READING?.getOrCreate({
+      profileId:koyomiDailyProfileKey(profile),
+      settingsHash:JSON.stringify(profile.birthData||{}),date:dateKey,
+      dayKey:`${dayPillar(selectedDate||new Date()).text} ${legacyDaily.title}`,
+      dailyScore:legacyDaily.score,themeCategory:document.getElementById('theme')?.value||'overall',
+      evidence:[`${dayPillar(selectedDate||new Date()).text}の日・${legacyDaily.title}・信号${legacyDaily.score}`,commonReading.items?.[0]?.themeName,commonReading.items?.[0]?.evidence?.map(item=>`${item.type}:${item.value}`).join('／')].filter(Boolean)
+    });
+    const dailyReading=dailyPack?.reading||null;
     result.commonReading=commonReading;
+    result.dailyReading=dailyReading;
     const reading={...KOYOMI_BAZI.buildBaziReading(result,{locale}),commonReading};
     window.KOYOMI_LAST_BAZI_READING={result,reading};
     const pillars=result.chart?.pillars||{};
@@ -2347,7 +2376,7 @@ async function koyomiRenderBaziReading(){
     if(commonReading.available){
       const overall=document.getElementById('overallReading');
       const legacyReading=personalResult?.reading||overall?.innerText||'';
-      if(overall)overall.innerHTML=koyomiCommonPrimaryReadingHtml(commonReading,legacyReading,locale);
+      if(overall)overall.innerHTML=koyomiDailyReadingHtml(dailyReading,dailyPack?.source,locale)+koyomiCommonPrimaryReadingHtml(commonReading,legacyReading,locale);
       const verdict=document.getElementById('personalVerdict');
       if(verdict)verdict.textContent=`${locale==='en'?'Today’s theme':'\u4eca\u65e5\u306e\u30c6\u30fc\u30de'}\uff1a${commonReading.items?.[0]?.themeName||''}`;
       const verdictNote=document.getElementById('personalVerdictNote');
@@ -2358,11 +2387,11 @@ async function koyomiRenderBaziReading(){
         const doNode=actionSummary.querySelector('[data-personal-action="do"]');
         const stopNode=actionSummary.querySelector('[data-personal-action="stop"]');
         const homeworkNode=actionSummary.querySelector('[data-personal-action="homework"]');
-        if(doNode)doNode.textContent=commonReading.todayAction;
-        if(stopNode)stopNode.textContent=commonReading.avoidAction;
-        if(homeworkNode)homeworkNode.textContent=commonReading.items?.[0]?.themeName||'';
+        if(doNode)doNode.textContent=dailyReading?.action||commonReading.todayAction;
+        if(stopNode)stopNode.textContent=dailyReading?.caution||commonReading.avoidAction;
+        if(homeworkNode)homeworkNode.textContent=dailyReading?.focusLabel||commonReading.items?.[0]?.themeName||'';
       }
-      if(personalResult)personalResult.reading=[commonReading.answer?.directAnswer,commonReading.answer?.reason,...(commonReading.answer?.actionPlan||[]).map(step=>`${step.when}: ${step.action}`),commonReading.answer?.stop,commonReading.summary,...Object.values(commonReading.categories||{})].filter(Boolean).join('\n');
+      if(personalResult)personalResult.reading=[dailyReading?.conclusion,dailyReading?.difference,dailyReading?.action,dailyReading?.caution,commonReading.answer?.directAnswer,commonReading.answer?.reason,...(commonReading.answer?.actionPlan||[]).map(step=>`${step.when}: ${step.action}`),commonReading.answer?.stop,commonReading.summary,...Object.values(commonReading.categories||{})].filter(Boolean).join('\n');
     }
   }catch(error){
     console.error('[KOYOMI_BAZI_READING] render failed',error);
