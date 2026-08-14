@@ -1883,7 +1883,7 @@ async function koyomiEditOwnProfile(){
  $('ledgerFormTitle').textContent='あなたのプロフィールを登録';
  return null;
 }
-function koyomiRenderHomeResult(profile,daily){const box=$('koyomiHomeResult');if(!box||!daily)return;box.hidden=false;box.innerHTML=`<h3>${koyomiEscapeHtml(profile.displayName||'あなた')}さんの今日</h3><p><b>結論</b>${koyomiEscapeHtml(daily.conclusion)}</p><p><b>今日の一手</b>${koyomiEscapeHtml(daily.action)}</p><p><b>注意</b>${koyomiEscapeHtml(daily.caution)}</p><button class="koyomi-home-detail" id="koyomiOpenFullReading" type="button">理由と本鑑定を見る</button>`;$('koyomiOpenFullReading').onclick=()=>{setPage('personal');requestAnimationFrame(()=>$('personalResult')?.scrollIntoView({behavior:'smooth',block:'start'}))}}
+function koyomiRenderHomeResult(profile,daily){const box=$('koyomiHomeResult');if(!box||!daily)return;box.hidden=false;box.innerHTML=`<h3>${ledgerEscape(profile.displayName||'あなた')}さんの今日</h3><p><b>結論</b>${ledgerEscape(daily.conclusion)}</p><p><b>今日の一手</b>${ledgerEscape(daily.action)}</p><p><b>注意</b>${ledgerEscape(daily.caution)}</p><button class="koyomi-home-detail" id="koyomiOpenFullReading" type="button">理由と本鑑定を見る</button>`;$('koyomiOpenFullReading').onclick=()=>{setPage('personal');requestAnimationFrame(()=>$('personalResult')?.scrollIntoView({behavior:'smooth',block:'start'}))}}
 async function koyomiGeneratePersonalOnce(profile){const result=buildPersonal();if(!result)return null;renderPersonal(result);await window.KOYOMI_BAZI_READING?.render();return window.KOYOMI_LAST_BAZI_READING?.result?.dailyReading||result.dailyReading||null}
 async function koyomiStartPersonalReading(){const button=$('koyomiStartReading');if(button?.disabled)return;selectedDate=startOfDay(new Date());renderCalendar();const p=await koyomiRequireProfile();if(!p)return;try{if(button){button.disabled=true;button.textContent='今日の結論を読み込み中…'}const daily=await koyomiGeneratePersonalOnce(p);if(daily){koyomiRenderHomeResult(p,daily);setPage('calendar');$('koyomiHomeResult')?.scrollIntoView({behavior:'smooth',block:'nearest'});sessionStorage.removeItem('koyomi.pending-reading.v1')}}finally{if(button){button.disabled=false;button.textContent='今日の結論を見る'}}}
 function koyomiToggleDatePicker(){const panel=$('koyomiDatePicker'),button=$('koyomiChooseReadingDate');if(!panel)return;panel.hidden=!panel.hidden;button?.setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden){$('koyomiReadingDate').value=fmtIso(selectedDate);$('koyomiReadingDate').focus()}}
@@ -1932,6 +1932,7 @@ const v201MundaneGenerateBase=mundaneGenerate;
 mundaneGenerate=async function(){const result=await v201MundaneGenerateBase();const box=$('mundaneReading');if(box&&!box.hidden){const facts=[...box.querySelectorAll('p')].map(x=>x.textContent).filter(Boolean);v201Answer({type:'mundane',subject:`${$('mundaneYear')?.value||''}年の社会の流れ`,score:55,evidence:facts.slice(0,2),actions:['公的資料と一次情報で、関係する指標を月に一度確認する','予測ではなく、備えられる費用・期限・代替案を決める'],caution:'事件・景気・市場価格を占星術だけで断定しないこと',disclaimer:'社会占星術は傾向を整理する補助です。事実確認と専門情報を優先してください。'},box)}return result};
 function v201Init(){FEATURES.push('全鑑定共通回答','結論・根拠・具体策・注意・見直し統一','相性回答','人生年表回答','古代神託回答','運命航法盤回答','マンデン回答','今日の運勢回答');renderFeatures();window.V201={answer:v201Answer,engine:window.KOYOMI_UNIVERSAL_READING}}
 window.KOYOMI_CALENDAR_TIME_LEGACY=Object.freeze({formatLocalDate:fmtIso,parseLocalDate:safeDate,startOfLocalDay:startOfDay,formatCalendarDate:calendarFormat});
+window.KOYOMI_DAILY_CONTEXT=Object.freeze({selectedDate:()=>new Date(selectedDate),formatDate:fmtIso,dailySignal,dayPillar});
 window.KOYOMI_PROFILE_SCHEMA_LEGACY=Object.freeze({normalizeProfile:ledgerNormalizeProfile,validateProfile:ledgerValidateProfile});
 window.KOYOMI_CRYPTO_LEGACY=Object.freeze({deriveKey:ledgerDeriveKey,encryptObject:ledgerEncryptObject,decryptObject:ledgerDecryptObject});
 window.KOYOMI_INDEXEDDB_LEGACY=Object.freeze({list:ledgerList,get:ledgerGet,put:ledgerPut,delete:ledgerRawDelete,clear:ledgerRawClear});
@@ -2330,13 +2331,15 @@ async function koyomiRenderBaziReading(){
     const locale=koyomiBaziLocale();
     const question=document.getElementById('question')?.value||document.getElementById('memo')?.value||document.getElementById('consultation')?.value||'';
     const commonReading=KOYOMI_BAZI.buildCommonReading(result,{tone:'mitsunome',maxThemes:4,question});
-    const dateKey=fmtIso(selectedDate||new Date()),legacyDaily=dailySignal(selectedDate||new Date());
+    const dailyContext=window.KOYOMI_DAILY_CONTEXT,readingDate=dailyContext?.selectedDate?.()||new Date();
+    const dateKey=dailyContext?.formatDate?.(readingDate)||readingDate.toISOString().slice(0,10),legacyDaily=dailyContext?.dailySignal?.(readingDate)||{score:50,title:'今日の流れ'};
+    const readingDayPillar=dailyContext?.dayPillar?.(readingDate)?.text||dateKey;
     const dailyPack=window.KOYOMI_DAILY_READING?.getOrCreate({
       profileId:koyomiDailyProfileKey(profile),
       settingsHash:JSON.stringify(profile.birthData||{}),date:dateKey,
-      dayKey:`${dayPillar(selectedDate||new Date()).text} ${legacyDaily.title}`,
+      dayKey:`${readingDayPillar} ${legacyDaily.title}`,
       dailyScore:legacyDaily.score,themeCategory:document.getElementById('theme')?.value||'overall',
-      evidence:[`${dayPillar(selectedDate||new Date()).text}の日・${legacyDaily.title}・信号${legacyDaily.score}`,commonReading.items?.[0]?.themeName,commonReading.items?.[0]?.evidence?.map(item=>`${item.type}:${item.value}`).join('／')].filter(Boolean)
+      evidence:[`${readingDayPillar}の日・${legacyDaily.title}・信号${legacyDaily.score}`,commonReading.items?.[0]?.themeName,commonReading.items?.[0]?.evidence?.map(item=>`${item.type}:${item.value}`).join('／')].filter(Boolean)
     });
     const dailyReading=dailyPack?.reading||null;
     result.commonReading=commonReading;
