@@ -11,5 +11,6 @@ assert.ok(app.includes('id="overallReading"'),'Integrated reading remains availa
 const loader=await readFile('src/astrology/western-suite-loader.js','utf8');
 assert.ok(loader.includes('c.westernConsensusTags=c.westernAstrology.consensusTags'),'integrated boundary must expose consensusTags only');
 assert.ok(loader.includes('if(value?.westernAstrology)'), 'final personal renderer must display the Western suite result');
+assert.ok(loader.includes('applyPrecisionUi(value.westernAstrology)'), 'unknown-time results must suppress legacy time-dependent UI');
 assert.ok(!loader.includes('c.reading='),'suite must not inject Western prose into integrated reading');
 console.log('Western integration and offline regression test passed');

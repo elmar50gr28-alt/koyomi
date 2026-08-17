@@ -6,7 +6,7 @@ const context={console,Date,setTimeout,document:{readyState:'loading',addEventLi
 for(const file of files)vm.runInNewContext(await readFile(`src/astrology/${file}`,'utf8'),context,{filename:file});
 const epoch=new Date('1990-01-01T00:00:00Z'),day=86400000,eph=date=>{const d=(new Date(date)-epoch)/day;return{太陽:(280+d*.9856)%360,月:(100+d*13.176)%360,水星:(290+d*1.1)%360,金星:(330+d*.8)%360,火星:(20+d*.5)%360,木星:(100+d*.08)%360,土星:(270+d*.033)%360}};
 const result=context.WesternAstrologySuite.buildResult({placements:eph(epoch),angles:{asc:10,mc:280},cusps:Array.from({length:12},(_,i)=>10+i*30),birthMoment:epoch,partnerMoment:new Date('1992-01-01T00:00:00Z'),partnerTimeKnown:true,targetDate:new Date('2026-01-01T00:00:00Z'),ephemeris:eph,birthTimeKnown:true,partnerPlacements:eph(new Date('1992-01-01T00:00:00Z'))});
-assert.equal(result.schemaVersion,'western-120-v1');
+assert.equal(result.schemaVersion,'western-130-v1');
 assert.equal(result.calculationMeta.offlineLevel,'B');
 assert.ok(result.chartWheel.svg.startsWith('<svg'));
 assert.equal(result.forecast.available,true);
