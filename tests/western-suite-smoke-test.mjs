@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-const files=['western-core-v1.js','western-transits-v1.js','western-synastry-v1.js','western-solar-return-v1.js','western-progressions-v1.js','western-dignities-v1.js','western-points-v1.js','western-patterns-v1.js','western-composite-v1.js','western-professional-v1.js','western-reading-v1.js','western-suite-loader.js'];
+const files=['western-core-v1.js','western-transits-v1.js','western-synastry-v1.js','western-solar-return-v1.js','western-progressions-v1.js','western-dignities-v1.js','western-points-v1.js','western-patterns-v1.js','western-composite-v1.js','western-professional-v1.js','western-reading-v1.js','western-chart-wheel-v1.js','western-forecast-v1.js','western-solar-arc-v1.js','western-davison-v1.js','western-fixed-stars-v1.js','western-suite-loader.js'];
 const listeners={};
 const context={console,Date,setTimeout,document:{readyState:'loading',addEventListener:(name,fn)=>listeners[name]=fn,getElementById:()=>null}};
 context.globalThis=context;
