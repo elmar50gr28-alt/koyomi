@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v1-maplibre-local-v1-reaction-scale-v1';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v1-maplibre-local-v1';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const MAP_CORE_CACHE = `${CACHE_VERSION}-map-core`;
 const MAP_REGION_CACHE = `${CACHE_VERSION}-map-region`;
@@ -29,7 +29,6 @@ const APP_SHELL = [
   './src/world/spatial-grid.js',
   './src/world/mundane-earthquake-adapter.js',
   './src/world/world-map-ui.js',
-  './src/world/world-reaction-scale.js',
   './src/world/world-map.css',
   './src/world/world-evaluation-cache.js',
   './src/world/validation-core.js',

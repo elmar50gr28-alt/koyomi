@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createWorldContext, consensusOf, createSpatialGrid, EqualAreaBandGrid, H3SpatialGrid, MundaneEarthquakeAdapter, MUNDANE_EARTHQUAKE_VERSION, WorldEvaluationCache, relateEventToCell, validateWorldEvent } from '../src/world/index.js';
-import { WORLD_REACTION_LEVELS, worldReactionLevel, worldReactionColorExpression, worldReactionOpacityExpression } from '../src/world/world-reaction-scale.js';
 
 const context=createWorldContext({datetimeUtc:'2026-08-20T00:00:00+09:00',latitude:35.68,longitude:139.77,themeId:'earthquake',mode:'forecast'});
 assert.equal(context.datetimeUtc,'2026-08-19T15:00:00.000Z');
@@ -30,15 +29,10 @@ const eventData=JSON.parse(await readFile(new URL('../data/world/validation-even
 for(const event of eventData.events){validateWorldEvent(event);const eventCell=grid.cellForLatLng(event.latitude,event.longitude,3),relation=relateEventToCell(event,eventCell,grid);assert.equal(relation.sameCell,true);assert.equal(relation.ring,0);assert.ok(relation.centerDistanceKm>=0)}
 assert.throws(()=>validateWorldEvent({}),/identity/);
 
-assert.equal(WORLD_REACTION_LEVELS.length,5);
-for(const [score,label] of [[0,'静穏'],[39,'静穏'],[40,'やや反応'],[54,'やや反応'],[55,'中反応'],[69,'中反応'],[70,'強い反応'],[79,'強い反応'],[80,'非常に強い反応'],[100,'非常に強い反応']])assert.equal(worldReactionLevel(score).label,label,`${score}点の5段階判定`);
-assert.equal(worldReactionColorExpression()[0],'step');assert.equal(worldReactionOpacityExpression()[0],'step');
-
-const worker=await readFile(new URL('../service-worker.js',import.meta.url),'utf8');for(const asset of ['vendor/h3-js/4.5.0/h3-js.es.js','vendor/h3-js/4.5.0/LICENSE','data/world/validation-events.json','src/world/world-reaction-scale.js'])assert.ok(worker.includes(asset),`${asset} must be cached offline`);
+const worker=await readFile(new URL('../service-worker.js',import.meta.url),'utf8');for(const asset of ['vendor/h3-js/4.5.0/h3-js.es.js','vendor/h3-js/4.5.0/LICENSE','data/world/validation-events.json'])assert.ok(worker.includes(asset),`${asset} must be cached offline`);
 for(const asset of ['vendor/maplibre-gl/5.24.0/maplibre-gl.js','vendor/maplibre-gl/5.24.0/maplibre-gl.css','data/map/natural-earth-50m-countries.geojson','data/map/natural-earth-50m-lakes.geojson'])assert.ok(worker.includes(asset),`${asset} must be in the map core cache`);
 for(const token of ['MAP_CORE_CACHE','MAP_REGION_CACHE','Promise.allSettled','cacheFirstMapCore'])assert.ok(worker.includes(token),`${token} must protect offline map caching`);
-const mapUi=await readFile(new URL('../src/world/world-map-ui.js',import.meta.url),'utf8');assert.ok(mapUi.includes('MAX_VISIBLE_CELLS=500'));assert.ok(mapUi.includes('while(ids.length>=MAX_VISIBLE_CELLS'));assert.ok(mapUi.includes("map.on('moveend',scheduleUpdate)"));assert.ok(mapUi.includes('setTimeout(update,180)'));assert.ok(mapUi.includes("MAPLIBRE_JS='./vendor/maplibre-gl/5.24.0/maplibre-gl.js'"));for(const token of ['world-legend','world-selection-line','worldReactionOpacityExpression','スコア ${Math.round(result.score)} / 100','スコアは発生確率ではありません'])assert.ok(mapUi.includes(token),`${token} must clarify the reaction display`);assert.ok(!/unpkg|demotiles\.maplibre/.test(mapUi),'world map must not depend on map CDNs');
-const mapCss=await readFile(new URL('../src/world/world-map.css',import.meta.url),'utf8');for(const token of ['.world-legend','.world-reaction-meter','.world-reaction-summary'])assert.ok(mapCss.includes(token),`${token} must be styled`);
+const mapUi=await readFile(new URL('../src/world/world-map-ui.js',import.meta.url),'utf8');assert.ok(mapUi.includes('MAX_VISIBLE_CELLS=500'));assert.ok(mapUi.includes('while(ids.length>=MAX_VISIBLE_CELLS'));assert.ok(mapUi.includes("map.on('moveend',scheduleUpdate)"));assert.ok(mapUi.includes('setTimeout(update,180)'));assert.ok(mapUi.includes("MAPLIBRE_JS='./vendor/maplibre-gl/5.24.0/maplibre-gl.js'"));assert.ok(!/unpkg|demotiles\.maplibre/.test(mapUi),'world map must not depend on map CDNs');
 const offlineStyle=await readFile(new URL('../src/world/offline-map-style.js',import.meta.url),'utf8');assert.ok(offlineStyle.includes('Natural Earth 1:50m'));assert.ok(!/https?:\/\//.test(offlineStyle));assert.ok(!/glyphs|sprite/.test(offlineStyle));
 const countries=JSON.parse(await readFile(new URL('../data/map/natural-earth-50m-countries.geojson',import.meta.url),'utf8'));assert.equal(countries.type,'FeatureCollection');assert.ok(countries.features.length>200);const japan=countries.features.find(feature=>feature.properties.ADMIN==='Japan');assert.ok(japan);assert.equal(japan.geometry.type,'MultiPolygon');assert.ok(japan.geometry.coordinates.length>=20,'offline base map must retain Japanese islands');assert.equal(countries.koyomiSource.license,'Public Domain');
 const lakes=JSON.parse(await readFile(new URL('../data/map/natural-earth-50m-lakes.geojson',import.meta.url),'utf8'));assert.equal(lakes.type,'FeatureCollection');assert.ok(lakes.features.length>100);
