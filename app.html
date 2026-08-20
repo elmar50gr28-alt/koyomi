@@ -154,6 +154,7 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 @media(max-width:760px){.koyomi-home-nav{padding:14px;margin-bottom:12px}.koyomi-home-grid{grid-template-columns:1fr}.koyomi-home-card{min-height:76px}.koyomi-theme-panel{grid-template-columns:repeat(2,minmax(0,1fr))}.mobile-nav{display:grid!important;grid-template-columns:repeat(6,1fr)!important;overflow:visible!important}.mobile-nav button{min-width:0!important;flex:auto!important;font-size:.7rem!important}.mobile-nav button b{font-size:1.05rem!important}}
 .mundane-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.mundane-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}.mundane-chart{border:3px solid #111;border-radius:14px;background:#fff;padding:12px}.mundane-chart h3{margin:0 0 8px}.mundane-chart dl{display:grid;grid-template-columns:auto 1fr;gap:4px 9px}.mundane-chart dt{font-weight:950}.mundane-chart dd{margin:0}.mundane-status{margin-top:12px;border:2px dashed #111;border-radius:11px;padding:9px;font-weight:850}.mundane-reading,.mundane-monthly{margin-top:14px;border:3px solid #111;border-radius:14px;background:#fff6d9;padding:14px}.mundane-reading h3,.mundane-season-reading h4,.mundane-monthly h3{margin:0 0 8px}.mundane-reading p,.mundane-season-reading p,.mundane-monthly p{margin:6px 0}.mundane-season-reading{margin-top:12px;border-top:2px dashed #777;padding-top:10px}.mundane-quickread{border:2px solid #111;border-radius:11px;background:#fff;padding:11px;margin:10px 0}.mundane-quickread strong{display:block;font-size:1.08rem}.mundane-legend{display:flex;gap:12px;flex-wrap:wrap;font-weight:850}.mundane-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px}.mundane-trend{display:grid;gap:7px;margin:12px 0}.mundane-trend-row{display:grid;grid-template-columns:3rem repeat(3,minmax(0,1fr));gap:7px;align-items:center}.mundane-trend-row>span{font-weight:950}.mundane-bar{position:relative;height:26px;border:1px solid #777;border-radius:6px;background:#eee;overflow:hidden}.mundane-bar i{display:block;height:100%;min-width:2px}.mundane-bar b{position:absolute;inset:0;display:grid;place-items:center;color:#111;font-size:.75rem;text-shadow:0 1px #fff}.mundane-support{background:#79c99e}.mundane-pressure{background:#ef8c8c}.mundane-change{background:#82b7e8}.mundane-month-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mundane-month-list details{border:2px solid #777;border-radius:10px;background:#fff;padding:9px}.mundane-month-list summary{font-weight:950;cursor:pointer}.mundane-stance{display:inline-block;border-radius:999px;background:#1d3d34;color:#fff;padding:3px 9px;font-weight:950}@media(max-width:760px){.mundane-controls,.mundane-results,.mundane-month-list{grid-template-columns:1fr}.mundane-trend-row{grid-template-columns:2.6rem repeat(3,minmax(0,1fr));gap:4px}.mundane-bar b{font-size:.68rem}}
 </style>
+<style>.koyomi-main-action:disabled{opacity:.65;cursor:wait}.koyomi-home-profile{margin:0;color:#fff3d5;font-weight:900}body.koyomi-profile-ready #personalForm .personal-actions{display:none}</style>
 </head>
 <body class="read-standard">
 <div class="koyomi-foundation-banner" role="note"><a href="index.html">← ホーム</a><span>端末内で利用</span><label class="top-reading-mode">表示<select id="readingModeQuick" aria-label="表示モード" onchange="setReadingMode(this.value);saveState(false)"><option value="beginner">初心者</option><option value="standard">標準</option><option value="detail">詳細</option></select></label></div>
@@ -246,7 +247,7 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <details class="divination-box" id="reading-shichu" open><summary>四柱推命 本鑑定</summary><details class="detail-box" open><summary>命式・五行・通変星</summary><div class="detail-content"><div class="pillar-grid" id="pillarGrid"></div><h4>五行バランス</h4><div class="element-bars" id="elementBars"></div><div class="kv-grid" id="shichuDetails"></div></div></details><div class="divination-reading" id="shichuReading">本鑑定後に表示します。</div><div class="divination-meta" id="shichuMeta"></div></details>
 <details class="divination-box" id="reading-sukuyo"><summary>宿曜占星術 本鑑定</summary><div class="divination-reading" id="sukuyoReading">本鑑定後に表示します。</div><div class="divination-meta" id="sukuyoMeta"></div></details>
 <details class="divination-box" id="reading-kyusei"><summary>九星気学 本鑑定</summary><div class="divination-reading" id="kyuseiReading">本鑑定後に表示します。</div><div class="divination-meta" id="kyuseiMeta"></div></details>
-<details class="divination-box" id="reading-astrology"><summary>西洋占星術 本鑑定（出生図・12ハウス・トランジット）</summary><div class="divination-reading" id="astrologyReading">本鑑定後に表示します。</div><div class="divination-meta" id="astrologyMeta"></div></details>
+<details class="divination-box" id="reading-astrology"><summary>西洋占星術 本鑑定（生まれた時の星と現在の流れ）</summary><div class="divination-reading" id="astrologyReading">本鑑定後に表示します。</div><div class="divination-meta" id="astrologyMeta"></div></details>
 <details class="divination-box" id="reading-tarot"><summary>タロット 本鑑定</summary><div class="divination-reading" id="tarotReading">本鑑定後に表示します。</div><div class="divination-meta" id="tarotMeta"></div></details>
 <details class="divination-box" id="reading-runes"><summary>ルーン 本鑑定</summary><div class="divination-reading" id="runesReading">本鑑定後に表示します。</div><div class="divination-meta" id="runesMeta"></div></details>
 <details class="divination-box" id="reading-name"><summary>姓名判断 本鑑定</summary><div class="divination-reading" id="nameReading">本鑑定後に表示します。</div><div class="divination-meta" id="nameMeta"></div></details>
@@ -256,7 +257,7 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <details class="divination-box" id="reading-timing"><summary>大運・流年・世界暦 本鑑定</summary><div class="divination-reading" id="timingReading">本鑑定後に表示します。</div><div class="divination-meta" id="timingMeta"></div></details>
 <details class="detail-box"><summary>大運・流年・月運</summary><div class="detail-content"><div class="kv-grid" id="luckDetails"></div><div class="scale-wrap"><table class="scale-table"><thead><tr><th>区分</th><th>期間</th><th>干支</th><th>信号</th><th>読み</th></tr></thead><tbody id="luckTable"></tbody></table></div></div></details>
 <details class="detail-box"><summary>宿曜・九星・姓名・ゲマトリア</summary><div class="detail-content"><div class="kv-grid" id="auxDetails"></div></div></details>
-<details class="detail-box" open><summary>西洋占星術・出生図／ハウス／トランジット</summary><div class="detail-content"><div class="accuracy-note">出生時刻・緯度経度・UTC時差からASC／MCと12ハウスを近似計算します。天体位置は単体HTML向け低精度天文計算で、専門エフェメリスほどの精度はありません。</div><div class="astro-summary-grid" id="astroAngles"></div><h4>天体配置</h4><div class="astro-wheel-list" id="astroDetails"></div><div class="astro-panel" id="astroBalance"></div><h4>出生図アスペクト</h4><div id="aspectList"></div><h4>12ハウスと入室天体</h4><div class="scale-wrap"><table class="astro-house-table"><thead><tr><th>室</th><th>カスプ</th><th>主題</th><th>天体</th></tr></thead><tbody id="astroHouseTable"></tbody></table></div><h4>選択日のトランジット</h4><div id="transitList"></div></div></details>
+<details class="detail-box"><summary>専門データを見る</summary><div class="detail-content"><div class="accuracy-note">出生時刻と出生地から、第一印象、社会で目指す姿、12の生活テーマを計算します。ここから先は検証用の専門表示です。</div><div class="astro-summary-grid" id="astroAngles"></div><h4>天体の位置</h4><div class="astro-wheel-list" id="astroDetails"></div><div class="astro-panel" id="astroBalance"></div><h4>天体同士の関係</h4><div id="aspectList"></div><h4>12の生活テーマと天体</h4><div class="scale-wrap"><table class="astro-house-table"><thead><tr><th>番号</th><th>開始位置</th><th>生活テーマ</th><th>天体</th></tr></thead><tbody id="astroHouseTable"></tbody></table></div><h4>選択日時点の星の動き</h4><div id="transitList"></div></div></details>
 <details class="detail-box"><summary>タロット・ケルト十字10枚／ルーン3枚</summary><div class="detail-content"><div class="tarot-grid" id="tarotGrid"></div><h4>ルーン</h4><div class="rune-grid" id="runeGrid"></div></div></details>
 <details class="detail-box"><summary>相性補助・具体的行動</summary><div class="detail-content"><div class="reading" id="adviceReading">本鑑定後に表示します。</div></div></details>
 </section>
@@ -459,8 +460,17 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <script src="./src/persona/beginner-explainer.js"></script>
 <script src="./src/persona/divination-glossary.js"></script>
 <script src="./src/persona/sister-renderer.js"></script>
+<script src="./src/persona/reading-structure-planner.js"></script>
+<script src="./src/persona/persona-policy.js"></script>
 <script src="./src/persona/conversation-adapter.js"></script>
 <script src="./src/reading/universal-reading-engine.js"></script>
+<script src="./src/reading/integrated-judgment-core.js"></script>
+<script src="./src/reading/meaning-evidence-translator.js"></script>
+<script src="./src/reading/output-quality-guard.js"></script>
+<script src="./src/reading/adaptive-narrative-engine.js"></script>
+<script>window.KOYOMI_ADAPTIVE_NARRATIVE?.load('./data/reading/adaptive_narrative_catalog.json');</script>
+<script src="./src/reading/daily/daily-reading-core.js"></script>
+<script src="./src/reading/daily/daily-reading-controller.js"></script>
 <script src="./src/data/name-strokes.js"></script>
 <script src="./src/astrology/western-core-v1.js"></script>
 <script src="./src/astrology/western-transits-v1.js"></script>
@@ -473,6 +483,11 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <script src="./src/astrology/western-composite-v1.js"></script>
 <script src="./src/astrology/western-professional-v1.js"></script>
 <script src="./src/astrology/western-reading-v1.js"></script>
+<script src="./src/astrology/western-chart-wheel-v1.js"></script>
+<script src="./src/astrology/western-forecast-v1.js"></script>
+<script src="./src/astrology/western-solar-arc-v1.js"></script>
+<script src="./src/astrology/western-davison-v1.js"></script>
+<script src="./src/astrology/western-fixed-stars-v1.js"></script>
 <script src="./src/astrology/western-suite-loader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
 <script>
@@ -1046,6 +1061,8 @@ function v191zIntegratedReading(c){const x=c.consensus||v191zConsensus(c),plan=v
 const v191zBuildPersonalBase=buildPersonal;
 buildIntegratedReading=function(c){return v191zIntegratedReading(c)};
 buildPersonal=function(){const c=v191zBuildPersonalBase();if(!c)return c;c.consensus=v191zConsensus(c);c.originalScore=c.score;c.score=c.consensus.score;c.grade=c.consensus.grade;c.verdict=`${c.grade.label} — ${c.grade.command}`;c.reading=v191zIntegratedReading(c);c.divinations=buildDivinationReadings(c);c.advice=`【今日の命令書】\n1. ${v191zThemePlan(c)[0]}。\n2. ${v191sElementAction(c.use.useful,c.i.theme,c.i.qResource)}\n3. ${v191zThemePlan(c)[1]}。\n\n【30日後の合否】\n${v191zThemePlan(c)[2]}。達成できなければ、根性ではなく条件を変える。\n\n【禁止】\n${v191zThemePlan(c)[3]}。`;return c}
+const v191qFinalBuildPersonalBase=buildPersonal;
+buildPersonal=function(){const c=v191qFinalBuildPersonalBase();if(!c)return c;const guard=window.KOYOMI_OUTPUT_QUALITY;if(!guard)return c;c.reading=guard.process(c.reading,{generalizeAstrology:true}).text;c.advice=guard.process(c.advice,{generalizeAstrology:true}).text;Object.keys(c.divinations||{}).forEach(key=>{c.divinations[key]=guard.process(c.divinations[key],{generalizeAstrology:key==='astrology'}).text});c.outputQuality=guard.audit([c.reading,c.advice,...Object.values(c.divinations||{})].join('\n'));return c}
 const v191zRenderPersonalBase=renderPersonal;
 renderPersonal=function(r){v191zRenderPersonalBase(r);if(!r||!r.consensus)return;const x=r.consensus;$('personalScore').textContent=r.score;$('personalVerdict').textContent=r.verdict;$('personalVerdictNote').innerHTML=`<span class="zubat-seal">${v191zMode()==='zubat'?'ズバッと':'姐さん'}・一致度${x.agreement}</span> 十一占術をデータ確度と相談関連度で加重統合。`;$('precisionSummary').innerHTML=`<b>精密判定：</b>総合${r.score}/100「${r.grade.label}」。占術間一致度${x.agreement}（最大点差${x.spread}）。出生時刻・座標・姓名辞書・質問具体度を、占術ごとに別の信頼度で扱っています。天文計算は${v191zEphemerisName()}。ここでいう精密さは、計算条件と読解の一貫性であり、未来の的中を保証する数値ではありません。`;$('methodJudgmentGrid').innerHTML=x.methods.map(m=>`<div class="judgment-card ${m.grade.tone}"><b>${m.label}</b><strong>${m.grade.label} ${m.score}</strong><small>確度${m.conf.label} ${m.conf.score}｜${m.factors.slice(0,2).join('／')}</small></div>`).join('');$('readingLength').textContent+=`｜鑑定口調：${v191zMode()==='zubat'?'ズバッとモード':'ミツノメ姐さん本鑑定'}｜信頼度加重統合`}
 const v191zCompatBase=compatibility;
@@ -1581,13 +1598,13 @@ function v195ActionType(score,psych,category){if(psych.risk>=80||score<32)return
 function v195Context(input={}){const question=[input.question,input.memo,input.concern,input.purpose,input.topic].filter(Boolean).join(' ');const history=v195History();const category=v195Category(question);const score=Math.max(0,Math.min(100,Number(input.score)||50));const psych=v195Psych(question,score,{risk:input.risk||0,historyCount:history.length});const tone=v195Tone(score,psych,input.mode);const action=v195ActionType(score,psych,category);return{question,history,category,score,psych,tone,action,mode:input.mode||'sister',grade:input.grade||'',reasons:input.reasons||[],name:input.name||'アンタ',system:input.system||'総合鑑定'} }
 function v195ReasonBand(score){return score>=64?'positive':score<45?'negative':'neutral'}
 function v195TailoredCaution(c){if(c.category==='health')return v195Pick(V195_BANK.cautions.health,c.question+'health');if(['love','marriage','relation'].includes(c.category))return v195Pick(V195_BANK.cautions.relation,c.question+'relation');if(c.psych.loss>=50)return v195Pick(V195_BANK.cautions.loss,c.question+'loss');if(c.psych.haste>=45)return v195Pick(V195_BANK.cautions.haste,c.question+'haste');if(c.psych.anxiety>=45)return v195Pick(V195_BANK.cautions.anxiety,c.question+'anxiety');return v195Pick(V195_BANK.cautions.generic,c.question+'generic')}
-function v195ConcreteReason(c){const base=v195Pick(V195_BANK.reasons[v195ReasonBand(c.score)],c.system+c.question+c.score);const details=(c.reasons||[]).filter(Boolean).slice(0,3);return details.length?`${base}\n盤上では、${details.join('、')}が主な根拠。専門語で言えばそういうことだけど、生活の言葉に直せば「${c.score>=64?'条件を揃えれば進める':'今は確認不足を埋めるほうが先'}」という意味よ。`:base}
+function v195ConcreteReason(c){const base=v195Pick(V195_BANK.reasons[v195ReasonBand(c.score)],c.system+c.question+c.score),translator=window.KOYOMI_MEANING_EVIDENCE;const details=(c.reasons||[]).filter(Boolean).filter(x=>!translator?.containsForbidden(x)).slice(0,3);return details.length?details.join('\n'):base}
 function v195Praise(c){if(c.psych.effort>=42||c.history.length>=2)return v195Pick(V195_BANK.praise,c.question+c.history.length);return v195Pick(V195_BANK.encouragement,c.question+c.score)}
 function v195Humor(c){if(c.psych.risk>=70||c.category==='health'||c.score<35)return'';return v195Pick(V195_BANK.humor,c.category+c.question+c.score)}
 function v195LastWord(c){return v195Pick(V195_BANK.closings,c.question+c.score+c.history.length)}
 function v195Generate(input={}){const c=v195Context(input),opening=v195Pick(V195_BANK.openings[c.tone],c.system+c.question+c.score+c.history.length),reason=v195ConcreteReason(c),caution=v195TailoredCaution(c),action=v195Pick(V195_BANK.actions[c.action],c.question+c.score+c.system),enc=v195Praise(c),humor=v195Humor(c),closing=v195LastWord(c);let verdict;if(c.mode==='zubat'){verdict=c.score>=70?'進んでいい。ただし条件を確認してから。':c.score>=55?'小さく試すところまで。大勝負はまだ。':c.score>=40?'今日は決めない。材料を集めなさい。':'今日は動くな。損を広げないことが正解。'}else{verdict=c.score>=70?'今は追い風を使える時よ。':c.score>=55?'慎重に進めば形になる余地があるわ。':c.score>=40?'いまは答えを急ぐより、条件を整える時ね。':'今回は守りを優先しましょう。止まることにも意味があるの。'}
 const text=`【第一印象】\n${opening}\n${verdict}\n\n【運勢の理由】\n${reason}\n\n【注意点】\n${caution}\n\n【行動指針】\n${action}\n${humor?`\n${humor}`:''}\n\n【励まし】\n${enc}\n\n【最後の一言】\n${closing}`;v195SaveHistory({system:c.system,category:c.category,score:c.score,grade:c.grade,question:c.question.slice(0,500),mode:c.mode,psych:c.psych});return{text,context:c}}
-function v195PersonalReasons(r){const out=[];if(r?.consensus?.top?.length)out.push(`追い風は${r.consensus.top.slice(0,2).map(x=>x.label).join('・')}`);if(r?.consensus?.bottom?.length)out.push(`警戒は${r.consensus.bottom.slice(0,2).map(x=>x.label).join('・')}`);if(r?.chart?.day?.text)out.push(`日主は${r.chart.day.text}`);if(r?.grade?.label)out.push(`総合判定は${r.grade.label}`);return out}
+function v195PersonalReasons(r){if(r?.meaningEvidence?.length)return r.meaningEvidence.slice(0,4);const score=Number(r?.score)||50,state=score>=72?'forward':score<42?'protect':'test',translator=window.KOYOMI_MEANING_EVIDENCE;return translator?translator.translate({domain:r?.i?.qFocus||r?.i?.theme||'overall',score,state,contradiction:false}):[]}
 const v195RenderPersonalBase=renderPersonal;
 renderPersonal=function(r){v195RenderPersonalBase(r);if(!r)return;const q=$('question')?.value||$('memo')?.value||$('consultation')?.value||'';const g=v195Generate({system:'総合鑑定',question:q,score:r.score||50,grade:r.grade?.label||'',mode:v191zMode(),reasons:v195PersonalReasons(r),name:$('name')?.value});r.reading=g.text;lastPersonal=r;if($('overallReading'))$('overallReading').textContent=g.text;if($('personalVerdictNote'))$('personalVerdictNote').innerHTML=`<span class="zubat-seal">${v191zMode()==='zubat'?'ズバッと':'人格AI'}</span> 感情温度：${g.context.tone}／心理リスク ${g.context.psych.risk}／希望 ${g.context.psych.hope}`}
 const v195RenderCompatBase=renderCompat;
@@ -1634,16 +1651,15 @@ function v196CategoryAdvice(category,score){const go=score>=62, stop=score<42;co
 function v196Avoid(category,score){if(score<42)return'取り返そうとして急ぐこと。長文連絡、衝動買い、勢いの署名は避けなさい。';if(['love','marriage','relation'].includes(category))return'相手の気持ちを決めつけること。返信速度だけで愛情を測らない。';if(category==='work'||category==='money')return'条件を読まずに返事すること。口約束だけで進めない。';if(category==='health')return'不調を根性で押し切ること。';return'一日に全部変えようとすること。'}
 function v196BestAction(c){const base=v196CategoryAdvice(c.category,c.score);return base.split('。')[0]+'。'}
 function v196LifeItems(c,input={}){const el=input.element||input.usefulElement||lastPersonal?.use?.useful||'土';const em=V196_LIFE_MAP.elements[el]||V196_LIFE_MAP.elements.土;const direction=input.direction||input.bestDirection||QMDJ_LAST?.ev?.best?.dir||'落ち着ける方向';const time=input.time||input.bestTime||QMDJ_LAST?.text?.bestRange||'午前中の落ち着いた時間';return{do:v196CategoryAdvice(c.category,c.score),stop:v196Avoid(c.category,c.score),person:['love','marriage','relation'].includes(c.category)?'話を最後まで聞いてくれる人':c.score<42?'利害のない第三者':'約束を守る人',avoidPerson:c.psych?.risk>=70?'急かす人、罪悪感を使う人':'結論を急かす人',time,place:c.category==='work'?'静かに資料を広げられる場所':c.category==='health'?'休める場所':'気持ちが落ち着く場所',direction,item:em.item,food:em.food,color:em.color,refresh:c.category==='health'||c.category==='rest'?'湯船か20分の昼寝':'10分歩いて視線を遠くへ向ける',homework:v196BestAction(c)} }
-function v196Technical(input,c){const reasons=(input.reasons||[]).filter(Boolean);const door=input.door||QMDJ_LAST?.ev?.best?.door;const translated=door&&V196_LIFE_MAP.doors[door]?`生活の言葉では「${V196_LIFE_MAP.doors[door].life}」。これを奇門遁甲では${door}というの。`:'';return [`ここからは詳しい人向けよ。`,translated,reasons.length?`今回の根拠は、${reasons.slice(0,4).join('、')}。`:'',input.system?`使用した占術：${input.system}。`:'' ].filter(Boolean).join('\n')}
 function v196Generate(input={}){const c=v195Context(input),weather=v195Pick(V196_LIFE_MAP.weather[v196Band(c.score)],c.question+c.score+'weather'),items=v196LifeItems(c,input),conclusion=c.mode==='zubat'?(c.score>=65?'進んでいい。ただし一気に全部やるな。':c.score>=45?'今日は小さく試すところまで。結論は持ち帰りなさい。':'今日は動くな。守るのが正解よ。'):(c.score>=65?'今日は動いていいわ。準備した分だけ前へ進める。':c.score>=45?'今日は慎重運転。小さく動いて、反応を見ましょう。':'今日は前進より防御。自分を守る日にしなさい。');
  const likely=c.score>=65?'連絡や相談が通りやすく、動いた分だけ反応が返ってきそう。':c.score>=45?'進展はあるけれど、確認不足があるとやり直しになりやすい。':'急ぐほど行き違い、見落とし、余計な出費が増えやすい。';
  const why=v195ConcreteReason(c).replace(/^.*?\n盤上では、/s,'盤の奥では、');
  const metaphor=c.score>=65?'今日は高速道路に乗れる日。でも出口は自分で確認するのよ。':c.score>=45?'今日は下道で行きましょ。遅くても、迷わないほうが勝ち。':'今日は引き返す勇気が必要。赤信号でアクセルを踏まないこと。';
- const tech=v196Technical(input,c);
- const text=`【結論】\n${conclusion}\n${weather}\n${v196Feel(c.score)}。\n\n【何が起こりそうか】\n${likely}\n${metaphor}\n\n【なぜそう読むのか】\n${why}\n\n【今日どう行動するか】\n・今日やること：${items.do}\n・会うべき人：${items.person}\n・おすすめ時間：${items.time}\n・おすすめ場所：${items.place}\n・おすすめ方角：${items.direction}\n・持ち物：${items.item}\n・食べ物：${items.food}\n・色：${items.color}\n・気分転換：${items.refresh}\n\n【避ける行動】\n・今日やめること：${items.stop}\n・避ける人：${items.avoidPerson}\n\n【一番おすすめの一手・今日の宿題】\n${items.homework}\n\n【占術の意味】\n${tech}\n\n【最後の一言】\n${v195LastWord(c)}`;
+ const relationship=['love','marriage','relation','family'].includes(c.category),support=relationship?`・話す相手：${items.person}`:`・動く場所：${items.place}`,riskLine=c.psych?.risk>=70?`\n・距離を取る相手：${items.avoidPerson}`:'';
+ const text=`【結論】\n${conclusion}\n${weather}\n\n【何が起こりそうか】\n${likely}\n${metaphor}\n\n【なぜそう読むのか】\n${why}\n\n【今日どう行動するか】\n・最初にすること：${items.do}\n・動く時間：${items.time}\n${support}\n\n【避ける行動】\n${items.stop}${riskLine}\n\n【今日の一手】\n${items.homework}\n\n【最後の一言】\n${v195LastWord(c)}`;
  v195SaveHistory({system:c.system,category:c.category,score:c.score,grade:c.grade,question:c.question.slice(0,500),mode:c.mode,psych:c.psych,translator:'v196'});return{text,context:c,life:items}}
 const v198LifeGenerateBase=v196Generate;
-v196Generate=function(input={}){const result=v198LifeGenerateBase(input),adapter=window.KOYOMI_PERSONA_ADAPTER;if(!adapter)return result;const layered=adapter.apply(result.text,{...input,psychRisk:result.context?.psych?.risk,variant:result.context?.history?.length||0});result.text=layered.text;result.persona=layered.persona;return result};
+v196Generate=function(input={}){const result=v198LifeGenerateBase(input),adapter=window.KOYOMI_PERSONA_ADAPTER,adaptive=window.KOYOMI_ADAPTIVE_NARRATIVE,judgment=window.KOYOMI_ACTIVE_JUDGMENT,domain=input.domain||judgment?.domain||result.context?.category||'overall',state=input.state||judgment?.state,contradiction=input.contradiction??judgment?.contradiction,risk=result.context?.psych?.risk||0;const narrative=adaptive?.compose({domain,state,contradiction,score:result.context?.score,risk,serious:risk>=70,reasons:input.reasons||result.context?.reasons,action:result.life?.do,stop:result.life?.stop,history:result.context?.history,date:fmtIso(selectedDate),variant:result.context?.history?.length||0,seed:[input.system,input.question,result.context?.score].join('|')});if(narrative){result.text=narrative.text;result.narrative=narrative.meta;const saved=v195History();if(saved[0]){saved[0].narrative=narrative.meta;storageSet('local',V195_DIALOGUE_KEY,JSON.stringify(saved))}}if(!adapter)return result;const safeReason=state==='forward'?'準備したことから進められる':state==='protect'?'負担を増やさず整える':'小さく試して反応を見る',layered=adapter.apply(result.text,{...input,reasons:narrative?[safeReason]:input.reasons,evidence:narrative?[safeReason]:input.evidence,domain,state,contradiction:input.contradiction??judgment?.contradiction,psychRisk:risk,variant:result.context?.history?.length||0}),finalQuality=adaptive?.audit(layered.text,{serious:risk>=70});result.text=finalQuality&&!finalQuality.pass&&narrative?narrative.text:layered.text;result.persona=layered.persona;if(result.narrative)result.narrative.finalQuality=finalQuality;return result};
 const v196RenderPersonalBase=renderPersonal;
 function v196RenderMethodSummary(r,key,readingId,summaryId){const reading=$(readingId);if(!reading)return;let box=$(summaryId);if(!box){reading.insertAdjacentHTML('beforebegin',`<div class="method-result-summary" id="${summaryId}"><article><b>この占術の結論</b><p data-method-summary="conclusion"></p></article><article><b>主な根拠</b><p data-method-summary="evidence"></p></article><article><b>今日の行動</b><p data-method-summary="action"></p></article><article><b>注意点</b><p data-method-summary="caution"></p></article><article class="confidence"><b>判定の確度</b><p data-method-summary="confidence"></p></article></div>`);box=$(summaryId)}const m=v191zMethodScore(key,r),plan=v191zMethodPlan(key,r);box.querySelector('[data-method-summary="conclusion"]').textContent=`${m.grade.label} ${m.score}点。${m.grade.command}`;box.querySelector('[data-method-summary="evidence"]').textContent=m.factors.join('／');box.querySelector('[data-method-summary="action"]').textContent=plan[0];box.querySelector('[data-method-summary="caution"]').textContent=plan[3];box.querySelector('[data-method-summary="confidence"]').textContent=`${m.conf.label} ${m.conf.score}%`}
 function v196RenderSukuyoSummary(r){v196RenderMethodSummary(r,'sukuyo','sukuyoReading','sukuyoResultSummary')}
@@ -1664,7 +1680,10 @@ const v197LedgerApplyPersonalBase=ledgerApplyPersonal;
 ledgerApplyPersonal=function(p){v197LedgerApplyPersonalBase(p);const n=p.nameData||{};if($('romaji'))$('romaji').value=n.romanizedName||n.originalSpelling||''}
 const v197LedgerCreateFromPersonalBase=ledgerCreateFromPersonal;
 ledgerCreateFromPersonal=function(){v197LedgerCreateFromPersonalBase();if($('lpRomanizedName'))$('lpRomanizedName').value=$('romaji')?.value||''}
-renderPersonal=function(r){v196RenderPersonalBase(r);if(!r)return;const q=$('question')?.value||$('memo')?.value||$('consultation')?.value||'',adapter=window.KOYOMI_PERSONA_ADAPTER,historyCount=v195History().length,psych=v195Psych(q,r.score||50);if(adapter)Object.keys(r.divinations||{}).forEach((key,index)=>{const method=v191zMethodScore(key,r),plan=v191zMethodPlan(key,r),layered=adapter.applyDivination(r.divinations[key],{system:V191Z_METHOD_LABEL[key]||key,question:q,score:method.score,mode:v191zMode(),psychRisk:psych.risk,evidence:method.factors,action:plan[0],variant:historyCount+index});r.divinations[key]=layered.text;const target=$(key+'Reading');if(target)target.textContent=layered.text});const g=v196Generate({system:'総合鑑定',question:q,score:r.score||50,grade:r.grade?.label||'',mode:v191zMode(),reasons:v195PersonalReasons(r),name:$('name')?.value,usefulElement:r.use?.useful});r.reading=g.text;lastPersonal=r;if($('overallReading'))$('overallReading').textContent=g.text;if($('personalVerdictNote'))$('personalVerdictNote').innerHTML=`<span class="zubat-seal">${v191zMode()==='zubat'?'ズバッと':'人生翻訳'}</span> ${v196Feel(g.context.score)}／今日の宿題：${g.life.homework}`;const actionSummary=$('personalActionSummary');if(actionSummary){actionSummary.hidden=false;actionSummary.querySelector('[data-personal-action="do"]').textContent=g.life.do;actionSummary.querySelector('[data-personal-action="stop"]').textContent=g.life.stop;actionSummary.querySelector('[data-personal-action="homework"]').textContent=g.life.homework}v196RenderSukuyoSummary(r);v196RenderKyuseiSummary(r);v196RenderAstrologySummary(r);v196RenderTarotSummary(r);v196RenderRunesSummary(r);v196RenderNameSummary(r);v196RenderNumerologySummary(r);v196RenderKabbalahSummary(r);v196RenderRokuseiSummary(r);v196RenderTimingSummary(r)}
+renderPersonal=function(r){v196RenderPersonalBase(r);if(!r)return;const q=$('question')?.value||$('memo')?.value||$('consultation')?.value||'',adapter=window.KOYOMI_PERSONA_ADAPTER,translator=window.KOYOMI_MEANING_EVIDENCE,historyCount=v195History().length,psych=v195Psych(q,r.score||50);if(adapter)Object.keys(r.divinations||{}).forEach((key,index)=>{const method=v191zMethodScore(key,r),plan=v191zMethodPlan(key,r),requestedLevel=$('readingModeSetting')?.value||'standard',publicEvidence=translator?translator.translate({domain:r.i?.qFocus||r.i?.theme||'overall',score:method.score,state:method.score>=72?'forward':method.score<42?'protect':'test'}).slice(0,2):[],layered=adapter.applyDivination(r.divinations[key],{system:requestedLevel==='detailed'?(V191Z_METHOD_LABEL[key]||key):'今日の流れ',question:q,score:method.score,mode:v191zMode(),psychRisk:psych.risk,evidence:requestedLevel==='detailed'?method.factors:publicEvidence,action:plan[0],level:requestedLevel==='detailed'?'detailed':'beginner',variant:historyCount+index});r.divinations[key]=layered.text;const target=$(key+'Reading');if(target)target.textContent=layered.text});const g=v196Generate({system:'総合鑑定',question:q,score:r.score||50,grade:r.grade?.label||'',mode:v191zMode(),reasons:v195PersonalReasons(r),name:$('name')?.value,usefulElement:r.use?.useful});r.reading=g.text;lastPersonal=r;if($('overallReading'))$('overallReading').textContent=g.text;if($('personalVerdictNote'))$('personalVerdictNote').innerHTML=`<span class="zubat-seal">${v191zMode()==='zubat'?'ズバッと':'人生翻訳'}</span> ${v196Feel(g.context.score)}／今日の宿題：${g.life.homework}`;v196RenderSukuyoSummary(r);v196RenderKyuseiSummary(r);v196RenderAstrologySummary(r);v196RenderTarotSummary(r);v196RenderRunesSummary(r);v196RenderNameSummary(r);v196RenderNumerologySummary(r);v196RenderKabbalahSummary(r);v196RenderRokuseiSummary(r);v196RenderTimingSummary(r)}
+function v202IntegratedJudgment(c){const engine=window.KOYOMI_INTEGRATED_JUDGMENT;if(!engine||!c)return null;const signals=Object.keys(V191Z_METHOD_LABEL).map(key=>{const method=v191zMethodScore(key,c),plan=v191zMethodPlan(key,c);return{id:key,system:method.label,score:method.score,confidence:method.conf,evidence:method.factors,timing:[plan[2]],supportConditions:[plan[0],plan[1]],cautionConditions:[plan[3]]}}),priorityGroups={shichu:['shichu','timing'],astrology:['astrology'],sukuyo:['sukuyo','kyusei','timing'],oracle:['tarot','runes'],name:['name','numerology','kabbalah'],timing:['timing','shichu','astrology']},priority=priorityGroups[c.i.qMethodPriority]||[];return engine.build({domain:c.i.qFocus||c.i.theme||'overall',priority,signals})}
+const v202IntegratedRenderBase=renderPersonal;
+renderPersonal=function(r){if(!r)return v202IntegratedRenderBase(r);const judgment=v202IntegratedJudgment(r);if(judgment){const translator=window.KOYOMI_MEANING_EVIDENCE;r.integratedJudgment=judgment;r.score=judgment.score;r.integrationConfidence=judgment.confidence;r.integratedEvidence=judgment.evidence;r.meaningEvidence=translator?translator.translate(judgment):[];window.KOYOMI_ACTIVE_JUDGMENT=judgment}try{return v202IntegratedRenderBase(r)}finally{delete window.KOYOMI_ACTIVE_JUDGMENT}}
 const v199ResultDrivenRenderBase=renderPersonal;
 renderPersonal=function(r){const fields=['question','memo','consultation'].map(id=>$(id)).filter(Boolean),values=fields.map(el=>el.value);try{fields.forEach(el=>el.value='');return v199ResultDrivenRenderBase(r)}finally{fields.forEach((el,index)=>el.value=values[index])}};
 const v200FuriganaRenderBase=renderPersonal;
@@ -1674,11 +1693,11 @@ const v196RenderCompatBase=renderCompat;
 renderCompat=function(r){v196RenderCompatBase(r);if(!r)return;const q=$('relationQuestion')?.value||'';const reasons=[`相性素質${r.symbolic}`,`現実運用${r.operation}`,`摩擦警報${r.axes?.摩擦??'—'}`,r.flags?.length?`安全旗${r.flags.length}件`:'安全旗なし'];const g=v196Generate({system:'相性鑑定',question:q,score:r.score||50,grade:r.grade?.label||'',mode:v191zMode(),reasons,risk:r.flags?.length?95:(r.operation<40?70:20),bestTime:'落ち着いて二人で話せる時間'});r.reading=g.text;lastCompat=r;if($('compatReading'))$('compatReading').textContent=g.text}
 const v196QmdjRenderBase=qmdjRender;
 qmdjRender=function(state){v196QmdjRenderBase(state);if(!state)return;const best=state.ev.best,door=best.door;const reasons=[`${best.dir}の${door}`,`最良時間${state.text.bestRange}`,state.chart.fuyin?'伏吟あり':'伏吟なし',state.chart.fanyin?'反吟あり':'反吟なし'];const g=v196Generate({system:'奇門遁甲',question:state.input.question||state.input.purpose.label,score:state.ev.overall,grade:state.ev.rank.label,mode:state.input.mode,reasons,risk:state.ev.metrics?.['金銭安全度']<40?70:20,direction:best.dir,time:state.text.bestRange,door});state.text.reading=g.text;QMDJ_LAST=state;if($('qmReading'))$('qmReading').textContent=g.text;qmdjGuidedRender(state)}
-function v196AddUi(){document.title='こよみ — 暦と鑑定';const h=document.querySelector('h1');if(h)h.textContent='こよみ';const sub=document.querySelector('.subtitle');if(sub)sub.textContent='占術を先に語らず、今日の結論・起こりそうなこと・具体行動・宿題へ翻訳します。';const banner=document.querySelector('.oracle-banner span');if(banner)banner.textContent='占術を覚えなくていいの。今日は何をして、何をやめるか。それだけ持って帰りなさい。専門用語は、納得した後に姐さんが最後に教えるわ。';const info=document.getElementById('v195PersonaInfo');if(info)info.innerHTML='<b>人生翻訳AI稼働中：</b>専門用語から話し始めません。生活、天気、地図、予防の言葉へ翻訳し、最後に今日の宿題を一つだけ出します。';const overall=document.getElementById('overallReading');if(overall&&!document.getElementById('personalActionSummary'))overall.insertAdjacentHTML('beforebegin','<div class="personal-action-summary" id="personalActionSummary" hidden><article class="support"><b>今日やること</b><p data-personal-action="do"></p></article><article class="caution"><b>今日やめること</b><p data-personal-action="stop"></p></article><article class="homework"><b>今日の宿題</b><p data-personal-action="homework"></p></article></div>');document.querySelector('.reading-index')?.addEventListener('click',e=>{const link=e.target.closest('a[href^="#reading-"]');if(!link)return;e.preventDefault();const target=document.getElementById(link.getAttribute('href').slice(1));if(!target)return;target.open=true;target.scrollIntoView({behavior:'smooth',block:'start'});target.querySelector('summary')?.focus({preventScroll:true})})}
-function v196Diagnostics(){const sample=v196Generate({system:'奇門遁甲',question:'仕事の契約を今日してよいか',score:38,mode:'zubat',reasons:['空亡','伏吟'],door:'杜門',direction:'東',time:'15時〜17時'});return[['生活語から開始',sample.text.indexOf('【結論】')===0],['指定順序',/結論[\s\S]*何が起こりそうか[\s\S]*なぜそう読むのか[\s\S]*今日どう行動するか[\s\S]*避ける行動[\s\S]*一番おすすめの一手[\s\S]*占術の意味/.test(sample.text)],['行動変換13項目',/今日やること[\s\S]*会うべき人[\s\S]*おすすめ時間[\s\S]*おすすめ場所[\s\S]*おすすめ方角[\s\S]*持ち物[\s\S]*食べ物[\s\S]*色[\s\S]*気分転換/.test(sample.text)],['専門用語は最後',sample.text.indexOf('空亡')>sample.text.indexOf('【占術の意味】')],['今日の宿題',sample.text.includes('今日の宿題')],['門の生活翻訳',Object.keys(V196_LIFE_MAP.doors).length===8]]}
+function v196AddUi(){document.title='こよみ — 暦と鑑定';const h=document.querySelector('h1');if(h)h.textContent='こよみ';const sub=document.querySelector('.subtitle');if(sub)sub.textContent='占術を先に語らず、今日の結論・起こりそうなこと・具体行動・宿題へ翻訳します。';const banner=document.querySelector('.oracle-banner span');if(banner)banner.textContent='占術を覚えなくていいの。今日は何をして、何をやめるか。それだけ持って帰りなさい。根拠は必要な分だけ、姐さんが生活の言葉で話すわ。';const info=document.getElementById('v195PersonaInfo');if(info)info.innerHTML='<b>人生翻訳AI稼働中：</b>専門用語から話し始めません。結論、理由、今日の一手を読みやすい順番で伝えます。';document.querySelector('.reading-index')?.addEventListener('click',e=>{const link=e.target.closest('a[href^="#reading-"]');if(!link)return;e.preventDefault();const target=document.getElementById(link.getAttribute('href').slice(1));if(!target)return;target.open=true;target.scrollIntoView({behavior:'smooth',block:'start'});target.querySelector('summary')?.focus({preventScroll:true})})}
+function v196Diagnostics(){const sample=v196Generate({system:'奇門遁甲',question:'仕事の契約を今日してよいか',score:38,mode:'zubat',reasons:['空亡','伏吟'],door:'杜門',direction:'東',time:'15時〜17時'});return[['生活語から開始',sample.text.indexOf('【結論】')===0],['自然な順序',/結論[\s\S]*何が起こりそうか[\s\S]*なぜそう読むのか[\s\S]*今日どう行動するか[\s\S]*避ける行動[\s\S]*今日の一手[\s\S]*最後の一言/.test(sample.text)],['行動を三点に限定',/最初にすること[\s\S]*動く時間[\s\S]*動く場所/.test(sample.text)],['不要な説明項目なし',!sample.text.includes(['【占術','の意味】'].join(''))],['根拠を理由へ統合',sample.text.indexOf('空亡')>sample.text.indexOf('【なぜそう読むのか】')],['門の生活翻訳',Object.keys(V196_LIFE_MAP.doors).length===8]]}
 const v196DiagnosticsBase=diagnostics;
 diagnostics=async function(){await v196DiagnosticsBase();const checks=v196Diagnostics();$('diagnostic').textContent+='\n'+checks.map(x=>`${x[1]?'✓':'×'} 人生翻訳 ${x[0]}: ${x[1]?'OK':'NG'}`).join('\n')+'\nV196 みつのめ姉さん 人生翻訳アルゴリズム'};
-function v196Init(){v196AddUi();FEATURES.push('人生翻訳アルゴリズム','生活語優先鑑定','専門用語後置','天気予報比喩','運命ナビ比喩','予防助言','体感運勢表現','今日やること','今日やめること','会うべき人','避ける人','おすすめ時間','おすすめ場所','おすすめ方角','持ち物・食べ物・色','気分転換','今日の宿題一つ','初心者生活語モード','詳細根拠後置');renderFeatures();window.V196={translator:{generate:v196Generate,map:V196_LIFE_MAP,diagnostics:v196Diagnostics}}}
+function v196Init(){v196AddUi();FEATURES.push('人生翻訳アルゴリズム','生活語優先鑑定','根拠の自然な統合','天気予報比喩','予防助言','今日やること','今日やめること','話す相手','動く時間','動く場所','今日の一手一つ','初心者生活語モード');renderFeatures();window.V196={translator:{generate:v196Generate,map:V196_LIFE_MAP,diagnostics:v196Diagnostics}}}
 
 function ledgerEnsureProfileAdvancedFields(){
  ledgerEnsureProfileSelect('lpOccupation','lpOccupationMajor','職業・相談の大分類',[
@@ -1765,7 +1784,7 @@ function ledgerApplyAutoNameToFields(){if(ledgerFormValue('lpReading')&&!ledgerF
 function ledgerProfileReadiness(p){const hasDate=!!p.birthData?.date,hasTime=!!p.birthData?.time&&!p.birthData?.timeUnknown,hasPlace=!!p.birthData?.place?.label,hasCoords=p.birthData?.place?.latitude!=null&&p.birthData?.place?.longitude!=null,hasTz=!!p.birthData?.place?.timezone||p.birthData?.place?.utcOffset!=null,hasName=!!p.displayName,hasKana=!!(p.nameData?.reading||p.nameData?.hiragana||p.nameData?.katakana),hasRoman=!!(p.nameData?.romanizedName||p.nameData?.originalSpelling),hasGlyph=!!(p.nameData?.oldGlyph||p.nameData?.variantGlyph||p.nameData?.divinationName);const conf=(ok,total)=>Math.round(ok/total*100);return[{name:'四柱推命',state:hasDate&&hasTime&&hasPlace?'ready':hasDate?'partial':'unavailable',confidence:conf([hasDate,hasTime,hasPlace,hasTz].filter(Boolean).length,4),note:hasDate&&hasTime&&hasPlace?'準備完了':'出生時刻・出生地で精度向上'},{name:'姓名判断',state:hasName&&hasKana&&hasGlyph?'ready':hasName?'partial':'unavailable',confidence:conf([hasName,hasKana,hasGlyph].filter(Boolean).length,3),note:hasKana&&hasGlyph?'準備完了':'かな・字体を確認すると精度向上'},{name:'西洋占星術',state:hasDate&&hasTime&&hasCoords&&hasTz?'ready':hasDate?'partial':'unavailable',confidence:conf([hasDate,hasTime,hasCoords,hasTz].filter(Boolean).length,4),note:hasTime&&hasCoords?'ハウス計算可':'時刻・座標でハウス精度向上'},{name:'宿曜',state:hasDate?'ready':'unavailable',confidence:hasDate?100:0,note:hasDate?'準備完了':'生年月日が必要'},{name:'数秘',state:hasDate&&hasName?'ready':hasDate||hasName?'partial':'unavailable',confidence:conf([hasDate,hasName].filter(Boolean).length,2),note:'生年月日と氏名を使用'},{name:'ゲマトリア・カバラ',state:hasRoman?'ready':hasName?'partial':'unavailable',confidence:hasRoman?100:(hasName?45:0),note:'ローマ字・原綴りで精度向上'}]}
 function ledgerUpdateReadiness(){if(!$('ledgerReadiness')||!$('ledgerProfileForm'))return;let p;try{p=ledgerCollectProfile()}catch(e){return}const label={ready:'ready',partial:'partial',unavailable:'unavailable'};$('ledgerReadiness').innerHTML=ledgerProfileReadiness(p).map(x=>`<div class="ledger-ready-row ${x.state}"><b>${x.name}</b><span>${label[x.state]}</span><small>confidence ${x.confidence}% / ${x.note}</small></div>`).join('')}
 const ledgerSaveProfileBase=ledgerSaveProfile;
-ledgerSaveProfile=async function(e){const silent=!!e?.silent;let before=null,beforeId=ledgerFormValue('lpId');try{const profiles=LedgerState.db&&!LedgerState.locked?await ledgerList('profiles'):[];if(beforeId)before=await ledgerGet('profiles',beforeId);if(!LedgerState.settings.mainProfileId&&!profiles.length&&$('lpMain'))$('lpMain').checked=true}catch(err){console.warn('[KOYOMI] primary pre-save skipped',err)}await ledgerSaveProfileBase(e);try{const id=ledgerFormValue('lpId');if(id){const p=await ledgerGet('profiles',id);if(p){if(!LedgerState.settings.mainProfileId||p.isMain||p.isPrimaryPerson){p.isMain=true;p.isPrimaryPerson=true;p.personId=p.personId||p.id;LedgerState.settings.mainProfileId=p.id;LedgerState.settings.lastProfileId=p.id;LedgerState.settings.startupMode='main';LedgerState.settings.onboardingCompleted=true;await koyomiInvalidateProfileReadings(p.id,before,p);await ledgerPut('profiles',p);await ledgerSaveAppSettings();await koyomiApplyPrimaryProfile();koyomiUpdateOwnProfileCard(p)}}}}catch(err){console.warn('[KOYOMI] primary post-save skipped',err)}if(silent)$('ledgerStatusToast')?.classList.remove('show');ledgerUpdateReadiness()}
+ledgerSaveProfile=async function(e){const silent=!!e?.silent;let before=null,beforeId=ledgerFormValue('lpId');try{const profiles=LedgerState.db&&!LedgerState.locked?await ledgerList('profiles'):[];if(beforeId)before=await ledgerGet('profiles',beforeId);if(!LedgerState.settings.mainProfileId&&!profiles.length&&$('lpMain'))$('lpMain').checked=true}catch(err){console.warn('[KOYOMI] primary pre-save skipped',err)}await ledgerSaveProfileBase(e);try{const id=ledgerFormValue('lpId');if(id){const p=await ledgerGet('profiles',id);if(p){if(!LedgerState.settings.mainProfileId||p.isMain||p.isPrimaryPerson){p.isMain=true;p.isPrimaryPerson=true;p.personId=p.personId||p.id;LedgerState.settings.mainProfileId=p.id;LedgerState.settings.lastProfileId=p.id;LedgerState.settings.startupMode='main';LedgerState.settings.onboardingCompleted=true;await koyomiInvalidateProfileReadings(p.id,before,p);await ledgerPut('profiles',p);await ledgerSaveAppSettings();await koyomiApplyPrimaryProfile();koyomiUpdateOwnProfileCard(p);if(sessionStorage.getItem('koyomi.pending-reading.v1')==='today'&&p.birthData?.date){sessionStorage.removeItem('koyomi.pending-reading.v1');await koyomiStartPersonalReading()}}}}}catch(err){console.warn('[KOYOMI] primary post-save skipped',err)}if(silent)$('ledgerStatusToast')?.classList.remove('show');ledgerUpdateReadiness()}
 const ledgerFillProfileBase=ledgerFillProfile;
 ledgerFillProfile=function(p){ledgerFillProfileBase(p);setupLedgerProfileUx();const n=p.nameData||{},pl=p.birthData?.place||{},o=p.optionalData||{};ledgerSetValue('lpMiddleName',n.middleName);ledgerSetValue('lpCompoundSurname',n.compoundSurname);ledgerSetValue('lpRomanizedName',n.romanizedName);ledgerSetValue('lpOriginalSpelling',n.originalSpelling);ledgerSetValue('lpVariantGlyph',n.variantGlyph);ledgerSetValue('lpDivinationGlyph',n.divinationGlyph);ledgerSetValue('lpTransliterationSystem',n.transliterationSystem||'auto');ledgerSetValue('lpPlacePrecision',pl.precision);ledgerSetValue('lpPlaceSource',pl.source);ledgerSetValue('lpOccupationMajor',o.occupationMajor);ledgerSyncBirthTimeUnknown();ledgerUpdateReadiness()}
 const ledgerResetFormBase=ledgerResetForm;
@@ -1795,7 +1814,7 @@ function koyomiInstallHome(){
  const nav=document.createElement('section');
  nav.id='koyomiHomeNav';
  nav.className='koyomi-home-nav';
- nav.innerHTML='<h2 class="koyomi-home-heading">今日の結論</h2><p class="koyomi-home-lead">登録済みの人物で、すぐ本鑑定します。</p><button class="koyomi-main-action" id="koyomiStartReading" type="button">今すぐ本鑑定する</button><details class="koyomi-more-actions"><summary>ほかの占い方</summary><div class="koyomi-more-body"><button class="koyomi-date-action" id="koyomiChooseReadingDate" type="button" aria-expanded="false" aria-controls="koyomiDatePicker">日付を選んで鑑定する</button><div class="koyomi-date-picker" id="koyomiDatePicker" hidden><label for="koyomiReadingDate">鑑定する日</label><input id="koyomiReadingDate" type="date"><button id="koyomiStartDateReading" type="button">この日を鑑定</button></div><div class="koyomi-home-grid"><button class="koyomi-home-card" id="koyomiChoosePerson" type="button"><b>人物を選ぶ</b></button><button class="koyomi-home-card" id="koyomiChooseTheme" type="button" aria-expanded="false" aria-controls="koyomiThemePanel"><b>テーマを選ぶ</b></button><button class="koyomi-home-card" id="koyomiOpenResult" type="button"><b>前回の結果</b></button></div><div class="koyomi-theme-panel" id="koyomiThemePanel" aria-live="polite" hidden></div></div></details>';
+ nav.innerHTML='<h2 class="koyomi-home-heading">今日の本鑑定</h2><p class="koyomi-home-lead">保存済みの本人プロフィールで、本鑑定を直接開きます。</p><p class="koyomi-home-profile" id="koyomiHomeProfileName">本人プロフィールを確認中…</p><button class="koyomi-main-action" id="koyomiStartReading" type="button">今日の鑑定を見る</button><p class="compact-note" id="koyomiDailyReadingNote">同じ日は同じ結果。入力画面や簡易結果は挟みません。</p><details class="koyomi-more-actions"><summary>ほかの占い方</summary><div class="koyomi-more-body"><button class="koyomi-date-action" id="koyomiChooseReadingDate" type="button" aria-expanded="false" aria-controls="koyomiDatePicker">日付を選んで鑑定する</button><div class="koyomi-date-picker" id="koyomiDatePicker" hidden><label for="koyomiReadingDate">鑑定する日</label><input id="koyomiReadingDate" type="date"><button id="koyomiStartDateReading" type="button">この日を鑑定</button></div><div class="koyomi-home-grid"><button class="koyomi-home-card" id="koyomiChoosePerson" type="button"><b>人物を選ぶ</b></button><button class="koyomi-home-card" id="koyomiChooseTheme" type="button" aria-expanded="false" aria-controls="koyomiThemePanel"><b>テーマを選ぶ</b></button><button class="koyomi-home-card" id="koyomiOpenResult" type="button"><b>前回の結果</b></button></div><div class="koyomi-theme-panel" id="koyomiThemePanel" aria-live="polite" hidden></div></div></details>';
  first.parentNode.insertBefore(nav,first);
  $('koyomiStartReading').onclick=koyomiStartPersonalReading;
  $('koyomiChooseReadingDate').onclick=koyomiToggleDatePicker;
@@ -1851,7 +1870,8 @@ async function koyomiApplyPrimaryProfile(){
  if(LedgerState.locked)return null;
  const p=await koyomiPrimaryProfile()||await koyomiMigratePersonalInputProfile();
  document.body.classList.toggle('koyomi-profile-ready',!!p);
- if(p){LedgerState.selectedPrimary=p.id;ledgerApplyPersonal(p);ledgerUpdateSelectionLabels();koyomiUpdateOwnProfileCard(p);return p}
+ if(p){LedgerState.selectedPrimary=p.id;ledgerApplyPersonal(p);ledgerUpdateSelectionLabels();koyomiUpdateOwnProfileCard(p);if($('koyomiHomeProfileName'))$('koyomiHomeProfileName').textContent=`${p.displayName||'本人'}さん・${fmtIso(selectedDate||new Date())}`;return p}
+ if($('koyomiHomeProfileName'))$('koyomiHomeProfileName').textContent='初回プロフィールが必要です';
  koyomiUpdateOwnProfileCard(null);
  return null;
 }
@@ -1865,6 +1885,7 @@ async function koyomiRequireProfile(){
  gate.className='koyomi-profile-gate';
  gate.textContent='初回設定：氏名・生年月日・出生時刻・出生地を登録してください。次回から本人として自動使用します。';
  $('ledgerProfileForm')?.prepend(gate);
+ sessionStorage.setItem('koyomi.pending-reading.v1','today');
  return null;
 }
 async function koyomiEditOwnProfile(){
@@ -1881,16 +1902,13 @@ async function koyomiEditOwnProfile(){
  $('ledgerFormTitle').textContent='あなたのプロフィールを登録';
  return null;
 }
-async function koyomiStartPersonalReading(){
- selectedDate=startOfDay(new Date());renderCalendar();
- const p=await koyomiRequireProfile();
- if(!p)return;
- setPage('personal');
- const result=buildPersonal();
- if(result)renderPersonal(result);
-}
+let koyomiRenderedPersonalKey='';
+function koyomiPersonalReadingKey(profile,date=selectedDate||new Date()){return `${profile?.id||profile?.personId||''}|${fmtIso(date)}|${JSON.stringify(profile?.birthData||{})}`}
+function koyomiOpenGeneratedPersonalReading(){setPage('personal');requestAnimationFrame(()=>($('overallReading')||$('personalResult'))?.scrollIntoView({behavior:'smooth',block:'start'}))}
+async function koyomiGeneratePersonalOnce(profile){const result=buildPersonal();if(!result)return null;renderPersonal(result);await window.KOYOMI_BAZI_READING?.render();const daily=window.KOYOMI_LAST_BAZI_READING?.result?.dailyReading||result.dailyReading||null;if(daily)koyomiRenderedPersonalKey=koyomiPersonalReadingKey(profile);return daily}
+async function koyomiStartPersonalReading(){const button=$('koyomiStartReading');if(button?.disabled)return;selectedDate=startOfDay(new Date());renderCalendar();const p=await koyomiRequireProfile();if(!p)return;const key=koyomiPersonalReadingKey(p);if(koyomiRenderedPersonalKey===key&&window.KOYOMI_LAST_BAZI_READING){if(button)button.textContent='今日の本鑑定へ戻る';koyomiOpenGeneratedPersonalReading();return}try{if(button){button.disabled=true;button.textContent='今日の本鑑定を作成中…'}const daily=await koyomiGeneratePersonalOnce(p);if(daily){sessionStorage.removeItem('koyomi.pending-reading.v1');koyomiOpenGeneratedPersonalReading()}}finally{if(button){button.disabled=false;button.textContent=koyomiRenderedPersonalKey===key?'今日の本鑑定へ戻る':'今日の鑑定を見る'}}}
 function koyomiToggleDatePicker(){const panel=$('koyomiDatePicker'),button=$('koyomiChooseReadingDate');if(!panel)return;panel.hidden=!panel.hidden;button?.setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden){$('koyomiReadingDate').value=fmtIso(selectedDate);$('koyomiReadingDate').focus()}}
-async function koyomiStartSelectedDateReading(){const date=safeDate($('koyomiReadingDate')?.value);if(!date){toast('鑑定する日付を選んでください');return}selectedDate=startOfDay(date);renderCalendar();const panel=$('koyomiDatePicker');if(panel)panel.hidden=true;$('koyomiChooseReadingDate')?.setAttribute('aria-expanded','false');const p=await koyomiRequireProfile();if(!p)return;setPage('personal');const result=buildPersonal();if(result)renderPersonal(result)}
+async function koyomiStartSelectedDateReading(){const date=safeDate($('koyomiReadingDate')?.value);if(!date){toast('鑑定する日付を選んでください');return}selectedDate=startOfDay(date);renderCalendar();const panel=$('koyomiDatePicker');if(panel)panel.hidden=true;$('koyomiChooseReadingDate')?.setAttribute('aria-expanded','false');const p=await koyomiRequireProfile();if(!p)return;const key=koyomiPersonalReadingKey(p);if(koyomiRenderedPersonalKey!==key||!window.KOYOMI_LAST_BAZI_READING)await koyomiGeneratePersonalOnce(p);koyomiOpenGeneratedPersonalReading()}
 async function koyomiPrepareCompat(){
  const p=await koyomiApplyPrimaryProfile();
  if(!p)return;
@@ -1909,7 +1927,9 @@ async function koyomiFinalizeUi(){
  koyomiApplyMode();
  const p=await koyomiApplyPrimaryProfile();
  const startHash=location.hash.replace('#','');
+ const directToday=new URLSearchParams(location.search).get('start')==='today';
  if(!p&&koyomiMode()==='personal'&&(!startHash||startHash==='calendar'||startHash==='ledger'))await koyomiRequireProfile();
+ if(p&&directToday){history.replaceState(null,'',`${location.pathname}#calendar`);await koyomiStartPersonalReading()}
  await koyomiPrepareCompat();
  const personalForm=$('personalForm');
  if(personalForm)personalForm.onsubmit=async event=>{event.preventDefault();if(!await ensureBirthPlaceCoordinates())return;renderPersonal(buildPersonal());setTimeout(()=>window.KOYOMI_BAZI_READING?.render(),0)};
@@ -1933,6 +1953,7 @@ const v201MundaneGenerateBase=mundaneGenerate;
 mundaneGenerate=async function(){const result=await v201MundaneGenerateBase();const box=$('mundaneReading');if(box&&!box.hidden){const facts=[...box.querySelectorAll('p')].map(x=>x.textContent).filter(Boolean);v201Answer({type:'mundane',subject:`${$('mundaneYear')?.value||''}年の社会の流れ`,score:55,evidence:facts.slice(0,2),actions:['公的資料と一次情報で、関係する指標を月に一度確認する','予測ではなく、備えられる費用・期限・代替案を決める'],caution:'事件・景気・市場価格を占星術だけで断定しないこと',disclaimer:'社会占星術は傾向を整理する補助です。事実確認と専門情報を優先してください。'},box)}return result};
 function v201Init(){FEATURES.push('全鑑定共通回答','結論・根拠・具体策・注意・見直し統一','相性回答','人生年表回答','古代神託回答','運命航法盤回答','マンデン回答','今日の運勢回答');renderFeatures();window.V201={answer:v201Answer,engine:window.KOYOMI_UNIVERSAL_READING}}
 window.KOYOMI_CALENDAR_TIME_LEGACY=Object.freeze({formatLocalDate:fmtIso,parseLocalDate:safeDate,startOfLocalDay:startOfDay,formatCalendarDate:calendarFormat});
+window.KOYOMI_DAILY_CONTEXT=Object.freeze({selectedDate:()=>new Date(selectedDate),formatDate:fmtIso,dailySignal,dayPillar});
 window.KOYOMI_PROFILE_SCHEMA_LEGACY=Object.freeze({normalizeProfile:ledgerNormalizeProfile,validateProfile:ledgerValidateProfile});
 window.KOYOMI_CRYPTO_LEGACY=Object.freeze({deriveKey:ledgerDeriveKey,encryptObject:ledgerEncryptObject,decryptObject:ledgerDecryptObject});
 window.KOYOMI_INDEXEDDB_LEGACY=Object.freeze({list:ledgerList,get:ledgerGet,put:ledgerPut,delete:ledgerRawDelete,clear:ledgerRawClear});
@@ -2280,32 +2301,7 @@ function koyomiBaziLuckStartHtml(luck,locale='ja'){
     <div class="koyomi-bazi-cycle-list">${cycles}</div>
   </section>`;
 }
-function koyomiCommonPrimaryReadingHtml(common,legacyText,locale='ja'){
-  if(!common?.available)return '';
-  const ja=locale!=='en',categories=common.categories||{},top=common.items?.[0]||{},answer=common.answer||{};
-  const rows=[
-    [ja?'\u4ed5\u4e8b':'Work',categories.work],
-    [ja?'\u604b\u611b':'Love',categories.love],
-    [ja?'\u5bfe\u4eba\u95a2\u4fc2':'Relationships',categories.relationship],
-    [ja?'\u5065\u5eb7':'Health',categories.health]
-  ].filter(([,text])=>text);
-  return `<section class="koyomi-common-primary" aria-label="${ja?'\u5171\u901a\u9451\u5b9a':'Common reading'}">
-    ${answer.available?`<div class="koyomi-bazi-view-head"><h3>${ja?'\u76f8\u8ac7\u3078\u306e\u7b54\u3048':'Answer to your question'}</h3></div>
-    ${answer.question?`<p><b>${ja?'\u76f8\u8ac7\u5185\u5bb9':'Question'}</b>${koyomiEscapeHtml(answer.question)}</p>`:''}
-    <p class="koyomi-bazi-guidance-card conclusion"><b>${ja?'\u7d50\u8ad6':'Conclusion'}</b>${koyomiEscapeHtml(answer.directAnswer)}</p>
-    <p class="koyomi-bazi-guidance-card evidence"><b>${ja?'\u7406\u7531':'Reason'}</b>${koyomiEscapeHtml(answer.reason)}</p>
-    <div class="koyomi-bazi-guidance-grid">${(answer.actionPlan||[]).map(step=>`<p class="koyomi-bazi-guidance-card action"><b>${koyomiEscapeHtml(step.when)}</b>${koyomiEscapeHtml(step.action)}</p>`).join('')}</div>
-    <p class="koyomi-bazi-guidance-card caution"><b>${ja?'\u3084\u3081\u308b\u3053\u3068':'Stop'}</b>${koyomiEscapeHtml(answer.stop)}</p>
-    <p><b>${ja?'\u898b\u76f4\u3057\u57fa\u6e96':'Review point'}</b>${koyomiEscapeHtml(answer.review)}</p>
-    ${answer.disclaimer?`<p class="koyomi-bazi-guidance-card caution">${koyomiEscapeHtml(answer.disclaimer)}</p>`:''}`:''}
-    <div class="koyomi-bazi-view-head"><h3>${ja?'\u4eca\u65e5\u306e\u4e2d\u5fc3\u30c6\u30fc\u30de':'Today’s central theme'}</h3></div>
-    <p class="koyomi-bazi-guidance-card conclusion"><b>${koyomiEscapeHtml(top.themeName||'')}</b>${koyomiEscapeHtml(common.summary)}</p>
-    <div class="koyomi-bazi-guidance-grid">${rows.map(([label,text])=>`<p class="koyomi-bazi-guidance-card"><b>${koyomiEscapeHtml(label)}</b>${koyomiEscapeHtml(text)}</p>`).join('')}</div>
-    <p class="koyomi-bazi-guidance-card action"><b>${ja?'\u4eca\u65e5\u306e\u4e00\u624b':'Action today'}</b>${koyomiEscapeHtml(common.todayAction)}</p>
-    <p class="koyomi-bazi-guidance-card caution"><b>${ja?'\u907f\u3051\u305f\u3044\u884c\u52d5':'Avoid'}</b>${koyomiEscapeHtml(common.avoidAction)}</p>
-    <details><summary>${ja?'\u5f93\u6765\u306e\u7dcf\u5408\u9451\u5b9a\u3092\u898b\u308b':'Show legacy integrated reading'}</summary><div style="white-space:pre-wrap">${koyomiEscapeHtml(legacyText||'')}</div></details>
-  </section>`;
-}
+function koyomiDailyProfileKey(profile){let value=JSON.stringify({personId:profile.personId||'',name:profile.displayName||'',birth:profile.birthData||{}}),hash=2166136261;for(const char of value)hash=Math.imul(hash^char.charCodeAt(0),16777619);return`profile-${(hash>>>0).toString(16)}`}
 async function koyomiRenderBaziReading(){
   try{
     const profile=koyomiBaziReadingProfile();
@@ -2316,7 +2312,19 @@ async function koyomiRenderBaziReading(){
     const locale=koyomiBaziLocale();
     const question=document.getElementById('question')?.value||document.getElementById('memo')?.value||document.getElementById('consultation')?.value||'';
     const commonReading=KOYOMI_BAZI.buildCommonReading(result,{tone:'mitsunome',maxThemes:4,question});
+    const dailyContext=window.KOYOMI_DAILY_CONTEXT,readingDate=dailyContext?.selectedDate?.()||new Date();
+    const dateKey=dailyContext?.formatDate?.(readingDate)||readingDate.toISOString().slice(0,10),legacyDaily=dailyContext?.dailySignal?.(readingDate)||{score:50,title:'今日の流れ'};
+    const readingDayPillar=dailyContext?.dayPillar?.(readingDate)?.text||dateKey;
+    const dailyPack=window.KOYOMI_DAILY_READING?.getOrCreate({
+      profileId:koyomiDailyProfileKey(profile),
+      settingsHash:JSON.stringify(profile.birthData||{}),date:dateKey,
+      dayKey:`${readingDayPillar} ${legacyDaily.title}`,
+      dailyScore:legacyDaily.score,themeCategory:document.getElementById('theme')?.value||'overall',
+      evidence:[`${readingDayPillar}の日・${legacyDaily.title}・信号${legacyDaily.score}`,commonReading.items?.[0]?.themeName,commonReading.items?.[0]?.evidence?.map(item=>`${item.type}:${item.value}`).join('／')].filter(Boolean)
+    });
+    const dailyReading=dailyPack?.reading||null;
     result.commonReading=commonReading;
+    result.dailyReading=dailyReading;
     const reading={...KOYOMI_BAZI.buildBaziReading(result,{locale}),commonReading};
     window.KOYOMI_LAST_BAZI_READING={result,reading};
     const pillars=result.chart?.pillars||{};
@@ -2346,26 +2354,6 @@ async function koyomiRenderBaziReading(){
       personalResult.luckCycles=result.luckCycles;
       if(personalResult.divinations)personalResult.divinations.shichu=reading.beginnerText;
     }
-    if(commonReading.available){
-      const overall=document.getElementById('overallReading');
-      const legacyReading=personalResult?.reading||overall?.innerText||'';
-      if(overall)overall.innerHTML=koyomiCommonPrimaryReadingHtml(commonReading,legacyReading,locale);
-      const verdict=document.getElementById('personalVerdict');
-      if(verdict)verdict.textContent=`${locale==='en'?'Today’s theme':'\u4eca\u65e5\u306e\u30c6\u30fc\u30de'}\uff1a${commonReading.items?.[0]?.themeName||''}`;
-      const verdictNote=document.getElementById('personalVerdictNote');
-      if(verdictNote)verdictNote.textContent=commonReading.summary;
-      const actionSummary=document.getElementById('personalActionSummary');
-      if(actionSummary){
-        actionSummary.hidden=false;
-        const doNode=actionSummary.querySelector('[data-personal-action="do"]');
-        const stopNode=actionSummary.querySelector('[data-personal-action="stop"]');
-        const homeworkNode=actionSummary.querySelector('[data-personal-action="homework"]');
-        if(doNode)doNode.textContent=commonReading.todayAction;
-        if(stopNode)stopNode.textContent=commonReading.avoidAction;
-        if(homeworkNode)homeworkNode.textContent=commonReading.items?.[0]?.themeName||'';
-      }
-      if(personalResult)personalResult.reading=[commonReading.answer?.directAnswer,commonReading.answer?.reason,...(commonReading.answer?.actionPlan||[]).map(step=>`${step.when}: ${step.action}`),commonReading.answer?.stop,commonReading.summary,...Object.values(commonReading.categories||{})].filter(Boolean).join('\n');
-    }
   }catch(error){
     console.error('[KOYOMI_BAZI_READING] render failed',error);
   }
@@ -2375,7 +2363,7 @@ document.addEventListener('submit',event=>{
   if(event.target?.id==='personalForm')setTimeout(koyomiRenderBaziReading,0);
 },true);
 document.addEventListener('click',event=>{
-  if(['koyomiStartReading','koyomiStartDateReading'].includes(event.target?.id)||event.target?.closest?.('[data-koyomi-shortcut="personal"]'))setTimeout(koyomiRenderBaziReading,250);
+  if(event.target?.closest?.('[data-koyomi-shortcut="personal"]'))setTimeout(koyomiRenderBaziReading,250);
 },true);
 </script>
 </body></html>

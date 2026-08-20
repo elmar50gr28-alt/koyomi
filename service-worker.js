@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-world-forecast-v1';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -39,8 +39,17 @@ const APP_SHELL = [
   './src/reading/question-interpreter.js',
   './src/reading/concrete-answer-composer.js',
   './src/reading/universal-reading-engine.js',
+  './src/reading/integrated-judgment-core.js',
+  './src/reading/meaning-evidence-translator.js',
+  './src/reading/output-quality-guard.js',
+  './src/reading/adaptive-narrative-engine.js',
+  './src/reading/daily/daily-reading-core.js',
+  './src/reading/daily/daily-reading-controller.js',
   './data/reading/common_reading_themes.json',
+  './data/reading/adaptive_narrative_catalog.json',
   './src/persona/conversation-adapter.js',
+  './src/persona/reading-structure-planner.js',
+  './src/persona/persona-policy.js',
   './src/persona/sister-renderer.js',
   './src/persona/sister-lexicon.js',
   './src/persona/beginner-explainer.js',
@@ -57,6 +66,11 @@ const APP_SHELL = [
   './src/astrology/western-composite-v1.js',
   './src/astrology/western-professional-v1.js',
   './src/astrology/western-reading-v1.js',
+  './src/astrology/western-chart-wheel-v1.js',
+  './src/astrology/western-forecast-v1.js',
+  './src/astrology/western-solar-arc-v1.js',
+  './src/astrology/western-davison-v1.js',
+  './src/astrology/western-fixed-stars-v1.js',
   './src/astrology/western-suite-loader.js',
   './src/shared/calendar-time-compat.js',
   './src/shared/profile-schema-compat.js',

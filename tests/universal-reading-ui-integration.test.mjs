@@ -12,7 +12,8 @@ for (const token of ['v201RenderCompatBase', 'v201RenderTimelineBase', 'v201RunO
 for (const type of ["type:'compatibility'", "type:'timeline'", "type:'oracle'", "type:'qimen'", "type:'mundane'"]) {
   assert.ok(app.includes(type), `${type} uses universal answers`);
 }
-assert.ok(app.includes('common.answer||{}'), 'personal reading keeps its richer Bazi common answer without a duplicate card');
+assert.ok(app.includes('const commonReading=KOYOMI_BAZI.buildCommonReading'), 'personal calculations keep the evidence-backed common reading data');
+assert.ok(!app.includes('koyomiCommonPrimaryReadingHtml'), 'common data must not recreate a duplicate overall-reading card');
 assert.match(today, /renderUniversalTodayReading/);
 assert.match(today, /type:'today'/);
 assert.match(worker, /common-reading-v5-universal/);

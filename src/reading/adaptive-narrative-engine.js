@@ -1,0 +1,36 @@
+(function(root,factory){
+ const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;root.KOYOMI_ADAPTIVE_NARRATIVE=api;
+})(typeof globalThis!=='undefined'?globalThis:this,function(){
+ const VERSION='1.0.0',STRUCTURES=['verdict','contrast','practice','conditions','timeline','reflection','protect'];
+ const BANNED=/(四柱推命|宿曜|九星(?:気学)?|西洋占星術|タロット|ルーン|姓名判断|数秘(?:術)?|カバラ|六星|大運|流年|日主|用神|喜神|忌神|五行|空亡|命式|トランジット|アスペクト|正位置|逆位置|\d+(?:\.\d+)?\s*(?:点|件|\/100))/;
+ const CERTAINTY=/(必ず|絶対|確実に|間違いなく).{0,12}(起きる|なる|成功|失敗|別れる|治る)/;
+ const DEFAULTS={
+  openings:{forward:['今日は、準備してきたことを現実へ移していい日よ。','動くなら今日。温めてきた話を一つ、外へ出しましょう。','追い風はあるわ。ただし、広げるより狙いを定めること。'],test:['今日は「決める日」ではなく「確かめる日」よ。','前へは進める。でも、答えを固定するにはまだ早いわ。','小さく動けば、次の判断材料が手に入る日ね。'],protect:['今日は増やさないことが、いちばん賢い選択よ。','無理に前へ出なくていいわ。守ることで残せるものがある日。','いま必要なのは勢いより整理。背負うものを一つ減らしましょう。']},
+  scenes:{work:['頼まれ事や役割の話が出たら、担当と期限を分けて聞いて。','返事を求められたら、引き受ける範囲を一文にしてから答えて。','提案するなら、理想より最初の一手を見せると話が通りやすいわ。'],money:['買うか迷ったら、値段より使う回数と維持費を並べて。','魅力的な条件ほど、解約や追加費用を先に確かめて。','今日は得を探すより、不要な支出を一つ止めるほうが効くわ。'],relationship:['相手の気持ちを読む前に、実際に言われたことと自分の想像を分けて。','話すなら一つの論点だけ。昔の不満まで同じ席に座らせないこと。','返事の速さではなく、約束した行動が続くかを見て。'],health:['予定を詰める前に、睡眠と疲れの残り方を基準にして。','頑張れるかではなく、明日も続けられる量かで決めて。','不調が続くなら、占いで結論を出さず専門家へ相談して。'],overall:['迷ったら、今日中に終わり、元にも戻せるほうを選んで。','新しい予定を増やす前に、いま抱えている一件を終わらせて。','返事を急かされたら、確認したい条件を一つだけ質問して。']},
+  closes:['運は命令じゃないわ。最後に選ぶのは、ちゃんと状況を見たあなたよ。','一歩は小さくていいの。明日の自分が困らない選び方をなさい。','焦らなくて大丈夫。条件を言葉にできた時点で、もう迷いは半分ほどけているわ。','勢いより納得よ。あとから自分に説明できる選択をして。']
+ };
+ let catalog=DEFAULTS;
+ function clean(v){return String(v??'').replace(/\s+/g,' ').trim()}
+ function hash(v){let h=2166136261;for(const c of String(v))h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0}
+ function pick(list,seed,offset=0){const a=list?.length?list:[''];return a[((hash(seed)+offset*2654435761)>>>0)%a.length]}
+ function domain(v){const x=clean(v).toLowerCase(),m={career:'work',changejob:'work',income:'money',purchase:'money',love:'relationship',marriage:'relationship',reconcile:'relationship',healthrhythm:'health',identity:'overall',timing:'overall'};return catalog.scenes[x]?x:(m[x]||'overall')}
+ function state(v,score){return['forward','test','protect'].includes(v)?v:Number(score)>=72?'forward':Number(score)<42?'protect':'test'}
+ function recentStructures(history){return(history||[]).map(x=>x?.narrative?.structure).filter(Boolean).slice(0,4)}
+ function eligible(input){if(input.serious||Number(input.risk)>=70)return['protect'];if(input.contradiction)return['contrast','conditions','practice'];if(input.state==='forward')return['verdict','practice','timeline'];if(input.state==='protect')return['protect','conditions','reflection'];return['practice','conditions','contrast','timeline','reflection']}
+ function chooseStructure(input,attempt=0){const recent=recentStructures(input.history),pool=eligible(input),fresh=pool.filter(x=>!recent.slice(0,2).includes(x)),use=fresh.length?fresh:pool;return pick(use,input.seed,attempt)}
+ function parts(input,attempt){const d=domain(input.domain),s=state(input.state,input.score),seed=`${input.seed}|${d}|${s}|${attempt}`,opening=pick(catalog.openings[s],seed,1),scene=pick(catalog.scenes[d]||catalog.scenes.overall,seed,2),reasons=(input.reasons||[]).map(clean).filter(x=>x&&!BANNED.test(x)).slice(0,2),reason=reasons.join(' ')||({forward:'準備と状況がかみ合い、動いた分だけ反応を確かめやすいから。',test:'進める材料と慎重に見る材料が混ざり、試した結果が次の答えになるから。',protect:'急ぐほど負担や見落としが増えやすく、余白を残す価値が高いから。'}[s]),action=clean(input.action)||scene,stop=clean(input.stop)||({forward:'条件が曖昧なまま責任だけ増えるなら、そこで止まって。',test:'後戻りできない約束を求められたら、その場では決めないで。',protect:'不安を埋めるための連絡・買い物・約束は増やさないこと。'}[s]),close=pick(catalog.closes,seed,3);return{d,s,opening,scene,reason,action,stop,close}}
+ function render(structure,p){const blocks={
+  verdict:`【結論】\n${p.opening}\n\n【今日、起こりやすいこと】\n${p.scene}\n\n【そう読む理由】\n${p.reason}\n\n【今日の一手】\n${p.action}\n\n【ここでは止まって】\n${p.stop}\n\n【最後に】\n${p.close}`,
+  contrast:`【二つに分けて考えましょう】\n進めていいのは、${p.action}\nまだ決めないのは、${p.stop}\n\n【なぜなら】\n${p.reason}\n\n【こんな場面で使って】\n${p.scene}\n\n【結論】\n${p.opening}\n${p.close}`,
+  practice:`【今日の一手】\n${p.action}\n\n【試すときの目印】\n${p.scene}\n\n【結論】\n${p.opening}\n\n【やめどき】\n${p.stop}\n\n【理由】\n${p.reason}\n\n【最後に】\n${p.close}`,
+  conditions:`【先に条件を整えましょう】\n${p.scene}\n\n【整ったら進めること】\n${p.action}\n\n【整わないなら止めること】\n${p.stop}\n\n【結論】\n${p.opening}\n${p.reason}\n\n【最後に】\n${p.close}`,
+  timeline:`【いま】\n${p.opening}\n\n【今日すること】\n${p.action}\n\n【動いたあとに見ること】\n${p.scene}\n\n【次へ持ち越す条件】\n${p.stop}\n\n【そう読む理由】\n${p.reason}\n\n【最後に】\n${p.close}`,
+  reflection:`【まず自分に聞いて】\n「これは望んで選ぶのか、それとも不安を消すために選ぶのか」\n\n【今日の見立て】\n${p.opening}\n${p.reason}\n\n【現実で確かめること】\n${p.scene}\n\n【今日の一手】\n${p.action}\n\n【手放すこと】\n${p.stop}\n\n【最後に】\n${p.close}`,
+  protect:`【今日は守る日】\n${p.opening}\n\n【増やさないもの】\n${p.stop}\n\n【代わりにすること】\n${p.action}\n\n【現実で見る目印】\n${p.scene}\n\n【理由】\n${p.reason}\n\n【最後に】\n${p.close}`};return blocks[structure]||blocks.verdict}
+ function audit(text,input={}){const issues=[],sentences=clean(text).split(/[。！？\n]+/).map(clean).filter(x=>x.length>5),seen=new Set();if(BANNED.test(text))issues.push('technical-term');if(CERTAINTY.test(text))issues.push('unsupported-certainty');if(!/【(?:今日の一手|今日すること|代わりにすること|整ったら進めること|二つに分けて考えましょう)】/.test(text))issues.push('missing-action');if(!/止|やめ|増やさない|決めない|持ち越/.test(text))issues.push('missing-stop');for(const s of sentences){const key=s.replace(/[、， ]/g,'').slice(0,20);if(seen.has(key))issues.push('repetition');seen.add(key)}const personaHits=(text.match(/あら|アンタ|姐さん|〜よ|なのよ/g)||[]).length;if(personaHits>4)issues.push('persona-overuse');if(input.serious&&/笑|冗談|景気よく|ときめき/.test(text))issues.push('unsafe-humor');return{pass:issues.length===0,issues:[...new Set(issues)],score:Math.max(0,100-issues.length*18)}}
+ function finalize(text){return globalThis.KOYOMI_OUTPUT_QUALITY?.process(text)?.text||text}
+ function compose(input={}){const normalized={...input,domain:domain(input.domain),state:state(input.state,input.score),seed:[input.seed,input.date,input.domain,input.state,input.variant].join('|')};let best=null;for(let attempt=0;attempt<7;attempt++){const structure=chooseStructure(normalized,attempt),text=finalize(render(structure,parts(normalized,attempt))),quality=audit(text,normalized),candidate={text,meta:{structure,attempt,domain:normalized.domain,state:normalized.state,quality,outputQuality:globalThis.KOYOMI_OUTPUT_QUALITY?.audit(text)||null}};if(!best||quality.score>best.meta.quality.score)best=candidate;if(quality.pass)return candidate}return best}
+ function register(next){if(!next||typeof next!=='object')return false;const merge=(base,extra)=>Object.fromEntries(Object.keys(base).map(key=>[key,[...base[key],...(Array.isArray(extra?.[key])?extra[key]:[])]]));catalog={openings:merge(DEFAULTS.openings,next.openings),scenes:merge(DEFAULTS.scenes,next.scenes),closes:[...DEFAULTS.closes,...(Array.isArray(next.closes)?next.closes:[])]};return true}
+ async function load(url){try{const res=await fetch(url);if(!res.ok)return false;return register(await res.json())}catch(_){return false}}
+ return Object.freeze({VERSION,STRUCTURES,BANNED,compose,audit,register,load});
+});
