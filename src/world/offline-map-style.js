@@ -5,6 +5,7 @@ export function createOfflineWorldStyle(){
     version:8,
     name:'KOYOMI Offline World v1',
     metadata:{'koyomi:offline':true,'koyomi:data':'Natural Earth 1:50m'},
+    projection:{type:'globe'},
     sources:{
       countries:{type:'geojson',data:assetUrl('./data/map/natural-earth-50m-countries.geojson'),attribution:'Made with Natural Earth · Public Domain',maxzoom:4},
       lakes:{type:'geojson',data:assetUrl('./data/map/natural-earth-50m-lakes.geojson'),attribution:'Made with Natural Earth · Public Domain',maxzoom:4}
