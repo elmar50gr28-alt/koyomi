@@ -1,8 +1,8 @@
 import { createSpatialGrid, MundaneEarthquakeAdapter, WorldEvaluationCache, relateEventToCell, validateWorldEvent } from './index.js';
+import { createOfflineWorldStyle } from './offline-map-style.js';
 
-const MAPLIBRE_JS='https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js';
-const MAPLIBRE_CSS='https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css';
-const MAP_STYLE='https://demotiles.maplibre.org/globe.json';
+const MAPLIBRE_JS='./vendor/maplibre-gl/5.24.0/maplibre-gl.js';
+const MAPLIBRE_CSS='./vendor/maplibre-gl/5.24.0/maplibre-gl.css';
 const MAX_VISIBLE_CELLS=500;
 
 function loadMapLibre(){
@@ -55,7 +55,7 @@ export async function initWorldMap({page,ephemeris}){
   page.querySelectorAll('[data-world-mode]').forEach(button=>button.onclick=()=>{mode=button.dataset.worldMode;cache.clear();page.querySelectorAll('[data-world-mode]').forEach(item=>item.classList.toggle('active',item===button));page.querySelector('#worldEventField').hidden=mode!=='validation';if(mode==='validation'&&events.length){const event=selectedEvent();page.querySelector('#worldDateTime').value=localInputValue(event.datetimeUtc);map?.flyTo({center:[event.longitude,event.latitude],zoom:5});evaluateCell(grid.cellForLatLng(event.latitude,event.longitude,grid.resolutionForZoom(5)))}else page.querySelector('#worldDateTime').value=localInputValue(new Date());scheduleUpdate()});
   const eventSelect=page.querySelector('#worldEvent');if(eventSelect)eventSelect.onchange=()=>{const event=selectedEvent();page.querySelector('#worldDateTime').value=localInputValue(event.datetimeUtc);map?.flyTo({center:[event.longitude,event.latitude],zoom:5});evaluateCell(grid.cellForLatLng(event.latitude,event.longitude,grid.resolutionForZoom(5)));scheduleUpdate()};
   try{
-    const maplibre=await loadMapLibre();map=new maplibre.Map({container:'worldMap',style:MAP_STYLE,center:[135,30],zoom:1.5,attributionControl:true});map.addControl(new maplibre.NavigationControl({showCompass:false}),'top-right');
+    const maplibre=await loadMapLibre();map=new maplibre.Map({container:'worldMap',style:createOfflineWorldStyle(),center:[135,30],zoom:1.5,attributionControl:true,maxZoom:10});map.addControl(new maplibre.NavigationControl({showCompass:false}),'top-right');
     map.on('load',update);map.on('moveend',scheduleUpdate);map.on('click',event=>evaluateCell(grid.cellForLatLng(event.lngLat.lat,event.lngLat.lng,grid.resolutionForZoom(map.getZoom()))));page.querySelector('#worldDateTime').onchange=()=>{cache.clear();scheduleUpdate()};
-  }catch(error){status.textContent='詳細地図はオンライン時に表示されます。H3計算と保存済み過去事象はオフラインでも利用できます。';sheet.innerHTML='<b>地図を読み込めませんでした</b><p>通信状態を確認してください。既存の世情鑑定と研究結果はこの下で利用できます。</p>'}
+  }catch(error){status.textContent='基本世界地図を読み込めませんでした。H3計算と保存済み過去事象は利用できます。';sheet.innerHTML='<b>地図を読み込めませんでした</b><p>アプリをオンラインで一度開いて基本地図を保存してください。既存の世情鑑定と研究結果はこの下で利用できます。</p>'}
 }
