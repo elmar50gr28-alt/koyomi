@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v2-maplibre-local-v1-globe-v2';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v2-maplibre-local-v1-globe-v2-mundane-accuracy-v1';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const MAP_CORE_CACHE = `${CACHE_VERSION}-map-core`;
 const MAP_REGION_CACHE = `${CACHE_VERSION}-map-region`;
