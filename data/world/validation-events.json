@@ -1,0 +1,8 @@
+{
+  "schemaId": "koyomi-world-validation-events-v1",
+  "events": [
+    {"id":"tohoku-2011","label":"2011年 東北地方太平洋沖地震","datetimeUtc":"2011-03-11T05:46:24.000Z","latitude":38.297,"longitude":142.373,"magnitude":9.1,"depthKm":29,"source":{"name":"USGS ComCat","url":"https://earthquake.usgs.gov/earthquakes/eventpage/official20110311054624120_30"}},
+    {"id":"kumamoto-2016","label":"2016年 熊本地震","datetimeUtc":"2016-04-15T16:25:06.000Z","latitude":32.755,"longitude":130.762,"magnitude":7.0,"depthKm":10,"source":{"name":"USGS ComCat","url":"https://earthquake.usgs.gov/earthquakes/eventpage/us20005iis"}},
+    {"id":"noto-2024","label":"2024年 能登半島地震","datetimeUtc":"2024-01-01T07:10:09.000Z","latitude":37.498,"longitude":137.242,"magnitude":7.5,"depthKm":10,"source":{"name":"USGS ComCat","url":"https://earthquake.usgs.gov/earthquakes/eventpage/us6000m0xl"}}
+  ]
+}

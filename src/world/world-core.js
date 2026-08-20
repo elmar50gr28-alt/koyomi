@@ -15,6 +15,9 @@ export function createWorldContext(input = {}) {
   if (context.latitude !== undefined && (context.latitude < -90 || context.latitude > 90)) throw new RangeError('latitude must be between -90 and 90');
   if (context.longitude !== undefined && (context.longitude < -180 || context.longitude > 180)) throw new RangeError('longitude must be between -180 and 180');
   if (input.spatialCellId) context.spatialCellId = String(input.spatialCellId);
+  if (input.gridSystemId) context.gridSystemId = String(input.gridSystemId);
+  if (input.gridVersion) context.gridVersion = String(input.gridVersion);
+  if (input.resolution !== undefined) context.resolution = Number(input.resolution);
   return Object.freeze(context);
 }
 
