@@ -27,6 +27,6 @@ export class MundaneEarthquakeAdapter {
     const matched=contributors.filter(item=>item.active).length;
     // This ordinal display score is derived from consensus count, not a sum of unlike systems.
     const score=[15,45,72,88][matched];
-    return validateWorldResult({systemId:this.systemId,systemName:this.systemName,version:this.version,themeId:context.themeId,cellId:context.spatialCellId,score,consensus:{matched,total:contributors.length},contributors,confidence:'experimental',metadata:{mode:context.mode,angles,ephemerisId:this.ephemeris.id||'unspecified',reviewStatus:'research-only'}});
+    return validateWorldResult({systemId:this.systemId,systemName:this.systemName,version:this.version,themeId:context.themeId,cellId:context.spatialCellId,gridSystemId:context.gridSystemId,gridVersion:context.gridVersion,resolution:context.resolution,score,consensus:{matched,total:contributors.length},contributors,confidence:'experimental',metadata:{mode:context.mode,angles,ephemerisId:this.ephemeris.id||'unspecified',reviewStatus:'research-only'}});
   }
 }

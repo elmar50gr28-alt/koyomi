@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v1';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -28,6 +28,13 @@ const APP_SHELL = [
   './src/world/mundane-earthquake-adapter.js',
   './src/world/world-map-ui.js',
   './src/world/world-map.css',
+  './src/world/world-evaluation-cache.js',
+  './src/world/validation-core.js',
+  './vendor/h3-js/4.5.0/h3-js.es.js',
+  './vendor/h3-js/4.5.0/LICENSE',
+  './vendor/h3-js/4.5.0/NOTICE',
+  './vendor/h3-js/4.5.0/KOYOMI_VENDOR.md',
+  './data/world/validation-events.json',
   './data/research/earthquake-validation-summary.json',
   './src/bazi/astronomy/solar-term-core.js',
   './src/bazi/reading/chart-interpretation.js',
