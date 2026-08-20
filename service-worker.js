@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-world-forecast-v1';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -22,6 +22,13 @@ const APP_SHELL = [
   './src/mundane/western/seasonal-interpretation-core.js',
   './src/mundane/western/monthly-trend-core.js',
   './src/mundane/western/astronomy-engine-adapter.js',
+  './src/world/index.js',
+  './src/world/world-core.js',
+  './src/world/spatial-grid.js',
+  './src/world/mundane-earthquake-adapter.js',
+  './src/world/world-map-ui.js',
+  './src/world/world-map.css',
+  './data/research/earthquake-validation-summary.json',
   './src/bazi/astronomy/solar-term-core.js',
   './src/bazi/reading/chart-interpretation.js',
   './src/reading/index.js',
