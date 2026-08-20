@@ -1,5 +1,7 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v1';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v1-maplibre-local-v1';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
+const MAP_CORE_CACHE = `${CACHE_VERSION}-map-core`;
+const MAP_REGION_CACHE = `${CACHE_VERSION}-map-region`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
 const APP_SHELL = [
@@ -89,18 +91,37 @@ const APP_SHELL = [
   './icon.svg'
 ];
 
+const MAP_CORE_ASSETS = [
+  './src/world/offline-map-style.js',
+  './vendor/maplibre-gl/5.24.0/maplibre-gl.js',
+  './vendor/maplibre-gl/5.24.0/maplibre-gl.css',
+  './vendor/maplibre-gl/5.24.0/LICENSE.txt',
+  './vendor/maplibre-gl/5.24.0/KOYOMI_VENDOR.md',
+  './data/map/natural-earth-50m-countries.geojson',
+  './data/map/natural-earth-50m-lakes.geojson',
+  './data/map/NATURAL_EARTH_LICENSE.md',
+  './data/map/KOYOMI_MAP_DATA.md'
+];
+
+async function cacheMapCore() {
+  const cache = await caches.open(MAP_CORE_CACHE);
+  await Promise.allSettled(MAP_CORE_ASSETS.map(asset => cache.add(asset)));
+}
+
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches
-      .open(SHELL_CACHE)
-      .then(cache => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
+    Promise.all([
+      caches.open(SHELL_CACHE).then(cache => cache.addAll(APP_SHELL)),
+      cacheMapCore().catch(() => {})
+    ]).then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', event => {
   const activeCaches = new Set([
     SHELL_CACHE,
+    MAP_CORE_CACHE,
+    MAP_REGION_CACHE,
     RUNTIME_CACHE
   ]);
 
@@ -129,6 +150,24 @@ function isHtmlRequest(request) {
 
 function isSameOrigin(request) {
   return new URL(request.url).origin === self.location.origin;
+}
+
+function isMapCoreRequest(request) {
+  const path = new URL(request.url).pathname;
+  return path.includes('/vendor/maplibre-gl/') || path.includes('/data/map/') || path.endsWith('/src/world/offline-map-style.js');
+}
+
+async function cacheFirstMapCore(request) {
+  const cache = await caches.open(MAP_CORE_CACHE);
+  const cached = await cache.match(request);
+  if (cached) return cached;
+  try {
+    const response = await fetch(request);
+    if (response && response.ok) cache.put(request, response.clone()).catch(() => {});
+    return response;
+  } catch (error) {
+    return new Response('オフライン基本地図を取得できません。', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+  }
 }
 
 async function networkFirstHtml(request) {
@@ -218,6 +257,11 @@ self.addEventListener('fetch', event => {
 
   if (isHtmlRequest(request)) {
     event.respondWith(networkFirstHtml(request));
+    return;
+  }
+
+  if (isMapCoreRequest(request)) {
+    event.respondWith(cacheFirstMapCore(request));
     return;
   }
 
