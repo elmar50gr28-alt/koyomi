@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import {
   EARTHQUAKE_FORECAST_FLAGS,EARTHQUAKE_SAFETY_NOTICE,LOCKED_VALIDATION,actionLevelFor,assertChronologicalSplit,
   buildBaselineFeatures,createForecastLayerState,createForecastUiModel,evaluateHoldoutRows,historyAvailableAt,peakDisplayMode,releaseGate,
-  renderForecastShell,runBaselineModel,validateForecastRow,validateLockedPeriods
+  renderForecastShell,runBaselineModel,runDecayNeighborModel,validateForecastRow,validateLockedPeriods
 } from '../src/world/earthquake-forecast/index.js';
 
 const event=(datetimeUtc,id='event',cell_id='cell')=>({id,datetimeUtc,cell_id});
@@ -23,6 +23,7 @@ const split=assertChronologicalSplit([event('2005-01-01T00:00:00Z')],[event('202
 // Baseline is deterministic and contains only background/recent-rate factors.
 const baseline=runBaselineModel(features,7);assert.ok(baseline.backgroundProbability>0&&baseline.backgroundProbability<1);assert.ok(baseline.modelProbability>0&&baseline.modelProbability<1);assert.deepEqual(baseline.topFactors,['背景活動率','直近7日活動率','直近30日活動率']);
 for(const forbidden of ['潮汐','b値','天体','地磁気'])assert.ok(!baseline.topFactors.some(item=>item.includes(forbidden)));
+const quietCandidate=runDecayNeighborModel({targetBackgroundDailyRate:.0001,nearbyEvents:[]},7),recentCandidate=runDecayNeighborModel({targetBackgroundDailyRate:.0001,nearbyEvents:[{ageDays:1,ring:0,magnitude:6.5}]},7),oldCandidate=runDecayNeighborModel({targetBackgroundDailyRate:.0001,nearbyEvents:[{ageDays:30,ring:0,magnitude:6.5}]},7),distantCandidate=runDecayNeighborModel({targetBackgroundDailyRate:.0001,nearbyEvents:[{ageDays:1,ring:2,magnitude:6.5}]},7);assert.ok(recentCandidate.modelProbability>quietCandidate.modelProbability);assert.ok(recentCandidate.modelProbability>oldCandidate.modelProbability);assert.ok(recentCandidate.modelProbability>distantCandidate.modelProbability);assert.ok(recentCandidate.topFactors.every(item=>!/(潮汐|天体|地磁気)/.test(item)));
 
 // AT03 and AT06: predictive display and every unvalidated modifier default off.
 assert.equal(EARTHQUAKE_FORECAST_FLAGS.earthquakeForecastEnabled,true);for(const key of ['experimentalPredictiveUIEnabled','actionLevel1Enabled','actionLevel2Enabled','peakDateEnabled','tidalModifierEnabled','bValueStaticStateEnabled','celestialModifierEnabled'])assert.equal(EARTHQUAKE_FORECAST_FLAGS[key],false,`${key} must default off`);
@@ -73,6 +74,8 @@ for(const asset of ['index.js','config.js','types.js','data.js','features.js','m
 assert.ok(worker.includes('./data/world/earthquake-research-preview-v1.json'),'fixed preview must be cached offline');
 
 const preview=JSON.parse(await readFile(new URL('../data/world/earthquake-research-preview-v1.json',import.meta.url),'utf8'));assert.equal(preview.schemaId,'koyomi-earthquake-research-preview-v1');assert.equal(preview.realHoldoutExecuted,false);assert.equal(preview.bandMethod,'all-horizon-fixed-quantiles-v1');assert.deepEqual(preview.horizonsDays,[1,3,7,14,30]);assert.ok(preview.recordCount>100000);assert.ok(preview.rows.length>5000);assert.ok(preview.sources.every(source=>/^[a-f0-9]{64}$/.test(source.sha256)&&source.recordCount>0));for(const horizon of preview.horizonsDays)assert.ok(preview.rows.some(row=>row.horizon_days===horizon));
+assert.equal(preview.targetMagnitude,6.5);assert.deepEqual(preview.developmentApprovedHorizons,[30]);assert.ok(preview.rows.filter(row=>row.horizon_days===30).every(row=>row.model_tier==='development-approved'));assert.ok(preview.rows.filter(row=>row.horizon_days!==30).every(row=>row.model_tier==='comparison-baseline'));assert.ok(mapUi.includes('<option selected>30</option>'),'30-day development-approved horizon must be the default preview');
 const sampleCell=preview.rows[0].cell_id,bands=preview.rows.filter(row=>row.cell_id===sampleCell).map(row=>row.relative_band);assert.ok(new Set(bands).size>1,'horizon switch must be capable of changing the fixed-band display');
+const development=JSON.parse(await readFile(new URL('../data/research/earthquake-development-evaluation-v2.json',import.meta.url),'utf8'));assert.equal(development.realHoldoutExecuted,false);assert.deepEqual(development.results.filter(result=>result.developmentPassed).map(result=>result.horizonDays),[30]);const approvedDevelopment=development.results.find(result=>result.horizonDays===30);assert.ok(approvedDevelopment.confirmation.informationGain>0);assert.ok(approvedDevelopment.confirmation.brierImprovement>0);assert.ok(approvedDevelopment.yearly.every(year=>year.informationGain>0));
 
 console.log('Earthquake forecast v2.8 safety acceptance passed: AT01-AT10');
