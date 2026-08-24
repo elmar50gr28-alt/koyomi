@@ -1,0 +1,45 @@
+name: Update Earthquake Catalog
+
+on:
+  schedule:
+    - cron: '20 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: earthquake-catalog-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Generate complete catalog and preview
+        run: node scripts/generate-earthquake-research-preview.mjs
+      - name: Validate generated assets
+        run: node --test tests/earthquake-forecast-safety-v2-8.test.mjs
+      - name: Open verified update pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- data/world/earthquake-research-catalog-v2.json data/world/earthquake-research-preview-v1.json; then
+            echo "No catalog changes"
+            exit 0
+          fi
+          branch="automation/earthquake-catalog-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add data/world/earthquake-research-catalog-v2.json data/world/earthquake-research-preview-v1.json
+          git commit -m "Update verified earthquake catalog"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title "Update verified earthquake catalog" --body "Automated USGS refresh passed completeness and earthquake safety tests."
