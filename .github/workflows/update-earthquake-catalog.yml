@@ -42,4 +42,10 @@ jobs:
           git add data/world/earthquake-research-catalog-v2.json data/world/earthquake-research-preview-v1.json
           git commit -m "Update verified earthquake catalog"
           git push origin "$branch"
-          gh pr create --base main --head "$branch" --title "Update verified earthquake catalog" --body "Automated USGS refresh passed completeness and earthquake safety tests."
+          if pr_url=$(gh pr create --base main --head "$branch" --title "Update verified earthquake catalog" --body "Automated USGS refresh passed completeness and earthquake safety tests."); then
+            echo "Verified update PR: $pr_url" >> "$GITHUB_STEP_SUMMARY"
+          else
+            compare_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/main...${branch}?expand=1"
+            echo "::warning::Automatic PR creation is disabled. Verified branch is ready: $compare_url"
+            echo "Verified update branch: [$branch]($compare_url)" >> "$GITHUB_STEP_SUMMARY"
+          fi
