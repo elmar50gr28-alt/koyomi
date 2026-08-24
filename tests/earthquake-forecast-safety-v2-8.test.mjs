@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import {
   EARTHQUAKE_FORECAST_FLAGS,EARTHQUAKE_SAFETY_NOTICE,LOCKED_VALIDATION,actionLevelFor,assertChronologicalSplit,
-  buildBaselineFeatures,createForecastUiModel,evaluateHoldoutRows,historyAvailableAt,peakDisplayMode,releaseGate,
+  buildBaselineFeatures,createForecastLayerState,createForecastUiModel,evaluateHoldoutRows,historyAvailableAt,peakDisplayMode,releaseGate,
   renderForecastShell,runBaselineModel,validateForecastRow,validateLockedPeriods
 } from '../src/world/earthquake-forecast/index.js';
 
@@ -61,10 +61,14 @@ const hiddenModel=createForecastUiModel({releaseResult:realHoldout,row});assert.
 const visibleModel=createForecastUiModel({releaseResult:realHoldout,row},releaseFlags),html=renderForecastShell(visibleModel);assert.ok(html.includes('相対リスク指標 72 / 100'));assert.ok(!/発生確率\s*72|72\s*%/.test(html));assert.ok(html.includes(EARTHQUAKE_SAFETY_NOTICE));assert.match(EARTHQUAKE_SAFETY_NOTICE,/気象庁・自治体等の公式情報を優先/);
 const failedHorizonModel=createForecastUiModel({releaseResult:onlySeven,row:{...row,horizon_days:3}},releaseFlags);assert.equal(failedHorizonModel.visible,false,'a failed horizon must never reach predictive UI');assert.equal(renderForecastShell(failedHorizonModel),'');
 
+const pendingLayer=createForecastLayerState();assert.equal(pendingLayer.status,'検証中');assert.equal(pendingLayer.realHoldoutStatus,'未実施');assert.equal(pendingLayer.predictiveUiEnabled,false);assert.deepEqual(pendingLayer.horizonCandidates,[1,3,7,14,30]);assert.equal(pendingLayer.allowedRows.length,0);assert.equal(pendingLayer.modelName,'背景活動率・直近活動率ベースライン v1');
+const disabledLayer=createForecastLayerState({releaseResult:onlySeven,rows:[{cell_id:'cell',horizon_days:7,risk_score_0_100:72},{cell_id:'cell',horizon_days:3,risk_score_0_100:99}]});assert.equal(disabledLayer.predictiveUiEnabled,false);assert.equal(disabledLayer.allowedRows.length,0,'forecast values must remain unavailable while the predictive flag is off');
+const releasedLayer=createForecastLayerState({releaseResult:onlySeven,rows:[{cell_id:'cell',horizon_days:7,risk_score_0_100:72},{cell_id:'cell',horizon_days:3,risk_score_0_100:99}]},releaseFlags);assert.equal(releasedLayer.predictiveUiEnabled,true);assert.equal(releasedLayer.bestHorizonDays,7);assert.deepEqual(releasedLayer.allowedRows,[{cell_id:'cell',horizon_days:7,risk_score_0_100:72}]);
+
 // AT10: existing World globe, bottom sheet and six-item mobile navigation remain untouched.
 const [app,mapUi,mapCss,worker]=await Promise.all(['../app.html','../src/world/world-map-ui.js','../src/world/world-map.css','../service-worker.js'].map(path=>readFile(new URL(path,import.meta.url),'utf8')));
-const mobileNav=app.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0]||'';assert.equal((mobileNav.match(/<button/g)||[]).length,6);assert.ok(mapUi.includes("map.setProjection({type:'globe'})"));assert.ok(mapUi.includes('world-sheet'));assert.ok(mapCss.includes('.world-sheet'));assert.ok(mapCss.includes('min-height:44px')||app.includes('min-height:46px'));
-assert.ok(!app.includes('earthquake-forecast'),'predictive UI module must not be mounted before the real holdout release gate passes');assert.ok(!mapUi.includes('earthquake-forecast'),'existing World map must remain independent of the disabled predictive shell');
+const mobileNav=app.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0]||'';assert.equal((mobileNav.match(/<button/g)||[]).length,6);assert.ok(mapUi.includes("map.setProjection({type:'globe'})"));assert.ok(mapUi.includes('world-sheet'));assert.ok(mapCss.includes('.world-sheet'));assert.ok(mapCss.includes('min-height:44px')||app.includes('min-height:46px'));assert.ok(mapCss.includes('pointer-events:none'),'validation notice must not block globe cell taps');
+assert.ok(!app.includes('earthquake-forecast'),'predictive values must not be mounted directly in the app shell');assert.ok(mapUi.includes("createForecastLayerState"),'World map must route earthquake prediction through the release-gated state');for(const token of ['earthquakeForecastLayer','地震予測は検証中です','forecastLayer.predictiveUiEnabled','forecastLayer.allowedRows'])assert.ok(mapUi.includes(token),`${token} must protect the World forecast layer`);
 for(const asset of ['index.js','config.js','types.js','data.js','features.js','model.js','validation.js','display-policy.js','action-policy.js','ui.js'])assert.ok(worker.includes(`./src/world/earthquake-forecast/${asset}`),`${asset} must be cached offline`);
 
 console.log('Earthquake forecast v2.8 safety acceptance passed: AT01-AT10');
