@@ -33,3 +33,16 @@ export function calculateDatedPreview(catalog,{forecastTime,targetMagnitude=6.5,
   for(const row of rows)row.relative_band=row.preview_value<bounds[0]?1:row.preview_value<bounds[1]?2:row.preview_value<bounds[2]?3:4;
   return Object.freeze({requestedTimeUtc:new Date(requestedTime).toISOString(),calculationTimeUtc:new Date(calculationTime).toISOString(),futureDateClamped:requestedTime>latestCatalogTime,bandBoundaries:Object.freeze(bounds),rows:Object.freeze(rows)});
 }
+
+export function eventsAfterPreview(catalog,{forecastTime,targetMagnitude=6.5,horizonDays=30}={}){
+  const start=new Date(forecastTime).getTime();
+  if(!Number.isFinite(start))throw new TypeError('forecastTime must be valid');
+  const end=Math.min(start+Math.max(1,Math.trunc(Number(horizonDays)))*DAY,Number(catalog?.latestTimeUtcMs));
+  const target=Number(targetMagnitude),events=[];
+  for(const [cell,compactEvents] of Object.entries(catalog?.eventsByCell||{})){
+    for(const [time,magnitude,latitude,longitude] of compactEvents){
+      if(time>=start&&time<end&&magnitude>=target&&Number.isFinite(latitude)&&Number.isFinite(longitude))events.push({cell_id:cell,time_utc:new Date(time).toISOString(),magnitude,latitude,longitude});
+    }
+  }
+  return Object.freeze(events.sort((a,b)=>a.time_utc.localeCompare(b.time_utc)));
+}
