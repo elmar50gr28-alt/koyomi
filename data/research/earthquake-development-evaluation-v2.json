@@ -1,0 +1,481 @@
+{
+  "schemaId": "koyomi-earthquake-development-evaluation-v2",
+  "periods": {
+    "training": [
+      "2005-01-01",
+      "2009-12-31"
+    ],
+    "tuning": [
+      "2010-01-01",
+      "2012-12-31"
+    ],
+    "confirmation": [
+      "2013-01-01",
+      "2014-12-31"
+    ]
+  },
+  "sampling": {
+    "stepDays": 7,
+    "historyWindowDays": 60,
+    "cellSelection": "training-only count >= 3"
+  },
+  "targetMagnitude": 6.5,
+  "h3Resolution": 2,
+  "parameterGridSize": 35,
+  "acceptance": "confirmation logloss and Brier improve; information gain positive in both 2013 and 2014; every selected parameter is inside the search grid",
+  "realHoldoutExecuted": false,
+  "sources": [
+    {
+      "year": 2005,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2005-01-01T00:00:00Z&endtime=2006-01-01T00:00:00Z&minmagnitude=4.5&eventtype=earthquake&limit=20000",
+      "recordCount": 7878,
+      "sha256": "09b1867ec69d472e0f0e3371c1a0ec0e6679c945394502687269c990324a8299"
+    },
+    {
+      "year": 2006,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2006-01-01T00:00:00Z&endtime=2007-01-01T00:00:00Z&minmagnitude=4.5&eventtype=earthquake&limit=20000",
+      "recordCount": 7075,
+      "sha256": "351c8af65f7eb38bf256bcaebae48f502c2bb577b38e1c44ce2253bc1b8af56c"
+    },
+    {
+      "year": 2007,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2007-01-01T00:00:00Z&endtime=2008-01-01T00:00:00Z&minmagnitude=4.5&eventtype=earthquake&limit=20000",
+      "recordCount": 7274,
+      "sha256": "4353b1ebbce35ceb05f495c1908e2ff50af2e2dec30b8a33ec942fd659ce0c25"
+    },
+    {
+      "year": 2008,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2008-01-01T00:00:00Z&endtime=2009-01-01T00:00:00Z&minmagnitude=4.5&eventtype=earthquake&limit=20000",
+      "recordCount": 6307,
+      "sha256": "13c0dd8b61d4417d9087966ee33a7c84b6fca5e0b7a4409cd61473fb67331591"
+    },
+    {
+      "year": 2009,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2009-01-01T00:00:00Z&endtime=2010-01-01T00:00:00Z&minmagnitude=4.5&eventtype=earthquake&limit=20000",
+      "recordCount": 6053,
+      "sha256": "48b128e22320d603eff88acaf24104c951e03c8ddc70745d27194035b841a68e"
+    },
+    {
+      "year": 2010,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2010-01-01T00:00:00Z&endtime=2011-01-01T00:00:00Z&minmagnitude=4.5&eventtype=earthquake&limit=20000",
+      "recordCount": 7214,
+      "sha256": "5dec7e7f286b3b1353c149e01d535d88f096c5bbf1a1123bb34e0c3181f8ff88"
+    },
+    {
+      "year": 2011,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2011-01-01T00:00:00Z&endtime=2012-01-01T00:00:00Z&minmagnitude=4.5&eventtype=earthquake&limit=20000",
+      "recordCount": 9584,
+      "sha256": "cb120ccd1c8f29469683bc34234130c25ddaba659bb92330340d6bd11825873a"
+    },
+    {
+      "year": 2012,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2012-01-01T00:00:00Z&endtime=2013-01-01T00:00:00Z&minmagnitude=4.5&eventtype=earthquake&limit=20000",
+      "recordCount": 7188,
+      "sha256": "7b5465bedf3abfdea49c4034e967c4e20b730e3036aa855e1aa7f43ec8362732"
+    },
+    {
+      "year": 2013,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2013-01-01T00:00:00Z&endtime=2014-01-01T00:00:00Z&minmagnitude=4.5&eventtype=earthquake&limit=20000",
+      "recordCount": 7209,
+      "sha256": "04d97a0c310f35b017890c0c7ab11ff4b06bfcc30c40c33a8d995fa87e7505b9"
+    },
+    {
+      "year": 2014,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time-asc&starttime=2014-01-01T00:00:00Z&endtime=2015-01-01T00:00:00Z&minmagnitude=4.5&eventtype=earthquake&limit=20000",
+      "recordCount": 8333,
+      "sha256": "ae205188688e081691e42c4c4b2d9d2f056a441261ba88c59815fa1e6b9fd984"
+    }
+  ],
+  "results": [
+    {
+      "horizonDays": 1,
+      "parameters": {
+        "productivityScale": 0.00016,
+        "temporalPower": 1.1,
+        "spatialDecayRings": 1,
+        "temporalOffsetDays": 0.5,
+        "magnitudeExponent": 0.8,
+        "maxRing": 0
+      },
+      "tuning": {
+        "baseline": {
+          "n": 131409,
+          "targetWindows": 25,
+          "logloss": 0.0017498856917311492,
+          "brier": 0.0001901427106247763
+        },
+        "candidate": {
+          "n": 131409,
+          "targetWindows": 25,
+          "logloss": 0.0016550111911683334,
+          "brier": 0.0001893782188424307
+        }
+      },
+      "confirmation": {
+        "baseline": {
+          "n": 87885,
+          "targetWindows": 13,
+          "logloss": 0.0015289150842748766,
+          "brier": 0.00014790442089500076
+        },
+        "candidate": {
+          "n": 87885,
+          "targetWindows": 13,
+          "logloss": 0.0014537296959732597,
+          "brier": 0.00014835059834639308
+        },
+        "informationGain": 0.00007518538830161695,
+        "brierImprovement": -4.46177451392314e-7
+      },
+      "yearly": [
+        {
+          "year": 2013,
+          "baseline": {
+            "n": 44361,
+            "targetWindows": 7,
+            "logloss": 0.0016600901705256588,
+            "brier": 0.0001578009751126988
+          },
+          "candidate": {
+            "n": 44361,
+            "targetWindows": 7,
+            "logloss": 0.0015831640234668268,
+            "brier": 0.00015799838128052076
+          },
+          "informationGain": 0.00007692614705883207,
+          "brierImprovement": -1.974061678219625e-7
+        },
+        {
+          "year": 2014,
+          "baseline": {
+            "n": 43524,
+            "targetWindows": 6,
+            "logloss": 0.0013952174002120708,
+            "brier": 0.00013781754832746897
+          },
+          "candidate": {
+            "n": 43524,
+            "targetWindows": 6,
+            "logloss": 0.001321806246793803,
+            "brier": 0.00013851728112539515
+          },
+          "informationGain": 0.00007341115341826768,
+          "brierImprovement": -6.997327979261819e-7
+        }
+      ],
+      "developmentPassed": false
+    },
+    {
+      "horizonDays": 3,
+      "parameters": {
+        "productivityScale": 0.00008,
+        "temporalPower": 1.1,
+        "spatialDecayRings": 1,
+        "temporalOffsetDays": 0.5,
+        "magnitudeExponent": 0.8,
+        "maxRing": 0
+      },
+      "tuning": {
+        "baseline": {
+          "n": 131409,
+          "targetWindows": 62,
+          "logloss": 0.004043434662114636,
+          "brier": 0.00047149419901646724
+        },
+        "candidate": {
+          "n": 131409,
+          "targetWindows": 62,
+          "logloss": 0.00378231031487714,
+          "brier": 0.00047007403187530476
+        }
+      },
+      "confirmation": {
+        "baseline": {
+          "n": 87885,
+          "targetWindows": 32,
+          "logloss": 0.003314425608997431,
+          "brier": 0.00036384453308757836
+        },
+        "candidate": {
+          "n": 87885,
+          "targetWindows": 32,
+          "logloss": 0.00306296362937159,
+          "brier": 0.00036429821914086777
+        },
+        "informationGain": 0.00025146197962584065,
+        "brierImprovement": -4.536860532894046e-7
+      },
+      "yearly": [
+        {
+          "year": 2013,
+          "baseline": {
+            "n": 44361,
+            "targetWindows": 20,
+            "logloss": 0.004056570251427883,
+            "brier": 0.0004502789666379789
+          },
+          "candidate": {
+            "n": 44361,
+            "targetWindows": 20,
+            "logloss": 0.0036623107715438885,
+            "brier": 0.000449880583854409
+          },
+          "informationGain": 0.0003942594798839942,
+          "brierImprovement": 3.9838278356990175e-7
+        },
+        {
+          "year": 2014,
+          "baseline": {
+            "n": 43524,
+            "targetWindows": 12,
+            "logloss": 0.002558008954211038,
+            "brier": 0.0002757478988920993
+          },
+          "candidate": {
+            "n": 43524,
+            "targetWindows": 12,
+            "logloss": 0.0024520905806197798,
+            "brier": 0.00027707003972128087
+          },
+          "informationGain": 0.00010591837359125817,
+          "brierImprovement": -0.000001322140829181594
+        }
+      ],
+      "developmentPassed": false
+    },
+    {
+      "horizonDays": 7,
+      "parameters": {
+        "productivityScale": 0.00004,
+        "temporalPower": 0.7,
+        "spatialDecayRings": 1,
+        "temporalOffsetDays": 0.5,
+        "magnitudeExponent": 0.8,
+        "maxRing": 0
+      },
+      "tuning": {
+        "baseline": {
+          "n": 131409,
+          "targetWindows": 129,
+          "logloss": 0.007738779043021902,
+          "brier": 0.0009801803064157046
+        },
+        "candidate": {
+          "n": 131409,
+          "targetWindows": 129,
+          "logloss": 0.007174217970679842,
+          "brier": 0.0009708478974745249
+        }
+      },
+      "confirmation": {
+        "baseline": {
+          "n": 87885,
+          "targetWindows": 86,
+          "logloss": 0.00776026076037597,
+          "brier": 0.000976587618552399
+        },
+        "candidate": {
+          "n": 87885,
+          "targetWindows": 86,
+          "logloss": 0.007300585682100556,
+          "brier": 0.0009770902546177398
+        },
+        "informationGain": 0.00045967507827541446,
+        "brierImprovement": -5.026360653406867e-7
+      },
+      "yearly": [
+        {
+          "year": 2013,
+          "baseline": {
+            "n": 44361,
+            "targetWindows": 44,
+            "logloss": 0.00803056838642113,
+            "brier": 0.0009901100369962533
+          },
+          "candidate": {
+            "n": 44361,
+            "targetWindows": 44,
+            "logloss": 0.007494748388417733,
+            "brier": 0.0009904260065478978
+          },
+          "informationGain": 0.0005358199980033968,
+          "brierImprovement": -3.1596955164456264e-7
+        },
+        {
+          "year": 2014,
+          "baseline": {
+            "n": 43524,
+            "targetWindows": 42,
+            "logloss": 0.007484754910768997,
+            "brier": 0.0009628051536000313
+          },
+          "candidate": {
+            "n": 43524,
+            "targetWindows": 42,
+            "logloss": 0.007102689077569477,
+            "brier": 0.0009634980459175971
+          },
+          "informationGain": 0.00038206583319952067,
+          "brierImprovement": -6.92892317565811e-7
+        }
+      ],
+      "developmentPassed": false
+    },
+    {
+      "horizonDays": 14,
+      "parameters": {
+        "productivityScale": 0.00004,
+        "temporalPower": 0.7,
+        "spatialDecayRings": 1,
+        "temporalOffsetDays": 0.5,
+        "magnitudeExponent": 0.8,
+        "maxRing": 0
+      },
+      "tuning": {
+        "baseline": {
+          "n": 131409,
+          "targetWindows": 251,
+          "logloss": 0.01378023040888573,
+          "brier": 0.0019046760092449825
+        },
+        "candidate": {
+          "n": 131409,
+          "targetWindows": 251,
+          "logloss": 0.012844402489922338,
+          "brier": 0.0018865178405752985
+        }
+      },
+      "confirmation": {
+        "baseline": {
+          "n": 87885,
+          "targetWindows": 169,
+          "logloss": 0.013842450058901303,
+          "brier": 0.0019162271706410117
+        },
+        "candidate": {
+          "n": 87885,
+          "targetWindows": 169,
+          "logloss": 0.013120622904718184,
+          "brier": 0.001919241092002003
+        },
+        "informationGain": 0.0007218271541831189,
+        "brierImprovement": -0.0000030139213609912518
+      },
+      "yearly": [
+        {
+          "year": 2013,
+          "baseline": {
+            "n": 44361,
+            "targetWindows": 87,
+            "logloss": 0.014516526889811943,
+            "brier": 0.001957861126801381
+          },
+          "candidate": {
+            "n": 44361,
+            "targetWindows": 87,
+            "logloss": 0.013593715956233817,
+            "brier": 0.0019589634420107502
+          },
+          "informationGain": 0.0009228109335781259,
+          "brierImprovement": -0.0000011023152093692437
+        },
+        {
+          "year": 2014,
+          "baseline": {
+            "n": 43524,
+            "targetWindows": 82,
+            "logloss": 0.013155410212032047,
+            "brier": 0.001873792561472969
+          },
+          "candidate": {
+            "n": 43524,
+            "targetWindows": 82,
+            "logloss": 0.012638431909891227,
+            "brier": 0.0018787548506464082
+          },
+          "informationGain": 0.0005169783021408206,
+          "brierImprovement": -0.000004962289173439166
+        }
+      ],
+      "developmentPassed": false
+    },
+    {
+      "horizonDays": 30,
+      "parameters": {
+        "productivityScale": 0.00002,
+        "temporalPower": 0.7,
+        "spatialDecayRings": 1,
+        "temporalOffsetDays": 0.5,
+        "magnitudeExponent": 0.8,
+        "maxRing": 0
+      },
+      "tuning": {
+        "baseline": {
+          "n": 131409,
+          "targetWindows": 523,
+          "logloss": 0.025875797937573785,
+          "brier": 0.003960977427532395
+        },
+        "candidate": {
+          "n": 131409,
+          "targetWindows": 523,
+          "logloss": 0.024149457706445533,
+          "brier": 0.003919434646530145
+        }
+      },
+      "confirmation": {
+        "baseline": {
+          "n": 87885,
+          "targetWindows": 355,
+          "logloss": 0.026239978421443495,
+          "brier": 0.004020381409212701
+        },
+        "candidate": {
+          "n": 87885,
+          "targetWindows": 355,
+          "logloss": 0.024848626873870957,
+          "brier": 0.0040133479782652574
+        },
+        "informationGain": 0.0013913515475725384,
+        "brierImprovement": 0.000007033430947443568
+      },
+      "yearly": [
+        {
+          "year": 2013,
+          "baseline": {
+            "n": 44361,
+            "targetWindows": 187,
+            "logloss": 0.028198344637567548,
+            "brier": 0.004209536799278428
+          },
+          "candidate": {
+            "n": 44361,
+            "targetWindows": 187,
+            "logloss": 0.026209299486296633,
+            "brier": 0.004195404261623274
+          },
+          "informationGain": 0.0019890451512709142,
+          "brierImprovement": 0.000014132537655153939
+        },
+        {
+          "year": 2014,
+          "baseline": {
+            "n": 43524,
+            "targetWindows": 168,
+            "logloss": 0.02424395131652343,
+            "brier": 0.003827588415504122
+          },
+          "candidate": {
+            "n": 43524,
+            "targetWindows": 168,
+            "logloss": 0.023461787480442187,
+            "brier": 0.0038277906125399933
+          },
+          "informationGain": 0.0007821638360812413,
+          "brierImprovement": -2.0219703587148752e-7
+        }
+      ],
+      "developmentPassed": true
+    }
+  ]
+}
