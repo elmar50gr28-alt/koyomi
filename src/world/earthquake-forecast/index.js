@@ -9,3 +9,4 @@ export * from './action-policy.js';
 export * from './ui.js';
 export * from './date-preview.js';
 export * from './change-preview.js';
+export * from './research-signals.js';
