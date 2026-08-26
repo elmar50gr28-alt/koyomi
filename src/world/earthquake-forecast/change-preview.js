@@ -61,7 +61,7 @@ export function changeBand(percentile){if(!Number.isFinite(percentile))return 0;
 
 export function changeLabel(percentile){return ['比較不能','平常域','やや上昇','上昇','大きく上昇'][changeBand(percentile)]}
 
-export function calculateChangePreview(catalog,{forecastTime,targetMagnitude=6.5,horizonDays=30}={}){
+export function calculateChangePreview(catalog,{forecastTime,targetMagnitude=6.5,horizonDays=30,geomagneticDataset=null}={}){
   const requestedTime=new Date(forecastTime).getTime(),latestCatalogTime=Number(catalog?.latestTimeUtcMs);
   if(!Number.isFinite(requestedTime))throw new TypeError('forecastTime must be valid');
   if(!Number.isFinite(latestCatalogTime)||catalog?.freshness?.complete===false) return Object.freeze({status:'catalog-incomplete',rows:Object.freeze([]),baseline:CHANGE_BASELINE});
@@ -72,5 +72,5 @@ export function calculateChangePreview(catalog,{forecastTime,targetMagnitude=6.5
     const trend=delta7===null?'unavailable':delta7>=5?'rising':delta7<=-5?'falling':'stable';
     rows.push(Object.freeze({cell_id:cell,target_magnitude:target,horizon_days:horizon,...current,change_band:changeBand(current.change_percentile),change_7d:seven.change_percentile,change_30d:thirty.change_percentile,change_7d_delta:delta7,trend,model_tier:target===6.5&&horizon===30?'development-approved':target===4.5?'research-activity':'comparison-baseline',quiescenceSignal}));
   }
-  return Object.freeze({status:'available',requestedTimeUtc:new Date(requestedTime).toISOString(),calculationTimeUtc:new Date(calculationTime).toISOString(),futureDateClamped:requestedTime>latestCatalogTime,baseline:CHANGE_BASELINE,geomagneticSignal:calculateGeomagneticSignal(null,{forecastTime:calculationTime}),rows:Object.freeze(rows)});
+  return Object.freeze({status:'available',requestedTimeUtc:new Date(requestedTime).toISOString(),calculationTimeUtc:new Date(calculationTime).toISOString(),futureDateClamped:requestedTime>latestCatalogTime,baseline:CHANGE_BASELINE,geomagneticSignal:calculateGeomagneticSignal(geomagneticDataset,{forecastTime:calculationTime}),rows:Object.freeze(rows)});
 }
