@@ -1,0 +1,21 @@
+{
+  "schemaId": "koyomi-volcano-catalog-v1",
+  "purpose": "offline-location-index-only",
+  "officialStatusIncluded": false,
+  "sources": [
+    {"name":"気象庁 火山登山者向けの情報提供ページ","url":"https://www.data.jma.go.jp/vois/data/filing/volcano.html"},
+    {"name":"Smithsonian Global Volcanism Program","url":"https://volcano.si.edu/"}
+  ],
+  "volcanoes": [
+    {"id":"jma-aso","name":"阿蘇山","latitude":32.884,"longitude":131.104,"region":"日本"},
+    {"id":"jma-sakurajima","name":"桜島","latitude":31.593,"longitude":130.657,"region":"日本"},
+    {"id":"jma-kirishima","name":"霧島山","latitude":31.934,"longitude":130.862,"region":"日本"},
+    {"id":"jma-asama","name":"浅間山","latitude":36.406,"longitude":138.523,"region":"日本"},
+    {"id":"jma-fuji","name":"富士山","latitude":35.361,"longitude":138.727,"region":"日本"},
+    {"id":"jma-ontake","name":"御嶽山","latitude":35.893,"longitude":137.480,"region":"日本"},
+    {"id":"gvp-kilauea","name":"キラウエア","latitude":19.421,"longitude":-155.287,"region":"ハワイ"},
+    {"id":"gvp-etna","name":"エトナ山","latitude":37.748,"longitude":14.999,"region":"イタリア"},
+    {"id":"gvp-merapi","name":"メラピ山","latitude":-7.540,"longitude":110.446,"region":"インドネシア"},
+    {"id":"gvp-popocatepetl","name":"ポポカテペトル山","latitude":19.023,"longitude":-98.622,"region":"メキシコ"}
+  ]
+}
