@@ -46,14 +46,17 @@
     const caution = clean(input.caution, '焦って結論を固定したり、一度に予定を増やしすぎないこと');
     const window = clean(input.window, policy.window);
     const review = clean(input.review, policy.review);
-    const directAnswer = clean(input.directAnswer, conclusion(score, policy.label, subject));
+    const narrativeEngine=globalThis.KOYOMI_APP_NARRATIVE;
+    const narrative=narrativeEngine?.compose({surface:type,domain:input.domain,question,subject,score,direction:input.state,confidence:input.confidence,risk:input.risk,serious:input.serious,contradiction:input.contradiction,evidence,actions,caution,review,seed:input.seed||[type,subject,score].join('|'),variant:input.variant});
+    const byRole=Object.fromEntries((narrative?.blocks||[]).map(block=>[block.role,block.text]));
+    const directAnswer = clean(input.directAnswer, byRole.conclusion||conclusion(score, policy.label, subject));
     return {
       type, label: policy.label, score, question, directAnswer,
-      reason: `そう読む根拠は、${evidence.join('／')}です。`,
-      actionPlan: actions.map((action, index) => ({ when: index === 0 ? window : review, action })),
-      stop: caution,
-      review: `${review}に、実際に起きた変化を確認して判断を更新して。`,
-      disclaimer: clean(input.disclaimer)
+      reason: byRole.reason||`そう読む根拠は、${evidence.join('／')}です。`,
+      actionPlan: (byRole.action?[byRole.action,...actions.slice(1)]:actions).slice(0,2).map((action, index) => ({ when: index === 0 ? window : review, action })),
+      stop: byRole.stop||caution,
+      review: byRole.review||`${review}に、実際に起きた変化を確認して判断を更新して。`,
+      disclaimer: clean(input.disclaimer), narrative
     };
   }
 
