@@ -1,0 +1,45 @@
+name: Update Geomagnetic Research Data
+
+on:
+  schedule:
+    - cron: '45 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: geomagnetic-research-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Fetch and validate official GFZ Kp history
+        run: node scripts/update-geomagnetic-research-data.mjs
+      - name: Validate research dataset and regressions
+        run: npm run test:geomagnetic
+      - name: Open verified update pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- data/world/geomagnetic-research-v1.json; then
+            echo "No geomagnetic changes"
+            exit 0
+          fi
+          branch="automation/geomagnetic-data-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add data/world/geomagnetic-research-v1.json
+          git commit -m "Update verified GFZ Kp history"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title "Update verified geomagnetic research data" --body "Automated official GFZ Kp refresh passed schema, coverage, hash, ordering, duplicate, missing-value, and future-leakage tests."

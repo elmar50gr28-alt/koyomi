@@ -33,16 +33,29 @@ export function calculateQuiescenceSignal(compactEvents,{forecastTime}={}){
 
 function closestObservation(observations,target,maxDistanceDays=1.5){let selected=null,distance=Infinity;for(const item of observations){const next=Math.abs(item.time-target);if(next<distance){selected=item;distance=next}}return distance<=maxDistanceDays*DAY?selected:null}
 
+const reasonText=Object.freeze({
+  'geomagnetic-dataset-missing':'公式地磁気データがまだKOYOMIへ取り込まれていません',
+  'coverage-out-of-range':'この日時の地磁気履歴が保存範囲外です',
+  'insufficient-baseline':'比較に必要な過去データが不足しています',
+  'latest-fetch-failed':'最新データの取得に失敗したため保存済みデータを使用しています',
+  'dst-unavailable':'この日時のDst指数は取得できません',
+  'corrupt-dataset':'データ検証に失敗したため使用していません'
+});
+function unavailable(status,reasonCode,dataset=null){return Object.freeze({status,reasonCode,reasonText:reasonText[reasonCode],signal0To100:null,definitionVersion:RESEARCH_SIGNAL_DEFINITIONS.version,global:true,provider:dataset?.provider||null,retrievedAt:dataset?.retrievedAt||null,sha256:dataset?.sha256||null,dataQuality:dataset?.dataQuality??null})}
+
 export function calculateGeomagneticSignal(dataset,{forecastTime}={}){
   const time=new Date(forecastTime).getTime();if(!Number.isFinite(time))throw new TypeError('forecastTime must be valid');
-  if(!dataset||!Array.isArray(dataset.observations))return Object.freeze({status:'data-unavailable',signal0To100:null,definitionVersion:RESEARCH_SIGNAL_DEFINITIONS.version,global:true,provider:null});
-  const observations=dataset.observations.map(item=>({time:Date.parse(item.timeUtc),kp:Number(item.kp),dst:item.dst==null?null:Number(item.dst)})).filter(item=>Number.isFinite(item.time)&&item.time<time&&Number.isFinite(item.kp)).sort((a,b)=>a.time-b.time),definition=RESEARCH_SIGNAL_DEFINITIONS.geomagnetic;
-  const baseline=observations.filter(item=>item.time<time-definition.lagEndDays*DAY);if(baseline.length<definition.minimumBaselineRecords)return Object.freeze({status:'insufficient-history',signal0To100:null,definitionVersion:RESEARCH_SIGNAL_DEFINITIONS.version,global:true,provider:dataset.provider||null});
+  if(!dataset||!Array.isArray(dataset.observations))return unavailable('data-unavailable','geomagnetic-dataset-missing');
+  const rawTimes=dataset.observations.map(item=>Date.parse(item.timeUtc)).filter(Number.isFinite).sort((a,b)=>a-b),coverageStart=Date.parse(dataset.coverageStartUtc)||rawTimes[0],coverageEnd=Date.parse(dataset.coverageEndUtc)||rawTimes.at(-1),definition=RESEARCH_SIGNAL_DEFINITIONS.geomagnetic;
+  if(!Number.isFinite(coverageStart)||!Number.isFinite(coverageEnd))return unavailable('data-unavailable','corrupt-dataset',dataset);
+  if(time-definition.controlLagDays.at(-1)*DAY<coverageStart||time-definition.lagStartDays*DAY>coverageEnd+DAY)return unavailable('data-unavailable','coverage-out-of-range',dataset);
+  const observations=dataset.observations.map(item=>({time:Date.parse(item.timeUtc),kp:Number(item.kp),dst:item.dst==null?null:Number(item.dst)})).filter(item=>Number.isFinite(item.time)&&item.time<time&&Number.isFinite(item.kp)).sort((a,b)=>a.time-b.time);
+  const baseline=observations.filter(item=>item.time<time-definition.lagEndDays*DAY);if(baseline.length<definition.minimumBaselineRecords)return unavailable('insufficient-history','insufficient-baseline',dataset);
   const mean=baseline.reduce((sum,item)=>sum+item.kp,0)/baseline.length,variance=baseline.reduce((sum,item)=>sum+(item.kp-mean)**2,0)/baseline.length,std=Math.sqrt(variance)||1;
   const lagWindow=observations.filter(item=>item.time>=time-definition.lagEndDays*DAY&&item.time<=time-definition.lagStartDays*DAY).map(item=>({...item,anomaly:(item.kp-mean)/std})),strongest=lagWindow.sort((a,b)=>b.anomaly-a.anomaly)[0]||null,reference=closestObservation(observations,time-definition.referenceLagDays*DAY),controls=Object.fromEntries(definition.controlLagDays.map(days=>[days,closestObservation(observations,time-days*DAY)]));
-  if(!strongest)return Object.freeze({status:'data-unavailable',signal0To100:null,definitionVersion:RESEARCH_SIGNAL_DEFINITIONS.version,global:true,provider:dataset.provider||null});
+  if(!strongest)return unavailable('data-unavailable','coverage-out-of-range',dataset);
   const historicalAnomalies=baseline.map(item=>(item.kp-mean)/std),percentile=percentileRank(historicalAnomalies,strongest.anomaly),signal=Math.max(0,Math.min(100,percentile??0));
-  return Object.freeze({status:signal>=60?'available':'inactive',signal0To100:Math.round(signal*10)/10,geomagneticLagPercentile:percentile,strongestLagDays:Math.round((time-strongest.time)/DAY*10)/10,kpAtStrongestLag:strongest.kp,dstAtStrongestLag:strongest.dst,anomalyAt15d:reference?(reference.kp-mean)/std:null,lag27Control:controls[27]?.kp??null,lag54Control:controls[54]?.kp??null,observationTimeUtc:new Date(strongest.time).toISOString(),definitionVersion:RESEARCH_SIGNAL_DEFINITIONS.version,global:true,provider:dataset.provider||null,retrievedAt:dataset.retrievedAt||null,sha256:dataset.sha256||null,dataQuality:dataset.dataQuality??null});
+  return Object.freeze({status:signal>=60?'available':'inactive',reasonCode:null,reasonText:null,signal0To100:Math.round(signal*10)/10,geomagneticLagPercentile:percentile,strongestLagDays:Math.round((time-strongest.time)/DAY*10)/10,kpAtStrongestLag:strongest.kp,dstAtStrongestLag:strongest.dst,anomalyAt15d:reference?percentileRank(historicalAnomalies,(reference.kp-mean)/std):null,lag27Control:controls[27]?.kp??null,lag54Control:controls[54]?.kp??null,observationTimeUtc:new Date(strongest.time).toISOString(),definitionVersion:RESEARCH_SIGNAL_DEFINITIONS.version,global:true,provider:dataset.provider||null,retrievedAt:dataset.retrievedAt||null,coverageStartUtc:dataset.coverageStartUtc,coverageEndUtc:dataset.coverageEndUtc,sha256:dataset.sha256||null,dataQuality:dataset.dataQuality??null,freshness:dataset.freshness||null});
 }
 
 export function calculateIndependentResearchSignals(compactEvents,{forecastTime,geomagneticDataset=null}={}){return Object.freeze({coreForecast:null,changeSignal:null,quiescenceSignal:calculateQuiescenceSignal(compactEvents,{forecastTime}),geomagneticSignal:calculateGeomagneticSignal(geomagneticDataset,{forecastTime})})}
