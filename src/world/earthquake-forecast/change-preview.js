@@ -1,4 +1,5 @@
 import { runDecayNeighborModel } from './model.js';
+import { calculateGeomagneticSignal, calculateQuiescenceSignal } from './research-signals.js';
 
 const DAY=86_400_000;
 const HISTORY_START=Date.parse('2005-01-01T00:00:00.000Z');
@@ -66,10 +67,10 @@ export function calculateChangePreview(catalog,{forecastTime,targetMagnitude=6.5
   if(!Number.isFinite(latestCatalogTime)||catalog?.freshness?.complete===false) return Object.freeze({status:'catalog-incomplete',rows:Object.freeze([]),baseline:CHANGE_BASELINE});
   const calculationTime=Math.min(requestedTime,latestCatalogTime),target=Number(targetMagnitude),horizon=Math.max(1,Math.trunc(Number(horizonDays))),rows=[];
   for(const [cell,compactEvents] of Object.entries(catalog?.eventsByCell||{})){
-    const current=changeAt(compactEvents,calculationTime,target,horizon),seven=changeAt(compactEvents,calculationTime-7*DAY,target,horizon),thirty=changeAt(compactEvents,calculationTime-30*DAY,target,horizon);
+    const current=changeAt(compactEvents,calculationTime,target,horizon),seven=changeAt(compactEvents,calculationTime-7*DAY,target,horizon),thirty=changeAt(compactEvents,calculationTime-30*DAY,target,horizon),quiescenceSignal=calculateQuiescenceSignal(compactEvents,{forecastTime:calculationTime});
     const delta7=current.change_percentile===null||seven.change_percentile===null?null:Math.round((current.change_percentile-seven.change_percentile)*10)/10;
     const trend=delta7===null?'unavailable':delta7>=5?'rising':delta7<=-5?'falling':'stable';
-    rows.push(Object.freeze({cell_id:cell,target_magnitude:target,horizon_days:horizon,...current,change_band:changeBand(current.change_percentile),change_7d:seven.change_percentile,change_30d:thirty.change_percentile,change_7d_delta:delta7,trend,model_tier:target===6.5&&horizon===30?'development-approved':target===4.5?'research-activity':'comparison-baseline'}));
+    rows.push(Object.freeze({cell_id:cell,target_magnitude:target,horizon_days:horizon,...current,change_band:changeBand(current.change_percentile),change_7d:seven.change_percentile,change_30d:thirty.change_percentile,change_7d_delta:delta7,trend,model_tier:target===6.5&&horizon===30?'development-approved':target===4.5?'research-activity':'comparison-baseline',quiescenceSignal}));
   }
-  return Object.freeze({status:'available',requestedTimeUtc:new Date(requestedTime).toISOString(),calculationTimeUtc:new Date(calculationTime).toISOString(),futureDateClamped:requestedTime>latestCatalogTime,baseline:CHANGE_BASELINE,rows:Object.freeze(rows)});
+  return Object.freeze({status:'available',requestedTimeUtc:new Date(requestedTime).toISOString(),calculationTimeUtc:new Date(calculationTime).toISOString(),futureDateClamped:requestedTime>latestCatalogTime,baseline:CHANGE_BASELINE,geomagneticSignal:calculateGeomagneticSignal(null,{forecastTime:calculationTime}),rows:Object.freeze(rows)});
 }
