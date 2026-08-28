@@ -1,21 +1,17 @@
-const OFFICIAL_JA=Object.freeze({
-  282030:'諏訪之瀬島',282050:'口永良部島',282090:'霧島山',282100:'雲仙岳',282110:'阿蘇山',
-  283020:'箱根山',283030:'富士山',283040:'御嶽山',283050:'白山',283070:'焼岳',283110:'浅間山',
-  283120:'草津白根山',283160:'磐梯山',283170:'安達太良山',283180:'吾妻山',283190:'蔵王山',
-  283220:'鳥海山',283230:'秋田駒ヶ岳',283240:'岩手山',283250:'八幡平',283260:'秋田焼山',
-  283270:'岩木山',283271:'十和田',283280:'八甲田山',284010:'伊豆大島',284040:'三宅島',
-  284050:'八丈島',284060:'青ヶ島',284070:'明神礁',284096:'西之島',284120:'硫黄島',
-  285011:'恵山',285020:'北海道駒ヶ岳',285030:'洞爺',285034:'倶多楽',285040:'支笏',
-  285050:'十勝岳',285060:'大雪山',285070:'阿寒',285080:'屈斜路',285081:'摩周',
-  332010:'キラウエア',332020:'マウナ・ロア',321050:'セント・ヘレンズ山',211060:'ヴェスヴィオ山',
-  263310:'クラカタウ',264020:'メラピ山',290360:'カムチャツカのクリュチェフスカヤ山'
+export const VERIFIED_JA=Object.freeze({
+  282010:'西表島北北東海底火山',282020:'硫黄鳥島',282021:'横当島',282022:'悪石島',282030:'諏訪之瀬島',282040:'中之島',282043:'口之島',282050:'口永良部島',282060:'鬼界カルデラ',282070:'阿多カルデラ',282080:'姶良カルデラ',282081:'米丸・住吉池',282090:'霧島山',282091:'福江火山群',282100:'雲仙岳',282110:'阿蘇山',282120:'九重山',282130:'由布岳・鶴見岳',
+  283001:'阿武火山群',283002:'三瓶山',283010:'伊豆東部火山群',283020:'箱根山',283030:'富士山',283031:'横岳',283040:'御嶽山',283050:'白山',283060:'乗鞍岳',283069:'アカンダナ山',283070:'焼岳',283080:'弥陀ヶ原',283090:'新潟焼山',283100:'妙高山',283110:'浅間山',283120:'草津白根山',283121:'志賀火山群',283122:'榛名山',283130:'赤城山',283131:'燧ヶ岳',283140:'日光白根山',283141:'男体山',283142:'大真名子火山群',283143:'高原山',283150:'那須岳',283151:'沼沢',283160:'磐梯山',283170:'安達太良山',283180:'吾妻山',283190:'蔵王山',283191:'肘折',283200:'鳴子',283210:'栗駒山',283220:'鳥海山',283230:'秋田駒ヶ岳',283240:'岩手山',283250:'八幡平',283260:'秋田焼山',283262:'目潟',283270:'岩木山',283271:'十和田',283280:'八甲田山',283290:'恐山',
+  284010:'伊豆大島',284011:'利島',284020:'新島',284030:'神津島',284040:'三宅島',284041:'御蔵島',284042:'黒瀬海穴',284050:'八丈島',284060:'青ヶ島',284061:'北ベヨネース列岩',284070:'明神礁',284080:'須美寿島',284090:'伊豆鳥島',284091:'孀婦岩',284093:'水曜海山',284094:'木曜海山',284095:'土曜海山',284096:'西之島',284097:'海形海山',284100:'海徳海山',284110:'噴火浅根',284120:'硫黄島',284121:'北福徳堆',284130:'福徳岡ノ場',284131:'南日吉海山',284132:'日光海山',
+  285010:'渡島大島',285011:'恵山',285020:'北海道駒ヶ岳',285030:'洞爺カルデラ',285031:'ニセコ',285032:'羊蹄山',285034:'倶多楽',285040:'支笏カルデラ',285041:'利尻山',285050:'十勝岳',285060:'大雪山',285061:'丸山',285070:'阿寒カルデラ',285080:'屈斜路カルデラ',285081:'摩周',285082:'羅臼岳',285083:'天頂山',285090:'知床硫黄山',
+  332010:'キラウエア',332020:'マウナ・ロア',321050:'セント・ヘレンズ山',211060:'ヴェスヴィオ山',263250:'メラピ山',263310:'クラカタウ',290360:'クリュチェフスカヤ山'
 });
 
-const ROMAJI=[['sch','シュ'],['tch','チ'],['sh','シ'],['ch','チ'],['ts','ツ'],['th','ス'],['ph','フ'],['kh','ハ'],['zh','ジ'],['qu','ク'],['ck','ック'],['ng','ン'],['ai','アイ'],['au','アウ'],['ei','エイ'],['oi','オイ'],['ou','オウ'],['ia','イア'],['io','イオ'],['ua','ウア'],['ue','ウエ'],['ya','ヤ'],['yu','ユ'],['yo','ヨ']];
-const LETTER=Object.freeze({a:'ア',b:'ブ',c:'ク',d:'ド',e:'エ',f:'フ',g:'グ',h:'ハ',i:'イ',j:'ジ',k:'ク',l:'ル',m:'ム',n:'ン',o:'オ',p:'プ',q:'ク',r:'ル',s:'ス',t:'ト',u:'ウ',v:'ヴ',w:'ウ',x:'クス',y:'イ',z:'ズ'});
+export const JAPAN_VOLCANO_NAME_SOURCE=Object.freeze({
+  name:'気象庁 日本の活火山表／Smithsonian Global Volcanism Program',
+  url:'https://www.data.jma.go.jp/vois/data/filing/bulletin/catalog/appendix/v_active.html',
+  note:'GVPの日本所在レコードをGVP番号で照合。気象庁とは火山群・カルデラ等の集約単位が異なる。'
+});
 
-export function katakanaFallback(value){let text=String(value||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase(),result='';while(text){const separator=text.match(/^[\s/_-]+/);if(separator){result+='・';text=text.slice(separator[0].length);continue}const punctuation=text.match(/^[()[\],.]+/);if(punctuation){result+=punctuation[0].replace(/[()[\]]/g,'');text=text.slice(punctuation[0].length);continue}const pair=ROMAJI.find(([token])=>text.startsWith(token));if(pair){result+=pair[1];text=text.slice(pair[0].length);continue}const char=text[0];result+=LETTER[char]||char;text=text.slice(1)}return result.replace(/・+/g,'・').replace(/^・|・$/g,'')||'名称未確認'}
-
-export function localizedVolcanoName(volcano){const official=OFFICIAL_JA[Number(volcano?.gvpNumber)];if(official)return Object.freeze({nameJa:official,nameEn:String(volcano.name||''),status:'official-or-established'});return Object.freeze({nameJa:katakanaFallback(volcano?.name),nameEn:String(volcano?.name||''),status:'auto-katakana'})}
+export function localizedVolcanoName(volcano){const verified=VERIFIED_JA[Number(volcano?.gvpNumber)];if(verified)return Object.freeze({nameJa:verified,nameEn:String(volcano.name||''),status:volcano?.country==='Japan'?'verified-japan':'verified-established',source:volcano?.country==='Japan'?JAPAN_VOLCANO_NAME_SOURCE:'established Japanese usage'});return Object.freeze({nameJa:String(volcano?.name||'名称未確認'),nameEn:String(volcano?.name||''),status:'unverified-original',source:null})}
 
 export function volcanoSearchText(volcano){const localized=localizedVolcanoName(volcano);return [localized.nameJa,localized.nameEn,volcano?.gvpNumber,volcano?.country,volcano?.region].filter(Boolean).join(' ').toLowerCase()}
