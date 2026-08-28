@@ -1,0 +1,38 @@
+name: Update volcano observations
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: update-volcano-observations
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Refresh verified observations
+        env:
+          NASA_FIRMS_MAP_KEY: ${{ secrets.NASA_FIRMS_MAP_KEY }}
+        run: node scripts/update-volcano-observations.mjs
+      - name: Verify safety and regressions
+        run: node tests/volcano-live-observations.test.mjs && npm run test:mundane
+      - name: Open data update pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- data/world/volcano-observations-v1.json; then exit 0; fi
+          branch="automation/volcano-observations-$(date -u +%Y%m%d%H%M%S)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add data/world/volcano-observations-v1.json
+          git commit -m "Update verified volcano observations"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title "Update verified volcano observations" --body "Automated NASA FIRMS and USGS refresh passed volcano safety and world regression tests."

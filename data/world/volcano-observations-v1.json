@@ -1,0 +1,524 @@
+{
+  "schemaId": "koyomi-volcano-observations-v1",
+  "generatedAt": "2026-08-28T00:56:53.069Z",
+  "coverageStartUtc": "2026-08-21T00:56:53.071Z",
+  "providers": {
+    "thermal": "NASA FIRMS key not configured",
+    "seismic": "USGS ComCat FDSN"
+  },
+  "freshness": {
+    "complete": false,
+    "thermalConfigured": false,
+    "seismicComplete": true,
+    "errors": []
+  },
+  "thermalByVolcano": {
+    "jma-aso": {
+      "status": "unconfigured",
+      "detectionCount": null,
+      "sensorCount": null,
+      "multiSensorConfirmed": false,
+      "maximumBrightnessKelvin": null,
+      "totalFrpMw": null,
+      "latestObservationUtc": null,
+      "detections": []
+    },
+    "jma-sakurajima": {
+      "status": "unconfigured",
+      "detectionCount": null,
+      "sensorCount": null,
+      "multiSensorConfirmed": false,
+      "maximumBrightnessKelvin": null,
+      "totalFrpMw": null,
+      "latestObservationUtc": null,
+      "detections": []
+    },
+    "jma-kirishima": {
+      "status": "unconfigured",
+      "detectionCount": null,
+      "sensorCount": null,
+      "multiSensorConfirmed": false,
+      "maximumBrightnessKelvin": null,
+      "totalFrpMw": null,
+      "latestObservationUtc": null,
+      "detections": []
+    },
+    "jma-asama": {
+      "status": "unconfigured",
+      "detectionCount": null,
+      "sensorCount": null,
+      "multiSensorConfirmed": false,
+      "maximumBrightnessKelvin": null,
+      "totalFrpMw": null,
+      "latestObservationUtc": null,
+      "detections": []
+    },
+    "jma-fuji": {
+      "status": "unconfigured",
+      "detectionCount": null,
+      "sensorCount": null,
+      "multiSensorConfirmed": false,
+      "maximumBrightnessKelvin": null,
+      "totalFrpMw": null,
+      "latestObservationUtc": null,
+      "detections": []
+    },
+    "jma-ontake": {
+      "status": "unconfigured",
+      "detectionCount": null,
+      "sensorCount": null,
+      "multiSensorConfirmed": false,
+      "maximumBrightnessKelvin": null,
+      "totalFrpMw": null,
+      "latestObservationUtc": null,
+      "detections": []
+    },
+    "gvp-kilauea": {
+      "status": "unconfigured",
+      "detectionCount": null,
+      "sensorCount": null,
+      "multiSensorConfirmed": false,
+      "maximumBrightnessKelvin": null,
+      "totalFrpMw": null,
+      "latestObservationUtc": null,
+      "detections": []
+    },
+    "gvp-etna": {
+      "status": "unconfigured",
+      "detectionCount": null,
+      "sensorCount": null,
+      "multiSensorConfirmed": false,
+      "maximumBrightnessKelvin": null,
+      "totalFrpMw": null,
+      "latestObservationUtc": null,
+      "detections": []
+    },
+    "gvp-merapi": {
+      "status": "unconfigured",
+      "detectionCount": null,
+      "sensorCount": null,
+      "multiSensorConfirmed": false,
+      "maximumBrightnessKelvin": null,
+      "totalFrpMw": null,
+      "latestObservationUtc": null,
+      "detections": []
+    },
+    "gvp-popocatepetl": {
+      "status": "unconfigured",
+      "detectionCount": null,
+      "sensorCount": null,
+      "multiSensorConfirmed": false,
+      "maximumBrightnessKelvin": null,
+      "totalFrpMw": null,
+      "latestObservationUtc": null,
+      "detections": []
+    }
+  },
+  "seismicByVolcano": {
+    "jma-aso": {
+      "status": "available",
+      "eventCount": 0,
+      "maximumMagnitude": null,
+      "latestObservationUtc": null,
+      "events": []
+    },
+    "jma-sakurajima": {
+      "status": "available",
+      "eventCount": 0,
+      "maximumMagnitude": null,
+      "latestObservationUtc": null,
+      "events": []
+    },
+    "jma-kirishima": {
+      "status": "available",
+      "eventCount": 0,
+      "maximumMagnitude": null,
+      "latestObservationUtc": null,
+      "events": []
+    },
+    "jma-asama": {
+      "status": "available",
+      "eventCount": 0,
+      "maximumMagnitude": null,
+      "latestObservationUtc": null,
+      "events": []
+    },
+    "jma-fuji": {
+      "status": "available",
+      "eventCount": 0,
+      "maximumMagnitude": null,
+      "latestObservationUtc": null,
+      "events": []
+    },
+    "jma-ontake": {
+      "status": "available",
+      "eventCount": 0,
+      "maximumMagnitude": null,
+      "latestObservationUtc": null,
+      "events": []
+    },
+    "gvp-kilauea": {
+      "status": "available",
+      "eventCount": 37,
+      "maximumMagnitude": 3.17,
+      "latestObservationUtc": "2026-08-27T02:09:55.020Z",
+      "events": [
+        {
+          "id": "hv75021702",
+          "timeUtc": "2026-08-21T03:57:14.840Z",
+          "latitude": 19.3348333333333,
+          "longitude": -155.207666666667,
+          "depthKm": 5.93,
+          "magnitude": 1.59,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75021707",
+          "timeUtc": "2026-08-21T04:18:17.980Z",
+          "latitude": 19.4011669158936,
+          "longitude": -155.280334472656,
+          "depthKm": 6.80999994277954,
+          "magnitude": 1.73,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75021872",
+          "timeUtc": "2026-08-21T11:43:48.990Z",
+          "latitude": 19.2058334350586,
+          "longitude": -155.272338867188,
+          "depthKm": 44.3199996948242,
+          "magnitude": 1.77,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75021877",
+          "timeUtc": "2026-08-21T11:45:04.290Z",
+          "latitude": 19.2094993591309,
+          "longitude": -155.248001098633,
+          "depthKm": 42.6199989318848,
+          "magnitude": 1.77,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75021917",
+          "timeUtc": "2026-08-21T13:20:01.970Z",
+          "latitude": 19.349,
+          "longitude": -155.242833333333,
+          "depthKm": 29.74,
+          "magnitude": 1.69,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022117",
+          "timeUtc": "2026-08-21T20:21:20.260Z",
+          "latitude": 19.1815,
+          "longitude": -155.3545,
+          "depthKm": 28.05,
+          "magnitude": 1.88,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022157",
+          "timeUtc": "2026-08-21T21:30:57.980Z",
+          "latitude": 19.4818325042725,
+          "longitude": -155.134506225586,
+          "depthKm": 43.5099983215332,
+          "magnitude": 1.81,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022212",
+          "timeUtc": "2026-08-22T00:28:19.050Z",
+          "latitude": 19.3865,
+          "longitude": -155.237333333333,
+          "depthKm": -0.56,
+          "magnitude": 1.11,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022247",
+          "timeUtc": "2026-08-22T03:25:36.570Z",
+          "latitude": 19.1790008544922,
+          "longitude": -155.396331787109,
+          "depthKm": 39.3800010681152,
+          "magnitude": 1.93,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022437",
+          "timeUtc": "2026-08-22T11:52:31.360Z",
+          "latitude": 19.3068333333333,
+          "longitude": -155.258,
+          "depthKm": 2.24,
+          "magnitude": 2.04,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022477",
+          "timeUtc": "2026-08-22T14:39:16.510Z",
+          "latitude": 19.3038333333333,
+          "longitude": -155.261166666667,
+          "depthKm": 4.96,
+          "magnitude": 1.77,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022482",
+          "timeUtc": "2026-08-22T14:52:43.560Z",
+          "latitude": 19.3048333333333,
+          "longitude": -155.263333333333,
+          "depthKm": 5.41,
+          "magnitude": 1.53,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022492",
+          "timeUtc": "2026-08-22T14:54:53.260Z",
+          "latitude": 19.3065,
+          "longitude": -155.263333333333,
+          "depthKm": 5.11,
+          "magnitude": 1.73,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022622",
+          "timeUtc": "2026-08-22T23:00:46.290Z",
+          "latitude": 19.2558333333333,
+          "longitude": -155.3515,
+          "depthKm": 31.28,
+          "magnitude": 2.07,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022847",
+          "timeUtc": "2026-08-23T12:25:17.190Z",
+          "latitude": 19.3665,
+          "longitude": -155.497,
+          "depthKm": 7.82,
+          "magnitude": 3.17,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75022887",
+          "timeUtc": "2026-08-23T17:23:23.860Z",
+          "latitude": 19.233,
+          "longitude": -155.349166666667,
+          "depthKm": 29.76,
+          "magnitude": 2.1,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023012",
+          "timeUtc": "2026-08-24T01:05:11.390Z",
+          "latitude": 19.2021675109863,
+          "longitude": -155.362335205078,
+          "depthKm": 29.6700000762939,
+          "magnitude": 1.82,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023142",
+          "timeUtc": "2026-08-24T11:52:34.570Z",
+          "latitude": 19.3379993438721,
+          "longitude": -155.31916809082,
+          "depthKm": 29.2399997711182,
+          "magnitude": 1.86,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023492",
+          "timeUtc": "2026-08-25T04:45:29.050Z",
+          "latitude": 19.3745,
+          "longitude": -155.542333333333,
+          "depthKm": 3.35,
+          "magnitude": 1.85,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023502",
+          "timeUtc": "2026-08-25T04:49:04.920Z",
+          "latitude": 19.3663333333333,
+          "longitude": -155.550666666667,
+          "depthKm": -0.85,
+          "magnitude": 1.85,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023547",
+          "timeUtc": "2026-08-25T05:16:11.520Z",
+          "latitude": 19.377,
+          "longitude": -155.541166666667,
+          "depthKm": 2.47,
+          "magnitude": 0.7,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023562",
+          "timeUtc": "2026-08-25T05:23:59.510Z",
+          "latitude": 19.3761666666667,
+          "longitude": -155.542666666667,
+          "depthKm": 2.31,
+          "magnitude": 0.92,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023582",
+          "timeUtc": "2026-08-25T05:44:51.510Z",
+          "latitude": 19.3603333333333,
+          "longitude": -155.541333333333,
+          "depthKm": -1.23,
+          "magnitude": 0.8,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv74000229",
+          "timeUtc": "2026-08-25T05:46:05.430Z",
+          "latitude": 19.3746666666667,
+          "longitude": -155.547333333333,
+          "depthKm": 2.39,
+          "magnitude": 1.74,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023587",
+          "timeUtc": "2026-08-25T05:56:42.340Z",
+          "latitude": 19.3875,
+          "longitude": -155.547333333333,
+          "depthKm": 4.68,
+          "magnitude": 1.3,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023602",
+          "timeUtc": "2026-08-25T06:14:48.980Z",
+          "latitude": 19.3715,
+          "longitude": -155.405166666667,
+          "depthKm": 10.37,
+          "magnitude": 1.9,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023607",
+          "timeUtc": "2026-08-25T06:27:47.490Z",
+          "latitude": 19.3755,
+          "longitude": -155.542666666667,
+          "depthKm": 2.54,
+          "magnitude": 0.78,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023647",
+          "timeUtc": "2026-08-25T08:06:06.620Z",
+          "latitude": 19.3345,
+          "longitude": -155.1765,
+          "depthKm": 5.64,
+          "magnitude": 1.44,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023722",
+          "timeUtc": "2026-08-25T13:17:19.350Z",
+          "latitude": 19.253999710083,
+          "longitude": -155.350494384766,
+          "depthKm": 30.7399997711182,
+          "magnitude": 1.83,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023822",
+          "timeUtc": "2026-08-25T18:00:44.370Z",
+          "latitude": 19.3411666666667,
+          "longitude": -155.111333333333,
+          "depthKm": 6.57,
+          "magnitude": 2.06,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023837",
+          "timeUtc": "2026-08-25T18:50:39.870Z",
+          "latitude": 19.4068336486816,
+          "longitude": -155.275161743164,
+          "depthKm": 6.3600001335144,
+          "magnitude": 1.8,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023947",
+          "timeUtc": "2026-08-26T00:30:20.910Z",
+          "latitude": 19.3421669006348,
+          "longitude": -155.182998657227,
+          "depthKm": 1.12999999523163,
+          "magnitude": 1.77,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75023952",
+          "timeUtc": "2026-08-26T00:45:21.820Z",
+          "latitude": 19.2211666107178,
+          "longitude": -155.339172363281,
+          "depthKm": 31.2099990844727,
+          "magnitude": 1.73,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75024012",
+          "timeUtc": "2026-08-26T05:05:34.490Z",
+          "latitude": 19.4175,
+          "longitude": -155.270666666667,
+          "depthKm": 0.5,
+          "magnitude": 1.99,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75024057",
+          "timeUtc": "2026-08-26T05:57:03.490Z",
+          "latitude": 19.415,
+          "longitude": -155.417833333333,
+          "depthKm": 7.21,
+          "magnitude": 2.13,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75024332",
+          "timeUtc": "2026-08-26T17:40:25.150Z",
+          "latitude": 19.329,
+          "longitude": -155.143666666667,
+          "depthKm": 5.58,
+          "magnitude": 1.76,
+          "source": "USGS ComCat"
+        },
+        {
+          "id": "hv75024547",
+          "timeUtc": "2026-08-27T02:09:55.020Z",
+          "latitude": 19.4715,
+          "longitude": -155.457666666667,
+          "depthKm": -0.18,
+          "magnitude": 1.85,
+          "source": "USGS ComCat"
+        }
+      ]
+    },
+    "gvp-etna": {
+      "status": "available",
+      "eventCount": 0,
+      "maximumMagnitude": null,
+      "latestObservationUtc": null,
+      "events": []
+    },
+    "gvp-merapi": {
+      "status": "available",
+      "eventCount": 0,
+      "maximumMagnitude": null,
+      "latestObservationUtc": null,
+      "events": []
+    },
+    "gvp-popocatepetl": {
+      "status": "available",
+      "eventCount": 0,
+      "maximumMagnitude": null,
+      "latestObservationUtc": null,
+      "events": []
+    }
+  },
+  "sha256": "0a2393d425cf74e131db88f7d6ddc776d7c8bd098567a41b6132eb4f9a351908"
+}
