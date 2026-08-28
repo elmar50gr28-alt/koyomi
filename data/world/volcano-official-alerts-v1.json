@@ -1,0 +1,9 @@
+{
+  "schemaId": "koyomi-volcano-official-alerts-v1",
+  "generatedAt": null,
+  "freshness": {
+    "complete": false,
+    "reason": "Official alert feeds are not connected; unknown must never be treated as safe."
+  },
+  "alertsByVolcano": {}
+}
