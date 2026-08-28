@@ -21,7 +21,7 @@ assert.equal(VOLCANO_LAYER_DEFAULTS.enabled,false);assert.equal(VOLCANO_LAYER_DE
 const catalog=JSON.parse(await readFile(new URL('../data/world/volcano-catalog-v2.json',import.meta.url),'utf8'));assert.equal(catalog.officialStatusIncluded,false);assert.equal(catalog.volcanoes.length,1214);assert.equal(volcanoGeoJson(catalog).features.length,catalog.volcanoes.length);
 const ui=await readFile(new URL('../src/world/world-map-ui.js',import.meta.url),'utf8'),layer=await readFile(new URL('../src/world/volcano/map-layer.js',import.meta.url),'utf8'),worker=await readFile(new URL('../service-worker.js',import.meta.url),'utf8');
 for(const token of ['volcanoLayerControl','公式状態','熱移送','火山周辺地震','公開条件未達','研究レイヤーは初期OFF','マンデン占術'])assert.ok((ui+layer).includes(token),token);
-for(const token of ['world-volcanoes','cluster:true','公式情報を取得できません','未取得は「安全」を意味しません','噴火確率や時期を表示しません','科学・観測モデルには一切加算しません'])assert.ok((ui+layer).includes(token),token);
+for(const token of ['world-volcanoes','cluster:true','公式評価なし','未取得は「安全」を意味しません','噴火確率や時期を表示しません','科学・観測モデルには一切加算しません'])assert.ok((ui+layer).includes(token),token);
 for(const asset of ['src/world/volcano/heat-transfer.js','src/world/volcano/map-layer.js','data/world/volcano-catalog-v2.json'])assert.ok(worker.includes(asset),asset);
 assert.ok(!/eruptionProbability\s*:\s*(?!null)/.test(layer));
 console.log('Volcano heat-transfer globe safety passed');
