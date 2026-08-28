@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v2-maplibre-local-v1-globe-v2-mundane-accuracy-v1-earthquake-safety-v2-8-world-layer-v2-preview-dated-v1-outcomes-v1-catalog-v2-change-map-v1-research-signals-v1-geomagnetic-v1-narrative-v2-prefectures-v1-volcano-v2-live-observations';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v2-maplibre-local-v1-globe-v2-mundane-accuracy-v1-earthquake-safety-v2-8-world-layer-v2-preview-dated-v1-outcomes-v1-catalog-v2-change-map-v1-research-signals-v1-geomagnetic-v1-narrative-v2-prefectures-v1-volcano-v3-global-thermal-map';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const MAP_CORE_CACHE = `${CACHE_VERSION}-map-core`;
 const MAP_REGION_CACHE = `${CACHE_VERSION}-map-region`;
@@ -61,6 +61,7 @@ const APP_SHELL = [
 './data/world/earthquake-research-catalog-v2.json',
 './data/world/geomagnetic-research-v1.json',
 './data/world/volcano-catalog-v1.json',
+'./data/world/volcano-catalog-v2.json',
 './data/world/volcano-observations-v1.json',
   './data/research/earthquake-validation-summary.json',
   './src/bazi/astronomy/solar-term-core.js',
