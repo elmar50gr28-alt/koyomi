@@ -1,7 +1,7 @@
 {
   "schemaId": "koyomi-volcano-observations-v1",
-  "generatedAt": "2026-08-28T01:14:30.941Z",
-  "coverageStartUtc": "2026-08-21T01:14:30.941Z",
+  "generatedAt": "2026-08-28T01:17:55.366Z",
+  "coverageStartUtc": "2026-08-21T01:17:55.367Z",
   "providers": {
     "thermal": "NASA FIRMS VIIRS",
     "seismic": "USGS ComCat FDSN"
@@ -8169,5 +8169,5 @@
       "events": []
     }
   },
-  "sha256": "9939e2138b82ad412b318e5031a32e6ac966d14890fd664fd663b624b4254177"
+  "sha256": "7dbcb08124a0b225d8a6bc411b0b40826ebffc8522b51902c37fa0bbda476431"
 }
