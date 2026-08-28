@@ -17,6 +17,7 @@ const data=JSON.parse(await readFile(new URL('../data/world/volcano-observations
 const script=await readFile(new URL('../scripts/update-volcano-observations.mjs',import.meta.url),'utf8'),workflow=await readFile(new URL('../.github/workflows/update-volcano-observations.yml',import.meta.url),'utf8'),ui=await readFile(new URL('../src/world/volcano/map-layer.js',import.meta.url),'utf8'),worker=await readFile(new URL('../service-worker.js',import.meta.url),'utf8');
 assert.ok(script.includes('process.env.NASA_FIRMS_MAP_KEY'));assert.ok(!script.includes('NASA_FIRMS_MAP_KEY='));assert.ok(workflow.includes('secrets.NASA_FIRMS_MAP_KEY'));assert.ok(workflow.includes("cron: '17 */6 * * *'"));
 assert.ok(script.includes('/world/${FIRMS_DAY_RANGE}'));assert.ok(script.includes('attempts=3'));assert.ok(script.includes('family:4'));assert.ok(script.includes('{forceIpv4:true}'));assert.ok(script.includes('minmagnitude=2.5'));assert.ok(!script.includes('for(const volcano of catalog.volcanoes){const detections=[]'));
+assert.ok(script.includes('Volcano observation refresh incomplete'),'incomplete provider data must stop the publication workflow');
 for(const token of ['検出なし（安全判定ではありません）','複数衛星一致','最終更新','一部未取得','一致しても噴火予測とは扱いません'])assert.ok(ui.includes(token),token);
 assert.ok(worker.includes('data/world/volcano-observations-v1.json'));
 console.log('Volcano live observation pipeline safety passed');
