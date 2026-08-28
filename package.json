@@ -20,7 +20,7 @@
     "test:mobile": "node tests/mobile-regression.test.mjs",
     "test:geomagnetic": "node tests/geomagnetic-research-data.test.mjs",
     "test:world-map-detail": "node tests/world-default-preview-prefectures.test.mjs && node tests/world-forecast-resolution.test.mjs",
-    "test:mundane": "node tests/mundane-seasonal-ingress-core.test.mjs && node tests/mundane-seasonal-interpretation-core.test.mjs && node tests/mundane-monthly-trend-core.test.mjs && node tests/mundane-browser-global.test.mjs && node tests/mundane-seasonal-ui.test.mjs && node tests/world-foundation.test.mjs && node tests/earthquake-forecast-safety-v2-8.test.mjs && node tests/earthquake-change-map.test.mjs && node tests/earthquake-research-ui-separation.test.mjs && node tests/volcano-heat-transfer-safety.test.mjs && npm run test:geomagnetic && npm run test:world-map-detail",
+    "test:mundane": "node tests/mundane-seasonal-ingress-core.test.mjs && node tests/mundane-seasonal-interpretation-core.test.mjs && node tests/mundane-monthly-trend-core.test.mjs && node tests/mundane-browser-global.test.mjs && node tests/mundane-seasonal-ui.test.mjs && node tests/world-foundation.test.mjs && node tests/earthquake-forecast-safety-v2-8.test.mjs && node tests/earthquake-change-map.test.mjs && node tests/earthquake-research-ui-separation.test.mjs && node tests/volcano-heat-transfer-safety.test.mjs && node tests/volcano-live-observations.test.mjs && npm run test:geomagnetic && npm run test:world-map-detail",
     "test:architecture": "node tests/architecture-contract.test.mjs",
     "test:calendar-time": "node tests/calendar-time-compat.test.mjs",
     "test:calendar-time-core": "node tests/calendar-time-core.test.mjs",
