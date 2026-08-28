@@ -6,7 +6,7 @@ import { volcanoGeoJson } from '../src/world/volcano/map-layer.js';
 
 const catalog=JSON.parse(await readFile(new URL('../data/world/volcano-catalog-v2.json',import.meta.url),'utf8'));
 const alerts=JSON.parse(await readFile(new URL('../data/world/volcano-official-alerts-v1.json',import.meta.url),'utf8'));
-assert.equal(alerts.freshness.complete,false,'unconnected official feeds must not imply safety');
+assert.equal(alerts.freshness.japanConnected,true,'JMA official feed must be connected');assert.ok(Object.keys(alerts.alertsByVolcano).length>0,'current JMA alert statements must be published');
 const fuji=catalog.volcanoes.find(item=>item.gvpNumber===283030);assert.equal(localizedVolcanoName(fuji).nameJa,'富士山');assert.match(volcanoSearchText(fuji),/fujisan/);
 const japan=catalog.volcanoes.filter(item=>item.country==='Japan');assert.equal(japan.length,105);assert.equal(japan.filter(item=>localizedVolcanoName(item).status==='verified-japan').length,105);assert.equal(new Set(japan.map(item=>item.gvpNumber)).size,105);for(const volcano of japan){const localized=localizedVolcanoName(volcano);assert.ok(VERIFIED_JA[volcano.gvpNumber]);assert.ok(!/[A-Za-z]/.test(localized.nameJa),`${volcano.name} must use its verified Japanese display name`);assert.equal(localized.nameEn,volcano.name)}
 assert.match(JAPAN_VOLCANO_NAME_SOURCE.url,/data\.jma\.go\.jp/);assert.equal(localizedVolcanoName(fuji).source,JAPAN_VOLCANO_NAME_SOURCE);

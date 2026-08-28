@@ -1,9 +1,106 @@
 {
   "schemaId": "koyomi-volcano-official-alerts-v1",
-  "generatedAt": null,
+  "generatedAt": "2026-08-28T13:47:36.403Z",
+  "providers": {
+    "japan": "気象庁防災情報XML（VFVO50/VFVO53）",
+    "global": "未接続"
+  },
   "freshness": {
     "complete": false,
-    "reason": "Official alert feeds are not connected; unknown must never be treated as safe."
+    "scope": "japan",
+    "japanConnected": true,
+    "globalConnected": false,
+    "reason": "日本は気象庁の公開XMLを使用。海外は共通の公式警戒尺度がないため未確認として表示。"
   },
-  "alertsByVolcano": {}
+  "alertsByVolcano": {
+    "gvp-282030": {
+      "system": "JMA",
+      "level": 2,
+      "issuedAt": "2026-08-28T11:00:00Z",
+      "sourceAgency": "気象庁",
+      "summaryJa": "諏訪之瀬島：噴火警戒レベル2（火口周辺規制）",
+      "sourceUrl": "https://www.data.jma.go.jp/developer/xml/data/20260828110049_0_VFVO53_010000.xml",
+      "jmaVolcanoName": "諏訪之瀬島",
+      "gvpNumber": 282030,
+      "status": "available"
+    },
+    "gvp-282050": {
+      "system": "JMA",
+      "level": 2,
+      "issuedAt": "2026-08-28T11:00:00Z",
+      "sourceAgency": "気象庁",
+      "summaryJa": "口永良部島：噴火警戒レベル2（火口周辺規制）",
+      "sourceUrl": "https://www.data.jma.go.jp/developer/xml/data/20260828110045_0_VFVO53_010000.xml",
+      "jmaVolcanoName": "口永良部島",
+      "gvpNumber": 282050,
+      "status": "available"
+    },
+    "gvp-282080": {
+      "system": "JMA",
+      "level": 3,
+      "issuedAt": "2026-08-28T11:00:00Z",
+      "sourceAgency": "気象庁",
+      "summaryJa": "桜島：噴火警戒レベル3（入山規制）",
+      "sourceUrl": "https://www.data.jma.go.jp/developer/xml/data/20260828110038_0_VFVO53_010000.xml",
+      "jmaVolcanoName": "桜島",
+      "gvpNumber": 282080,
+      "status": "available"
+    },
+    "gvp-282090": {
+      "system": "JMA",
+      "level": 2,
+      "issuedAt": "2026-08-28T11:00:00Z",
+      "sourceAgency": "気象庁",
+      "summaryJa": "霧島山（新燃岳）：噴火警戒レベル2（火口周辺規制）",
+      "sourceUrl": "https://www.data.jma.go.jp/developer/xml/data/20260828110052_0_VFVO53_010000.xml",
+      "jmaVolcanoName": "霧島山（新燃岳）",
+      "gvpNumber": 282090,
+      "status": "available"
+    },
+    "gvp-285070": {
+      "system": "JMA",
+      "level": 2,
+      "issuedAt": "2026-08-28T11:00:00Z",
+      "sourceAgency": "気象庁",
+      "summaryJa": "雌阿寒岳：噴火警戒レベル2（火口周辺規制）",
+      "sourceUrl": "https://www.data.jma.go.jp/developer/xml/data/20260828110030_0_VFVO53_010000.xml",
+      "jmaVolcanoName": "雌阿寒岳",
+      "gvpNumber": 285070,
+      "status": "available"
+    },
+    "gvp-283240": {
+      "system": "JMA",
+      "level": 2,
+      "issuedAt": "2026-08-26T23:00:00Z",
+      "sourceAgency": "気象庁",
+      "summaryJa": "岩手山：噴火警戒レベル2（火口周辺規制）",
+      "sourceUrl": "https://www.data.jma.go.jp/developer/xml/data/20260826230034_0_VFVO53_010000.xml",
+      "jmaVolcanoName": "岩手山",
+      "gvpNumber": 283240,
+      "status": "available"
+    },
+    "gvp-282110": {
+      "system": "JMA",
+      "level": 3,
+      "issuedAt": "2026-08-28T11:00:00Z",
+      "sourceAgency": "気象庁",
+      "summaryJa": "阿蘇山：噴火警戒レベル3（入山規制）",
+      "sourceUrl": "https://www.data.jma.go.jp/developer/xml/data/20260828110034_0_VFVO53_010000.xml",
+      "jmaVolcanoName": "阿蘇山",
+      "gvpNumber": 282110,
+      "status": "available"
+    },
+    "gvp-282060": {
+      "system": "JMA",
+      "level": 2,
+      "issuedAt": "2026-08-28T11:00:00Z",
+      "sourceAgency": "気象庁",
+      "summaryJa": "薩摩硫黄島：噴火警戒レベル2（火口周辺規制）",
+      "sourceUrl": "https://www.data.jma.go.jp/developer/xml/data/20260828110042_0_VFVO53_010000.xml",
+      "jmaVolcanoName": "薩摩硫黄島",
+      "gvpNumber": 282060,
+      "status": "available"
+    }
+  },
+  "sha256": "c05cd31a2cd31289327a116d9a570d2bf28b966e1c28a30ee1f101d3504eb680"
 }

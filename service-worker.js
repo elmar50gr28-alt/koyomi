@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v2-maplibre-local-v1-globe-v2-mundane-accuracy-v1-earthquake-safety-v2-8-world-layer-v2-preview-dated-v1-outcomes-v1-catalog-v2-change-map-v1-research-signals-v1-geomagnetic-v1-narrative-v2-prefectures-v1-volcano-v6-verified-ja-names';
+const CACHE_VERSION = 'koyomi-foundation-20260728-72-v117-20260805-73-western-suite-v1-20260806-common-reading-v5-universal-mundane-research-v1-integrated-persona-v1-adaptive-narrative-v1-western-130-v1-language-quality-v3-world-forecast-v1-h3-v2-maplibre-local-v1-globe-v2-mundane-accuracy-v1-earthquake-safety-v2-8-world-layer-v2-preview-dated-v1-outcomes-v1-catalog-v2-change-map-v1-research-signals-v1-geomagnetic-v1-narrative-v2-prefectures-v1-volcano-v7-live-data';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const MAP_CORE_CACHE = `${CACHE_VERSION}-map-core`;
 const MAP_REGION_CACHE = `${CACHE_VERSION}-map-region`;
@@ -279,6 +279,20 @@ async function staleWhileRevalidate(request) {
   }
 }
 
+async function networkFirstLiveData(request) {
+  try {
+    const response = await fetch(request, { cache: 'no-store' });
+    if (response && response.ok) {
+      const cache = await caches.open(RUNTIME_CACHE);
+      cache.put(request, response.clone()).catch(() => {});
+    }
+    return response;
+  } catch (error) {
+    const cached = await caches.match(request);
+    return cached || new Response('観測データを取得できません。', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+  }
+}
+
 self.addEventListener('fetch', event => {
   const { request } = event;
 
@@ -296,6 +310,11 @@ self.addEventListener('fetch', event => {
 
   if (isMapCoreRequest(request)) {
     event.respondWith(cacheFirstMapCore(request));
+    return;
+  }
+
+  if (/\/data\/world\/volcano-(?:observations|official-alerts)-v1\.json$/.test(new URL(request.url).pathname)) {
+    event.respondWith(networkFirstLiveData(request));
     return;
   }
 

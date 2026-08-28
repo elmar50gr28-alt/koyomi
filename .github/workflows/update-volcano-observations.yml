@@ -20,19 +20,20 @@ jobs:
       - name: Refresh verified observations
         env:
           NASA_FIRMS_MAP_KEY: ${{ secrets.NASA_FIRMS_MAP_KEY }}
-        run: node scripts/update-gvp-volcano-catalog.mjs && node scripts/update-volcano-observations.mjs
+        run: node scripts/update-gvp-volcano-catalog.mjs && node scripts/update-volcano-observations.mjs && node scripts/update-jma-volcano-alerts.mjs
       - name: Verify safety and regressions
-        run: node tests/volcano-live-observations.test.mjs && npm run test:mundane
-      - name: Open data update pull request
+        run: node tests/volcano-live-observations.test.mjs && node tests/jma-volcano-alert-ingestion.test.mjs && npm run test:mundane
+      - name: Publish verified data update
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if git diff --quiet -- data/world/volcano-catalog-v2.json data/world/volcano-observations-v1.json; then exit 0; fi
+          if git diff --quiet -- data/world/volcano-catalog-v2.json data/world/volcano-observations-v1.json data/world/volcano-official-alerts-v1.json; then exit 0; fi
           branch="automation/volcano-observations-$(date -u +%Y%m%d%H%M%S)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$branch"
-          git add data/world/volcano-catalog-v2.json data/world/volcano-observations-v1.json
-          git commit -m "Update verified volcano observations"
+          git add data/world/volcano-catalog-v2.json data/world/volcano-observations-v1.json data/world/volcano-official-alerts-v1.json
+          git commit -m "Update verified volcano observations and alerts"
           git push origin "$branch"
-          gh pr create --base main --head "$branch" --title "Update verified volcano observations" --body "Automated NASA FIRMS and USGS refresh passed volcano safety and world regression tests."
+          pr_url=$(gh pr create --base main --head "$branch" --title "Update verified volcano observations and alerts" --body "Automated NASA FIRMS, USGS and JMA refresh passed completeness, safety and world regression tests.")
+          gh pr merge "$pr_url" --squash --delete-branch
