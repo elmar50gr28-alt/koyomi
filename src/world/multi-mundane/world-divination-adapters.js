@@ -1,0 +1,22 @@
+export const WORLD_DIVINATION_VERSION='world-grid-divination-v1.0';
+const DAY=86400000,mod=(n,m)=>((n%m)+m)%m,clamp=n=>Math.max(0,Math.min(100,Math.round(n)));
+const STEMS='甲乙丙丁戊己庚辛壬癸'.split(''),BRANCHES='子丑寅卯辰巳午未申酉戌亥'.split(''),STEM_ELEMENTS=['木','木','火','火','土','土','金','金','水','水'],BRANCH_ELEMENTS=['水','土','木','木','土','火','火','土','金','金','土','水'];
+const STAR_NAMES=['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'],STAR_ELEMENTS=['水','土','木','木','土','金','金','土','火'];
+const PALACES=[{name:'北',element:'水'},{name:'北東',element:'土'},{name:'東',element:'木'},{name:'南東',element:'木'},{name:'南',element:'火'},{name:'南西',element:'土'},{name:'西',element:'金'},{name:'北西',element:'金'}],DOORS=[['休門',74],['生門',82],['傷門',38],['杜門',44],['景門',67],['死門',25],['驚門',34],['開門',78]],LODGES=['昴宿','畢宿','觜宿','参宿','井宿','鬼宿','柳宿','星宿','張宿','翼宿','軫宿','角宿','亢宿','氐宿','房宿','心宿','尾宿','箕宿','斗宿','女宿','虚宿','危宿','室宿','壁宿','奎宿','婁宿','胃宿'];
+const RELATION=(a,b)=>a===b?8:{木:'火',火:'土',土:'金',金:'水',水:'木'}[a]===b?6:{木:'土',土:'水',水:'火',火:'金',金:'木'}[a]===b?-8:-2;
+const localSolarDate=(date,longitude)=>new Date(new Date(date).getTime()+Number(longitude)*240000),jdn=date=>Math.floor(date.getTime()/DAY+2440588),sector=longitude=>mod(Math.floor((Number(longitude)+22.5)/45),8),band=score=>score>=90?4:score>=75?3:score>=60?2:score>=40?1:0;
+const result=(systemId,name,score,summary,contributors)=>Object.freeze({systemId,name,version:WORLD_DIVINATION_VERSION,score:clamp(score),band:band(score),confidence:'experimental-world-grid-extension',summary,contributors:Object.freeze(contributors)});
+
+export function evaluateWorldDivinations({date=new Date(),latitude=0,longitude=0,westernScore=50,ephemeris}={}){
+  const local=localSolarDate(date,longitude),dayNumber=jdn(local),dayIndex=mod(dayNumber+49,60),dayStem=dayIndex%10,hourBranch=mod(Math.floor((local.getUTCHours()+1)/2),12),palace=PALACES[sector(longitude)],latitudePenalty=Math.max(0,(Math.abs(Number(latitude))-55)*.35);
+  const starNo=mod(11-mod(dayNumber,9),9)||9,starElement=STAR_ELEMENTS[starNo-1],kyuseiScore=58+RELATION(starElement,palace.element)+(starNo===5?8:0)-latitudePenalty;
+  const kyusei=result('kyusei-world','九星・世界格子拡張',kyuseiScore,`${STAR_NAMES[starNo-1]}と${palace.name}方位の五行関係`,[`${STAR_NAMES[starNo-1]}（${starElement}）`,`${palace.name}方位（${palace.element}）`,'地方太陽日で日界を判定']);
+  const sun=ephemeris?.planetLongitudes?.(new Date(date))?.Sun??0,solarTerm=Math.floor(mod(sun,360)/15),yuan=mod(Math.floor(dayIndex/5),3),yin=mod(sun,360)>=90&&mod(sun,360)<270,ju=mod(solarTerm*3+yuan,9)+1,doorIndex=mod(sector(longitude)+(yin?-hourBranch:hourBranch)+ju,8),door=DOORS[doorIndex],qimenScore=door[1]+RELATION(['水','土','木','木','土','金','金','土','火'][ju-1],palace.element)*.55-latitudePenalty;
+  const qimen=result('qimen-world','奇門遁甲・世界格子拡張',qimenScore,`${yin?'陰遁':'陽遁'}${ju}局・${palace.name}の${door[0]}`,[`${yin?'陰遁':'陽遁'} ${ju}局`,`地方太陽時 ${BRANCHES[hourBranch]}刻`,`${palace.name}方位 ${door[0]}`]);
+  const stemElement=STEM_ELEMENTS[dayStem],hourElement=BRANCH_ELEMENTS[hourBranch],ganzhiScore=56+RELATION(stemElement,hourElement)+RELATION(hourElement,palace.element)*.7-latitudePenalty;
+  const ganzhi=result('ganzhi-world','干支五行・世界格子拡張',ganzhiScore,`${STEMS[dayStem]}${BRANCHES[dayIndex%12]}日・${BRANCHES[hourBranch]}刻の五行関係`,[`${STEMS[dayStem]}（${stemElement}）の日`,`${BRANCHES[hourBranch]}（${hourElement}）の刻`,`${palace.name}（${palace.element}）との関係`]);
+  const lodgeIndex=mod(dayNumber+11,27),lodge=LODGES[lodgeIndex],lodgeGroup=mod(Math.floor(lodgeIndex/3),9),sukuyoScore=48+((lodgeGroup*7+sector(longitude)*5+hourBranch*3)%37)-latitudePenalty;
+  const sukuyo=result('sukuyo-world','宿曜・世界格子拡張',sukuyoScore,`${lodge}と地方太陽時の巡り`,[`${lodge}（第${lodgeIndex+1}宿）`,`地方太陽日 ${local.toISOString().slice(0,10)}`,`${palace.name}方位の時刻差を反映`]);
+  const western=result('western-mundane','西洋マンデン',westernScore,'四季図・月間図・週間トリガー',[`西洋マンデン活性 ${clamp(westernScore)}`]),systems=Object.freeze([western,kyusei,qimen,ganzhi,sukuyo]),active=systems.filter(item=>item.score>=65),average=clamp(systems.reduce((sum,item)=>sum+item.score,0)/systems.length);
+  return Object.freeze({schemaId:'koyomi-world-divination-consensus-v1',version:WORLD_DIVINATION_VERSION,calculationTimeUtc:new Date(date).toISOString(),localSolarTime:local.toISOString(),systems,averageScore:average,agreementCount:active.length,agreementSystemIds:Object.freeze(active.map(item=>item.systemId)),agreementLabel:active.length>=4?'強い一致':active.length>=3?'複数一致':active.length>=2?'一部一致':'単独'})
+}
