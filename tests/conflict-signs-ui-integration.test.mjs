@@ -1,0 +1,3 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const ui=await readFile(new URL('../src/world/world-map-ui.js',import.meta.url),'utf8'),worker=await readFile(new URL('../service-worker.js',import.meta.url),'utf8');for(const token of ['世界の動乱','conflictOmens','conflictCard','world-conflict-sign-dots','確認済み情勢：','公式データは未接続','個別施設・座標・部隊配置は示しません'])assert.ok(ui.includes(token),token);for(const asset of ['conflict/regions.js','conflict/conflict-signs-core.js','conflict/conflict-signs-ledger.js'])assert.ok(worker.includes(asset),asset);console.log('Conflict signs globe, disclosure, and offline integration passed');
