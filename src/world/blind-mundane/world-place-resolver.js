@@ -1,0 +1,2 @@
+const longitudeZone=longitude=>{const value=((longitude+180)%360+360)%360-180;if(value<-120)return'西経150度周辺';if(value<-60)return'西経90度周辺';if(value<0)return'西経30度周辺';if(value<60)return'東経30度周辺';if(value<120)return'東経90度周辺';return'東経150度周辺'};
+export function resolveBlindPlace({latitude,longitude}){const latitudeZone=latitude>=45?'北半球高緯度':latitude>=20?'北半球中緯度':latitude>=0?'北半球低緯度':latitude>=-20?'南半球低緯度':latitude>=-45?'南半球中緯度':'南半球高緯度';return`${latitudeZone}・${longitudeZone(longitude)}`}

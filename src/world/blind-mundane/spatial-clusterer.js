@@ -1,0 +1,2 @@
+const distanceKm=(a,b)=>{const rad=Math.PI/180,dLat=(b.latitude-a.latitude)*rad,dLon=(b.longitude-a.longitude)*rad,lat1=a.latitude*rad,lat2=b.latitude*rad,h=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;return 6371*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h))};
+export function selectSpatiallyDiverse(items,{limit=5,minDistanceKm=1400}={}){const selected=[];for(const item of items){if(selected.every(existing=>distanceKm(item,existing)>=minDistanceKm))selected.push(item);if(selected.length>=limit)break}return selected}
