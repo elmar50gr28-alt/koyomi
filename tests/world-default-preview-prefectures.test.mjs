@@ -12,6 +12,7 @@ assert.ok(ui.includes('raiseMapReferenceLayers'),'prefecture lines must be raise
 assert.ok(worker.includes('japan-prefectures-2026.geojson')&&worker.includes('JAPAN_PREFECTURE_BOUNDARIES.md'),'prefecture assets must work offline');
 assert.equal(asset.type,'FeatureCollection');assert.equal(asset.features.length,47);assert.equal(new Set(asset.features.map(feature=>feature.properties.N03_001)).size,47);assert.ok(asset.features.every(feature=>['Polygon','MultiPolygon'].includes(feature.geometry.type)));
 assert.ok((await stat('data/map/japan-prefectures-2026.geojson')).size<250_000,'prefecture asset must stay mobile-friendly');
-assert.equal(createHash('sha256').update(assetText).digest('hex'),'6d31ec2b2f6e29bfabac5da6badca3067556922538c948d5d1c0d6795ecb6d94');
+// Git may check this text asset out with CRLF on Windows; verify canonical LF bytes.
+assert.equal(createHash('sha256').update(assetText.replace(/\r\n/g,'\n')).digest('hex'),'6d31ec2b2f6e29bfabac5da6badca3067556922538c948d5d1c0d6795ecb6d94');
 for(const token of ['2026-01-01','CC BY 4.0','47','2 km²','Survey Act'])assert.ok(metadata.includes(token),token);
 console.log('World default preview and Japan prefecture boundary tests passed');
