@@ -15,10 +15,13 @@ assert.equal(fallback.source,'saved');assert.equal(fallback.events[0].id,'net');
 const unavailable=await loadLiveEarthquakes({now,storage:{getItem:()=>null},fetchImpl:async()=>{throw new Error('offline')}});
 assert.equal(unavailable.source,'unavailable');assert.deepEqual(unavailable.events,[]);
 
-const ui=await readFile(new URL('../src/world/world-map-ui.js',import.meta.url),'utf8'),worker=await readFile(new URL('../service-worker.js',import.meta.url),'utf8');
-for(const token of ['loadLiveEarthquakes','liveEventsInWindow','USGS速報','保存済みUSGS速報','visibilitychange','earthquakeLiveLayer','live-earthquake-dots','直近30日の観測地震','予測とは別表示','これは発生済みの観測地震です'])assert.ok(ui.includes(token),token);
+const ui=await readFile(new URL('../src/world/world-map-ui.js',import.meta.url),'utf8'),css=await readFile(new URL('../src/world/world-map.css',import.meta.url),'utf8'),worker=await readFile(new URL('../service-worker.js',import.meta.url),'utf8');
+for(const token of ['loadLiveEarthquakes','liveEventsInWindow','USGS速報','保存済みUSGS速報','visibilitychange','earthquakeLiveLayer','live-earthquake-halo','live-earthquake-dots','直近30日の観測地震','予測とは別表示','depthKm','これは発生済みの観測地震です'])assert.ok(ui.includes(token),token);
 assert.ok(worker.includes('./src/world/earthquake-live-data.js'),'live updater must remain available after offline installation');
-assert.ok(worker.includes('live-earthquake-v2'),'service worker cache must be invalidated when the live map layer changes');
+assert.ok(worker.includes('live-earthquake-v6'),'service worker cache must be invalidated when the live map layer changes');
 assert.ok(!ui.includes('calculateDatedPreview(activeCatalogWithLive'),'unverified live events must not silently enter the research calculation');
+for(const token of ["4.5,7,5,10,6,14,7,19,8,25",'#ffe600','#ff8a00','#ff2d20','#ff2db2'])assert.ok(ui.includes(token),token);
+assert.ok(!ui.includes("'live-earthquakes',{type:'geojson',data,cluster:true"),'globe markers must use the verified direct-render path');
+assert.ok(css.includes('world-live-earthquake-legend'));assert.ok(css.includes('outline:1px solid #fff'));
 
 console.log('earthquake live data tests passed');
