@@ -18,6 +18,7 @@ assert.equal(unavailable.source,'unavailable');assert.deepEqual(unavailable.even
 const ui=await readFile(new URL('../src/world/world-map-ui.js',import.meta.url),'utf8'),worker=await readFile(new URL('../service-worker.js',import.meta.url),'utf8');
 for(const token of ['loadLiveEarthquakes','liveEventsInWindow','USGS速報','保存済みUSGS速報','visibilitychange','earthquakeLiveLayer','live-earthquake-dots','直近30日の観測地震','予測とは別表示','これは発生済みの観測地震です'])assert.ok(ui.includes(token),token);
 assert.ok(worker.includes('./src/world/earthquake-live-data.js'),'live updater must remain available after offline installation');
+assert.ok(worker.includes('live-earthquake-v2'),'service worker cache must be invalidated when the live map layer changes');
 assert.ok(!ui.includes('calculateDatedPreview(activeCatalogWithLive'),'unverified live events must not silently enter the research calculation');
 
 console.log('earthquake live data tests passed');
