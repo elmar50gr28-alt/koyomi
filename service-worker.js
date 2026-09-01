@@ -46,6 +46,7 @@ const APP_SHELL = [
   './src/world/blind-mundane/adaptive-viewport-cache.js',
   './src/world/multi-mundane/world-divination-adapters.js',
   './src/world/world-map-ui.js',
+  './src/world/earthquake-live-data.js',
   './src/world/natural-environment/natural-environment-core.js',
   './src/world/natural-environment/natural-environment-scanner.js',
   './src/world/world-map.css',
