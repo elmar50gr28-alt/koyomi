@@ -18,13 +18,13 @@ assert.equal(unavailable.source,'unavailable');assert.deepEqual(unavailable.even
 const ui=await readFile(new URL('../src/world/world-map-ui.js',import.meta.url),'utf8'),css=await readFile(new URL('../src/world/world-map.css',import.meta.url),'utf8'),worker=await readFile(new URL('../service-worker.js',import.meta.url),'utf8');
 for(const token of ['loadLiveEarthquakes','liveEventsInWindow','USGS速報','保存済みUSGS速報','visibilitychange','earthquakeLiveLayer','live-earthquake-halo','live-earthquake-dots','直近30日の観測地震','予測とは別表示','depthKm','これは発生済みの観測地震です'])assert.ok(ui.includes(token),token);
 assert.ok(worker.includes('./src/world/earthquake-live-data.js'),'live updater must remain available after offline installation');
-assert.ok(worker.includes('live-earthquake-v10-overlay-renderer'),'service worker cache must be invalidated when the overlay renderer changes');
+assert.ok(worker.includes('live-earthquake-v11-overlay-init-guard'),'service worker cache must be invalidated when the overlay initialization changes');
 assert.ok(!ui.includes('calculateDatedPreview(activeCatalogWithLive'),'unverified live events must not silently enter the research calculation');
 for(const token of ["4.5,7,5,10,6,14,7,19,8,25",'#ffe600','#ff8a00','#ff2d20','#ff2db2'])assert.ok(ui.includes(token),token);
 assert.ok(!ui.includes("'live-earthquakes',{type:'geojson',data,cluster:true"),'globe markers must use the verified direct-render path');
-for(const token of ['world-live-earthquake-marker','world-live-earthquake-overlay','syncLiveEarthquakeDomMarkers','positionLiveEarthquakeMarkers','map.project','dataset.renderedMarkers','地球儀に${liveEarthquakeMarkers.length}件表示'])assert.ok(ui.includes(token),token);
+for(const token of ['world-live-earthquake-marker','world-live-earthquake-overlay','syncLiveEarthquakeDomMarkers','positionLiveEarthquakeMarkers','map.project','dataset.renderedMarkers','liveEarthquakeOverlay?.isConnected','地震の丸を描画できません','地球儀に${liveEarthquakeMarkers.length}件表示'])assert.ok(ui.includes(token),token);
 for(const token of ['--earthquake-marker-size','.world-live-earthquake-marker[data-magnitude="7"]','.world-live-earthquake-overlay'])assert.ok(css.includes(token),token);
-const app=await readFile(new URL('../app.html',import.meta.url),'utf8');assert.ok(app.includes("world-map-ui.js?v=earthquake-overlay-v10"),'app must bypass stale cached map modules');assert.ok(app.includes('world-map.css?v=earthquake-overlay-v10'),'app must bypass stale cached map styles');
+const app=await readFile(new URL('../app.html',import.meta.url),'utf8');assert.ok(app.includes("world-map-ui.js?v=earthquake-overlay-v11"),'app must bypass stale cached map modules');assert.ok(app.includes('world-map.css?v=earthquake-overlay-v11'),'app must bypass stale cached map styles');
 assert.ok(css.includes('world-live-earthquake-legend'));assert.ok(css.includes('outline:1px solid #fff'));
 
 console.log('earthquake live data tests passed');
