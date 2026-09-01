@@ -18,7 +18,7 @@ assert.equal(unavailable.source,'unavailable');assert.deepEqual(unavailable.even
 const ui=await readFile(new URL('../src/world/world-map-ui.js',import.meta.url),'utf8'),css=await readFile(new URL('../src/world/world-map.css',import.meta.url),'utf8'),worker=await readFile(new URL('../service-worker.js',import.meta.url),'utf8');
 for(const token of ['loadLiveEarthquakes','liveEventsInWindow','USGS速報','保存済みUSGS速報','visibilitychange','earthquakeLiveLayer','live-earthquake-halo','live-earthquake-dots','直近30日の観測地震','予測とは別表示','depthKm','これは発生済みの観測地震です'])assert.ok(ui.includes(token),token);
 assert.ok(worker.includes('./src/world/earthquake-live-data.js'),'live updater must remain available after offline installation');
-assert.ok(worker.includes('live-earthquake-v6'),'service worker cache must be invalidated when the live map layer changes');
+assert.ok(worker.includes('live-earthquake-v7-direct-update'),'service worker cache must be invalidated when the direct-update release changes');
 assert.ok(!ui.includes('calculateDatedPreview(activeCatalogWithLive'),'unverified live events must not silently enter the research calculation');
 for(const token of ["4.5,7,5,10,6,14,7,19,8,25",'#ffe600','#ff8a00','#ff2d20','#ff2db2'])assert.ok(ui.includes(token),token);
 assert.ok(!ui.includes("'live-earthquakes',{type:'geojson',data,cluster:true"),'globe markers must use the verified direct-render path');
