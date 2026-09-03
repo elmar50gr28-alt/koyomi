@@ -34,17 +34,19 @@ const ui=await readFile(new URL('../src/world/world-map-ui.js',import.meta.url),
 for(const token of ['loadLiveEarthquakes','liveEventsInWindow','USGS速報','保存済みUSGS速報','visibilitychange','earthquakeLiveLayer','直近30日の観測地震','予測とは別表示','depthKm','これは発生済みの観測地震です'])assert.ok(ui.includes(token),token);
 assert.ok(worker.includes('./src/world/earthquake-live-data.js'),'live updater must remain available after offline installation');
 assert.ok(worker.includes('./src/world/live-marker-render-gate.js'),'ready-state gate must remain available after offline installation');
-assert.ok(worker.includes('live-earthquake-v17-ready-gate'),'service worker cache must be invalidated for the ready-state renderer');
+assert.ok(worker.includes('live-earthquake-v18-occlusion-toggle'),'service worker cache must be invalidated for the covered-marker toggle');
 assert.ok(!ui.includes('calculateDatedPreview(activeCatalogWithLive'),'unverified live events must not silently enter the research calculation');
 for(const token of ['#ffe600','#ff8a00','#ff2d20','#ff2db2'])assert.ok(css.includes(token),token);
 for(const token of ['world-live-earthquake-marker','createLiveEarthquakeNativeMarkers','syncLiveEarthquakeDomMarkers','createLiveMarkerRenderGate','dataset.renderState','ready-native-markers','new maplibreApi.Marker','地震の丸を描画できません','表示 ${liveEarthquakeMarkers.length}/${events.length}件',"theme==='earthquake'&&liveLayerOn"])assert.ok(ui.includes(token),token);
+for(const token of ['earthquakeBacksideToggle','裏側を透かす：OFF','showCoveredEarthquakeMarkers','coveredEarthquakeOpacity','marker.setOpacity(1,coveredEarthquakeOpacity())'])assert.ok(ui.includes(token),token);
 for(const removed of ['live-earthquake-halo','live-earthquake-dots','liveRenderTimer',"map.once('idle',restoreLiveMarkers)",'setTimeout(restoreLiveMarkers,500)','setTimeout(()=>{liveMarkerSignature='])assert.ok(!ui.includes(removed),`ready-state renderer must not retain the race-prone path: ${removed}`);
 assert.ok(ui.includes('const syncLiveEarthquakeDomMarkers=()=>liveMarkerGate.request()'),'every trigger must enter the ready-state gate');
 assert.ok(ui.includes("liveEarthquakes.source!=='loading'"),'markers must wait for both map and feed readiness');
 for(const removed of ['queryRenderedFeatures({layers:[\'live-earthquake-dots\']','marker-fallback','slice(0,360)'])assert.ok(!ui.includes(removed),`markers must not disappear through path switching or selection: ${removed}`);
 for(const removed of ['positionLiveEarthquakeMarkers','map.project','world-live-earthquake-overlay'])assert.ok(!ui.includes(removed),`manual positioning must be removed: ${removed}`);
 for(const token of ['--earthquake-marker-size','.world-live-earthquake-marker[data-magnitude="7"]'])assert.ok(css.includes(token),token);assert.ok(!css.includes('.world-live-earthquake-overlay'),'manual overlay CSS must be removed');
-const app=await readFile(new URL('../app.html',import.meta.url),'utf8');assert.ok(app.includes("world-map-ui.js?v=earthquake-native-v17"),'app must bypass stale cached map modules');assert.ok(app.includes('world-map.css?v=earthquake-native-v17'),'app must bypass stale cached map styles');
+assert.ok(css.includes('#worldMapShell:not([data-earthquake-backside="visible"]) .world-live-earthquake-marker.maplibregl-marker-covered{opacity:0!important;pointer-events:none}'),'covered markers must be non-interactive while hidden');
+const app=await readFile(new URL('../app.html',import.meta.url),'utf8');assert.ok(app.includes("world-map-ui.js?v=earthquake-native-v18-occlusion-toggle"),'app must bypass stale cached map modules');assert.ok(app.includes('world-map.css?v=earthquake-native-v18-occlusion-toggle'),'app must bypass stale cached map styles');
 assert.ok(css.includes('world-live-earthquake-legend'));assert.ok(css.includes('outline:1px solid #fff'));
 
 console.log('earthquake live data tests passed');
