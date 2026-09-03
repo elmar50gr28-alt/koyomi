@@ -30,7 +30,7 @@ assert.ok(ui.includes('相対指標'));assert.ok(ui.includes('この値は地震
 // UT15: color, hatch, dots, outcomes, and trend are explicit and independently rendered.
 for(const token of ['previewColor','quiescencePattern','geomagneticPattern','research-quiescence-hatch','research-geomagnetic-dots','斜線 急静穏化','点 地磁気研究','● 期間内地震','↑ 上昇傾向'])assert.ok(ui.includes(token),token);
 // UT17: viewport movement only schedules cached rendering.
-assert.ok(ui.includes("map.on('moveend',scheduleUpdate)"));assert.ok(!/moveend[^;]+calculate(?:Change|Quiescence|Geomagnetic)/.test(ui));
+assert.ok(ui.includes("map.on('moveend',()=>{syncEarthquakeDepthPresentation();scheduleUpdate()})"));assert.ok(!/moveend[^;]+calculate(?:Change|Quiescence|Geomagnetic)/.test(ui));
 // UT18 / UT19: mobile cards and details are responsive without fixed overflowing widths.
 for(const token of ['パラメータ詳細を見る','マンデン詳細を見る','@media(max-width:430px)','overflow-wrap:anywhere','min-width:0'])assert.ok((ui+css).includes(token),token);
 // UT20 is completed by browser console inspection; keep syntax-visible error handling intact.
