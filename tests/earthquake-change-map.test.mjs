@@ -37,7 +37,7 @@ assert.ok(mapUi.includes('地震の発生確率ではありません'));assert.o
 // CT11: all three 44px-class mobile controls, sheet, ranking and globe remain present.
 for(const token of ['data-preview-mode="change"','data-preview-mode="current"','data-preview-mode="outcomes"','world-change-ranking','world-sheet','type:\'globe\''])assert.ok(mapUi.includes(token),token);assert.ok(css.includes('.world-preview-mode button{min-height:42px'));assert.ok(css.includes('@media(max-width:430px)'));
 // CT12: changing viewport only schedules map rendering; baseline calculation is keyed elsewhere.
-assert.ok(mapUi.includes("map.on('moveend',scheduleUpdate)"));assert.ok(mapUi.includes('const datedCache=new Map(),changeCache=new Map()'));assert.ok(!/moveend[^;]+calculateChangePreview/.test(mapUi));
+assert.ok(mapUi.includes("map.on('moveend',()=>{syncEarthquakeDepthPresentation();scheduleUpdate()})"));assert.ok(mapUi.includes('const datedCache=new Map(),changeCache=new Map()'));assert.ok(!/moveend[^;]+calculateChangePreview/.test(mapUi));
 
 assert.equal(CHANGE_BASELINE.anchorIntervalMonths,1);assert.equal(CHANGE_BASELINE.minimumHistoricalAnchors,24);assert.equal(CHANGE_BASELINE.minimumHistoryYears,2);
 console.log('Earthquake change map acceptance passed: CT01-CT12');
