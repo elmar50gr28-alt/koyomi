@@ -23,7 +23,7 @@
     "test:blind-mundane": "node tests/blind-mundane-scanner.test.mjs && node tests/blind-mundane-adaptive.test.mjs && node tests/world-divination-adapters.test.mjs && node tests/blind-mundane-ui.test.mjs",
     "test:natural-environment": "node tests/natural-environment-mundane.test.mjs",
     "test:geomagnetic": "node tests/geomagnetic-research-data.test.mjs",
-    "test:prediction-engine": "node tests/world-prediction-engine-v1.test.mjs",
+    "test:prediction-engine": "node tests/world-prediction-engine-v1.test.mjs && node tests/earthquake-thermal-anomaly-v1.test.mjs",
     "evaluate:earthquake-shortterm": "node scripts/evaluate-earthquake-shortterm-v1.mjs",
     "snapshot:world-prediction": "node scripts/generate-world-prediction-snapshot.mjs",
     "test:world-map-detail": "node tests/world-default-preview-prefectures.test.mjs && node tests/world-forecast-resolution.test.mjs && node tests/earthquake-live-data.test.mjs && node tests/service-worker-direct-update.test.mjs",

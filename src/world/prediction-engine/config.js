@@ -16,5 +16,6 @@ export const FEATURE_REGISTRY=Object.freeze([
   Object.freeze({id:'seismic-rate-change',name:'地震活動率変化',category:'seismic',enabled:true,experimental:false,version:'1'}),
   Object.freeze({id:'volcano-observation',name:'火山観測変化',category:'volcano',enabled:false,experimental:true,version:'1'}),
   Object.freeze({id:'geomagnetic-lag',name:'地磁気遅延',category:'electromagnetic',enabled:false,experimental:true,version:'1'}),
+  Object.freeze({id:'earthquake-thermal-anomaly',name:'地表熱異常候補',category:'thermal',enabled:false,experimental:true,version:'1',reviewStatus:'research-only'}),
   Object.freeze({id:'mundane-astrology',name:'マンデン占術',category:'mundane',enabled:true,experimental:true,version:'3'})
 ]);
