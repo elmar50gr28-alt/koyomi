@@ -74,6 +74,7 @@ const APP_SHELL = [
   './src/world/prediction-engine/factors.js',
   './src/world/prediction-engine/snapshot.js',
   './src/world/prediction-engine/backtest.js',
+  './src/world/prediction-engine/prospective.js',
   './src/world/volcano/index.js',
   './src/world/volcano/config.js',
   './src/world/volcano/heat-transfer.js',
