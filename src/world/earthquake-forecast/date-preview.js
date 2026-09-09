@@ -23,9 +23,9 @@ export function calculateDatedPreview(catalog,{forecastTime,targetMagnitude=6.5,
     const targetCount=events.filter(event=>event.magnitude>=target).length;
     const background=target===4.5?ordinaryBackground:(targetCount||.25)/(historyDays+2500);
     const nearbyEvents=events.filter(event=>event.time>=calculationTime-60*DAY).map(event=>({ageDays:(calculationTime-event.time)/DAY,ring:0,magnitude:event.magnitude}));
-    const approved=target===6.5&&horizon===30;
-    const probability=target===4.5?1-Math.exp(-background*ordinaryActivity*horizon):approved?runDecayNeighborModel({targetBackgroundDailyRate:background,nearbyEvents},horizon,M65_PARAMETERS).modelProbability:1-Math.exp(-background*horizon);
-    rows.push({cell_id:cell,target_magnitude:target,horizon_days:horizon,preview_value:Number(probability.toPrecision(8)),data_quality:Math.min(1,events.length/50),model_tier:approved?'development-approved':target===4.5?'research-activity':'comparison-baseline'});
+    const approved=target===6.5&&horizon===30,baselineProbability=1-Math.exp(-background*horizon);
+    const probability=target<6.5?1-Math.exp(-background*ordinaryActivity*horizon):approved?runDecayNeighborModel({targetBackgroundDailyRate:background,nearbyEvents},horizon,M65_PARAMETERS).modelProbability:baselineProbability;
+    rows.push({cell_id:cell,target_magnitude:target,horizon_days:horizon,preview_value:Number(probability.toPrecision(8)),baseline_probability:Number(baselineProbability.toPrecision(8)),model_probability:Number(probability.toPrecision(8)),lift:Number((baselineProbability?probability/baselineProbability:1).toPrecision(8)),calibration_status:'uncalibrated',data_quality:Math.min(1,events.length/50),model_tier:approved?'development-approved':target<6.5?'research-activity':'comparison-baseline'});
   }
   const sorted=rows.map(row=>row.preview_value).sort((a,b)=>a-b);
   const at=q=>sorted[Math.min(sorted.length-1,Math.floor((sorted.length-1)*q))]??0;

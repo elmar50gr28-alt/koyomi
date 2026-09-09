@@ -4,3 +4,4 @@ export * from './mundane-earthquake-adapter.js';
 export * from './world-evaluation-cache.js';
 export * from './validation-core.js';
 export * from './earthquake-forecast/index.js';
+export * from './prediction-engine/index.js';
