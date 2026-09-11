@@ -39,3 +39,19 @@
 - Blackett et al. (2011): https://doi.org/10.1029/2011GL048282
 
 既往研究には肯定・否定の両方があり、後ろ向き一致だけでは予測能力を示せません。このため、KOYOMIでは熱異常を単独の危険度、地震確率、避難判断として表示しません。
+
+## NASAデータ取得経路
+
+取得経路はNASA AppEEARS APIに固定し、次のCollection 6.1製品を使用します。
+
+- Terra/Aqua夜間LST: `MOD11A1.061`, `MYD11A1.061`
+- 積雪除外: `MOD10A1.061`
+- Terra/Aqua火災除外: `MOD14A2.061`, `MYD14A2.061`
+
+日本周辺（北緯20〜48度、東経122〜154度）の全H3 resolution 2セルを母集団とし、地震発生セルだけを選びません。取得点はresolution 3の中心点、評価単位はresolution 2です。これにより地震発生の有無を使った観測地点選択を避けます。World表示がresolution 3以上の場合も、対応するresolution 2親セルの熱観測を表示します。
+
+`npm run update:earthquake-thermal -- --preflight` は製品・レイヤーの存在、対象座標数、タスク数だけを検証します。取得タスクの送信は `APPEEARS_TOKEN`、またはローカル環境に設定した `EARTHDATA_USERNAME` と `EARTHDATA_PASSWORD` がある場合に限り `--submit` で行います。送信後は `--status` で各タスクを一度だけ確認し、完了後に `--download` で成果物を取得します。各ファイルはAppEEARS bundle記載のSHA-256と一致した場合だけ保存します。認証情報はリポジトリへ保存しません。タスクIDのローカル状態ファイルとダウンロード物もGit対象外です。
+
+認証・取得・変換・整合性検証が完了するまでは、`earthquake-thermal-research-v1.json` を `awaiting-authentication` とし、観測値を空に保ちます。この状態を「取得済み」や「精度向上」とは扱いません。
+
+AppEEARSの生CSVを公開用JSONへ変換する工程は、全球で一貫した気象補正値と、火山・工業熱源の固定マスクを用意してから実装します。欠けた補正値を0、未確認の交絡要因をfalseとして埋めることは禁止します。そのため、現バージョンは認証済みでも `--download` の後に自動で予測表示を有効化しません。
