@@ -1,0 +1,32 @@
+{
+  "schemaId": "koyomi-earthquake-thermal-research-v1",
+  "status": "awaiting-authentication",
+  "generatedAt": "2026-09-10T00:00:00.000Z",
+  "retrievedAt": null,
+  "coverageStartUtc": null,
+  "coverageEndUtc": null,
+  "spatialResolution": 2,
+  "observationCount": 0,
+  "sha256": null,
+  "dataQuality": "not-acquired-earthdata-auth-required",
+  "provider": {
+    "name": "NASA AppEEARS",
+    "sourceUrl": "https://appeears.earthdatacloud.nasa.gov/api/",
+    "products": {
+      "MODIS_LST": "MOD11A1.061",
+      "MODIS_AQUA_LST": "MYD11A1.061",
+      "MODIS_SNOW": "MOD10A1.061",
+      "MODIS_FIRE": "MOD14A2.061",
+      "MODIS_AQUA_FIRE": "MYD14A2.061"
+    }
+  },
+  "preflight": {
+    "checkedAt": "2026-09-10T00:00:00.000Z",
+    "productsAvailable": true,
+    "authenticationConfigured": false,
+    "plannedRegion": "Japan 20N-48N, 122E-154E",
+    "sampleResolution": 3,
+    "aggregateResolution": 2
+  },
+  "observationsByCell": {}
+}

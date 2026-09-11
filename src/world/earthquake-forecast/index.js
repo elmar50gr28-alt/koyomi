@@ -11,3 +11,4 @@ export * from './date-preview.js';
 export * from './change-preview.js';
 export * from './research-signals.js';
 export * from './geomagnetic-data.js';
+export * from './thermal-data.js';
