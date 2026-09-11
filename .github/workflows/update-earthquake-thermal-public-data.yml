@@ -1,0 +1,45 @@
+name: Update Authentication-Free Earthquake Thermal Research Data
+
+on:
+  schedule:
+    - cron: '20 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: earthquake-thermal-public-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Fetch authentication-free NASA POWER data and check Himawari availability
+        run: npm run update:earthquake-thermal-public
+      - name: Validate thermal model, dataset, UI, and offline cache
+        run: npm run test:prediction-engine
+      - name: Open verified update pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- data/world/earthquake-thermal-public-v1.json; then
+            echo "No thermal data changes"
+            exit 0
+          fi
+          branch="automation/earthquake-thermal-public-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add data/world/earthquake-thermal-public-v1.json
+          git commit -m "Update authentication-free thermal research data"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title "Update authentication-free thermal research data" --body "Automated NASA POWER refresh and Himawari-9 public-object availability check passed provenance, schema, coverage, hash, future-leakage, UI, and offline-cache tests. Himawari binary values are not used in the numerical signal."
