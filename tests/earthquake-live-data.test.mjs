@@ -54,7 +54,7 @@ for(const token of ['--earthquake-marker-size','.world-live-earthquake-marker[da
 assert.ok(css.includes('#worldMapShell:not([data-earthquake-backside="visible"]) .world-live-earthquake-marker.maplibregl-marker-covered{opacity:0!important;pointer-events:none}'),'covered markers must be non-interactive while hidden');
 for(const token of ['[data-earthquake-depth="visible"]','world-live-earthquake-depth-value','world-earthquake-depth-cross-section','--earthquake-depth-position','[data-earthquake-deep-focus="visible"]','data-depth-band="very-deep"','world-earthquake-depth-legend'])assert.ok(css.includes(token),token);
 for(const removed of ['--earthquake-depth-length','data-earthquake-depth3d'])assert.ok(!css.includes(removed),`old line-based depth presentation must be removed: ${removed}`);
-const app=await readFile(new URL('../app.html',import.meta.url),'utf8');assert.ok(app.includes("world-map-ui.js?v=earthquake-native-v20-readable-depth"),'app must bypass stale cached map modules');assert.ok(app.includes('world-map.css?v=earthquake-native-v20-readable-depth'),'app must bypass stale cached map styles');
+const app=await readFile(new URL('../app.html',import.meta.url),'utf8');assert.ok(app.includes("world-map-ui.js?v=earthquake-native-v21-module-cache"),'app must bypass stale cached map modules');assert.ok(app.includes('world-map.css?v=earthquake-native-v20-readable-depth'),'app must bypass stale cached map styles');
 assert.ok(css.includes('world-live-earthquake-legend'));assert.ok(css.includes('outline:1px solid #fff'));
 
 console.log('earthquake live data tests passed');

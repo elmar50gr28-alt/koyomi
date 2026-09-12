@@ -14,6 +14,7 @@ for(const cellId of [target,...neighbors]){
 }
 const active=buildPowerThermalFeatures(observations,{cellId:target,neighborCellIds:neighbors,asOf});
 assert.equal(active.status,'candidate-active');assert.ok(active.positiveEvidence>0);assert.equal(active.scientificProbabilityContribution,0);assert.ok(active.limitations.includes('not-direct-satellite-lst'));assert.ok(!EARTHQUAKE_POWER_THERMAL_SOURCE_IDS.includes('NOAA-NODD-JMA-HIMAWARI9'));
+assert.deepEqual(buildPowerThermalFeatures(observations,{cellId:target,neighborCellIds:neighbors,asOf:Date.parse(asOf)}),active,'World millisecond timestamps must match ISO evaluation');assert.deepEqual(buildPowerThermalFeatures(observations,{cellId:target,neighborCellIds:neighbors,asOf:new Date(asOf)}),active,'Date timestamps must match ISO evaluation');
 assert.deepEqual(buildPowerThermalFeatures([...observations,{cellId:target,timeUtc:'2026-06-09T00:00:00Z',skinTemperatureC:99,airTemperatureC:1,relativeHumidityPercent:60,precipitationMm:0}],{cellId:target,neighborCellIds:neighbors,asOf}),active,'future data must not enter the signal');
 assert.equal(buildPowerThermalFeatures(observations.filter(item=>item.cellId===target),{cellId:target,neighborCellIds:neighbors,asOf}).status,'insufficient-spatial-coverage');
 assert.equal(buildPowerThermalFeatures(observations,{cellId:target,neighborCellIds:neighbors,asOf:'2026-07-01T00:00:00Z'}).status,'stale-data');
