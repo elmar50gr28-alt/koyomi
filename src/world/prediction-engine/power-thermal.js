@@ -7,6 +7,7 @@ const median=values=>{if(!values.length)return null;const sorted=[...values].sor
 const dayOfYear=time=>{const date=new Date(time);return Math.floor((Date.UTC(date.getUTCFullYear(),date.getUTCMonth(),date.getUTCDate())-Date.UTC(date.getUTCFullYear(),0,0))/DAY)};
 const seasonalDistance=(left,right)=>Math.min(Math.abs(left-right),366-Math.abs(left-right));
 const finite=value=>value!==null&&value!==''&&Number.isFinite(Number(value))&&Number(value)!==-999;
+const timestamp=value=>value instanceof Date?value.getTime():typeof value==='number'?value:Date.parse(value);
 
 function normalize(item,cutoff){
   const time=Date.parse(item?.timeUtc),values=[item?.skinTemperatureC,item?.airTemperatureC,item?.relativeHumidityPercent,item?.precipitationMm];
@@ -28,7 +29,7 @@ function scoreCell(cellId,observations,{cutoff,recentWindowDays,seasonalWindowDa
 }
 
 export function buildPowerThermalFeatures(observations,{cellId,neighborCellIds=[],asOf,recentWindowDays=7,seasonalWindowDays=45,humidityTolerance=20,minimumBaselineSamples=30,minimumPersistentObservations=2,minimumNeighborCells=2,spatialTimeToleranceDays=2,anomalyZThreshold=2.5,minimumScaleK=.5}={}){
-  const cutoff=Date.parse(asOf);if(!cellId||!Number.isFinite(cutoff))throw new TypeError('cellId and valid asOf are required');
+  const cutoff=timestamp(asOf);if(!cellId||!Number.isFinite(cutoff))throw new TypeError('cellId and valid asOf are required');
   if(recentWindowDays<1||seasonalWindowDays<1||humidityTolerance<0||minimumBaselineSamples<3||minimumPersistentObservations<1||minimumNeighborCells<1||spatialTimeToleranceDays<0||anomalyZThreshold<=0||minimumScaleK<=0)throw new RangeError('invalid POWER thermal configuration');
   const normalized=(Array.isArray(observations)?observations:[]).map(item=>normalize(item,cutoff)).filter(Boolean),options={cutoff,recentWindowDays,seasonalWindowDays,humidityTolerance,minimumBaselineSamples,anomalyZThreshold,minimumScaleK},target=scoreCell(cellId,normalized,options);
   const base={modelVersion:EARTHQUAKE_POWER_THERMAL_MODEL_VERSION,sourceIds:EARTHQUAKE_POWER_THERMAL_SOURCE_IDS,reviewStatus:'research-only',cellId:String(cellId),scientificProbabilityContribution:0,signalKind:'daily-surface-air-temperature-residual',limitations:Object.freeze(['daily-analysis-data','not-direct-satellite-lst','fire-volcano-industrial-masks-not-applied'])};
