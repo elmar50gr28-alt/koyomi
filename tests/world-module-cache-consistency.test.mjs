@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const [app,ui,worker]=await Promise.all(['app.html','src/world/world-map-ui.js','service-worker.js'].map(path=>readFile(new URL(`../${path}`,import.meta.url),'utf8')));
-assert.match(app,/world-map-ui\.js\?v=earthquake-native-v21-module-cache/,'World entry module must use a new cache generation');
+assert.match(app,/world-map-ui\.js\?v=earthquake-native-v22-readable-attention-ui/,'World entry module must use a new cache generation');
 assert.match(ui,/earthquake-forecast\/index\.js\?v=thermal-public-v1/,'the barrel module must not reuse a pre-thermal cache entry');
 assert.match(worker,/function isApplicationCodeRequest/);assert.match(worker,/networkFirstApplicationCode/);assert.match(worker,/fetch\(request, \{ cache: 'no-store' \}\)/);assert.match(worker,/caches\.match\(request, \{ ignoreSearch: true \}\)/);
 assert.match(worker,/Promise\.allSettled\(APP_SHELL\.map/,'one optional asset must not prevent the new worker from activating');

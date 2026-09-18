@@ -32,6 +32,6 @@ const bindings=ui.split('\n').find(line=>line.includes("const layerToggle=page.q
 assert.ok(bindings,'World control bindings must exist');
 assert.doesNotMatch(bindings,/refreshOmens\(\)|renderOmenRanking\(\)/,'research readings must not run before the globe renderer starts');
 assert.match(ui,/const completeMapStartup=.*refreshOmens\(\)/,'readings must still run when the globe is ready');
-assert.match(app,/globe-failsafe-v2/,'iPhone clients must load the repaired module');
-assert.match(worker,/globe-failsafe-v2-shell/,'offline shell must update with the repaired module');
+assert.match(app,/earthquake-native-v22-readable-attention-ui/,'iPhone clients must load the repaired module');
+assert.match(worker,/shell-readable-attention-v1/,'offline shell must update with the repaired module');
 console.log('World globe iPhone storage fallback tests passed');
