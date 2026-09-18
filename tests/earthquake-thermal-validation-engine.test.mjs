@@ -8,6 +8,7 @@ import { evaluateThermalTransferHypothesis } from '../src/world/earthquake-forec
 import { createPredictionRecord } from '../src/world/earthquake-forecast/prediction-schema.js';
 import { appendPrediction,loadPredictionLedger } from '../src/world/earthquake-forecast/prediction-ledger.js';
 import { compareValidationModels,evaluatePrediction,groupPredictionEpisodes } from '../src/world/earthquake-forecast/prediction-evaluation.js';
+import { attentionState,attentionSummary,dataQualityText,depthMigrationText,thermalTransferText } from '../src/world/earthquake-forecast/research-validation-presenter.js';
 import { aggregateSurfaceTemperatureRows } from '../scripts/aggregate-surface-temperature-grid.mjs';
 
 const DAY=86_400_000,at=day=>Date.parse(`2026-01-${String(day).padStart(2,'0')}T00:00:00Z`),event=(day,depthKm,cellId='A',magnitude=5.5)=>({timeUtc:new Date(at(day)).toISOString(),magnitude,latitude:35+day/100,longitude:139+day/100,depthKm,cellId,id:`e${day}`});
@@ -43,6 +44,26 @@ const record2=await createPredictionRecord({...baseInput,issuedAt:'2026-01-11T00
 const score=compareValidationModels([{record,evaluation:boundary,outcome:1,backgroundProbability:.2,seismicProbability:.6,depthProbability:.7,thermalProbability:.8},{record:record2,evaluation:{...nearby,status:'false-alarm'},outcome:0,backgroundProbability:.2,seismicProbability:.1,depthProbability:.1,thermalProbability:.1}]);assert.ok(Math.abs(score.models.backgroundProbability.brierScore-.34)<1e-12);assert.ok(score.models.seismicProbability.logLoss<score.models.backgroundProbability.logLoss);assert.equal(score.models.thermalProbability.n,2);assert.equal(score.models.seismicProbability.calibration.reduce((sum,bin)=>sum+bin.count,0),2);
 const missingModelScore=compareValidationModels([{record,evaluation:boundary,outcome:1,backgroundProbability:.2,seismicProbability:.6,depthProbability:null,thermalProbability:null}]);assert.equal(missingModelScore.models.depthProbability.status,'insufficient-data');assert.equal(missingModelScore.models.depthProbability.n,0,'missing probability must not be evaluated as zero');assert.equal(missingModelScore.models.thermalProbability.n,0);
 
-const [ui,css,worker,app]=await Promise.all(['../src/world/earthquake-forecast/research-validation-ui.js','../src/world/world-map.css','../service-worker.js','../app.html'].map(path=>readFile(new URL(path,import.meta.url),'utf8')));for(const text of ['現在の見立て','予測記録','検証成績','熱移送仮説との一致','発生確率ではありません','公的な防災情報を優先'])assert.ok(ui.includes(text));for(const forbidden of ['地震が起きます','安全です','科学的に証明済み','熱移送を確認','予知成功'])assert.ok(!ui.includes(forbidden));assert.match(css,/@media\(max-width:600px\)[^{]*\{[^}]*earthquake-validation-panel/s);assert.match(css,/earthquake-validation-grid\{grid-template-columns:1fr/);for(const asset of ['depth-migration.js','thermal-source-exclusions.js','prediction-ledger.js','prediction-evaluation.js','research-validation-ui.js','surface-temperature-adapter.js'])assert.ok(worker.includes(asset),`${asset} must be cached offline`);assert.match(app,/thermal-validation-v1/,'app must request the new validation module generation');
+assert.deepEqual(attentionState({attentionBand:4}),{key:'attention',label:'研究上の注目',shortLabel:'注目',symbol:'!'});
+assert.equal(attentionState({attentionBand:3}).label,'変化を観察');
+assert.equal(attentionState({attentionBand:1}).label,'平常域');
+assert.equal(attentionState({attentionBand:null}).label,'判定不能');
+assert.match(attentionSummary({attentionBand:4,divinationStatus:'available'},{thermal:{status:'insufficient-data'}}),/地震活動とマンデン占術/);
+assert.match(attentionSummary({attentionBand:null},{thermal:{status:'insufficient-data'}}),/観測が不足/);
+assert.match(depthMigrationText(migration),/深部から浅部/);
+assert.match(thermalTransferText(blockedHypothesis),/地表温度データ未接続/);
+assert.equal(dataQualityText({migration,surface:{status:'data-unavailable'}}),'震源深度 8件・地表温度未接続');
+
+const [ui,css,worker,app]=await Promise.all(['../src/world/earthquake-forecast/research-validation-ui.js','../src/world/world-map.css','../service-worker.js','../app.html'].map(path=>readFile(new URL(path,import.meta.url),'utf8')));
+for(const text of ['現在の見立てへ戻る','予測記録を見る','過去の答え合わせ','熱移送仮説','地震が起きる確率ではありません','公的機関の情報を優先'])assert.ok(ui.includes(text),`validation UI missing: ${text}`);
+for(const forbidden of ['地震が起きます','安全です','科学的に証明済み','熱移送を確認','予知成功'])assert.ok(!ui.includes(forbidden));
+assert.match(css,/@media\(max-width:600px\)[^{]*\{[^}]*earthquake-validation-panel/s);
+assert.match(css,/earthquake-validation-grid\{grid-template-columns:1fr/);
+for(const asset of ['depth-migration.js','thermal-source-exclusions.js','prediction-ledger.js','prediction-evaluation.js','research-validation-ui.js','surface-temperature-adapter.js'])assert.ok(worker.includes(asset),`${asset} must be cached offline`);
 assert.match(ui,/value!=null&&Number\.isFinite\(Number\(value\)\)/,'missing UI values must not be formatted as zero');
+for(const text of ['いま注目する場所','なぜこの結果？','地図で場所を見る','過去の答え合わせを見る','この見立ては期間終了後に自動で答え合わせされます'])assert.ok(ui.includes(text),`readable UI missing: ${text}`);
+assert.ok(!ui.includes('role="tablist"'),'default earthquake result must not start with competing tabs');
+assert.match(ui,/regions=\[\.\.\.\(value\|\|\[\]\)\]\.slice\(0,3\)/,'attention list must be limited to three regions');
+assert.ok(worker.includes('research-validation-presenter.js'),'readable presenter must work offline');
+assert.match(app,/readable-attention-ui/,'app must request the readable attention UI generation');
 console.log('Earthquake thermal validation engine passed');
