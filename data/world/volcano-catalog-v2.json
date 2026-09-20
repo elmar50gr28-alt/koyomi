@@ -1,6 +1,6 @@
 {
   "schemaId": "koyomi-volcano-catalog-v2",
-  "generatedAt": "2026-09-20T11:33:02.689Z",
+  "generatedAt": "2026-09-20T16:13:49.025Z",
   "databaseVersion": "GVP VOTW 5.4.0",
   "purpose": "global-holocene-location-index",
   "officialStatusIncluded": false,
@@ -19435,5 +19435,5 @@
       "excludedHeatSources": []
     }
   ],
-  "sha256": "4f52075bfdab490fd2153d4c1e0b018ae9d95afa02993ba20a93372bf3e700ea"
+  "sha256": "c249d51642a84ec098e4004d39016fe7da647be56c59ac315e7a143dacce3338"
 }
