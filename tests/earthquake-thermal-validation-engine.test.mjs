@@ -9,6 +9,7 @@ import { createPredictionRecord } from '../src/world/earthquake-forecast/predict
 import { appendPrediction,loadPredictionLedger } from '../src/world/earthquake-forecast/prediction-ledger.js';
 import { compareValidationModels,evaluatePrediction,groupPredictionEpisodes } from '../src/world/earthquake-forecast/prediction-evaluation.js';
 import { attentionState,attentionSummary,dataQualityText,depthMigrationText,thermalTransferText } from '../src/world/earthquake-forecast/research-validation-presenter.js';
+import { buildEarthquakeDataQuality } from '../src/world/earthquake-forecast/data-quality-presenter.js';
 import { aggregateSurfaceTemperatureRows } from '../scripts/aggregate-surface-temperature-grid.mjs';
 
 const DAY=86_400_000,at=day=>Date.parse(`2026-01-${String(day).padStart(2,'0')}T00:00:00Z`),event=(day,depthKm,cellId='A',magnitude=5.5)=>({timeUtc:new Date(at(day)).toISOString(),magnitude,latitude:35+day/100,longitude:139+day/100,depthKm,cellId,id:`e${day}`});
@@ -53,6 +54,8 @@ assert.match(attentionSummary({attentionBand:null},{thermal:{status:'insufficien
 assert.match(depthMigrationText(migration),/深部から浅部/);
 assert.match(thermalTransferText(blockedHypothesis),/地表温度データ未接続/);
 assert.equal(dataQualityText({migration,surface:{status:'data-unavailable'}}),'震源深度 8件・地表温度未接続');
+const completeQuality=buildEarthquakeDataQuality({online:true,live:{source:'network',events:[{},{}],fetchedAt:'2026-09-25T10:00:00Z'},catalog:{freshness:{storedRecords:160507,catalogThroughUtc:'2026-08-24T13:00:00Z'}},thermal:{observationCount:113045,coverageEndUtc:'2026-09-09T00:00:00Z'}});assert.equal(completeQuality.state,'current');assert.equal(completeQuality.items[1].value,'2件');assert.equal(completeQuality.items[2].value,'160,507件');assert.equal(completeQuality.items[3].value,'113,045件');
+const offlineQuality=buildEarthquakeDataQuality({online:false,live:{source:'saved',events:[{}],fetchedAt:'2026-09-24T10:00:00Z'}});assert.equal(offlineQuality.state,'offline');assert.match(offlineQuality.summary,/オフライン/);assert.equal(offlineQuality.items[2].value,'未取得','missing catalog must not look like zero or normal');assert.equal(offlineQuality.items[3].value,'未取得','missing thermal data must remain explicit');
 
 const [ui,css,worker,app]=await Promise.all(['../src/world/earthquake-forecast/research-validation-ui.js','../src/world/world-map.css','../service-worker.js','../app.html'].map(path=>readFile(new URL(path,import.meta.url),'utf8')));
 for(const text of ['現在の見立てへ戻る','予測記録を見る','過去の答え合わせ','熱移送仮説','地震が起きる確率ではありません','公的機関の情報を優先'])assert.ok(ui.includes(text),`validation UI missing: ${text}`);
@@ -65,5 +68,7 @@ for(const text of ['いま注目する場所','なぜこの結果？','地図で
 assert.ok(!ui.includes('role="tablist"'),'default earthquake result must not start with competing tabs');
 assert.match(ui,/regions=\[\.\.\.\(value\|\|\[\]\)\]\.slice\(0,3\)/,'attention list must be limited to three regions');
 assert.ok(worker.includes('research-validation-presenter.js'),'readable presenter must work offline');
-assert.match(app,/readable-attention-ui/,'app must request the readable attention UI generation');
+assert.ok(worker.includes('data-quality-presenter.js'),'data quality presenter must work offline');
+for(const text of ['使用中のデータ状態','未取得','平常域を意味しません'])assert.ok(ui.includes(text),`data quality UI missing: ${text}`);
+assert.match(app,/data-quality-ui/,'app must request the data quality UI generation');
 console.log('Earthquake thermal validation engine passed');
