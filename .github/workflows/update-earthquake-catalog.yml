@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -43,7 +44,9 @@ jobs:
           git commit -m "Update verified earthquake catalog"
           git push origin "$branch"
           if pr_url=$(gh pr create --base main --head "$branch" --title "Update verified earthquake catalog" --body "Automated USGS refresh passed completeness and earthquake safety tests."); then
-            echo "Verified update PR: $pr_url" >> "$GITHUB_STEP_SUMMARY"
+            gh pr merge "$pr_url" --squash --delete-branch
+            gh workflow run pages-production.yml --ref main
+            echo "Verified update merged and production deployment requested: $pr_url" >> "$GITHUB_STEP_SUMMARY"
           else
             compare_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/main...${branch}?expand=1"
             echo "::warning::Automatic PR creation is disabled. Verified branch is ready: $compare_url"

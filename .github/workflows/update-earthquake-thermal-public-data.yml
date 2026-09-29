@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -42,4 +43,12 @@ jobs:
           git add data/world/earthquake-thermal-public-v1.json
           git commit -m "Update authentication-free thermal research data"
           git push origin "$branch"
-          gh pr create --base main --head "$branch" --title "Update authentication-free thermal research data" --body "Automated NASA POWER refresh and Himawari-9 public-object availability check passed provenance, schema, coverage, hash, future-leakage, UI, and offline-cache tests. Himawari binary values are not used in the numerical signal."
+          if pr_url=$(gh pr create --base main --head "$branch" --title "Update authentication-free thermal research data" --body "Automated NASA POWER refresh and Himawari-9 public-object availability check passed provenance, schema, coverage, hash, future-leakage, UI, and offline-cache tests. Himawari binary values are not used in the numerical signal."); then
+            gh pr merge "$pr_url" --squash --delete-branch
+            gh workflow run pages-production.yml --ref main
+            echo "Verified update merged and production deployment requested: $pr_url" >> "$GITHUB_STEP_SUMMARY"
+          else
+            compare_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/main...${branch}?expand=1"
+            echo "::warning::Automatic PR creation is disabled. Verified branch is ready: $compare_url"
+            echo "Verified update branch: [$branch]($compare_url)" >> "$GITHUB_STEP_SUMMARY"
+          fi
