@@ -28,6 +28,8 @@ jobs:
         run: npm run update:earthquake-thermal-public
       - name: Validate thermal model, dataset, UI, and offline cache
         run: npm run test:prediction-engine
+      - name: Enforce thermal freshness before publication
+        run: npm run check:earthquake-data-freshness -- --only thermal
       - name: Open verified update pull request
         env:
           GH_TOKEN: ${{ github.token }}
