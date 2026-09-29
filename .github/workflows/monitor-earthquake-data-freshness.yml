@@ -1,0 +1,66 @@
+name: Monitor Earthquake Data Freshness
+
+on:
+  schedule:
+    - cron: '15 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+  issues: write
+
+concurrency:
+  group: earthquake-data-freshness-monitor
+  cancel-in-progress: true
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Compare main data with freshness limits and production
+        id: freshness
+        continue-on-error: true
+        run: npm run check:earthquake-data-freshness -- --remote-base https://elmar50gr28-alt.github.io/koyomi/
+      - name: Request bounded recovery jobs
+        if: steps.freshness.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CATALOG_NEEDS_UPDATE: ${{ steps.freshness.outputs.catalog_needs_update }}
+          THERMAL_NEEDS_UPDATE: ${{ steps.freshness.outputs.thermal_needs_update }}
+          PRODUCTION_NEEDS_DEPLOY: ${{ steps.freshness.outputs.production_needs_deploy }}
+        run: |
+          if [ "$CATALOG_NEEDS_UPDATE" = "true" ]; then gh workflow run update-earthquake-catalog.yml --ref main; fi
+          if [ "$THERMAL_NEEDS_UPDATE" = "true" ]; then gh workflow run update-earthquake-thermal-public-data.yml --ref main; fi
+          if [ "$PRODUCTION_NEEDS_DEPLOY" = "true" ]; then gh workflow run pages-production.yml --ref main; fi
+      - name: Create or update one operator alert
+        if: steps.freshness.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title='[自動監視] 地震データ更新遅延'
+          if [ ! -f earthquake-data-freshness-report.md ]; then
+            printf '# 地震データ更新監視\n\n監視処理自体が完了しませんでした。実行ログを確認してください。\n' > earthquake-data-freshness-report.md
+          fi
+          issue_number=$(gh issue list --state open --limit 100 --json number,title --jq '.[] | select(.title == "[自動監視] 地震データ更新遅延") | .number' | head -n 1)
+          if [ -n "$issue_number" ]; then
+            gh issue edit "$issue_number" --body-file earthquake-data-freshness-report.md
+          else
+            gh issue create --title "$title" --body-file earthquake-data-freshness-report.md
+          fi
+      - name: Close recovered operator alert
+        if: steps.freshness.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          issue_number=$(gh issue list --state open --limit 100 --json number,title --jq '.[] | select(.title == "[自動監視] 地震データ更新遅延") | .number' | head -n 1)
+          if [ -n "$issue_number" ]; then gh issue close "$issue_number" --comment '地震カタログ・地表熱・本番反映が正常範囲へ戻りました。'; fi
+      - name: Keep unresolved freshness incidents visible
+        if: steps.freshness.outcome == 'failure'
+        run: exit 1
