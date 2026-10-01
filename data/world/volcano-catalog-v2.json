@@ -1,6 +1,6 @@
 {
   "schemaId": "koyomi-volcano-catalog-v2",
-  "generatedAt": "2026-09-22T11:47:39.860Z",
+  "generatedAt": "2026-10-01T22:45:26.425Z",
   "databaseVersion": "GVP VOTW 5.4.0",
   "purpose": "global-holocene-location-index",
   "officialStatusIncluded": false,
@@ -3517,7 +3517,7 @@
     {
       "id": "gvp-244000",
       "gvpNumber": 244000,
-      "name": "Vailulu'u",
+      "name": "Vailuluu",
       "latitude": -14.215,
       "longitude": -169.058,
       "elevationM": -592,
@@ -3533,7 +3533,7 @@
     {
       "id": "gvp-244001",
       "gvpNumber": 244001,
-      "name": "Ta'u",
+      "name": "Tau",
       "latitude": -14.23,
       "longitude": -169.454,
       "elevationM": 931,
@@ -19435,5 +19435,5 @@
       "excludedHeatSources": []
     }
   ],
-  "sha256": "9cae7374ac6daa6db440211718a22e421b414546a042377a6d944cefb9624c39"
+  "sha256": "dffefbb906abf332c0a94d8ca55378aa71243733c3a5164184c5cb68f7d5669c"
 }
