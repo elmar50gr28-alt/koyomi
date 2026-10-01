@@ -1,6 +1,7 @@
 import { compareValidationModels } from './prediction-evaluation.js';
 
 const finite=value=>value!=null&&Number.isFinite(Number(value));
+const clamp=(value,minimum=0,maximum=100)=>Math.max(minimum,Math.min(maximum,Number(value)));
 const settledStatuses=new Set(['hit','nearby','miss','false-alarm','out-of-scope']);
 const eventStatuses=new Set(['hit','nearby','miss']);
 
@@ -117,6 +118,65 @@ export function depthMigrationText(migration={}){
 export function thermalTransferText(thermal={}){
   if(thermal.status!=='available')return thermal.reason||'必要な観測が不足しているため判定できません';
   return `研究上の一致 ${Math.round(Number(thermal.agreement))} / 100。発生確率には加算していません`;
+}
+
+const signal=({key,group='observation',label,state,stateLabel,headline,detail,meta=''})=>Object.freeze({key,group,label,state,stateLabel,headline,detail,meta});
+const signedTemperature=value=>`${Number(value)>=0?'+':''}${Number(value).toFixed(1)}℃`;
+
+export function buildPrecursorDisplay(selection={},view={}){
+  const seismicState=attentionState(selection),attentionBand=finite(selection.attentionBand)?Math.round(clamp(selection.attentionBand,0,4)):null;
+  const seismic=signal({
+    key:'seismic',label:'最近の地震活動',
+    state:seismicState.key==='attention'?'strong':seismicState.key==='watch'?'watch':seismicState.key==='baseline'?'quiet':'unavailable',
+    stateLabel:seismicState.key==='attention'?'強い変化':seismicState.key==='watch'?'変化あり':seismicState.key==='baseline'?'大きな変化なし':'データ不足',
+    headline:selection.seismicLabel||'比較できる地震活動データがありません',
+    detail:attentionBand==null?'この地域自身の過去と比較できません':`平常時との相対区分 ${attentionBand} / 4`,
+    meta:'長期履歴と直近活動を比較'
+  });
+
+  const migration=view.depthMigration||{},depthReady=migration.status==='available',depthDirection=migration.direction;
+  const depth=signal({
+    key:'depth',label:'震源の深さの移動',
+    state:!depthReady?'unavailable':depthDirection==='deep-to-shallow'?(Number(migration.strength)>=.5?'strong':'watch'):depthDirection==='stable'?'quiet':'watch',
+    stateLabel:!depthReady?'データ不足':depthDirection==='deep-to-shallow'?'浅部へ移動':depthDirection==='shallow-to-deep'?'深部へ移動':'大きな移動なし',
+    headline:depthMigrationText(migration),
+    detail:depthReady?`${migration.usedCount||0}件を期間前半・後半で比較`:(migration.dataQuality?.reason||'計算に必要な地震数が不足しています'),
+    meta:migration.lastObservationUtc?`最新 ${String(migration.lastObservationUtc).slice(0,10)}`:'最新観測なし'
+  });
+
+  const thermalResearch=selection.thermalSignal||null,thermalResearchReady=['candidate-active','inactive'].includes(thermalResearch?.status),thermalEvidence=thermalResearchReady?Math.max(Number(thermalResearch.positiveEvidence)||0,Number(thermalResearch.negativeEvidence)||0):null;
+  const surface=view.surface||{},surfaceReady=surface.status==='available',deviation=surfaceReady&&finite(surface.monthlyTimeBaselineDeviationC)?Number(surface.monthlyTimeBaselineDeviationC):null,absoluteDeviation=deviation==null?null:Math.abs(deviation);
+  const surfaceSignal=thermalResearch?signal({
+    key:'surface',label:'地表熱の変化',
+    state:!thermalResearchReady?'unavailable':thermalResearch.status==='candidate-active'?(thermalEvidence>=.65?'strong':'watch'):'quiet',
+    stateLabel:!thermalResearchReady?'データ不足':thermalResearch.status==='candidate-active'?'熱異常候補':'基準内',
+    headline:thermalResearch.reason||'地表熱を判定できません',
+    detail:thermalResearchReady?`上昇側 ${Math.round((Number(thermalResearch.positiveEvidence)||0)*100)} / 100・低下側 ${Math.round((Number(thermalResearch.negativeEvidence)||0)*100)} / 100`:'取得済みデータをこの縮尺・日時では比較できません',
+    meta:thermalResearch.latestObservationUtc?`最新 ${String(thermalResearch.latestObservationUtc).slice(0,10)}・${thermalResearch.provider?.name||'NASA熱データ'}・研究用`:'最新観測なし'
+  }):signal({
+    key:'surface',label:'地表付近の温度変化',
+    state:!surfaceReady?'unavailable':absoluteDeviation>=3?'strong':absoluteDeviation>=1.5?'watch':'quiet',
+    stateLabel:!surfaceReady?'データ不足':absoluteDeviation>=3?'大きな偏差':absoluteDeviation>=1.5?'偏差あり':'大きな偏差なし',
+    headline:deviation==null?(surface.reason||'温度偏差を判定できません'):`平年同時期比 ${signedTemperature(deviation)}`,
+    detail:surfaceReady?`周辺との差 ${signedTemperature(surface.neighborDeviationC)}・${surface.persistenceDays||0}日継続`:(surface.reason||'地表付近の温度データがありません'),
+    meta:surface.latestObservationUtc?`最新 ${String(surface.latestObservationUtc).slice(0,10)}・研究用`:'最新観測なし'
+  });
+
+  const divinationReady=selection.divinationStatus==='available'&&finite(selection.divinationScore),divinationScore=divinationReady?Math.round(clamp(selection.divinationScore)):null;
+  const divination=signal({
+    key:'mundane',group:'divination',label:'マンデン占術',
+    state:!divinationReady?'unavailable':divinationScore>=75?'strong':divinationScore>=50?'watch':'quiet',
+    stateLabel:!divinationReady?'判定不能':divinationScore>=75?'強い兆し':divinationScore>=50?'兆しあり':'穏やか',
+    headline:selection.divinationLabel||'判定不能',
+    detail:divinationScore==null?'占術計算を利用できません':`占術上の活性 ${divinationScore} / 100`,
+    meta:'占い表示・科学観測には加算しません'
+  });
+
+  const observations=[seismic,depth,surfaceSignal],available=observations.filter(item=>item.state!=='unavailable'),candidates=available.filter(item=>['strong','watch'].includes(item.state));
+  const state=!available.length?'unavailable':candidates.length>=2?'strong':candidates.length===1?'watch':'quiet';
+  const label=state==='strong'?'複数の変化候補':state==='watch'?'変化候補あり':state==='quiet'?'大きな変化候補なし':'判定不能';
+  const summary=!available.length?'科学観測のデータが不足しており、予兆候補を判定できません。':`科学観測3項目中${available.length}項目を判定し、${candidates.length}項目に変化候補があります。`;
+  return Object.freeze({state,label,summary,availableCount:available.length,candidateCount:candidates.length,signals:Object.freeze([...observations,divination])});
 }
 
 export function dataQualityText({migration={},surface={}}={}){
