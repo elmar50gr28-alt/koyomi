@@ -15,8 +15,8 @@ assert.match(ui,/update\(\);syncLiveEarthquakeDomMarkers\(\);loadWorldData\(\);r
 assert.match(ui,/研究データ取得中・地球儀は表示中/,'a missing research catalog must not be reported as zero anomalies');
 assert.match(ui,/const startupWatchdog=setTimeout/,'a renderer that never becomes ready must not leave the original loading message forever');
 assert.match(app,/const status=page\.querySelector\('#worldMapStatus'\)/,'post-shell bootstrap errors must be visible');
-assert.match(app,/earthquake-native-v24-freshness-gate/,'clients must fetch a new World module generation');
-assert.match(worker,/shell-freshness-gate-v1/,'the offline shell must receive a new cache generation');
+assert.match(app,/earthquake-native-v25-validation-dashboard/,'clients must fetch a new World module generation');
+assert.match(worker,/shell-validation-dashboard-v1/,'the offline shell must receive a new cache generation');
 
 const loaderSource=ui.slice(ui.indexOf('function loadMapLibre(){'),ui.indexOf('\nasync function loadEvents(){'));
 function loaderHarness(){

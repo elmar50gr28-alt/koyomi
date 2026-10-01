@@ -1,4 +1,86 @@
+import { compareValidationModels } from './prediction-evaluation.js';
+
 const finite=value=>value!=null&&Number.isFinite(Number(value));
+const settledStatuses=new Set(['hit','nearby','miss','false-alarm','out-of-scope']);
+const eventStatuses=new Set(['hit','nearby','miss']);
+
+const latestEvaluation=(ledger,predictionId)=>(ledger?.evaluations||[])
+  .filter(item=>item.predictionId===predictionId)
+  .sort((left,right)=>Date.parse(right.evaluatedAt)-Date.parse(left.evaluatedAt))[0]||null;
+
+const rowFor=(ledger,record)=>{
+  const evaluation=latestEvaluation(ledger,record.predictionId);
+  if(!settledStatuses.has(evaluation?.status))return null;
+  return Object.freeze({
+    record,
+    evaluation,
+    outcome:eventStatuses.has(evaluation.status)?1:0,
+    backgroundProbability:record.baselineProbability,
+    seismicProbability:record.seismicModel?.probability,
+    depthProbability:record.seismicModel?.depthProbability??null,
+    thermalProbability:record.seismicModel?.thermalProbability??null
+  });
+};
+
+const summaryFor=rows=>{
+  const statusCounts={hit:0,nearby:0,miss:0,'false-alarm':0,'out-of-scope':0};
+  for(const row of rows)if(row.evaluation?.status in statusCounts)statusCounts[row.evaluation.status]++;
+  const matched=statusCounts.hit+statusCounts.nearby,alerted=matched+statusCounts['false-alarm'],events=matched+statusCounts.miss;
+  return Object.freeze({
+    total:rows.length,
+    matched,
+    noMatch:statusCounts['false-alarm']+statusCounts['out-of-scope'],
+    missed:statusCounts.miss,
+    precision:alerted?matched/alerted:null,
+    recall:events?matched/events:null,
+    falseAlarmRate:alerted?statusCounts['false-alarm']/alerted:null,
+    statusCounts:Object.freeze(statusCounts)
+  });
+};
+
+const signalMetric=(rows,{key,label,available,positive})=>{
+  const usable=rows.filter(row=>available(row.record));
+  let truePositive=0,falsePositive=0,falseNegative=0,positiveCount=0;
+  for(const row of usable){
+    const signal=positive(row.record),outcome=Number(row.outcome)===1;
+    if(signal)positiveCount++;
+    if(signal&&outcome)truePositive++;
+    else if(signal&&!outcome)falsePositive++;
+    else if(!signal&&outcome)falseNegative++;
+  }
+  const predictedPositive=truePositive+falsePositive,actualPositive=truePositive+falseNegative;
+  return Object.freeze({
+    key,label,n:usable.length,positiveCount,truePositive,falsePositive,falseNegative,
+    precision:predictedPositive?truePositive/predictedPositive:null,
+    recall:actualPositive?truePositive/actualPositive:null,
+    falseAlarmRate:predictedPositive?falsePositive/predictedPositive:null,
+    status:usable.length?'available':'insufficient-data'
+  });
+};
+
+const signalMetrics=rows=>Object.freeze([
+  signalMetric(rows,{key:'seismic',label:'最近の地震活動',available:record=>record.seismicModel?.status==='available'||finite(record.seismicModel?.attentionValue),positive:record=>record.attention?.active===true||Number(record.seismicModel?.attentionValue)>=.6}),
+  signalMetric(rows,{key:'depth',label:'震源深度移動',available:record=>record.depthMigration?.status==='available',positive:record=>record.depthMigration?.direction==='deep-to-shallow'}),
+  signalMetric(rows,{key:'thermal',label:'熱移送仮説',available:record=>record.thermalTransferHypothesis?.status==='available'&&finite(record.thermalTransferHypothesis?.agreement),positive:record=>Number(record.thermalTransferHypothesis?.agreement)>=60}),
+  signalMetric(rows,{key:'mundane',label:'マンデン占術',available:record=>record.divinationResults?.mundane?.status==='available'&&finite(record.divinationResults?.mundane?.score),positive:record=>Number(record.divinationResults?.mundane?.score)>=60})
+]);
+
+export function buildValidationDashboard(ledger={predictions:[],evaluations:[]},{recentLimit=30}={}){
+  const predictions=[...(ledger.predictions||[])],prospective=predictions.filter(record=>(record.recordKind||'prospective')==='prospective');
+  const rows=prospective.map(record=>rowFor(ledger,record)).filter(Boolean).sort((left,right)=>Date.parse(left.evaluation.evaluatedAt)-Date.parse(right.evaluation.evaluatedAt));
+  const limit=Math.max(1,Math.floor(Number(recentLimit)||30)),recentRows=rows.slice(-limit),latestRecord=[...predictions].sort((left,right)=>Date.parse(right.issuedAt)-Date.parse(left.issuedAt))[0]||null;
+  const latest=latestRecord?Object.freeze({record:latestRecord,evaluation:latestEvaluation(ledger,latestRecord.predictionId)}):null;
+  const completedModels=compareValidationModels(rows),recentModels=compareValidationModels(recentRows);
+  return Object.freeze({
+    latest,
+    pendingCount:prospective.filter(record=>latestEvaluation(ledger,record.predictionId)?.status==='pending'||!latestEvaluation(ledger,record.predictionId)).length,
+    insufficientCount:prospective.filter(record=>latestEvaluation(ledger,record.predictionId)?.status==='insufficient-data').length,
+    replayCount:predictions.filter(record=>record.recordKind==='retrospective-replay').length,
+    recent:Object.freeze({...summaryFor(recentRows),limit,models:recentModels}),
+    lifetime:Object.freeze({...summaryFor(rows),models:completedModels,statisticallyEvaluable:completedModels.statisticallyEvaluable}),
+    signals:signalMetrics(rows)
+  });
+}
 
 export function attentionState(selection={}){
   const band=finite(selection.attentionBand)?Number(selection.attentionBand):null;
