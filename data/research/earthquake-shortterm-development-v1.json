@@ -1,12 +1,12 @@
 {
   "schemaId": "koyomi-earthquake-shortterm-development-v1",
-  "generatedAt": "2026-09-09T10:33:49.116Z",
+  "generatedAt": "2026-10-02T10:32:17.533Z",
   "modelId": "seismic-shortterm-activity-v1",
   "formulaLocked": true,
   "realHoldoutExecuted": false,
   "inputCatalog": {
     "schemaId": "koyomi-earthquake-research-catalog-v2",
-    "sha256": "b5bef75d2d83bdb6cbdff3a6d20cbcd4dc1bc8a9565965446b4d94cc86929be2"
+    "sha256": "3173269ce58330dc09cd5de1a70eb4e95ad494e6c153d779e459e8bab58d2027"
   },
   "periods": {
     "baselineTraining": [
@@ -25,7 +25,9 @@
   "sampling": {
     "stepDays": 7,
     "h3Resolution": 2,
-    "eligibleCellRule": "training-only M4.5+ count >= 3"
+    "eligibleCellRule": "training-only M4.5+ count >= 3",
+    "outcomeWindows": "half-open; fully observed; never cross evaluation or confirmation-year boundaries",
+    "dependence": "overlapping windows and neighboring cells are not independent; no significance claim"
   },
   "targets": [
     5,
@@ -50,6 +52,20 @@
       "horizonDays": 1,
       "evaluation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 690,
+          "trueNegatives": 130719,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 131409,
           "targetWindows": 690,
           "logloss": 0.031001858208293872,
@@ -62,6 +78,20 @@
           "auc": 0.7811474297505735
         },
         "shortTerm": {
+          "truePositives": 186,
+          "falsePositives": 12125,
+          "falseNegatives": 504,
+          "trueNegatives": 118594,
+          "missRate": 0.7304347826086957,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12311,
+            "expectedHits": 64.64237609296167,
+            "expectedFalsePositives": 12246.357623907039,
+            "precision": 0.005250781909914846,
+            "recall": 0.09368460303327779,
+            "falsePositiveRate": 0.09368460303327779
+          },
           "n": 131409,
           "targetWindows": 690,
           "logloss": 0.03152454642582286,
@@ -76,6 +106,20 @@
       },
       "confirmation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 377,
+          "trueNegatives": 86671,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 87048,
           "targetWindows": 377,
           "logloss": 0.02633526874078823,
@@ -88,6 +132,20 @@
           "auc": 0.7655368557832055
         },
         "shortTerm": {
+          "truePositives": 82,
+          "falsePositives": 9110,
+          "falseNegatives": 295,
+          "trueNegatives": 77561,
+          "missRate": 0.7824933687002652,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 9192,
+            "expectedHits": 39.81003584229391,
+            "expectedFalsePositives": 9152.189964157706,
+            "precision": 0.004330943847072879,
+            "recall": 0.10559691204852495,
+            "falsePositiveRate": 0.10559691204852495
+          },
           "n": 87048,
           "targetWindows": 377,
           "logloss": 0.027291268885323385,
@@ -106,6 +164,20 @@
         {
           "year": 2013,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 166,
+            "trueNegatives": 43358,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 166,
             "logloss": 0.023684336439268715,
@@ -118,6 +190,20 @@
             "auc": 0.758828570428214
           },
           "shortTerm": {
+            "truePositives": 35,
+            "falsePositives": 4313,
+            "falseNegatives": 131,
+            "trueNegatives": 39045,
+            "missRate": 0.7891566265060241,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4348,
+              "expectedHits": 16.583218454186195,
+              "expectedFalsePositives": 4331.416781545813,
+              "precision": 0.003813987684955427,
+              "recall": 0.09989890635051925,
+              "falsePositiveRate": 0.09989890635051925
+            },
             "n": 43524,
             "targetWindows": 166,
             "logloss": 0.024537951509389474,
@@ -135,6 +221,20 @@
         {
           "year": 2014,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 211,
+            "trueNegatives": 43313,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 211,
             "logloss": 0.02898620104231294,
@@ -147,6 +247,20 @@
             "auc": 0.7708493657377474
           },
           "shortTerm": {
+            "truePositives": 47,
+            "falsePositives": 4797,
+            "falseNegatives": 164,
+            "trueNegatives": 38516,
+            "missRate": 0.7772511848341233,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4844,
+              "expectedHits": 23.483227644517967,
+              "expectedFalsePositives": 4820.516772355482,
+              "precision": 0.004847900009190332,
+              "recall": 0.11129491774653065,
+              "falsePositiveRate": 0.11129491774653065
+            },
             "n": 43524,
             "targetWindows": 211,
             "logloss": 0.030044586261238106,
@@ -169,6 +283,20 @@
       "horizonDays": 3,
       "evaluation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 1887,
+          "trueNegatives": 129522,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 131409,
           "targetWindows": 1887,
           "logloss": 0.06924291612062086,
@@ -181,6 +309,20 @@
           "auc": 0.7894608644052072
         },
         "shortTerm": {
+          "truePositives": 394,
+          "falsePositives": 11838,
+          "falseNegatives": 1493,
+          "trueNegatives": 117684,
+          "missRate": 0.7912029676735559,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12232,
+            "expectedHits": 175.64842590690134,
+            "expectedFalsePositives": 12056.351574093098,
+            "precision": 0.014359747049288862,
+            "recall": 0.0930834265537368,
+            "falsePositiveRate": 0.0930834265537368
+          },
           "n": 131409,
           "targetWindows": 1887,
           "logloss": 0.07220199740729204,
@@ -195,6 +337,20 @@
       },
       "confirmation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 1030,
+          "trueNegatives": 86018,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 87048,
           "targetWindows": 1030,
           "logloss": 0.05996522441123051,
@@ -207,6 +363,20 @@
           "auc": 0.7659961213807812
         },
         "shortTerm": {
+          "truePositives": 221,
+          "falsePositives": 8917,
+          "falseNegatives": 809,
+          "trueNegatives": 77101,
+          "missRate": 0.7854368932038835,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 9138,
+            "expectedHits": 108.12586159360353,
+            "expectedFalsePositives": 9029.874138406398,
+            "precision": 0.0118325521551328,
+            "recall": 0.10497656465398401,
+            "falsePositiveRate": 0.10497656465398401
+          },
           "n": 87048,
           "targetWindows": 1030,
           "logloss": 0.06269806989495579,
@@ -225,6 +395,20 @@
         {
           "year": 2013,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 482,
+            "trueNegatives": 43042,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 482,
             "logloss": 0.05676602626369418,
@@ -237,6 +421,20 @@
             "auc": 0.7650399754288053
           },
           "shortTerm": {
+            "truePositives": 97,
+            "falsePositives": 4226,
+            "falseNegatives": 385,
+            "trueNegatives": 38816,
+            "missRate": 0.7987551867219918,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4323,
+              "expectedHits": 47.8744141163496,
+              "expectedFalsePositives": 4275.12558588365,
+              "precision": 0.011074349784027203,
+              "recall": 0.09932451061483319,
+              "falsePositiveRate": 0.09932451061483319
+            },
             "n": 43524,
             "targetWindows": 482,
             "logloss": 0.05948722332921586,
@@ -254,6 +452,20 @@
         {
           "year": 2014,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 548,
+            "trueNegatives": 42976,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 548,
             "logloss": 0.0631644225587594,
@@ -266,6 +478,20 @@
             "auc": 0.766863002130539
           },
           "shortTerm": {
+            "truePositives": 124,
+            "falsePositives": 4691,
+            "falseNegatives": 424,
+            "trueNegatives": 38285,
+            "missRate": 0.7737226277372263,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4815,
+              "expectedHits": 60.624483043837884,
+              "expectedFalsePositives": 4754.375516956162,
+              "precision": 0.012590754526238397,
+              "recall": 0.11062861869313483,
+              "falsePositiveRate": 0.11062861869313483
+            },
             "n": 43524,
             "targetWindows": 548,
             "logloss": 0.0659089164606944,
@@ -288,116 +514,228 @@
       "horizonDays": 7,
       "evaluation": {
         "baseline": {
-          "n": 131409,
-          "targetWindows": 4144,
-          "logloss": 0.12761801252272736,
-          "brier": 0.029327997078354685,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 4126,
+          "trueNegatives": 126446,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 130572,
+          "targetWindows": 4126,
+          "logloss": 0.12789532243720877,
+          "brier": 0.02938411522335212,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7855647140986787
+          "auc": 0.7850957266429198
         },
         "shortTerm": {
-          "n": 131409,
-          "targetWindows": 4144,
-          "logloss": 0.13682046792184613,
-          "brier": 0.029218337884536705,
+          "truePositives": 721,
+          "falsePositives": 11360,
+          "falseNegatives": 3405,
+          "trueNegatives": 115086,
+          "missRate": 0.8252544837615123,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12081,
+            "expectedHits": 381.75264222038413,
+            "expectedFalsePositives": 11699.247357779615,
+            "precision": 0.031599424072542355,
+            "recall": 0.09252366510431026,
+            "falsePositiveRate": 0.09252366510431026
+          },
+          "n": 130572,
+          "targetWindows": 4126,
+          "logloss": 0.13713817420805904,
+          "brier": 0.029278541343054947,
           "alertThresholdLift": 2.5,
-          "alertRows": 12152,
-          "precision": 0.0597432521395655,
-          "recall": 0.1751930501930502,
-          "falsePositiveRate": 0.08978116528503516,
-          "auc": 0.7899951109828138
+          "alertRows": 12081,
+          "precision": 0.05968049002566013,
+          "recall": 0.17474551623848764,
+          "falsePositiveRate": 0.08984072252186705,
+          "auc": 0.789688118097066
         }
       },
       "confirmation": {
         "baseline": {
-          "n": 87048,
-          "targetWindows": 2192,
-          "logloss": 0.10663353882562675,
-          "brier": 0.023681544085311746,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 2152,
+          "trueNegatives": 83222,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 85374,
+          "targetWindows": 2152,
+          "logloss": 0.10668325199140412,
+          "brier": 0.023695555018362482,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7765790125168684
+          "auc": 0.7765962444785341
         },
         "shortTerm": {
-          "n": 87048,
-          "targetWindows": 2192,
-          "logloss": 0.11356010262787683,
-          "brier": 0.023655000696773315,
+          "truePositives": 382,
+          "falsePositives": 8525,
+          "falseNegatives": 1770,
+          "trueNegatives": 74697,
+          "missRate": 0.8224907063197026,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 8907,
+            "expectedHits": 224.51641014828868,
+            "expectedFalsePositives": 8682.48358985171,
+            "precision": 0.025206737414201045,
+            "recall": 0.10432918687188136,
+            "falsePositiveRate": 0.10432918687188136
+          },
+          "n": 85374,
+          "targetWindows": 2152,
+          "logloss": 0.11376291697087997,
+          "brier": 0.02368014877691077,
           "alertThresholdLift": 2.5,
-          "alertRows": 9065,
-          "precision": 0.04335355763927193,
-          "recall": 0.1792883211678832,
-          "falsePositiveRate": 0.10219666258131423,
-          "auc": 0.775383997466898
+          "alertRows": 8907,
+          "precision": 0.04288761648141911,
+          "recall": 0.1775092936802974,
+          "falsePositiveRate": 0.10243685563913388,
+          "auc": 0.7748571580479103
         },
-        "informationGain": -0.0069265638022500825,
-        "brierImprovement": 0.000026543388538430995
+        "informationGain": -0.007079664979475847,
+        "brierImprovement": 0.00001540624145171185
       },
       "yearly": [
         {
           "year": 2013,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 1037,
-            "logloss": 0.10254624717086894,
-            "brier": 0.022542544997378025,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 1020,
+            "trueNegatives": 41667,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 42687,
+            "targetWindows": 1020,
+            "logloss": 0.1029498721871696,
+            "brier": 0.022611194182000905,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.7718405963600778
+            "auc": 0.7706350349197206
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 1037,
-            "logloss": 0.10957116594321135,
-            "brier": 0.02250817329166061,
+            "truePositives": 168,
+            "falsePositives": 4035,
+            "falseNegatives": 852,
+            "trueNegatives": 37632,
+            "missRate": 0.8352941176470589,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4203,
+              "expectedHits": 100.43010752688171,
+              "expectedFalsePositives": 4102.569892473118,
+              "precision": 0.023894862604540025,
+              "recall": 0.09846088973223698,
+              "falsePositiveRate": 0.09846088973223698
+            },
+            "n": 42687,
+            "targetWindows": 1020,
+            "logloss": 0.11018266623391647,
+            "brier": 0.02258612012673506,
             "alertThresholdLift": 2.5,
-            "alertRows": 4289,
-            "precision": 0.04033574259734204,
-            "recall": 0.16682738669238187,
-            "falsePositiveRate": 0.09687669169392991,
-            "auc": 0.7689772666068666
+            "alertRows": 4203,
+            "precision": 0.03997144896502498,
+            "recall": 0.16470588235294117,
+            "falsePositiveRate": 0.0968392252861977,
+            "auc": 0.7672376973925386
           },
-          "informationGain": -0.007024918772342417,
-          "brierImprovement": 0.00003437170571741338
+          "informationGain": -0.007232794046746871,
+          "brierImprovement": 0.000025074055265843914
         },
         {
           "year": 2014,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 1155,
-            "logloss": 0.11072083048035897,
-            "brier": 0.024820543173262613,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 1132,
+            "trueNegatives": 41555,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 42687,
+            "targetWindows": 1132,
+            "logloss": 0.11041663179561323,
+            "brier": 0.024779915854742172,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.7808845272910981
+            "auc": 0.7820190088235056
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 1155,
-            "logloss": 0.11754903931254142,
-            "brier": 0.024801828101897,
+            "truePositives": 214,
+            "falsePositives": 4490,
+            "falseNegatives": 918,
+            "trueNegatives": 37065,
+            "missRate": 0.8109540636042403,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4704,
+              "expectedHits": 124.74355190104716,
+              "expectedFalsePositives": 4579.256448098952,
+              "precision": 0.026518612223862065,
+              "recall": 0.11019748401152575,
+              "falsePositiveRate": 0.11019748401152575
+            },
+            "n": 42687,
+            "targetWindows": 1132,
+            "logloss": 0.11734316770784631,
+            "brier": 0.024774177427097737,
             "alertThresholdLift": 2.5,
-            "alertRows": 4776,
-            "precision": 0.046063651591289785,
-            "recall": 0.19047619047619047,
-            "falsePositiveRate": 0.10753144988080908,
-            "auc": 0.7808339410123734
+            "alertRows": 4704,
+            "precision": 0.04549319727891157,
+            "recall": 0.18904593639575973,
+            "falsePositiveRate": 0.10804957285525207,
+            "auc": 0.7814217651007881
           },
-          "informationGain": -0.00682820883218245,
-          "brierImprovement": 0.000018715071365613817
+          "informationGain": -0.006926535912233078,
+          "brierImprovement": 0.000005738427644435412
         }
       ],
       "developmentPassed": false
@@ -407,116 +745,228 @@
       "horizonDays": 14,
       "evaluation": {
         "baseline": {
-          "n": 131409,
-          "targetWindows": 7665,
-          "logloss": 0.199349000423908,
-          "brier": 0.0509648209918929,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 7586,
+          "trueNegatives": 122149,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 129735,
+          "targetWindows": 7586,
+          "logloss": 0.1999227929523271,
+          "brier": 0.051083346017551934,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7865188901447696
+          "auc": 0.7858025119822444
         },
         "shortTerm": {
-          "n": 131409,
-          "targetWindows": 7665,
-          "logloss": 0.21910553115876788,
-          "brier": 0.051376277432395034,
+          "truePositives": 1138,
+          "falsePositives": 10587,
+          "falseNegatives": 6448,
+          "trueNegatives": 111562,
+          "missRate": 0.8499868178223042,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 11725,
+            "expectedHits": 685.5964080625891,
+            "expectedFalsePositives": 11039.403591937411,
+            "precision": 0.05847304119936794,
+            "recall": 0.09037653678652638,
+            "falsePositiveRate": 0.09037653678652638
+          },
+          "n": 129735,
+          "targetWindows": 7586,
+          "logloss": 0.21971355130693634,
+          "brier": 0.051496425895753505,
           "alertThresholdLift": 2.5,
-          "alertRows": 11858,
-          "precision": 0.09698094113678529,
-          "recall": 0.15003261578604044,
-          "falsePositiveRate": 0.08653348849237134,
-          "auc": 0.7868865752513743
+          "alertRows": 11725,
+          "precision": 0.09705756929637527,
+          "recall": 0.15001318217769574,
+          "falsePositiveRate": 0.08667283399782233,
+          "auc": 0.7864688411766436
         }
       },
       "confirmation": {
         "baseline": {
-          "n": 87048,
-          "targetWindows": 4087,
-          "logloss": 0.1694327372921437,
-          "brier": 0.04196773881735027,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 3950,
+          "trueNegatives": 79750,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 83700,
+          "targetWindows": 3950,
+          "logloss": 0.17013447232285886,
+          "brier": 0.04215439604477714,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7763687367293106
+          "auc": 0.7760707908416332
         },
         "shortTerm": {
-          "n": 87048,
-          "targetWindows": 4087,
-          "logloss": 0.18431347739446324,
-          "brier": 0.04231510903308929,
+          "truePositives": 585,
+          "falsePositives": 7887,
+          "falseNegatives": 3365,
+          "trueNegatives": 71863,
+          "missRate": 0.8518987341772152,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 8472,
+            "expectedHits": 399.81362007168457,
+            "expectedFalsePositives": 8072.186379928316,
+            "precision": 0.047192353643966546,
+            "recall": 0.10121863799283154,
+            "falsePositiveRate": 0.10121863799283154
+          },
+          "n": 83700,
+          "targetWindows": 3950,
+          "logloss": 0.18523761105695924,
+          "brier": 0.04250974525018547,
           "alertThresholdLift": 2.5,
-          "alertRows": 8799,
-          "precision": 0.06989430617115582,
-          "recall": 0.1504771225838023,
-          "falsePositiveRate": 0.09864876267161678,
-          "auc": 0.7710975221090131
+          "alertRows": 8472,
+          "precision": 0.06905099150141643,
+          "recall": 0.14810126582278482,
+          "falsePositiveRate": 0.09889655172413793,
+          "auc": 0.7706501615015278
         },
-        "informationGain": -0.014880740102319545,
-        "brierImprovement": -0.0003473702157390235
+        "informationGain": -0.01510313873410038,
+        "brierImprovement": -0.00035534920540833403
       },
       "yearly": [
         {
           "year": 2013,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 1950,
-            "logloss": 0.16458899470894445,
-            "brier": 0.04039982503757104,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 1878,
+            "trueNegatives": 39972,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 41850,
+            "targetWindows": 1878,
+            "logloss": 0.16510764309245268,
+            "brier": 0.04049966256460629,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.77102355638941
+            "auc": 0.7698630921304125
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 1950,
-            "logloss": 0.18003856982328043,
-            "brier": 0.04080270839943136,
+            "truePositives": 244,
+            "falsePositives": 3756,
+            "falseNegatives": 1634,
+            "trueNegatives": 36216,
+            "missRate": 0.8700745473908413,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4000,
+              "expectedHits": 179.49820788530468,
+              "expectedFalsePositives": 3820.5017921146955,
+              "precision": 0.044874551971326164,
+              "recall": 0.0955794504181601,
+              "falsePositiveRate": 0.0955794504181601
+            },
+            "n": 41850,
+            "targetWindows": 1878,
+            "logloss": 0.18085304343610378,
+            "brier": 0.040900373241475586,
             "alertThresholdLift": 2.5,
-            "alertRows": 4167,
-            "precision": 0.0628749700023998,
-            "recall": 0.13435897435897437,
-            "falsePositiveRate": 0.09392889786886034,
-            "auc": 0.7631988681288725
+            "alertRows": 4000,
+            "precision": 0.061,
+            "recall": 0.1299254526091587,
+            "falsePositiveRate": 0.09396577604323027,
+            "auc": 0.7615248139086072
           },
-          "informationGain": -0.015449575114335978,
-          "brierImprovement": -0.00040288336186032614
+          "informationGain": -0.0157454003436511,
+          "brierImprovement": -0.0004007106768692953
         },
         {
           "year": 2014,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 2137,
-            "logloss": 0.17427647987528538,
-            "brier": 0.04353565259708188,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 2072,
+            "trueNegatives": 39778,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 41850,
+            "targetWindows": 2072,
+            "logloss": 0.1751613015532063,
+            "brier": 0.043809129524903095,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.78132285576032
+            "auc": 0.7817877395219142
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 2137,
-            "logloss": 0.18858838496573316,
-            "brier": 0.04382750966671535,
+            "truePositives": 341,
+            "falsePositives": 4131,
+            "falseNegatives": 1731,
+            "trueNegatives": 35647,
+            "missRate": 0.8354247104247104,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4472,
+              "expectedHits": 221.4094145758662,
+              "expectedFalsePositives": 4250.590585424134,
+              "precision": 0.04951015531660693,
+              "recall": 0.10685782556750299,
+              "falsePositiveRate": 0.10685782556750299
+            },
+            "n": 41850,
+            "targetWindows": 2072,
+            "logloss": 0.1896221786778986,
+            "brier": 0.044119117258866414,
             "alertThresholdLift": 2.5,
-            "alertRows": 4632,
-            "precision": 0.07620898100172711,
-            "recall": 0.16518483855872718,
-            "falsePositiveRate": 0.1033899533669993,
-            "auc": 0.7780880129384441
+            "alertRows": 4472,
+            "precision": 0.07625223613595707,
+            "recall": 0.16457528957528958,
+            "falsePositiveRate": 0.1038513751319825,
+            "auc": 0.7786735324098942
           },
-          "informationGain": -0.014311905090447774,
-          "brierImprovement": -0.00029185706963347213
+          "informationGain": -0.014460877124692295,
+          "brierImprovement": -0.00030998773396331836
         }
       ],
       "developmentPassed": false
@@ -526,6 +976,20 @@
       "horizonDays": 1,
       "evaluation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 182,
+          "trueNegatives": 131227,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 131409,
           "targetWindows": 182,
           "logloss": 0.01031900969029262,
@@ -538,6 +1002,20 @@
           "auc": 0.7366472885630528
         },
         "shortTerm": {
+          "truePositives": 50,
+          "falsePositives": 12271,
+          "falseNegatives": 132,
+          "trueNegatives": 118956,
+          "missRate": 0.7252747252747253,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12321,
+            "expectedHits": 17.064447640572563,
+            "expectedFalsePositives": 12303.935552359428,
+            "precision": 0.0013849888516007274,
+            "recall": 0.09376070132182728,
+            "falsePositiveRate": 0.09376070132182728
+          },
           "n": 131409,
           "targetWindows": 182,
           "logloss": 0.010439622519227074,
@@ -552,6 +1030,20 @@
       },
       "confirmation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 106,
+          "trueNegatives": 86942,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 87048,
           "targetWindows": 106,
           "logloss": 0.0092151067027772,
@@ -564,6 +1056,20 @@
           "auc": 0.7251620360222799
         },
         "shortTerm": {
+          "truePositives": 27,
+          "falsePositives": 9175,
+          "falseNegatives": 79,
+          "trueNegatives": 77767,
+          "missRate": 0.7452830188679245,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 9202,
+            "expectedHits": 11.20544986674019,
+            "expectedFalsePositives": 9190.79455013326,
+            "precision": 0.0012177189596544436,
+            "recall": 0.10571179119566217,
+            "falsePositiveRate": 0.10571179119566217
+          },
           "n": 87048,
           "targetWindows": 106,
           "logloss": 0.009403317938966569,
@@ -582,6 +1088,20 @@
         {
           "year": 2013,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 49,
+            "trueNegatives": 43475,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 49,
             "logloss": 0.008712543529439364,
@@ -594,6 +1114,20 @@
             "auc": 0.7108047083123071
           },
           "shortTerm": {
+            "truePositives": 12,
+            "falsePositives": 4339,
+            "falseNegatives": 37,
+            "trueNegatives": 39136,
+            "missRate": 0.7551020408163265,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4351,
+              "expectedHits": 4.898423858101277,
+              "expectedFalsePositives": 4346.1015761418985,
+              "precision": 0.0011258156419446741,
+              "recall": 0.09996783383880158,
+              "falsePositiveRate": 0.09996783383880158
+            },
             "n": 43524,
             "targetWindows": 49,
             "logloss": 0.008838409325011846,
@@ -611,6 +1145,20 @@
         {
           "year": 2014,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 57,
+            "trueNegatives": 43467,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 57,
             "logloss": 0.009717669876117765,
@@ -623,6 +1171,20 @@
             "auc": 0.7375094798675664
           },
           "shortTerm": {
+            "truePositives": 15,
+            "falsePositives": 4836,
+            "falseNegatives": 42,
+            "trueNegatives": 38631,
+            "missRate": 0.7368421052631579,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4851,
+              "expectedHits": 6.352977667493796,
+              "expectedFalsePositives": 4844.647022332506,
+              "precision": 0.0013096222773642128,
+              "recall": 0.11145574855252274,
+              "falsePositiveRate": 0.11145574855252274
+            },
             "n": 43524,
             "targetWindows": 57,
             "logloss": 0.009968226552921454,
@@ -645,6 +1207,20 @@
       "horizonDays": 3,
       "evaluation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 542,
+          "trueNegatives": 130867,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 131409,
           "targetWindows": 542,
           "logloss": 0.025524044687926416,
@@ -657,6 +1233,20 @@
           "auc": 0.764623787644801
         },
         "shortTerm": {
+          "truePositives": 127,
+          "falsePositives": 12188,
+          "falseNegatives": 415,
+          "trueNegatives": 118679,
+          "missRate": 0.7656826568265682,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12315,
+            "expectedHits": 50.79355295299409,
+            "expectedFalsePositives": 12264.206447047007,
+            "precision": 0.0041245272393823865,
+            "recall": 0.09371504234869758,
+            "falsePositiveRate": 0.09371504234869758
+          },
           "n": 131409,
           "targetWindows": 542,
           "logloss": 0.026231353772529064,
@@ -671,6 +1261,20 @@
       },
       "confirmation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 334,
+          "trueNegatives": 86714,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 87048,
           "targetWindows": 334,
           "logloss": 0.0243804436531442,
@@ -683,6 +1287,20 @@
           "auc": 0.7405261207639844
         },
         "shortTerm": {
+          "truePositives": 83,
+          "falsePositives": 9110,
+          "falseNegatives": 251,
+          "trueNegatives": 77604,
+          "missRate": 0.7514970059880239,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 9193,
+            "expectedHits": 35.27320558772172,
+            "expectedFalsePositives": 9157.726794412278,
+            "precision": 0.0038369635143828693,
+            "recall": 0.10560839996323867,
+            "falsePositiveRate": 0.10560839996323867
+          },
           "n": 87048,
           "targetWindows": 334,
           "logloss": 0.024989153083826397,
@@ -701,6 +1319,20 @@
         {
           "year": 2013,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 164,
+            "trueNegatives": 43360,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 164,
             "logloss": 0.02399690271694193,
@@ -713,6 +1345,20 @@
             "auc": 0.745249077490775
           },
           "shortTerm": {
+            "truePositives": 36,
+            "falsePositives": 4313,
+            "falseNegatives": 128,
+            "trueNegatives": 39047,
+            "missRate": 0.7804878048780488,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4349,
+              "expectedHits": 16.387188677511258,
+              "expectedFalsePositives": 4332.612811322489,
+              "precision": 0.003768036026100542,
+              "recall": 0.0999218821799467,
+              "falsePositiveRate": 0.0999218821799467
+            },
             "n": 43524,
             "targetWindows": 164,
             "logloss": 0.024699791297403514,
@@ -730,6 +1376,20 @@
         {
           "year": 2014,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 170,
+            "trueNegatives": 43354,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 170,
             "logloss": 0.024763984589347518,
@@ -742,6 +1402,20 @@
             "auc": 0.735969813491665
           },
           "shortTerm": {
+            "truePositives": 47,
+            "falsePositives": 4797,
+            "falseNegatives": 123,
+            "trueNegatives": 38557,
+            "missRate": 0.7235294117647059,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4844,
+              "expectedHits": 18.92013601691021,
+              "expectedFalsePositives": 4825.07986398309,
+              "precision": 0.003905891002665196,
+              "recall": 0.11129491774653065,
+              "falsePositiveRate": 0.11129491774653065
+            },
             "n": 43524,
             "targetWindows": 170,
             "logloss": 0.025278514870214742,
@@ -764,116 +1438,228 @@
       "horizonDays": 7,
       "evaluation": {
         "baseline": {
-          "n": 131409,
-          "targetWindows": 1217,
-          "logloss": 0.050071863277534025,
-          "brier": 0.009075215442796783,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 1213,
+          "trueNegatives": 129359,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 130572,
+          "targetWindows": 1213,
+          "logloss": 0.050205946628705464,
+          "brier": 0.009102490486074775,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7601424093550374
+          "auc": 0.7601056039734561
         },
         "shortTerm": {
-          "n": 131409,
-          "targetWindows": 1217,
-          "logloss": 0.05245935188275561,
-          "brier": 0.009059835637275825,
+          "truePositives": 246,
+          "falsePositives": 11941,
+          "falseNegatives": 967,
+          "trueNegatives": 117418,
+          "missRate": 0.79719703215169,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12187,
+            "expectedHits": 113.21593450356892,
+            "expectedFalsePositives": 12073.784065496431,
+            "precision": 0.009289893698495848,
+            "recall": 0.0933354777440799,
+            "falsePositiveRate": 0.0933354777440799
+          },
+          "n": 130572,
+          "targetWindows": 1213,
+          "logloss": 0.05257830448936,
+          "brier": 0.009086556121235276,
           "alertThresholdLift": 2.5,
-          "alertRows": 12258,
-          "precision": 0.020068526676456193,
-          "recall": 0.20213640098603122,
-          "falsePositiveRate": 0.0922637335627381,
-          "auc": 0.779888550797462
+          "alertRows": 12187,
+          "precision": 0.02018544350537458,
+          "recall": 0.20280296784830998,
+          "falsePositiveRate": 0.0923090005333993,
+          "auc": 0.78015889585115
         }
       },
       "confirmation": {
         "baseline": {
-          "n": 87048,
-          "targetWindows": 685,
-          "logloss": 0.043599499492623504,
-          "brier": 0.007722032325323529,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 669,
+          "trueNegatives": 84705,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 85374,
+          "targetWindows": 669,
+          "logloss": 0.043543011381869175,
+          "brier": 0.007692007550537095,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7498851943134948
+          "auc": 0.7476685240757756
         },
         "shortTerm": {
-          "n": 87048,
-          "targetWindows": 685,
-          "logloss": 0.04574733655306327,
-          "brier": 0.00770829671494109,
+          "truePositives": 137,
+          "falsePositives": 8862,
+          "falseNegatives": 532,
+          "trueNegatives": 75843,
+          "missRate": 0.7952167414050823,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 8999,
+            "expectedHits": 70.51714807786914,
+            "expectedFalsePositives": 8928.482851922132,
+            "precision": 0.00783610935413592,
+            "recall": 0.10540679832267436,
+            "falsePositiveRate": 0.10540679832267436
+          },
+          "n": 85374,
+          "targetWindows": 669,
+          "logloss": 0.04574611008285148,
+          "brier": 0.007678336002359403,
           "alertThresholdLift": 2.5,
-          "alertRows": 9160,
-          "precision": 0.015393013100436682,
-          "recall": 0.20583941605839415,
-          "falsePositiveRate": 0.10443129580954807,
-          "auc": 0.7624550963844597
+          "alertRows": 8999,
+          "precision": 0.015223913768196467,
+          "recall": 0.20478325859491778,
+          "falsePositiveRate": 0.10462192314503276,
+          "auc": 0.7598413609741502
         },
-        "informationGain": -0.002147837060439764,
-        "brierImprovement": 0.000013735610382439
+        "informationGain": -0.0022030987009823075,
+        "brierImprovement": 0.000013671548177692297
       },
       "yearly": [
         {
           "year": 2013,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 330,
-            "logloss": 0.04212568271402251,
-            "brier": 0.007451655372093192,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 321,
+            "trueNegatives": 42366,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 42687,
+            "targetWindows": 321,
+            "logloss": 0.041945364914329396,
+            "brier": 0.0073943040829703675,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.7557824389189857
+            "auc": 0.7531833188401386
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 330,
-            "logloss": 0.04467671496175976,
-            "brier": 0.0074582289806647654,
+            "truePositives": 53,
+            "falsePositives": 4193,
+            "falseNegatives": 268,
+            "trueNegatives": 38173,
+            "missRate": 0.8348909657320872,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4246,
+              "expectedHits": 31.929299318293623,
+              "expectedFalsePositives": 4214.0707006817065,
+              "precision": 0.007519853819664067,
+              "recall": 0.09946822217536955,
+              "falsePositiveRate": 0.09946822217536955
+            },
+            "n": 42687,
+            "targetWindows": 321,
+            "logloss": 0.04460881763914369,
+            "brier": 0.00740191707416095,
             "alertThresholdLift": 2.5,
-            "alertRows": 4333,
-            "precision": 0.012924071082390954,
-            "recall": 0.1696969696969697,
-            "falsePositiveRate": 0.09901838218271056,
-            "auc": 0.7612908148017191
+            "alertRows": 4246,
+            "precision": 0.012482336316533208,
+            "recall": 0.16510903426791276,
+            "falsePositiveRate": 0.09897087286975405,
+            "auc": 0.7570671053303044
           },
-          "informationGain": -0.002551032247737249,
-          "brierImprovement": -0.000006573608571573512
+          "informationGain": -0.0026634527248142956,
+          "brierImprovement": -0.000007612991190582459
         },
         {
           "year": 2014,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 355,
-            "logloss": 0.04507331627122944,
-            "brier": 0.007992409278538545,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 348,
+            "trueNegatives": 42339,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 42687,
+            "targetWindows": 348,
+            "logloss": 0.04514065784941391,
+            "brier": 0.007989711018089162,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.7444051694633506
+            "auc": 0.7425844843467871
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 355,
-            "logloss": 0.04681795814433066,
-            "brier": 0.007958364449204067,
+            "truePositives": 84,
+            "falsePositives": 4669,
+            "falseNegatives": 264,
+            "trueNegatives": 37670,
+            "missRate": 0.7586206896551724,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4753,
+              "expectedHits": 38.74819031555275,
+              "expectedFalsePositives": 4714.251809684447,
+              "precision": 0.008152364888607773,
+              "recall": 0.11134537446997915,
+              "falsePositiveRate": 0.11134537446997915
+            },
+            "n": 42687,
+            "targetWindows": 348,
+            "logloss": 0.04688340252652386,
+            "brier": 0.007954754930545023,
             "alertThresholdLift": 2.5,
-            "alertRows": 4827,
-            "precision": 0.017609281126993993,
-            "recall": 0.23943661971830985,
-            "falsePositiveRate": 0.10984734415900299,
-            "auc": 0.7635188787989816
+            "alertRows": 4753,
+            "precision": 0.017673048600883652,
+            "recall": 0.2413793103448276,
+            "falsePositiveRate": 0.11027657715109002,
+            "auc": 0.7623546793763419
           },
-          "informationGain": -0.0017446418731012214,
-          "brierImprovement": 0.00003404482933447826
+          "informationGain": -0.001742744677109949,
+          "brierImprovement": 0.00003495608754413952
         }
       ],
       "developmentPassed": false
@@ -883,116 +1669,228 @@
       "horizonDays": 14,
       "evaluation": {
         "baseline": {
-          "n": 131409,
-          "targetWindows": 2334,
-          "logloss": 0.0843248141242549,
-          "brier": 0.017082631886184585,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 2317,
+          "trueNegatives": 127418,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 129735,
+          "targetWindows": 2317,
+          "logloss": 0.0846999857703781,
+          "brier": 0.017172045311213583,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7595420981238696
+          "auc": 0.7597627793529509
         },
         "shortTerm": {
-          "n": 131409,
-          "targetWindows": 2334,
-          "logloss": 0.08976175509069442,
-          "brier": 0.017099446391036353,
+          "truePositives": 427,
+          "falsePositives": 11648,
+          "falseNegatives": 1890,
+          "trueNegatives": 115770,
+          "missRate": 0.8157099697885196,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12075,
+            "expectedHits": 215.65325471152735,
+            "expectedFalsePositives": 11859.346745288472,
+            "precision": 0.017859482791844915,
+            "recall": 0.0930743438547809,
+            "falsePositiveRate": 0.0930743438547809
+          },
+          "n": 129735,
+          "targetWindows": 2317,
+          "logloss": 0.0901183788655868,
+          "brier": 0.017186810765923082,
           "alertThresholdLift": 2.5,
-          "alertRows": 12208,
-          "precision": 0.03514089121887287,
-          "recall": 0.18380462724935734,
-          "falsePositiveRate": 0.09125702111175674,
-          "auc": 0.7748447567317448
+          "alertRows": 12075,
+          "precision": 0.03536231884057971,
+          "recall": 0.18429003021148035,
+          "falsePositiveRate": 0.09141565555886923,
+          "auc": 0.7754430933681362
         }
       },
       "confirmation": {
         "baseline": {
-          "n": 87048,
-          "targetWindows": 1318,
-          "logloss": 0.07386995157352087,
-          "brier": 0.014606606312955394,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 1272,
+          "trueNegatives": 82428,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 83700,
+          "targetWindows": 1272,
+          "logloss": 0.07433236384118834,
+          "brier": 0.014667501476360352,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7500287896131537
+          "auc": 0.7474996856414121
         },
         "shortTerm": {
-          "n": 87048,
-          "targetWindows": 1318,
-          "logloss": 0.07844525025105853,
-          "brier": 0.014591648769767228,
+          "truePositives": 242,
+          "falsePositives": 8531,
+          "falseNegatives": 1030,
+          "trueNegatives": 73897,
+          "missRate": 0.809748427672956,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 8773,
+            "expectedHits": 133.32444444444445,
+            "expectedFalsePositives": 8639.675555555556,
+            "precision": 0.015197132616487455,
+            "recall": 0.10481481481481482,
+            "falsePositiveRate": 0.10481481481481482
+          },
+          "n": 83700,
+          "targetWindows": 1272,
+          "logloss": 0.0789619844280714,
+          "brier": 0.014652241638279325,
           "alertThresholdLift": 2.5,
-          "alertRows": 9111,
-          "precision": 0.027768631324772253,
-          "recall": 0.19195751138088013,
-          "falsePositiveRate": 0.10332439052840313,
-          "auc": 0.7580490200468811
+          "alertRows": 8773,
+          "precision": 0.027584634674569702,
+          "recall": 0.19025157232704404,
+          "falsePositiveRate": 0.1034963847236376,
+          "auc": 0.7559176096661299
         },
-        "informationGain": -0.004575298677537656,
-        "brierImprovement": 0.000014957543188165792
+        "informationGain": -0.004629620586883057,
+        "brierImprovement": 0.000015259838081026558
       },
       "yearly": [
         {
           "year": 2013,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 640,
-            "logloss": 0.07172483047713048,
-            "brier": 0.01421421537404363,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 612,
+            "trueNegatives": 41238,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 41850,
+            "targetWindows": 612,
+            "logloss": 0.0715864276730747,
+            "brier": 0.014145895725899006,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.7573923986801604
+            "auc": 0.7550048625751932
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 640,
-            "logloss": 0.07731574539170605,
-            "brier": 0.01427373869339573,
+            "truePositives": 93,
+            "falsePositives": 4046,
+            "falseNegatives": 519,
+            "trueNegatives": 37192,
+            "missRate": 0.8480392156862745,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4139,
+              "expectedHits": 60.527311827956986,
+              "expectedFalsePositives": 4078.472688172043,
+              "precision": 0.014623655913978495,
+              "recall": 0.09890083632019116,
+              "falsePositiveRate": 0.09890083632019116
+            },
+            "n": 41850,
+            "targetWindows": 612,
+            "logloss": 0.07720550785833388,
+            "brier": 0.014196533191934483,
             "alertThresholdLift": 2.5,
-            "alertRows": 4311,
-            "precision": 0.023196474135931337,
-            "recall": 0.15625,
-            "falsePositiveRate": 0.0981951310512079,
-            "auc": 0.7558092579691726
+            "alertRows": 4139,
+            "precision": 0.02246919545784006,
+            "recall": 0.15196078431372548,
+            "falsePositiveRate": 0.09811339056210291,
+            "auc": 0.7528022610340676
           },
-          "informationGain": -0.0055909149145755704,
-          "brierImprovement": -0.00005952331935210088
+          "informationGain": -0.0056190801852591815,
+          "brierImprovement": -0.00005063746603547678
         },
         {
           "year": 2014,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 678,
-            "logloss": 0.07601507266992036,
-            "brier": 0.01499899725188036,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 660,
+            "trueNegatives": 41190,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 41850,
+            "targetWindows": 660,
+            "logloss": 0.07707830000931049,
+            "brier": 0.015189107226829405,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.7430779396940156
+            "auc": 0.740542717782339
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 678,
-            "logloss": 0.07957475511034968,
-            "brier": 0.014909558846144599,
+            "truePositives": 149,
+            "falsePositives": 4485,
+            "falseNegatives": 511,
+            "trueNegatives": 36705,
+            "missRate": 0.7742424242424243,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4634,
+              "expectedHits": 73.08100358422939,
+              "expectedFalsePositives": 4560.91899641577,
+              "precision": 0.015770609318996417,
+              "recall": 0.11072879330943847,
+              "falsePositiveRate": 0.11072879330943847
+            },
+            "n": 41850,
+            "targetWindows": 660,
+            "logloss": 0.08071846099775049,
+            "brier": 0.015107950084624903,
             "alertThresholdLift": 2.5,
-            "alertRows": 4800,
-            "precision": 0.031875,
-            "recall": 0.22566371681415928,
-            "falsePositiveRate": 0.10845819913177426,
-            "auc": 0.7601869086749182
+            "alertRows": 4634,
+            "precision": 0.03215364695727233,
+            "recall": 0.22575757575757577,
+            "falsePositiveRate": 0.1088856518572469,
+            "auc": 0.7587330147799922
           },
-          "informationGain": -0.0035596824404293265,
-          "brierImprovement": 0.00008943840573576167
+          "informationGain": -0.00364016098844,
+          "brierImprovement": 0.00008115714220450175
         }
       ],
       "developmentPassed": false
@@ -1002,6 +1900,20 @@
       "horizonDays": 1,
       "evaluation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 62,
+          "trueNegatives": 131347,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 131409,
           "targetWindows": 62,
           "logloss": 0.0039244663754000805,
@@ -1014,6 +1926,20 @@
           "auc": 0.7418954520124851
         },
         "shortTerm": {
+          "truePositives": 18,
+          "falsePositives": 12308,
+          "falseNegatives": 44,
+          "trueNegatives": 119039,
+          "missRate": 0.7096774193548387,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12326,
+            "expectedHits": 5.815522528898325,
+            "expectedFalsePositives": 12320.184477471103,
+            "precision": 0.00047180938900684123,
+            "recall": 0.09379875046610202,
+            "falsePositiveRate": 0.09379875046610202
+          },
           "n": 131409,
           "targetWindows": 62,
           "logloss": 0.003945300199864139,
@@ -1028,6 +1954,20 @@
       },
       "confirmation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 31,
+          "trueNegatives": 87017,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 87048,
           "targetWindows": 31,
           "logloss": 0.0029024759483784863,
@@ -1040,6 +1980,20 @@
           "auc": 0.8009897583972283
         },
         "shortTerm": {
+          "truePositives": 11,
+          "falsePositives": 9194,
+          "falseNegatives": 20,
+          "trueNegatives": 77823,
+          "missRate": 0.6451612903225806,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 9205,
+            "expectedHits": 3.278133903133903,
+            "expectedFalsePositives": 9201.721866096867,
+            "precision": 0.00035612535612535614,
+            "recall": 0.10574625493980333,
+            "falsePositiveRate": 0.10574625493980333
+          },
           "n": 87048,
           "targetWindows": 31,
           "logloss": 0.00286346382093106,
@@ -1058,6 +2012,20 @@
         {
           "year": 2013,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 17,
+            "trueNegatives": 43507,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 17,
             "logloss": 0.0032503076072264376,
@@ -1070,6 +2038,20 @@
             "auc": 0.7601690870569847
           },
           "shortTerm": {
+            "truePositives": 7,
+            "falsePositives": 4345,
+            "falseNegatives": 10,
+            "trueNegatives": 39162,
+            "missRate": 0.5882352941176471,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4352,
+              "expectedHits": 1.6998437643598934,
+              "expectedFalsePositives": 4350.30015623564,
+              "precision": 0.00039058910026651964,
+              "recall": 0.09999080966822903,
+              "falsePositiveRate": 0.09999080966822903
+            },
             "n": 43524,
             "targetWindows": 17,
             "logloss": 0.003156310895851659,
@@ -1087,6 +2069,20 @@
         {
           "year": 2014,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 14,
+            "trueNegatives": 43510,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 14,
             "logloss": 0.002554644289539227,
@@ -1099,6 +2095,20 @@
             "auc": 0.8505565223101421
           },
           "shortTerm": {
+            "truePositives": 4,
+            "falsePositives": 4849,
+            "falseNegatives": 10,
+            "trueNegatives": 38661,
+            "missRate": 0.7142857142857143,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4853,
+              "expectedHits": 1.5610238029592869,
+              "expectedFalsePositives": 4851.438976197041,
+              "precision": 0.00032166161198419265,
+              "recall": 0.11150170021137763,
+              "falsePositiveRate": 0.11150170021137763
+            },
             "n": 43524,
             "targetWindows": 14,
             "logloss": 0.0025706167460116816,
@@ -1121,6 +2131,20 @@
       "horizonDays": 3,
       "evaluation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 167,
+          "trueNegatives": 131242,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 131409,
           "targetWindows": 167,
           "logloss": 0.009226945236718189,
@@ -1133,6 +2157,20 @@
           "auc": 0.7479381235395746
         },
         "shortTerm": {
+          "truePositives": 39,
+          "falsePositives": 12287,
+          "falseNegatives": 128,
+          "trueNegatives": 118955,
+          "missRate": 0.7664670658682635,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12326,
+            "expectedHits": 15.664391327839038,
+            "expectedFalsePositives": 12310.335608672161,
+            "precision": 0.0012708414187764918,
+            "recall": 0.09379875046610202,
+            "falsePositiveRate": 0.09379875046610202
+          },
           "n": 131409,
           "targetWindows": 167,
           "logloss": 0.009506511070531385,
@@ -1147,6 +2185,20 @@
       },
       "confirmation": {
         "baseline": {
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 121,
+          "trueNegatives": 86927,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
           "n": 87048,
           "targetWindows": 121,
           "logloss": 0.010140617433286618,
@@ -1159,6 +2211,20 @@
           "auc": 0.7323499902597097
         },
         "shortTerm": {
+          "truePositives": 30,
+          "falsePositives": 9175,
+          "falseNegatives": 91,
+          "trueNegatives": 77752,
+          "missRate": 0.7520661157024794,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 9205,
+            "expectedHits": 12.795296847716203,
+            "expectedFalsePositives": 9192.204703152283,
+            "precision": 0.001390037680360261,
+            "recall": 0.10574625493980333,
+            "falsePositiveRate": 0.10574625493980333
+          },
           "n": 87048,
           "targetWindows": 121,
           "logloss": 0.010299315329058206,
@@ -1177,6 +2243,20 @@
         {
           "year": 2013,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 59,
+            "trueNegatives": 43465,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 59,
             "logloss": 0.010013962398260967,
@@ -1189,6 +2269,20 @@
             "auc": 0.7202933589660101
           },
           "shortTerm": {
+            "truePositives": 17,
+            "falsePositives": 4335,
+            "falseNegatives": 42,
+            "trueNegatives": 39130,
+            "missRate": 0.711864406779661,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4352,
+              "expectedHits": 5.899457770425513,
+              "expectedFalsePositives": 4346.100542229575,
+              "precision": 0.0013555739362190976,
+              "recall": 0.09999080966822903,
+              "falsePositiveRate": 0.09999080966822903
+            },
             "n": 43524,
             "targetWindows": 59,
             "logloss": 0.01003307961520251,
@@ -1206,6 +2300,20 @@
         {
           "year": 2014,
           "baseline": {
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 62,
+            "trueNegatives": 43462,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
             "n": 43524,
             "targetWindows": 62,
             "logloss": 0.01026727246831781,
@@ -1218,6 +2326,20 @@
             "auc": 0.7438244161380873
           },
           "shortTerm": {
+            "truePositives": 13,
+            "falsePositives": 4840,
+            "falseNegatives": 49,
+            "trueNegatives": 38622,
+            "missRate": 0.7903225806451613,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4853,
+              "expectedHits": 6.913105413105413,
+              "expectedFalsePositives": 4846.086894586894,
+              "precision": 0.0014245014245014246,
+              "recall": 0.11150170021137763,
+              "falsePositiveRate": 0.11150170021137763
+            },
             "n": 43524,
             "targetWindows": 62,
             "logloss": 0.010565551042932724,
@@ -1240,116 +2362,228 @@
       "horizonDays": 7,
       "evaluation": {
         "baseline": {
-          "n": 131409,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 386,
+          "trueNegatives": 130186,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 130572,
           "targetWindows": 386,
-          "logloss": 0.01887104651841032,
-          "brier": 0.002913659204055374,
+          "logloss": 0.01898013648457591,
+          "brier": 0.0029322449551056973,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7486752513767804
+          "auc": 0.7486799476778899
         },
         "shortTerm": {
-          "n": 131409,
+          "truePositives": 75,
+          "falsePositives": 12170,
+          "falseNegatives": 311,
+          "trueNegatives": 118016,
+          "missRate": 0.805699481865285,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12245,
+            "expectedHits": 36.19895536562203,
+            "expectedFalsePositives": 12208.801044634378,
+            "precision": 0.002956223386330913,
+            "recall": 0.09377967711301044,
+            "falsePositiveRate": 0.09377967711301044
+          },
+          "n": 130572,
           "targetWindows": 386,
-          "logloss": 0.019721517375679065,
-          "brier": 0.0029124928506005744,
+          "logloss": 0.019838307563893064,
+          "brier": 0.0029310334075541076,
           "alertThresholdLift": 2.5,
-          "alertRows": 12316,
-          "precision": 0.006089639493341994,
+          "alertRows": 12245,
+          "precision": 0.006124948958758677,
           "recall": 0.19430051813471502,
-          "falsePositiveRate": 0.09342634499286386,
-          "auc": 0.770510983733861
+          "falsePositiveRate": 0.09348163396985851,
+          "auc": 0.7705047198711067
         }
       },
       "confirmation": {
         "baseline": {
-          "n": 87048,
-          "targetWindows": 236,
-          "logloss": 0.01796576512095034,
-          "brier": 0.0026947469353285555,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 233,
+          "trueNegatives": 85141,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 85374,
+          "targetWindows": 233,
+          "logloss": 0.018085606807744684,
+          "brier": 0.0027127398267722536,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7214938261288567
+          "auc": 0.7211413200813617
         },
         "shortTerm": {
-          "n": 87048,
-          "targetWindows": 236,
-          "logloss": 0.01869840331685093,
-          "brier": 0.0026961976256466643,
+          "truePositives": 47,
+          "falsePositives": 8989,
+          "falseNegatives": 186,
+          "trueNegatives": 76152,
+          "missRate": 0.7982832618025751,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 9036,
+            "expectedHits": 24.660763230023193,
+            "expectedFalsePositives": 9011.339236769978,
+            "precision": 0.0027291681308126594,
+            "recall": 0.10584018553658023,
+            "falsePositiveRate": 0.10584018553658023
+          },
+          "n": 85374,
+          "targetWindows": 233,
+          "logloss": 0.018815934802054436,
+          "brier": 0.00271390302615107,
           "alertThresholdLift": 2.5,
-          "alertRows": 9197,
-          "precision": 0.00511036207458954,
-          "recall": 0.19915254237288135,
-          "falsePositiveRate": 0.10540017509100125,
-          "auc": 0.752487500751673
+          "alertRows": 9036,
+          "precision": 0.00520141655599823,
+          "recall": 0.2017167381974249,
+          "falsePositiveRate": 0.10557780622731704,
+          "auc": 0.7529198094168759
         },
-        "informationGain": -0.0007326381959005882,
-        "brierImprovement": -0.0000014506903181087279
+        "informationGain": -0.000730327994309752,
+        "brierImprovement": -0.0000011631993788166137
       },
       "yearly": [
         {
           "year": 2013,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 113,
-            "logloss": 0.017297388171999942,
-            "brier": 0.0025821850048512733,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 112,
+            "trueNegatives": 42575,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 42687,
+            "targetWindows": 112,
+            "logloss": 0.01750380092497459,
+            "brier": 0.002609861740515919,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.7281804110250593
+            "auc": 0.7258656991863098
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 113,
-            "logloss": 0.017755278667733354,
-            "brier": 0.0025817642311587678,
+            "truePositives": 26,
+            "falsePositives": 4237,
+            "falseNegatives": 86,
+            "trueNegatives": 38338,
+            "missRate": 0.7678571428571429,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4263,
+              "expectedHits": 11.185044627169864,
+              "expectedFalsePositives": 4251.81495537283,
+              "precision": 0.002623749619322042,
+              "recall": 0.09986646988544522,
+              "falsePositiveRate": 0.09986646988544522
+            },
+            "n": 42687,
+            "targetWindows": 112,
+            "logloss": 0.01797031297897418,
+            "brier": 0.0026091025925059873,
             "alertThresholdLift": 2.5,
-            "alertRows": 4350,
-            "precision": 0.005977011494252874,
-            "recall": 0.23008849557522124,
-            "falsePositiveRate": 0.09960609062219253,
-            "auc": 0.7702180006984078
+            "alertRows": 4263,
+            "precision": 0.006098991320666197,
+            "recall": 0.23214285714285715,
+            "falsePositiveRate": 0.09951849677040517,
+            "auc": 0.7685205729385118
           },
-          "informationGain": -0.00045789049573341165,
-          "brierImprovement": 4.2077369250556954e-7
+          "informationGain": -0.0004665120539995918,
+          "brierImprovement": 7.591480099319176e-7
         },
         {
           "year": 2014,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 123,
-            "logloss": 0.01863414206988571,
-            "brier": 0.0028073088658109283,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 121,
+            "trueNegatives": 42566,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 42687,
+            "targetWindows": 121,
+            "logloss": 0.018667412690499367,
+            "brier": 0.002815617913033602,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.7153515251887156
+            "auc": 0.7167691553767935
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 123,
-            "logloss": 0.019641527965976433,
-            "brier": 0.002810631020135466,
+            "truePositives": 21,
+            "falsePositives": 4752,
+            "falseNegatives": 100,
+            "trueNegatives": 37814,
+            "missRate": 0.8264462809917356,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4773,
+              "expectedHits": 13.529482043713543,
+              "expectedFalsePositives": 4759.470517956286,
+              "precision": 0.0028345866423032775,
+              "recall": 0.11181390118771523,
+              "falsePositiveRate": 0.11181390118771523
+            },
+            "n": 42687,
+            "targetWindows": 121,
+            "logloss": 0.019661556625142775,
+            "brier": 0.002818703459797041,
             "alertThresholdLift": 2.5,
-            "alertRows": 4847,
-            "precision": 0.004332576851660821,
-            "recall": 0.17073170731707318,
-            "falsePositiveRate": 0.11119559457155365,
-            "auc": 0.7361946813634169
+            "alertRows": 4773,
+            "precision": 0.0043997485857950975,
+            "recall": 0.17355371900826447,
+            "falsePositiveRate": 0.11163839684255039,
+            "auc": 0.7384969107769636
           },
-          "informationGain": -0.001007385896090722,
-          "brierImprovement": -0.000003322154324537571
+          "informationGain": -0.0009941439346434072,
+          "brierImprovement": -0.0000030855467634386714
         }
       ],
       "developmentPassed": false
@@ -1359,116 +2593,228 @@
       "horizonDays": 14,
       "evaluation": {
         "baseline": {
-          "n": 131409,
-          "targetWindows": 746,
-          "logloss": 0.03269430015816886,
-          "brier": 0.005588935355386741,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 745,
+          "trueNegatives": 128990,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 129735,
+          "targetWindows": 745,
+          "logloss": 0.033042023160088294,
+          "brier": 0.005653107840082794,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7486545571595997
+          "auc": 0.7483474604711566
         },
         "shortTerm": {
-          "n": 131409,
-          "targetWindows": 746,
-          "logloss": 0.03434067175137842,
-          "brier": 0.005594144673284193,
+          "truePositives": 140,
+          "falsePositives": 12028,
+          "falseNegatives": 605,
+          "trueNegatives": 116962,
+          "missRate": 0.8120805369127517,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 12168,
+            "expectedHits": 69.87443635102323,
+            "expectedFalsePositives": 12098.125563648977,
+            "precision": 0.005742475045284618,
+            "recall": 0.0937911897329171,
+            "falsePositiveRate": 0.0937911897329171
+          },
+          "n": 129735,
+          "targetWindows": 745,
+          "logloss": 0.03470922494650274,
+          "brier": 0.005657727950325365,
           "alertThresholdLift": 2.5,
-          "alertRows": 12303,
-          "precision": 0.011379338372754613,
-          "recall": 0.1876675603217158,
-          "falsePositiveRate": 0.09308679580294345,
-          "auc": 0.77111823533758
+          "alertRows": 12168,
+          "precision": 0.011505588428665352,
+          "recall": 0.18791946308724833,
+          "falsePositiveRate": 0.09324753856888131,
+          "auc": 0.7708871662180774
         }
       },
       "confirmation": {
         "baseline": {
-          "n": 87048,
-          "targetWindows": 458,
-          "logloss": 0.031380371717761396,
-          "brier": 0.005201047251987656,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 451,
+          "trueNegatives": 83249,
+          "missRate": 1,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 0,
+            "expectedHits": 0,
+            "expectedFalsePositives": 0,
+            "precision": null,
+            "recall": 0,
+            "falsePositiveRate": 0
+          },
+          "n": 83700,
+          "targetWindows": 451,
+          "logloss": 0.03210144302006894,
+          "brier": 0.005326667237656295,
           "alertThresholdLift": 2.5,
           "alertRows": 0,
           "precision": 0,
           "recall": 0,
           "falsePositiveRate": 0,
-          "auc": 0.7205483755952738
+          "auc": 0.7195720960965046
         },
         "shortTerm": {
-          "n": 87048,
-          "targetWindows": 458,
-          "logloss": 0.03286672185372406,
-          "brier": 0.005211461491919256,
+          "truePositives": 87,
+          "falsePositives": 8758,
+          "falseNegatives": 364,
+          "trueNegatives": 74491,
+          "missRate": 0.8070953436807096,
+          "randomAlertBaseline": {
+            "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+            "alertRows": 8845,
+            "expectedHits": 47.659438470728794,
+            "expectedFalsePositives": 8797.34056152927,
+            "precision": 0.005388291517323776,
+            "recall": 0.10567502986857825,
+            "falsePositiveRate": 0.10567502986857825
+          },
+          "n": 83700,
+          "targetWindows": 451,
+          "logloss": 0.033625007735570416,
+          "brier": 0.005336062394831811,
           "alertThresholdLift": 2.5,
-          "alertRows": 9186,
-          "precision": 0.009470934030045721,
-          "recall": 0.18995633187772926,
-          "falsePositiveRate": 0.10508141817761867,
-          "auc": 0.7473904653310209
+          "alertRows": 8845,
+          "precision": 0.009836065573770493,
+          "recall": 0.19290465631929046,
+          "falsePositiveRate": 0.10520246489447321,
+          "auc": 0.74731088171651
         },
-        "informationGain": -0.0014863501359626621,
-        "brierImprovement": -0.000010414239931600018
+        "informationGain": -0.0015235647155014756,
+        "brierImprovement": -0.000009395157175516242
       },
       "yearly": [
         {
           "year": 2013,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 220,
-            "logloss": 0.030258088464655036,
-            "brier": 0.005003403306848853,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 218,
+            "trueNegatives": 41632,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 41850,
+            "targetWindows": 218,
+            "logloss": 0.03115699154620753,
+            "brier": 0.005156543699927999,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.7310391229867491
+            "auc": 0.7287049614269898
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 220,
-            "logloss": 0.03138371009046314,
-            "brier": 0.005008323380563102,
+            "truePositives": 45,
+            "falsePositives": 4125,
+            "falseNegatives": 173,
+            "trueNegatives": 37507,
+            "missRate": 0.7935779816513762,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4170,
+              "expectedHits": 21.721863799283152,
+              "expectedFalsePositives": 4148.278136200716,
+              "precision": 0.005209080047789725,
+              "recall": 0.0996415770609319,
+              "falsePositiveRate": 0.0996415770609319
+            },
+            "n": 41850,
+            "targetWindows": 218,
+            "logloss": 0.03231166885507353,
+            "brier": 0.005159102789400495,
             "alertThresholdLift": 2.5,
-            "alertRows": 4345,
-            "precision": 0.010356731875719217,
-            "recall": 0.20454545454545456,
-            "falsePositiveRate": 0.09929798632920746,
-            "auc": 0.7605342987420856
+            "alertRows": 4170,
+            "precision": 0.01079136690647482,
+            "recall": 0.20642201834862386,
+            "falsePositiveRate": 0.09908243658724059,
+            "auc": 0.7591920514565366
           },
-          "informationGain": -0.0011256216258081035,
-          "brierImprovement": -0.000004920073714249386
+          "informationGain": -0.0011546773088659985,
+          "brierImprovement": -0.0000025590894724963203
         },
         {
           "year": 2014,
           "baseline": {
-            "n": 43524,
-            "targetWindows": 238,
-            "logloss": 0.03250265497083073,
-            "brier": 0.005398691197142629,
+            "truePositives": 0,
+            "falsePositives": 0,
+            "falseNegatives": 233,
+            "trueNegatives": 41617,
+            "missRate": 1,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 0,
+              "expectedHits": 0,
+              "expectedFalsePositives": 0,
+              "precision": null,
+              "recall": 0,
+              "falsePositiveRate": 0
+            },
+            "n": 41850,
+            "targetWindows": 233,
+            "logloss": 0.03304589449389152,
+            "brier": 0.005496790775400534,
             "alertThresholdLift": 2.5,
             "alertRows": 0,
             "precision": 0,
             "recall": 0,
             "falsePositiveRate": 0,
-            "auc": 0.7108504816702821
+            "auc": 0.7110266510642059
           },
           "shortTerm": {
-            "n": 43524,
-            "targetWindows": 238,
-            "logloss": 0.03434973361700511,
-            "brier": 0.005414599603286219,
+            "truePositives": 42,
+            "falsePositives": 4633,
+            "falseNegatives": 191,
+            "trueNegatives": 36984,
+            "missRate": 0.8197424892703863,
+            "randomAlertBaseline": {
+              "method": "uniform-random-alerts-with-equal-alert-count-expectation",
+              "alertRows": 4675,
+              "expectedHits": 26.028076463560335,
+              "expectedFalsePositives": 4648.97192353644,
+              "precision": 0.005567502986857826,
+              "recall": 0.11170848267622462,
+              "falsePositiveRate": 0.11170848267622462
+            },
+            "n": 41850,
+            "targetWindows": 233,
+            "logloss": 0.03493834661608862,
+            "brier": 0.005513022000273638,
             "alertThresholdLift": 2.5,
-            "alertRows": 4841,
-            "precision": 0.008675893410452386,
-            "recall": 0.17647058823529413,
-            "falsePositiveRate": 0.11086725500161715,
-            "auc": 0.7351953025353745
+            "alertRows": 4675,
+            "precision": 0.008983957219251337,
+            "recall": 0.18025751072961374,
+            "falsePositiveRate": 0.11132469904125718,
+            "auc": 0.7361429759896114
           },
-          "informationGain": -0.0018470786461743799,
-          "brierImprovement": -0.000015908406143589487
+          "informationGain": -0.0018924521221971025,
+          "brierImprovement": -0.000016231224873103876
         }
       ],
       "developmentPassed": false

@@ -12,6 +12,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,7 +23,7 @@ jobs:
           NASA_FIRMS_MAP_KEY: ${{ secrets.NASA_FIRMS_MAP_KEY }}
         run: node scripts/update-gvp-volcano-catalog.mjs && node scripts/update-volcano-observations.mjs && node scripts/update-jma-volcano-alerts.mjs
       - name: Verify safety and regressions
-        run: node tests/volcano-live-observations.test.mjs && node tests/jma-volcano-alert-ingestion.test.mjs && npm run test:mundane
+        run: npm run test:data-reliability && node tests/volcano-live-observations.test.mjs && node tests/jma-volcano-alert-ingestion.test.mjs && npm run test:mundane
       - name: Publish verified data update
         env:
           GH_TOKEN: ${{ github.token }}

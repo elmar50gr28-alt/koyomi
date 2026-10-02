@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import { empty, add, finalize, completeWindow } from '../scripts/lib/earthquake-evaluation-metrics.mjs';
+
+const end = Date.parse('2015-01-01T00:00:00Z');
+assert.equal(completeWindow(end - 7 * 86400000, 7, end), true);
+assert.equal(completeWindow(end - 6 * 86400000, 7, end), false, 'unobserved days must not become negatives');
+assert.equal(completeWindow(Date.parse('2012-12-31'), 3, Date.parse('2013-01-01')), false, 'evaluation must not use confirmation outcomes');
+const score = empty();
+for (const [p, outcome, lift] of [[.9,1,3],[.8,0,3],[.2,1,1],[.1,0,1]]) add(score,p,outcome,lift);
+const result = finalize(score);
+assert.deepEqual([result.truePositives,result.falsePositives,result.falseNegatives,result.trueNegatives],[1,1,1,1]);
+assert.equal(result.precision,.5);
+assert.equal(result.recall,.5);
+assert.equal(result.missRate,.5);
+assert.equal(result.falsePositiveRate,.5);
+assert.equal(result.auc,.75);
+assert.equal(result.randomAlertBaseline.expectedHits,1);
+assert.equal(result.randomAlertBaseline.expectedFalsePositives,1);
+assert.equal(result.randomAlertBaseline.recall,.5);
+const tied=empty();add(tied,.5,1,1);add(tied,.5,0,1);
+assert.equal(finalize(tied).auc,.5);
+assert.equal(finalize(tied).randomAlertBaseline.precision,null);
+console.log('Earthquake complete windows, confusion matrix, and equal-budget random baseline passed');

@@ -44,6 +44,7 @@
     "test:crypto-compat": "node tests/crypto-compat.test.mjs",
     "test:indexeddb-compat": "node tests/indexeddb-compat.test.mjs",
     "test:backup-compat": "node tests/backup-compat.test.mjs",
-    "test:compat-integration": "node tests/compatibility-integration.test.mjs"
+    "test:compat-integration": "node tests/compatibility-integration.test.mjs",
+    "test:data-reliability": "node tests/volcano-feed-validation.test.mjs && node tests/earthquake-evaluation-metrics.test.mjs && node tests/volcano-observation-status.test.mjs"
   }
 }
