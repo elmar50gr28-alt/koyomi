@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "sourceId": "qimen-yanyi-wikisource-volume1-transcription",
+    "title": "遁甲演義（四庫全書本）巻一",
+    "url": "https://zh.wikisource.org/zh/遁甲演義_(四庫全書本)/卷1",
+    "section": "時家竒門",
+    "accessedOn": "2026-10-03",
+    "representation": "online_transcription",
+    "editionMatch": "not_verified_against_cataloged_editions",
+    "pageOrLeaf": null,
+    "reviewStatus": "needs_facsimile_review"
+  },
+  "scope": "Partial xun-head home palace and leader correspondence; not a dated full chart.",
+  "cases": [
+    {
+      "caseId": "yang1-xun0",
+      "dun": "陽遁",
+      "ju": 1,
+      "xunHead": "甲子",
+      "hiddenStem": "戊",
+      "expected": {
+        "xunPalace": 1,
+        "valueStar": "天蓬",
+        "valueDoor": "休門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yang1-xun1",
+      "dun": "陽遁",
+      "ju": 1,
+      "xunHead": "甲戌",
+      "hiddenStem": "己",
+      "expected": {
+        "xunPalace": 2,
+        "valueStar": "天芮",
+        "valueDoor": "死門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yang1-xun2",
+      "dun": "陽遁",
+      "ju": 1,
+      "xunHead": "甲申",
+      "hiddenStem": "庚",
+      "expected": {
+        "xunPalace": 3,
+        "valueStar": "天冲",
+        "valueDoor": "傷門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yang1-xun3",
+      "dun": "陽遁",
+      "ju": 1,
+      "xunHead": "甲午",
+      "hiddenStem": "辛",
+      "expected": {
+        "xunPalace": 4,
+        "valueStar": "天輔",
+        "valueDoor": "杜門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yang1-xun4",
+      "dun": "陽遁",
+      "ju": 1,
+      "xunHead": "甲辰",
+      "hiddenStem": "壬",
+      "expected": {
+        "xunPalace": 5,
+        "valueStar": "天禽",
+        "valueDoor": "死門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yang1-xun5",
+      "dun": "陽遁",
+      "ju": 1,
+      "xunHead": "甲寅",
+      "hiddenStem": "癸",
+      "expected": {
+        "xunPalace": 6,
+        "valueStar": "天心",
+        "valueDoor": "開門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yin9-xun0",
+      "dun": "陰遁",
+      "ju": 9,
+      "xunHead": "甲子",
+      "hiddenStem": "戊",
+      "expected": {
+        "xunPalace": 9,
+        "valueStar": "天英",
+        "valueDoor": "景門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yin9-xun1",
+      "dun": "陰遁",
+      "ju": 9,
+      "xunHead": "甲戌",
+      "hiddenStem": "己",
+      "expected": {
+        "xunPalace": 8,
+        "valueStar": "天任",
+        "valueDoor": "生門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yin9-xun2",
+      "dun": "陰遁",
+      "ju": 9,
+      "xunHead": "甲申",
+      "hiddenStem": "庚",
+      "expected": {
+        "xunPalace": 7,
+        "valueStar": "天柱",
+        "valueDoor": "驚門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yin9-xun3",
+      "dun": "陰遁",
+      "ju": 9,
+      "xunHead": "甲午",
+      "hiddenStem": "辛",
+      "expected": {
+        "xunPalace": 6,
+        "valueStar": "天心",
+        "valueDoor": "開門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yin9-xun4",
+      "dun": "陰遁",
+      "ju": 9,
+      "xunHead": "甲辰",
+      "hiddenStem": "壬",
+      "expected": {
+        "xunPalace": 5,
+        "valueStar": "天禽",
+        "valueDoor": "死門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    },
+    {
+      "caseId": "yin9-xun5",
+      "dun": "陰遁",
+      "ju": 9,
+      "xunHead": "甲寅",
+      "hiddenStem": "癸",
+      "expected": {
+        "xunPalace": 4,
+        "valueStar": "天輔",
+        "valueDoor": "杜門"
+      },
+      "reviewStatus": "needs_facsimile_review"
+    }
+  ]
+}
