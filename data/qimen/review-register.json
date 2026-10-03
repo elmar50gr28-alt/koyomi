@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "scope": "Existing QMDJ implementation audit; not an approved classical source registry.",
+  "sources": [],
+  "schoolCandidates": [
+    {
+      "schoolId": "qimen-chaibu-zhuanpan",
+      "implementationValue": "chaibu",
+      "label": "時家奇門・拆補法・転盤式",
+      "sourceIds": [],
+      "confidence": null,
+      "reviewStatus": "needs_source_review"
+    },
+    {
+      "schoolId": "qimen-fixed-zhuanpan",
+      "implementationValue": "fixed",
+      "label": "節気三元固定式・転盤式",
+      "sourceIds": [],
+      "confidence": null,
+      "reviewStatus": "needs_source_review"
+    }
+  ],
+  "rules": [
+    {
+      "ruleId": "qimen-time-basis",
+      "label": "時刻補正・日境界",
+      "implementation": {
+        "path": "app.html",
+        "functions": "qmdjAdjustedTime / qmdjHourPillar"
+      },
+      "schoolIds": [],
+      "sourceIds": [],
+      "confidence": null,
+      "reviewStatus": "needs_source_review",
+      "referenceCaseIds": []
+    },
+    {
+      "ruleId": "qimen-ju-yuan",
+      "label": "節気・三元・局数",
+      "implementation": {
+        "path": "app.html",
+        "functions": "QMDJ_JU / qmdjYuan / qmdjFuTou"
+      },
+      "schoolIds": [
+        "qimen-chaibu-zhuanpan",
+        "qimen-fixed-zhuanpan"
+      ],
+      "sourceIds": [],
+      "confidence": null,
+      "reviewStatus": "needs_source_review",
+      "referenceCaseIds": []
+    },
+    {
+      "ruleId": "qimen-plate-placement",
+      "label": "九宮・天地盤・星門神・中宮",
+      "implementation": {
+        "path": "app.html",
+        "functions": "qmdjChart / qmdjRingPlace"
+      },
+      "schoolIds": [
+        "qimen-chaibu-zhuanpan",
+        "qimen-fixed-zhuanpan"
+      ],
+      "sourceIds": [],
+      "confidence": null,
+      "reviewStatus": "needs_source_review",
+      "referenceCaseIds": []
+    },
+    {
+      "ruleId": "qimen-xun-leaders",
+      "label": "旬首・値符・値使",
+      "implementation": {
+        "path": "app.html",
+        "functions": "qmdjChart / QMDJ_XUN_HIDDEN"
+      },
+      "schoolIds": [
+        "qimen-chaibu-zhuanpan",
+        "qimen-fixed-zhuanpan"
+      ],
+      "sourceIds": [],
+      "confidence": null,
+      "reviewStatus": "needs_source_review",
+      "referenceCaseIds": []
+    },
+    {
+      "ruleId": "qimen-patterns",
+      "label": "空亡・馬星・入墓・撃刑・格",
+      "implementation": {
+        "path": "app.html",
+        "functions": "qmdjVoidBranches / qmdjHorseBranch / qmdjTomb / qmdjPunishment / qmdjStemPair"
+      },
+      "schoolIds": [
+        "qimen-chaibu-zhuanpan",
+        "qimen-fixed-zhuanpan"
+      ],
+      "sourceIds": [],
+      "confidence": null,
+      "reviewStatus": "needs_source_review",
+      "referenceCaseIds": []
+    },
+    {
+      "ruleId": "qimen-purpose-scores",
+      "label": "目的別評価係数・内部スコア",
+      "implementation": {
+        "path": "app.html",
+        "functions": "qmdjScorePalace / qmdjEvaluate / QMDJ_PURPOSE_GROUPS"
+      },
+      "schoolIds": [],
+      "sourceIds": [],
+      "confidence": null,
+      "reviewStatus": "needs_source_review",
+      "referenceCaseIds": []
+    }
+  ],
+  "referenceCases": []
+}
