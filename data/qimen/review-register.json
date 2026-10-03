@@ -2,7 +2,74 @@
   "schemaVersion": 1,
   "status": "draft",
   "scope": "Existing QMDJ implementation audit; not an approved classical source registry.",
-  "sources": [],
+  "sources": [
+    {
+      "sourceId": "qimen-dunjia-yanyi-ba78688077",
+      "title": "遁甲演義",
+      "authorStatement": "(明)程道生撰",
+      "edition": {
+        "series": "四庫全書珍本 初集 895-898",
+        "publisher": "臺灣商務印書館",
+        "publicationDate": "[19--?]",
+        "extent": "4巻・4冊"
+      },
+      "catalog": {
+        "provider": "国立情報学研究所 CiNii Books",
+        "id": "BA78688077",
+        "url": "https://ci.nii.ac.jp/ncid/BA78688077"
+      },
+      "holdingsExamples": [
+        "宇都宮大学附属図書館",
+        "東京国立博物館"
+      ],
+      "schoolIds": [],
+      "passageLocator": null,
+      "rightsStatus": "not_reviewed; bibliographic metadata only; no text or images copied",
+      "verification": {
+        "checkedBy": "Codex",
+        "checkedOn": "2026-10-03",
+        "scope": "catalog_metadata_only",
+        "humanReviewer": null
+      },
+      "bibliographicStatus": "catalog_verified",
+      "reviewStatus": "needs_passage_review",
+      "confidence": null,
+      "adoptionReason": null
+    },
+    {
+      "sourceId": "qimen-tongzong-bc05748423",
+      "title": "奇門遁甲統宗",
+      "alternateTitle": "奇門遁甲統宗大全",
+      "authorStatement": "封面の責任表示: 諸葛武侯著",
+      "authorshipNote": "書誌の責任表示を記録したもので、歴史的著者の真偽を認定しない。",
+      "edition": {
+        "publisher": "湖南書局",
+        "publicationDate": "光緒24 [1898]",
+        "extent": "12巻・6冊"
+      },
+      "catalog": {
+        "provider": "国立情報学研究所 CiNii Books",
+        "id": "BC05748423",
+        "url": "https://ci.nii.ac.jp/ncid/BC05748423"
+      },
+      "holdingsExamples": [
+        "東北大学附属図書館"
+      ],
+      "schoolIds": [],
+      "passageLocator": null,
+      "rightsStatus": "not_reviewed; bibliographic metadata only; no text or images copied",
+      "verification": {
+        "checkedBy": "Codex",
+        "checkedOn": "2026-10-03",
+        "scope": "catalog_metadata_only",
+        "humanReviewer": null
+      },
+      "bibliographicStatus": "catalog_verified",
+      "reviewStatus": "needs_passage_review",
+      "confidence": null,
+      "adoptionReason": null
+    }
+  ],
   "schoolCandidates": [
     {
       "schoolId": "qimen-chaibu-zhuanpan",
