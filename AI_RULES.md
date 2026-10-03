@@ -2,7 +2,8 @@
 
 最終更新: 2026-08-05
 
-AI(Codex)は、作業開始前に必ず `VISION.md`、`ROADMAP.md`、`PROJECT_MANAGER.md`、`DECISIONS.md`、`AI_RULES.md` を確認します。
+AI(Codex)は、通常作業ではまず `AGENTS.md` の低クレジット開発ルールに従います。
+`VISION.md`、`ROADMAP.md`、`PROJECT_MANAGER.md`、`DECISIONS.md`、`AI_RULES.md` は、対象タスクに関連する場合のみ必要な範囲を確認します。
 
 ## 絶対禁止
 
