@@ -71,6 +71,31 @@ npm SHA-512: `8yWKNf7UeNbH458h3sAJ6ZgAjE5jTXp/mNNRFoC20j2SHwZIjAQeEsBB2Q3uCFRaTC
 
 公式天文時刻は古典の流派・日時付き参照盤の承認を代替しない。既存の資料・候補・規則の審査状態は保持する。
 
+## 2025〜2027年の複数年比較と同梱後の回帰検証
+
+PR #422で同じ版の配布物を `vendor/astronomy-engine/2.1.19/astronomy.browser.min.js` に同梱した。上記の「検証用ローカルファイル」はPR #421時点の取得方法を表す。以後の再現では同梱ファイルを指定できる。
+
+[2025年の公式表](https://eco.mtk.nao.ac.jp/koyomi/yoko/2025/rekiyou252.html)（発表2024-02-01）と[2027年の公式表](https://eco.mtk.nao.ac.jp/koyomi/yoko/2027/rekiyou272.html)（発表2026-02-02）から二十四節気のみを追加した。出典・発表日・確認日・UTC+9・分単位の解像度を各年のJSONに記録する。2027年の値は公表された暦計算値であり、観測による事後検証ではない。
+
+| 年 | 件数 | 平均絶対差（分） | 最大絶対差（分） | 最大差の節気 | フォールバック |
+| --- | --- | --- | --- | --- | --- |
+| 2025 | 24 | 0.303 | 0.720 | 立秋 | 0 |
+| 2026 | 24 | 0.350 | 0.991 | 芒種 | 0 |
+| 2027 | 24 | 0.342 | 0.703 | 雨水 | 0 |
+
+全72件の明細は `data/qimen/astronomy-engine-audit-2025-2027.json` に保存する。3年の標本内では最大約59秒だったが、秒精度の保証や他年度の上限ではない。近似モデルや実画面の計算式は変更しない。
+
+再現例:
+
+```powershell
+node scripts/audit-qimen-solar-terms.mjs --year 2025 --astronomy-browser vendor/astronomy-engine/2.1.19/astronomy.browser.min.js --json
+node scripts/audit-qimen-solar-terms.mjs --year 2026 --astronomy-browser vendor/astronomy-engine/2.1.19/astronomy.browser.min.js --json
+node scripts/audit-qimen-solar-terms.mjs --year 2027 --astronomy-browser vendor/astronomy-engine/2.1.19/astronomy.browser.min.js --json
+npm run test:qimen
+```
+
+`--year` の既定値は2026。未収録年や値なしは拒否する。オフライン回帰テストは実Service Worker処理と模擬CacheStorage・通信失敗を使い、キャッシュで得た同梱エンジンにより72件を照合する。90秒のしきい値は標本年の回帰検出用であり、占術の採用基準ではない。実ブラウザーの機内モード試験は含まない。
+
 ## 次工程
 
-既存高精度エンジンをオフラインでも利用できる配信方法を確認し、複数年の公式値との差と節入り前後の盤への影響を比較する。共有の太陽黄経を一括変更して他占術へ影響を広げない。採用する節気の時刻基準は流派資料の確認と分けて記録する。
+同梱と複数年の比較を踏まえ、節入り前後の盤への影響を比較する。共有の太陽黄経を一括変更して他占術へ影響を広げない。採用する節気の時刻基準は流派資料の確認と分けて記録する。

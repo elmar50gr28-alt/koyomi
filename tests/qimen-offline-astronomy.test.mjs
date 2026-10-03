@@ -45,13 +45,18 @@ vm.runInContext('function mod(n,m){return((n%m)+m)%m}function jd(d){return d.get
   '\nconst approximateSolarLongitude=solarLongitude;const v191zSolarLongitudeFallback=d=>{auditFallbackCalls++;return approximateSolarLongitude(d)};\n'+
   runtime+'\nthis.termStart=qmdjTermStart;',ctx);
 assert.equal(ctx.v191zEphemerisActive(),true,'offline engine is active');
-const official=JSON.parse(readFileSync('data/qimen/naoj-solar-terms-2026.json','utf8'));
+for(const year of [2025,2026,2027]){
+const official=JSON.parse(readFileSync(`data/qimen/naoj-solar-terms-${year}.json`,'utf8'));
+assert.equal(official.terms.length,24);
+assert.equal(new Set(official.terms.map(term=>term.name)).size,24);
 for(const term of official.terms){
+  assert.ok(term.datetime.startsWith(year+'-'));
   const instant=Date.parse(term.datetime),result=ctx.termStart(new Date(instant+86400000));
   assert.equal(result.name,term.name);
-  // 2026 regression guard against returning to the old multi-minute fallback.
+  // Sample-year regression guard against returning to the old multi-minute fallback.
   // Official fixtures have minute resolution; this is not an all-year accuracy guarantee.
-  assert.ok(Math.abs(result.start-instant)<90000,term.name+': 2026 regression limit');
+  assert.ok(Math.abs(result.start-instant)<90000,year+' '+term.name+': sample-year regression limit');
+}
 }
 assert.equal(ctx.auditFallbackCalls,0,'no silent approximation fallback while offline');
-console.log('Offline Astronomy Engine passed: unchanged licensed artifact, service-worker cached response under network failure, 24 official terms and no fallback.');
+console.log('Offline Astronomy Engine passed: unchanged licensed artifact, service-worker cached response under network failure, 72 official terms (2025-2027) and no fallback.');

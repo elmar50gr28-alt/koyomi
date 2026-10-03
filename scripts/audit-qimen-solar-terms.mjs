@@ -2,7 +2,11 @@ import {solarApparentLongitude} from '../src/bazi/astronomy/solar-term-core.js';
 import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
-const data=JSON.parse(readFileSync('data/qimen/naoj-solar-terms-2026.json','utf8'));
+const yearIndex=process.argv.indexOf('--year');
+const year=yearIndex<0?2026:Number(process.argv[yearIndex+1]);
+if(![2025,2026,2027].includes(year))throw Error('--year requires a supported official fixture year: 2025, 2026 or 2027');
+const data=JSON.parse(readFileSync(`data/qimen/naoj-solar-terms-${year}.json`,'utf8'));
+if(data.terms.length!==24 || data.terms.some(row=>!row.datetime.startsWith(year+'-')))throw Error('Invalid official year fixture');
 const lines=readFileSync('app.html','utf8').split(/\r?\n/);
 const definitions=['solarLongitude','qmdjMod','qmdjSignedAngle','qmdjTermStart'].map(n=>lines.find(l=>l.startsWith('function '+n+'(')));
 if(definitions.some(l=>!l))throw Error('Solar term functions missing');
@@ -40,6 +44,6 @@ const report=data.terms.map(row=>{
 });
 if(enginePath && context.auditFallbackCalls!==0)throw Error('Astronomy Engine audit silently fell back to the approximation');
 const max=report.reduce((a,b)=>Math.abs(a.differenceMinutes)>Math.abs(b.differenceMinutes)?a:b);
-const summary={model,engineSha256,fallbackCalls:enginePath?context.auditFallbackCalls:undefined,year:2026,count:report.length,meanAbsoluteMinutes:Number((report.reduce((s,r)=>s+Math.abs(r.differenceMinutes),0)/report.length).toFixed(3)),maxAbsoluteMinutes:Math.abs(max.differenceMinutes),maxTerm:max.name};
+const summary={model,engineSha256,fallbackCalls:enginePath?context.auditFallbackCalls:undefined,year,count:report.length,meanAbsoluteMinutes:Number((report.reduce((s,r)=>s+Math.abs(r.differenceMinutes),0)/report.length).toFixed(3)),maxAbsoluteMinutes:Math.abs(max.differenceMinutes),maxTerm:max.name};
 if(process.argv.includes('--json'))console.log(JSON.stringify({summary,report},null,2));
 else{console.table(report);console.log(summary);console.log('Measurement only: model-labelled comparison; Astronomy Engine mode replays the app runtime override with a verified library file. Minute-resolution official times; no accuracy acceptance threshold or Qimen approval implied.');}

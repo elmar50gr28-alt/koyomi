@@ -1,0 +1,479 @@
+{
+  "scope": "Three sample years; minute-resolution official fixtures; no all-year accuracy or Qimen chart approval implied.",
+  "reports": [
+    {
+      "summary": {
+        "model": "astronomy-engine-2.1.19-runtime",
+        "engineSha256": "f41139a87941ea017ab902b954c9389fa27ea72083d7fab4971756d7769d14e6",
+        "fallbackCalls": 0,
+        "year": 2025,
+        "count": 24,
+        "meanAbsoluteMinutes": 0.303,
+        "maxAbsoluteMinutes": 0.72,
+        "maxTerm": "立秋"
+      },
+      "report": [
+        {
+          "name": "小寒",
+          "official": "2025-01-05T11:33:00+09:00",
+          "computedUtc": "2025-01-05T02:32:41.100Z",
+          "differenceMinutes": -0.315
+        },
+        {
+          "name": "大寒",
+          "official": "2025-01-20T05:00:00+09:00",
+          "computedUtc": "2025-01-19T20:00:02.569Z",
+          "differenceMinutes": 0.043
+        },
+        {
+          "name": "立春",
+          "official": "2025-02-03T23:10:00+09:00",
+          "computedUtc": "2025-02-03T14:10:29.635Z",
+          "differenceMinutes": 0.494
+        },
+        {
+          "name": "雨水",
+          "official": "2025-02-18T19:07:00+09:00",
+          "computedUtc": "2025-02-18T10:06:35.158Z",
+          "differenceMinutes": -0.414
+        },
+        {
+          "name": "啓蟄",
+          "official": "2025-03-05T17:07:00+09:00",
+          "computedUtc": "2025-03-05T08:07:17.120Z",
+          "differenceMinutes": 0.285
+        },
+        {
+          "name": "春分",
+          "official": "2025-03-20T18:01:00+09:00",
+          "computedUtc": "2025-03-20T09:01:26.760Z",
+          "differenceMinutes": 0.446
+        },
+        {
+          "name": "清明",
+          "official": "2025-04-04T21:49:00+09:00",
+          "computedUtc": "2025-04-04T12:48:34.187Z",
+          "differenceMinutes": -0.43
+        },
+        {
+          "name": "穀雨",
+          "official": "2025-04-20T04:56:00+09:00",
+          "computedUtc": "2025-04-19T19:56:03.323Z",
+          "differenceMinutes": 0.055
+        },
+        {
+          "name": "立夏",
+          "official": "2025-05-05T14:57:00+09:00",
+          "computedUtc": "2025-05-05T05:57:21.709Z",
+          "differenceMinutes": 0.362
+        },
+        {
+          "name": "小満",
+          "official": "2025-05-21T03:55:00+09:00",
+          "computedUtc": "2025-05-20T18:54:51.047Z",
+          "differenceMinutes": -0.149
+        },
+        {
+          "name": "芒種",
+          "official": "2025-06-05T18:57:00+09:00",
+          "computedUtc": "2025-06-05T09:56:40.820Z",
+          "differenceMinutes": -0.32
+        },
+        {
+          "name": "夏至",
+          "official": "2025-06-21T11:42:00+09:00",
+          "computedUtc": "2025-06-21T02:42:17.884Z",
+          "differenceMinutes": 0.298
+        },
+        {
+          "name": "小暑",
+          "official": "2025-07-07T05:05:00+09:00",
+          "computedUtc": "2025-07-06T20:04:51.896Z",
+          "differenceMinutes": -0.135
+        },
+        {
+          "name": "大暑",
+          "official": "2025-07-22T22:29:00+09:00",
+          "computedUtc": "2025-07-22T13:29:20.779Z",
+          "differenceMinutes": 0.346
+        },
+        {
+          "name": "立秋",
+          "official": "2025-08-07T14:52:00+09:00",
+          "computedUtc": "2025-08-07T05:51:16.774Z",
+          "differenceMinutes": -0.72
+        },
+        {
+          "name": "処暑",
+          "official": "2025-08-23T05:34:00+09:00",
+          "computedUtc": "2025-08-22T20:33:49.606Z",
+          "differenceMinutes": -0.173
+        },
+        {
+          "name": "白露",
+          "official": "2025-09-07T17:52:00+09:00",
+          "computedUtc": "2025-09-07T08:51:50.125Z",
+          "differenceMinutes": -0.165
+        },
+        {
+          "name": "秋分",
+          "official": "2025-09-23T03:19:00+09:00",
+          "computedUtc": "2025-09-22T18:19:34.560Z",
+          "differenceMinutes": 0.576
+        },
+        {
+          "name": "寒露",
+          "official": "2025-10-08T09:41:00+09:00",
+          "computedUtc": "2025-10-08T00:41:21.050Z",
+          "differenceMinutes": 0.351
+        },
+        {
+          "name": "霜降",
+          "official": "2025-10-23T12:51:00+09:00",
+          "computedUtc": "2025-10-23T03:51:20.322Z",
+          "differenceMinutes": 0.339
+        },
+        {
+          "name": "立冬",
+          "official": "2025-11-07T13:04:00+09:00",
+          "computedUtc": "2025-11-07T04:04:15.491Z",
+          "differenceMinutes": 0.258
+        },
+        {
+          "name": "小雪",
+          "official": "2025-11-22T10:36:00+09:00",
+          "computedUtc": "2025-11-22T01:35:50.104Z",
+          "differenceMinutes": -0.165
+        },
+        {
+          "name": "大雪",
+          "official": "2025-12-07T06:05:00+09:00",
+          "computedUtc": "2025-12-06T21:04:38.612Z",
+          "differenceMinutes": -0.356
+        },
+        {
+          "name": "冬至",
+          "official": "2025-12-22T00:03:00+09:00",
+          "computedUtc": "2025-12-21T15:03:03.908Z",
+          "differenceMinutes": 0.065
+        }
+      ]
+    },
+    {
+      "summary": {
+        "model": "astronomy-engine-2.1.19-runtime",
+        "engineSha256": "f41139a87941ea017ab902b954c9389fa27ea72083d7fab4971756d7769d14e6",
+        "fallbackCalls": 0,
+        "year": 2026,
+        "count": 24,
+        "meanAbsoluteMinutes": 0.35,
+        "maxAbsoluteMinutes": 0.991,
+        "maxTerm": "芒種"
+      },
+      "report": [
+        {
+          "name": "小寒",
+          "official": "2026-01-05T17:23:00+09:00",
+          "computedUtc": "2026-01-05T08:23:03.115Z",
+          "differenceMinutes": 0.052
+        },
+        {
+          "name": "大寒",
+          "official": "2026-01-20T10:45:00+09:00",
+          "computedUtc": "2026-01-20T01:44:42.361Z",
+          "differenceMinutes": -0.294
+        },
+        {
+          "name": "立春",
+          "official": "2026-02-04T05:02:00+09:00",
+          "computedUtc": "2026-02-03T20:01:54.542Z",
+          "differenceMinutes": -0.091
+        },
+        {
+          "name": "雨水",
+          "official": "2026-02-19T00:52:00+09:00",
+          "computedUtc": "2026-02-18T15:51:32.390Z",
+          "differenceMinutes": -0.46
+        },
+        {
+          "name": "啓蟄",
+          "official": "2026-03-05T22:59:00+09:00",
+          "computedUtc": "2026-03-05T13:58:43.972Z",
+          "differenceMinutes": -0.267
+        },
+        {
+          "name": "春分",
+          "official": "2026-03-20T23:46:00+09:00",
+          "computedUtc": "2026-03-20T14:45:36.045Z",
+          "differenceMinutes": -0.399
+        },
+        {
+          "name": "清明",
+          "official": "2026-04-05T03:40:00+09:00",
+          "computedUtc": "2026-04-04T18:39:59.162Z",
+          "differenceMinutes": -0.014
+        },
+        {
+          "name": "穀雨",
+          "official": "2026-04-20T10:39:00+09:00",
+          "computedUtc": "2026-04-20T01:39:09.898Z",
+          "differenceMinutes": 0.165
+        },
+        {
+          "name": "立夏",
+          "official": "2026-05-05T20:49:00+09:00",
+          "computedUtc": "2026-05-05T11:49:09.476Z",
+          "differenceMinutes": 0.158
+        },
+        {
+          "name": "小満",
+          "official": "2026-05-21T09:37:00+09:00",
+          "computedUtc": "2026-05-21T00:37:16.959Z",
+          "differenceMinutes": 0.283
+        },
+        {
+          "name": "芒種",
+          "official": "2026-06-06T00:48:00+09:00",
+          "computedUtc": "2026-06-05T15:48:59.458Z",
+          "differenceMinutes": 0.991
+        },
+        {
+          "name": "夏至",
+          "official": "2026-06-21T17:25:00+09:00",
+          "computedUtc": "2026-06-21T08:25:00.317Z",
+          "differenceMinutes": 0.005
+        },
+        {
+          "name": "小暑",
+          "official": "2026-07-07T10:57:00+09:00",
+          "computedUtc": "2026-07-07T01:57:22.387Z",
+          "differenceMinutes": 0.373
+        },
+        {
+          "name": "大暑",
+          "official": "2026-07-23T04:13:00+09:00",
+          "computedUtc": "2026-07-22T19:13:18.218Z",
+          "differenceMinutes": 0.304
+        },
+        {
+          "name": "立秋",
+          "official": "2026-08-07T20:43:00+09:00",
+          "computedUtc": "2026-08-07T11:42:56.664Z",
+          "differenceMinutes": -0.056
+        },
+        {
+          "name": "処暑",
+          "official": "2026-08-23T11:19:00+09:00",
+          "computedUtc": "2026-08-23T02:18:58.413Z",
+          "differenceMinutes": -0.026
+        },
+        {
+          "name": "白露",
+          "official": "2026-09-07T23:41:00+09:00",
+          "computedUtc": "2026-09-07T14:41:44.297Z",
+          "differenceMinutes": 0.738
+        },
+        {
+          "name": "秋分",
+          "official": "2026-09-23T09:05:00+09:00",
+          "computedUtc": "2026-09-23T00:05:38.618Z",
+          "differenceMinutes": 0.644
+        },
+        {
+          "name": "寒露",
+          "official": "2026-10-08T15:29:00+09:00",
+          "computedUtc": "2026-10-08T06:29:58.056Z",
+          "differenceMinutes": 0.968
+        },
+        {
+          "name": "霜降",
+          "official": "2026-10-23T18:38:00+09:00",
+          "computedUtc": "2026-10-23T09:38:24.267Z",
+          "differenceMinutes": 0.404
+        },
+        {
+          "name": "立冬",
+          "official": "2026-11-07T18:52:00+09:00",
+          "computedUtc": "2026-11-07T09:52:33.363Z",
+          "differenceMinutes": 0.556
+        },
+        {
+          "name": "小雪",
+          "official": "2026-11-22T16:23:00+09:00",
+          "computedUtc": "2026-11-22T07:23:34.116Z",
+          "differenceMinutes": 0.569
+        },
+        {
+          "name": "大雪",
+          "official": "2026-12-07T11:53:00+09:00",
+          "computedUtc": "2026-12-07T02:52:47.192Z",
+          "differenceMinutes": -0.213
+        },
+        {
+          "name": "冬至",
+          "official": "2026-12-22T05:50:00+09:00",
+          "computedUtc": "2026-12-21T20:50:22.188Z",
+          "differenceMinutes": 0.37
+        }
+      ]
+    },
+    {
+      "summary": {
+        "model": "astronomy-engine-2.1.19-runtime",
+        "engineSha256": "f41139a87941ea017ab902b954c9389fa27ea72083d7fab4971756d7769d14e6",
+        "fallbackCalls": 0,
+        "year": 2027,
+        "count": 24,
+        "meanAbsoluteMinutes": 0.342,
+        "maxAbsoluteMinutes": 0.703,
+        "maxTerm": "雨水"
+      },
+      "report": [
+        {
+          "name": "小寒",
+          "official": "2027-01-05T23:10:00+09:00",
+          "computedUtc": "2027-01-05T14:10:07.757Z",
+          "differenceMinutes": 0.129
+        },
+        {
+          "name": "大寒",
+          "official": "2027-01-20T16:30:00+09:00",
+          "computedUtc": "2027-01-20T07:30:02.653Z",
+          "differenceMinutes": 0.044
+        },
+        {
+          "name": "立春",
+          "official": "2027-02-04T10:46:00+09:00",
+          "computedUtc": "2027-02-04T01:46:24.432Z",
+          "differenceMinutes": 0.407
+        },
+        {
+          "name": "雨水",
+          "official": "2027-02-19T06:33:00+09:00",
+          "computedUtc": "2027-02-18T21:33:42.191Z",
+          "differenceMinutes": 0.703
+        },
+        {
+          "name": "啓蟄",
+          "official": "2027-03-06T04:40:00+09:00",
+          "computedUtc": "2027-03-05T19:39:28.130Z",
+          "differenceMinutes": -0.531
+        },
+        {
+          "name": "春分",
+          "official": "2027-03-21T05:25:00+09:00",
+          "computedUtc": "2027-03-20T20:24:43.454Z",
+          "differenceMinutes": -0.276
+        },
+        {
+          "name": "清明",
+          "official": "2027-04-05T09:17:00+09:00",
+          "computedUtc": "2027-04-05T00:17:09.081Z",
+          "differenceMinutes": 0.151
+        },
+        {
+          "name": "穀雨",
+          "official": "2027-04-20T16:18:00+09:00",
+          "computedUtc": "2027-04-20T07:17:22.640Z",
+          "differenceMinutes": -0.623
+        },
+        {
+          "name": "立夏",
+          "official": "2027-05-06T02:25:00+09:00",
+          "computedUtc": "2027-05-05T17:24:38.618Z",
+          "differenceMinutes": -0.356
+        },
+        {
+          "name": "小満",
+          "official": "2027-05-21T15:18:00+09:00",
+          "computedUtc": "2027-05-21T06:17:54.414Z",
+          "differenceMinutes": -0.093
+        },
+        {
+          "name": "芒種",
+          "official": "2027-06-06T06:26:00+09:00",
+          "computedUtc": "2027-06-05T21:25:22.587Z",
+          "differenceMinutes": -0.624
+        },
+        {
+          "name": "夏至",
+          "official": "2027-06-21T23:11:00+09:00",
+          "computedUtc": "2027-06-21T14:10:33.793Z",
+          "differenceMinutes": -0.437
+        },
+        {
+          "name": "小暑",
+          "official": "2027-07-07T16:37:00+09:00",
+          "computedUtc": "2027-07-07T07:36:49.152Z",
+          "differenceMinutes": -0.181
+        },
+        {
+          "name": "大暑",
+          "official": "2027-07-23T10:05:00+09:00",
+          "computedUtc": "2027-07-23T01:04:23.854Z",
+          "differenceMinutes": -0.602
+        },
+        {
+          "name": "立秋",
+          "official": "2027-08-08T02:27:00+09:00",
+          "computedUtc": "2027-08-07T17:26:25.905Z",
+          "differenceMinutes": -0.568
+        },
+        {
+          "name": "処暑",
+          "official": "2027-08-23T17:14:00+09:00",
+          "computedUtc": "2027-08-23T08:13:53.870Z",
+          "differenceMinutes": -0.102
+        },
+        {
+          "name": "白露",
+          "official": "2027-09-08T05:28:00+09:00",
+          "computedUtc": "2027-09-07T20:28:02.374Z",
+          "differenceMinutes": 0.04
+        },
+        {
+          "name": "秋分",
+          "official": "2027-09-23T15:02:00+09:00",
+          "computedUtc": "2027-09-23T06:01:18.346Z",
+          "differenceMinutes": -0.694
+        },
+        {
+          "name": "寒露",
+          "official": "2027-10-08T21:17:00+09:00",
+          "computedUtc": "2027-10-08T12:16:48.446Z",
+          "differenceMinutes": -0.193
+        },
+        {
+          "name": "霜降",
+          "official": "2027-10-24T00:33:00+09:00",
+          "computedUtc": "2027-10-23T15:32:44.735Z",
+          "differenceMinutes": -0.254
+        },
+        {
+          "name": "立冬",
+          "official": "2027-11-08T00:39:00+09:00",
+          "computedUtc": "2027-11-07T15:38:35.027Z",
+          "differenceMinutes": -0.416
+        },
+        {
+          "name": "小雪",
+          "official": "2027-11-22T22:16:00+09:00",
+          "computedUtc": "2027-11-22T13:16:20.720Z",
+          "differenceMinutes": 0.345
+        },
+        {
+          "name": "大雪",
+          "official": "2027-12-07T17:38:00+09:00",
+          "computedUtc": "2027-12-07T08:37:51.995Z",
+          "differenceMinutes": -0.133
+        },
+        {
+          "name": "冬至",
+          "official": "2027-12-22T11:42:00+09:00",
+          "computedUtc": "2027-12-22T02:42:18.623Z",
+          "differenceMinutes": 0.31
+        }
+      ]
+    }
+  ]
+}
