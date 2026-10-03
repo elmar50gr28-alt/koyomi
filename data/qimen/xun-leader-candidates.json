@@ -24,7 +24,17 @@
         "valueStar": "天蓬",
         "valueDoor": "休門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            19
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yang1-xun1",
@@ -37,7 +47,17 @@
         "valueStar": "天芮",
         "valueDoor": "死門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            19
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yang1-xun2",
@@ -50,7 +70,17 @@
         "valueStar": "天冲",
         "valueDoor": "傷門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            19
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yang1-xun3",
@@ -63,7 +93,18 @@
         "valueStar": "天輔",
         "valueDoor": "杜門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            19,
+            20
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yang1-xun4",
@@ -76,7 +117,17 @@
         "valueStar": "天禽",
         "valueDoor": "死門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            20
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yang1-xun5",
@@ -89,7 +140,17 @@
         "valueStar": "天心",
         "valueDoor": "開門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            20
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yin9-xun0",
@@ -102,7 +163,17 @@
         "valueStar": "天英",
         "valueDoor": "景門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            20
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yin9-xun1",
@@ -115,7 +186,17 @@
         "valueStar": "天任",
         "valueDoor": "生門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            20
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yin9-xun2",
@@ -128,7 +209,17 @@
         "valueStar": "天柱",
         "valueDoor": "驚門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            20
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yin9-xun3",
@@ -141,7 +232,18 @@
         "valueStar": "天心",
         "valueDoor": "開門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            20,
+            21
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yin9-xun4",
@@ -154,7 +256,17 @@
         "valueStar": "天禽",
         "valueDoor": "死門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            21
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
     },
     {
       "caseId": "yin9-xun5",
@@ -167,7 +279,34 @@
         "valueStar": "天輔",
         "valueDoor": "杜門"
       },
-      "reviewStatus": "needs_facsimile_review"
+      "reviewStatus": "needs_facsimile_review",
+      "supplementalEvidence": [
+        {
+          "sourceId": "qimen-yanyi-cadal01053966-volume1",
+          "scanPages": [
+            21
+          ],
+          "observation": "home_palace_star_door_match",
+          "reviewStatus": "needs_human_review"
+        }
+      ]
+    }
+  ],
+  "supplementalSources": [
+    {
+      "sourceId": "qimen-yanyi-cadal01053966-volume1",
+      "title": "四庫全書珍本初集・遁甲演義 巻一",
+      "url": "https://commons.wikimedia.org/wiki/File:CADAL01053966_四庫全書珍本初集·遁甲演義.djvu",
+      "publisher": "上海商務印書館",
+      "publicationYears": "1934–1935",
+      "bibliographyBasis": "public_file_metadata",
+      "representation": "facsimile",
+      "section": "時家奇門",
+      "accessedOn": "2026-10-03",
+      "editionMatch": "not_verified_against_transcription_or_cataloged_editions",
+      "reviewStatus": "needs_human_review",
+      "reviewMethod": "Codex_visual_cross_check",
+      "reviewRecord": "docs/QIMEN_FACSIMILE_REVIEW.md"
     }
   ]
 }
