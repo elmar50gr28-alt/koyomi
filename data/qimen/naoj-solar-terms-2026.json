@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "sourceId": "naoj-rekiyou-2026-solar-terms",
+    "title": "令和8年(2026)暦要項 二十四節気および雑節",
+    "url": "https://eco.mtk.nao.ac.jp/koyomi/yoko/2026/rekiyou262.html",
+    "publishedOn": "2025-02-03",
+    "accessedOn": "2026-10-03",
+    "timeBasis": "中央標準時 UTC+09:00",
+    "resolutionSeconds": 60,
+    "reviewStatus": "transcribed_from_official_table"
+  },
+  "scope": "Astronomical solar-term timings only; not an approved Qimen rule or full-chart reference.",
+  "terms": [
+    {
+      "name": "小寒",
+      "longitude": 285,
+      "datetime": "2026-01-05T17:23:00+09:00"
+    },
+    {
+      "name": "大寒",
+      "longitude": 300,
+      "datetime": "2026-01-20T10:45:00+09:00"
+    },
+    {
+      "name": "立春",
+      "longitude": 315,
+      "datetime": "2026-02-04T05:02:00+09:00"
+    },
+    {
+      "name": "雨水",
+      "longitude": 330,
+      "datetime": "2026-02-19T00:52:00+09:00"
+    },
+    {
+      "name": "啓蟄",
+      "longitude": 345,
+      "datetime": "2026-03-05T22:59:00+09:00"
+    },
+    {
+      "name": "春分",
+      "longitude": 0,
+      "datetime": "2026-03-20T23:46:00+09:00"
+    },
+    {
+      "name": "清明",
+      "longitude": 15,
+      "datetime": "2026-04-05T03:40:00+09:00"
+    },
+    {
+      "name": "穀雨",
+      "longitude": 30,
+      "datetime": "2026-04-20T10:39:00+09:00"
+    },
+    {
+      "name": "立夏",
+      "longitude": 45,
+      "datetime": "2026-05-05T20:49:00+09:00"
+    },
+    {
+      "name": "小満",
+      "longitude": 60,
+      "datetime": "2026-05-21T09:37:00+09:00"
+    },
+    {
+      "name": "芒種",
+      "longitude": 75,
+      "datetime": "2026-06-06T00:48:00+09:00"
+    },
+    {
+      "name": "夏至",
+      "longitude": 90,
+      "datetime": "2026-06-21T17:25:00+09:00"
+    },
+    {
+      "name": "小暑",
+      "longitude": 105,
+      "datetime": "2026-07-07T10:57:00+09:00"
+    },
+    {
+      "name": "大暑",
+      "longitude": 120,
+      "datetime": "2026-07-23T04:13:00+09:00"
+    },
+    {
+      "name": "立秋",
+      "longitude": 135,
+      "datetime": "2026-08-07T20:43:00+09:00"
+    },
+    {
+      "name": "処暑",
+      "longitude": 150,
+      "datetime": "2026-08-23T11:19:00+09:00"
+    },
+    {
+      "name": "白露",
+      "longitude": 165,
+      "datetime": "2026-09-07T23:41:00+09:00"
+    },
+    {
+      "name": "秋分",
+      "longitude": 180,
+      "datetime": "2026-09-23T09:05:00+09:00"
+    },
+    {
+      "name": "寒露",
+      "longitude": 195,
+      "datetime": "2026-10-08T15:29:00+09:00"
+    },
+    {
+      "name": "霜降",
+      "longitude": 210,
+      "datetime": "2026-10-23T18:38:00+09:00"
+    },
+    {
+      "name": "立冬",
+      "longitude": 225,
+      "datetime": "2026-11-07T18:52:00+09:00"
+    },
+    {
+      "name": "小雪",
+      "longitude": 240,
+      "datetime": "2026-11-22T16:23:00+09:00"
+    },
+    {
+      "name": "大雪",
+      "longitude": 255,
+      "datetime": "2026-12-07T11:53:00+09:00"
+    },
+    {
+      "name": "冬至",
+      "longitude": 270,
+      "datetime": "2026-12-22T05:50:00+09:00"
+    }
+  ]
+}
