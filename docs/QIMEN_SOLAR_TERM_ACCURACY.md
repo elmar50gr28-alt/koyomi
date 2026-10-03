@@ -22,9 +22,32 @@
 | 奇門の内蔵フォールバック | 6.061 | 11.767 | 秋分 |
 | 四柱推命用内蔵視黄経の比較候補 | 5.055 | 12.636 | 立夏 |
 
-候補は平均差が小さくなる一方、最大差が大きくなるため、この比較だけで精度改善と扱わず採用しない。Astronomy Engineを実際にロードしたオンライン経路の測定は本スクリプトでは行っていない。
+候補は平均差が小さくなる一方、最大差が大きくなるため、この比較だけで精度改善と扱わず採用しない。Astronomy Engine経路の測定は以下の追加検証に記録する。
 
 候補再現: `node scripts/audit-qimen-solar-terms.mjs --bazi-candidate --json`。
+
+## Astronomy Engine 2.1.19経路の追加検証
+
+アプリと同じ版のブラウザー配布物を公式npmパッケージから取得し、パッケージのSHA-512が配布メタデータと一致することを確認した。ブラウザーJSファイルのSHA-256も固定し、異なるファイルは測定スクリプトで拒否する。スクリプトはNode VM内で配布物と実画面の後段再定義を実行する。これは同じ実行経路の再現であり、CDN接続・ブラウザー通信障害を含む実機試験ではない。
+
+2026年24件では平均絶対差0.350分（約21秒）、最大絶対差0.991分（約59秒、芒種）。近似式へのフォールバック呼出は0件。完全な測定結果は `data/qimen/astronomy-engine-audit-2026.json` に保存する。
+
+公式表は分単位なので、この結果を秒単位の精度保証や全年度の誤差上限と扱わない。24件が1分以内だったことは今回の測定結果であり、採用基準の認定ではない。
+
+検証用の取得・再現手順（リポジトリの作業コピーで実行）:
+
+```powershell
+npm pack astronomy-engine@2.1.19 --ignore-scripts --pack-destination .
+New-Item -ItemType Directory -Path .qimen-audit-engine -Force
+tar -xf astronomy-engine-2.1.19.tgz -C .qimen-audit-engine --strip-components=1 package/astronomy.browser.min.js package/package.json
+node scripts/audit-qimen-solar-terms.mjs --astronomy-browser .qimen-audit-engine/astronomy.browser.min.js --json
+```
+
+配布元: https://registry.npmjs.org/astronomy-engine/-/astronomy-engine-2.1.19.tgz  
+npm SHA-512: `8yWKNf7UeNbH458h3sAJ6ZgAjE5jTXp/mNNRFoC20j2SHwZIjAQeEsBB2Q3uCFRaTCCJRv33K2XhkhZQMXoX6w==`  
+ブラウザーJS SHA-256: `f41139a87941ea017ab902b954c9389fa27ea72083d7fab4971756d7769d14e6`
+
+東京の既定端末時区とニューヨーク端末時区で測定結果が一致した。パス未指定、誤ったファイル、候補オプションとの併用、近似式へのフォールバックは失敗として扱う。第三者配布物は検証用ローカルファイルであり、このPRではアプリに同梱しない。
 
 ## 結果
 
@@ -50,4 +73,4 @@
 
 ## 次工程
 
-奇門専用の節気算出を高精度化する候補を確認し、複数年の公式値との差と節入り前後の盤への影響を比較する。共有の太陽黄経を一括変更して他占術へ影響を広げない。採用する節気の時刻基準は流派資料の確認と分けて記録する。
+既存高精度エンジンをオフラインでも利用できる配信方法を確認し、複数年の公式値との差と節入り前後の盤への影響を比較する。共有の太陽黄経を一括変更して他占術へ影響を広げない。採用する節気の時刻基準は流派資料の確認と分けて記録する。
