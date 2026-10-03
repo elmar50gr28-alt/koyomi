@@ -50,10 +50,47 @@ for(const year of [2025,2026,2027]){
     }
   }
 }
+// Measure how the current chart path applies clock corrections to astronomy.
+const time=ctx.window.KOYOMI_QIMEN_TIME_CORE,correctionRows=[];
+const locations=[{name:'標準子午線',lon:135},{name:'東京',lon:139.7671},{name:'那覇',lon:127.68}];
+const terms2026=JSON.parse(readFileSync('data/qimen/naoj-solar-terms-2026.json','utf8')).terms;
+for(const [index,term] of terms2026.entries()){
+  const published=Date.parse(term.datetime),root=ctx.api.qmdjTermStart(new Date(published+86400000)).start.getTime();
+  for(const location of locations)for(const basis of ['standard','local','solar']){
+    // Solve the raw input instant whose corrected clock reaches the same root.
+    let lo=root-86400000,hi=root+86400000;
+    for(let i=0;i<40;i++){
+      const mid=Math.floor((lo+hi)/2),adjusted=time.adjustedTime(new Date(mid),location.lon,9,basis).date.getTime();
+      if(adjusted>=root)hi=mid;else lo=mid;
+    }
+    const transition=Math.ceil(hi);
+    assert.ok(Math.abs(time.adjustedTime(new Date(transition),location.lon,9,basis).date.getTime()-root)<2);
+    if(basis==='standard')assert.ok(Math.abs(transition-root)<2);
+    if(basis==='local')assert.ok(Math.abs(transition-root+(location.lon-135)*4*60000)<2,'longitude correction shift');
+    for(const school of ['chaibu','fixed']){
+      const chart=instant=>ctx.api.qmdjChart({date:new Date(instant),tz:9,lon:location.lon,basis,boundary:23,school});
+      const before=chart(transition-1000),after=chart(transition+1000);
+      assert.equal(before.term.name,names[(index+23)%24]);
+      assert.equal(after.term.name,term.name);
+      for(const c of [before,after]){
+        assert.equal(c.ju,ctx.api.QMDJ_JU[c.term.name][c.yuan.yuan]);
+        assert.equal(Object.keys(c.palaces).length,9);
+      }
+      if(school==='fixed')assert.equal(after.yuan.yuan,0);
+      const atRootBefore=chart(root-1000),atRootAfter=chart(root+1000);
+      correctionRows.push({name:term.name,location:location.name,longitude:location.lon,basis,school,astronomicalUtc:new Date(root).toISOString(),inputTransitionUtc:new Date(transition).toISOString(),inputShiftMinutes:Number(((transition-root)/60000).toFixed(3)),astronomicalRootStraddles:atRootBefore.term.name===names[(index+23)%24]&&atRootAfter.term.name===term.name,groundChanged:JSON.stringify(before.ground)!==JSON.stringify(after.ground),palacesChanged:JSON.stringify(before.palaces)!==JSON.stringify(after.palaces)});
+    }
+  }
+}
+const correctionSummary=locations.flatMap(location=>['standard','local','solar'].map(basis=>{
+  const selected=correctionRows.filter(r=>r.location===location.name&&r.basis===basis);
+  return {location:location.name,longitude:location.lon,basis,pairs:selected.length,minInputShiftMinutes:Math.min(...selected.map(r=>r.inputShiftMinutes)),maxInputShiftMinutes:Math.max(...selected.map(r=>r.inputShiftMinutes)),astronomicalRootStraddles:selected.filter(r=>r.astronomicalRootStraddles).length,groundChangedPairs:selected.filter(r=>r.groundChanged).length,palacesChangedPairs:selected.filter(r=>r.palacesChanged).length};
+}));
+assert.equal(correctionRows.length,432);
 assert.equal(ctx.fallbackCount(),0);
 const summary={years:[2025,2026,2027],terms:72,schoolPairs:rows.length,rootProbeSeconds:1,officialProbeSeconds:90,timeBasis:'standard UTC+09:00; longitude 135; day boundary 23:00',fallbackCalls:ctx.fallbackCount(),dunChangedPairs:rows.filter(r=>r.changedFields.includes('dun')).length,juChangedPairs:rows.filter(r=>r.changedFields.includes('ju')).length,groundChangedPairs:rows.filter(r=>r.changedFields.includes('ground')).length,palacesChangedPairs:rows.filter(r=>r.changedFields.includes('palaces')).length};
 assert.equal(summary.schoolPairs,144);
 assert.equal(summary.dunChangedPairs,12);
-const report={scope:'Implementation transition regression only; not an approved classic chart or all-basis/all-location proof. Official minute values are not exact second boundaries.',summary,rows};
+const report={scope:'Implementation transition regression only; not an approved classic chart or all-basis/all-location proof. Official minute values are not exact second boundaries.',summary,rows,correctionSummary,correctionRows};
 if(process.argv.includes('--json'))console.log(JSON.stringify(report,null,2));
-else console.log('Qimen real-engine term/chart boundaries passed: '+JSON.stringify(summary));
+else console.log('Qimen real-engine term/chart boundaries passed: '+JSON.stringify({summary,correctionSummary}));
