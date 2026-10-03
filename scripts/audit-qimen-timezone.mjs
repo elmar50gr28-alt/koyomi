@@ -8,7 +8,8 @@ if (process.argv.includes('--worker')) {
   const names = ['qmdjInputDate', 'qmdjEquationOfTime', 'qmdjAdjustedTime'];
   const definitions = names.map(name => lines.find(line => line.startsWith('function ' + name + '(')));
   if (definitions.some(line => !line)) throw new Error('Qimen definitions not found');
-  const context = vm.createContext({ DAY: 86400000, $: () => ({ value: '2026-07-13T20:30' }) });
+  const context = vm.createContext({ window: {}, DAY: 86400000, $: id => ({ value: id === 'qmTimezone' ? '9' : '2026-07-13T20:30' }) });
+  vm.runInContext(readFileSync('src/shared/qimen-time-core.js', 'utf8'), context);
   vm.runInContext(definitions.join('\n') + '\nthis.result=qmdjAdjustedTime(qmdjInputDate(),139.7671,9,"standard");', context);
   process.stdout.write(JSON.stringify({ hostTimezone: process.env.TZ, input: '2026-07-13T20:30', selectedUtcOffset: 9,
     actualInstant: context.result.date.toISOString(), expectedInstant: '2026-07-13T11:30:00.000Z' }));
