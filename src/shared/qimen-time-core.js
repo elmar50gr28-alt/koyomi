@@ -59,6 +59,11 @@
     const correction = basis === 'local' ? localMinutes : basis === 'solar' ? localMinutes + eot : 0;
     return { date: new OffsetDate(date.getTime() + correction * MINUTE, tz), correction, localMinutes, eot, stdMeridian };
   }
+  function calculationTimes(date, lon, tz, basis) {
+    const astronomicalDate = atOffset(date, tz);
+    const adjusted = adjustedTime(astronomicalDate, lon, tz, basis);
+    return { astronomicalDate, clockDate: adjusted.date, adjusted };
+  }
   function effectiveDayDate(date, boundary, tz) {
     const d = atOffset(date, tz);
     return new OffsetDate(d.getTime() + (Number(boundary) === 23 && d.getHours() >= 23 ? DAY : 0), tz);
@@ -104,6 +109,6 @@
     });
   }
   global.KOYOMI_QIMEN_TIME_CORE = Object.freeze({ atOffset, fromParts, parseInput, inputValue,
-    equationOfTime, adjustedTime, effectiveDayDate, hourPillar, fuTou, slotDates });
+    equationOfTime, adjustedTime, calculationTimes, effectiveDayDate, hourPillar, fuTou, slotDates });
 })(typeof window === 'undefined' ? globalThis : window);
 

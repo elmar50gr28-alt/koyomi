@@ -50,36 +50,58 @@ for(const year of [2025,2026,2027]){
     }
   }
 }
-// Measure how the current chart path applies clock corrections to astronomy.
+// Verify that clock correction does not move the astronomical instant.
 const time=ctx.window.KOYOMI_QIMEN_TIME_CORE,correctionRows=[];
 const locations=[{name:'標準子午線',lon:135},{name:'東京',lon:139.7671},{name:'那覇',lon:127.68}];
 const terms2026=JSON.parse(readFileSync('data/qimen/naoj-solar-terms-2026.json','utf8')).terms;
 for(const [index,term] of terms2026.entries()){
   const published=Date.parse(term.datetime),root=ctx.api.qmdjTermStart(new Date(published+86400000)).start.getTime();
-  for(const location of locations)for(const basis of ['standard','local','solar']){
-    // Solve the raw input instant whose corrected clock reaches the same root.
-    let lo=root-86400000,hi=root+86400000;
-    for(let i=0;i<40;i++){
-      const mid=Math.floor((lo+hi)/2),adjusted=time.adjustedTime(new Date(mid),location.lon,9,basis).date.getTime();
-      if(adjusted>=root)hi=mid;else lo=mid;
+  for(const location of locations)for(const basis of ['standard','local','solar'])for(const school of ['chaibu','fixed']){
+    const chart=instant=>ctx.api.qmdjChart({date:new Date(instant),tz:9,lon:location.lon,basis,boundary:23,school});
+    const before=chart(root-1000),after=chart(root+1000);
+    assert.equal(before.term.name,names[(index+23)%24]);
+    assert.equal(after.term.name,term.name);
+    for(const c of [before,after]){
+      assert.equal(c.raw.getTime(),c.input.date.getTime(),'astronomy retains input instant');
+      assert.equal(c.usedDate.getTime(),time.adjustedTime(c.raw,location.lon,9,basis).date.getTime(),'clock correction remains active');
+      const standard=ctx.api.qmdjChart({...c.input,basis:'standard'});
+      assert.equal(c.dun,standard.dun);
+      assert.equal(c.yp.text,standard.yp.text,'year pillar uses same astronomical instant');
+      assert.equal(c.mp.text,standard.mp.text,'month pillar uses same astronomical instant');
+      assert.equal(c.ju,ctx.api.QMDJ_JU[c.term.name][c.yuan.yuan]);
+      assert.equal(Object.keys(c.palaces).length,9);
+      assert.equal(c.hp.text,ctx.qmdjHourPillar(c.usedDate,23,9).text,'hour pillar uses corrected clock');
+      if(school==='chaibu')assert.equal(c.yuan.yuan,ctx.qmdjYuan(c.usedDate,c.term,school,23,9).yuan);
     }
-    const transition=Math.ceil(hi);
-    assert.ok(Math.abs(time.adjustedTime(new Date(transition),location.lon,9,basis).date.getTime()-root)<2);
-    if(basis==='standard')assert.ok(Math.abs(transition-root)<2);
-    if(basis==='local')assert.ok(Math.abs(transition-root+(location.lon-135)*4*60000)<2,'longitude correction shift');
-    for(const school of ['chaibu','fixed']){
-      const chart=instant=>ctx.api.qmdjChart({date:new Date(instant),tz:9,lon:location.lon,basis,boundary:23,school});
-      const before=chart(transition-1000),after=chart(transition+1000);
-      assert.equal(before.term.name,names[(index+23)%24]);
-      assert.equal(after.term.name,term.name);
-      for(const c of [before,after]){
-        assert.equal(c.ju,ctx.api.QMDJ_JU[c.term.name][c.yuan.yuan]);
-        assert.equal(Object.keys(c.palaces).length,9);
+    if(school==='fixed'){
+      assert.equal(after.yuan.yuan,0);
+      if(term.name==='夏至'||term.name==='冬至')for(const [days,oldYuan,newYuan] of [[5,0,1],[10,1,2]]){
+        assert.equal(chart(root+days*86400000-1000).yuan.yuan,oldYuan);
+        assert.equal(chart(root+days*86400000+1000).yuan.yuan,newYuan);
       }
-      if(school==='fixed')assert.equal(after.yuan.yuan,0);
-      const atRootBefore=chart(root-1000),atRootAfter=chart(root+1000);
-      correctionRows.push({name:term.name,location:location.name,longitude:location.lon,basis,school,astronomicalUtc:new Date(root).toISOString(),inputTransitionUtc:new Date(transition).toISOString(),inputShiftMinutes:Number(((transition-root)/60000).toFixed(3)),astronomicalRootStraddles:atRootBefore.term.name===names[(index+23)%24]&&atRootAfter.term.name===term.name,groundChanged:JSON.stringify(before.ground)!==JSON.stringify(after.ground),palacesChanged:JSON.stringify(before.palaces)!==JSON.stringify(after.palaces)});
     }
+    correctionRows.push({name:term.name,location:location.name,longitude:location.lon,basis,school,astronomicalUtc:new Date(root).toISOString(),inputTransitionUtc:new Date(root).toISOString(),inputShiftMinutes:0,clockCorrectionMinutes:Number(after.adjusted.correction.toFixed(3)),astronomicalRootStraddles:true,groundChanged:JSON.stringify(before.ground)!==JSON.stringify(after.ground),palacesChanged:JSON.stringify(before.palaces)!==JSON.stringify(after.palaces)});
+  }
+}
+// Corrections must still affect the selected civil day/hour boundary.
+for(const boundary of [0,23]){
+  const date=new Date(boundary===23?'2026-01-01T13:50:00Z':'2026-01-01T14:50:00Z');
+  const input={date,tz:9,lon:139.7671,boundary,school:'chaibu'};
+  const standard=ctx.api.qmdjChart({...input,basis:'standard'}),local=ctx.api.qmdjChart({...input,basis:'local'});
+  assert.notEqual(standard.dp.text,local.dp.text,'longitude correction crosses selected day boundary');
+  assert.equal(standard.term.name,local.term.name);
+}
+// Fractional/negative offsets and year rollover retain real instants.
+for(const [tz,lon] of [[5.75,85.32],[-5,-74],[14,179]])for(const boundary of [0,23]){
+  const date=new Date('2026-12-31T23:55:00Z');
+  const baseline=ctx.api.qmdjChart({date,tz,lon,basis:'standard',boundary,school:'fixed'});
+  for(const basis of ['local','solar']){
+    const c=ctx.api.qmdjChart({date,tz,lon,basis,boundary,school:'fixed'});
+    assert.equal(c.raw.getTime(),date.getTime());
+    assert.equal(c.term.name,baseline.term.name);
+    assert.equal(c.yp.text,baseline.yp.text);
+    assert.equal(c.mp.text,baseline.mp.text);
+    assert.equal(c.yuan.yuan,baseline.yuan.yuan);
   }
 }
 const correctionSummary=locations.flatMap(location=>['standard','local','solar'].map(basis=>{
