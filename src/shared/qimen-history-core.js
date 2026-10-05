@@ -11,6 +11,22 @@
       input.question.toLowerCase().replace(/\s/g,''), input.location, input.lat, input.lon,
       input.basis, input.school, input.tz, input.boundary, input.mode, input.situation]);
   }
+  function inputSnapshot(input){
+    return {date:input.date.toISOString(),tz:input.tz,lat:input.lat,lon:input.lon,
+      basis:input.basis,school:input.school,boundary:input.boundary,mode:input.mode,situation:input.situation};
+  }
+  function conditionsLabel(record){
+    const s=record.inputConditions;
+    if(!s || typeof s !== 'object') return '保存時の設定は記録されていません';
+    const labels=[];
+    if(Number.isFinite(s.tz)) labels.push('UTC'+(s.tz>=0?'+':'')+s.tz);
+    if(s.boundary===23 || s.boundary===0) labels.push('子刻の開始 '+s.boundary+'時');
+    const modes={sister:'みつのめ姉さん本鑑定',zubat:'ズバッとモード'};
+    const stages={planning:'まだ計画中',ready:'準備は整っている',negotiating:'相手と調整中',stalled:'停滞している',urgent:'今日中に判断が必要',withdraw:'撤退も考えている'};
+    if(Object.hasOwn(modes,s.mode)) labels.push(modes[s.mode]);
+    if(Object.hasOwn(stages,s.situation)) labels.push(stages[s.situation]);
+    return labels.length?labels.join('｜'):'保存時の設定は確認できません';
+  }
   function recentDuplicate(history, key, now){
     return history.find(record => record.key === key && record.calculationVersion === VERSION &&
       Number.isFinite(record.savedAt) && now >= record.savedAt && now - record.savedAt < 30 * 60000);
@@ -20,5 +36,5 @@
       return '計算方式の記録がない鑑定';
     return record.calculationVersion === VERSION ? '現在と同じ計算方式で保存' : '異なる計算方式で保存';
   }
-  root.KoyomiQimenHistory = Object.freeze({VERSION, save, versionLabel, recentDuplicate, inputKey});
+  root.KoyomiQimenHistory = Object.freeze({VERSION, save, versionLabel, recentDuplicate, inputKey, inputSnapshot, conditionsLabel});
 })(globalThis);
