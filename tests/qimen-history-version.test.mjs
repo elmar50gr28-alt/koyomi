@@ -91,3 +91,19 @@ assert.ok(list.innerHTML.includes('保存時の設定'));
 assert.ok(list.innerHTML.includes('子刻の開始 23時'));
 assert.equal(JSON.stringify(history),original);
 console.log('Qimen saved input conditions remain immutable and visible');
+
+for(const [basis,label] of Object.entries({standard:'標準時',local:'地方平均時',solar:'真太陽時'}))
+ for(const [school,name] of Object.entries({chaibu:'時家奇門・拆補法・転盤式',fixed:'時家奇門・節気三元固定式'})){
+  history=[{reading:'saved',inputConditions:{...snapshot,basis,school}}];
+  const before=JSON.stringify(history);
+  vm.runInContext('qmdjRenderHistory()',context);
+  assert.ok(list.innerHTML.includes('使用時刻 '+label));
+  assert.ok(list.innerHTML.includes('基準方式 '+name));
+  assert.equal(JSON.stringify(history),before);
+ }
+const unknown=core.conditionsLabel({inputConditions:{basis:'<img>',school:'toString'}});
+assert.ok(unknown.includes('使用時刻は記録なし・未対応'));
+assert.ok(unknown.includes('基準方式は記録なし・未対応'));
+assert.ok(!unknown.includes('<img>'));
+assert.equal(core.conditionsLabel({}),'保存時の設定は記録されていません');
+console.log('Qimen saved basis and school labels passed across six combinations');

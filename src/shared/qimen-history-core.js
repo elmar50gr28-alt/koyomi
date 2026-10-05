@@ -19,6 +19,10 @@
     const s=record.inputConditions;
     if(!s || typeof s !== 'object') return '保存時の設定は記録されていません';
     const labels=[];
+    const bases={standard:'標準時',local:'地方平均時',solar:'真太陽時'};
+    const schools={chaibu:'時家奇門・拆補法・転盤式',fixed:'時家奇門・節気三元固定式'};
+    labels.push(Object.hasOwn(bases,s.basis)?'使用時刻 '+bases[s.basis]:'使用時刻は記録なし・未対応');
+    labels.push(Object.hasOwn(schools,s.school)?'基準方式 '+schools[s.school]:'基準方式は記録なし・未対応');
     if(Number.isFinite(s.tz)) labels.push('UTC'+(s.tz>=0?'+':'')+s.tz);
     if(s.boundary===23 || s.boundary===0) labels.push('子刻の開始 '+s.boundary+'時');
     const modes={sister:'みつのめ姉さん本鑑定',zubat:'ズバッとモード'};
