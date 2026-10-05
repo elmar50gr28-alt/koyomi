@@ -107,3 +107,15 @@ assert.ok(unknown.includes('基準方式は記録なし・未対応'));
 assert.ok(!unknown.includes('<img>'));
 assert.equal(core.conditionsLabel({}),'保存時の設定は記録されていません');
 console.log('Qimen saved basis and school labels passed across six combinations');
+
+const payload='<img src=x onerror="alert(1)"> & "quoted"';
+const fields=['purpose','rank','score','date','usedDate','location','method','id','question','bestTime','bestDirection','reading'];
+history=[Object.fromEntries(fields.map(field=>[field,payload]))];
+const unsafeOriginal=JSON.stringify(history);
+vm.runInContext('qmdjRenderHistory()',context);
+assert.ok(!list.innerHTML.includes('<img'),'saved text must never create executable markup');
+assert.ok(!list.innerHTML.includes('data-qm-delete="<img'),'saved ID must never escape its attribute');
+const escaped=context.qmdjEscape(payload);
+assert.equal(list.innerHTML.split(escaped).length-1,fields.length,'all saved text fields must render as escaped text');
+assert.equal(JSON.stringify(history),unsafeOriginal,'escaping must not alter stored values');
+console.log('Qimen history renders saved text and IDs without HTML injection');
