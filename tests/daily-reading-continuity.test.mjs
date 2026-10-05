@@ -9,6 +9,8 @@ vm.runInNewContext(await readFile('src/reading/daily/daily-reading-controller.js
 const core = context.KOYOMI_DAILY_READING_CORE, controller = context.KOYOMI_DAILY_READING;
 const legacyActions = core.FOCI.map(focus => ({ id: focus.id, actions: focus.actions.slice(0, ({ money: 12, rest: 6, health: 6 })[focus.id] || 3) }));
 assert.equal(createHash('sha256').update(JSON.stringify(legacyActions)).digest('hex'), '24e341ec18bd7342971b2b457c704c751a57eac4b7c5d93c4c9d8e7c1d76b238', 'all v3.0 action texts and saved ID positions remain unchanged');
+const v31Actions = core.FOCI.map(focus => ({ id: focus.id, actions: focus.actions.slice(0, ({ money: 24, rest: 12, health: 12 })[focus.id] || 6) }));
+assert.equal(createHash('sha256').update(JSON.stringify(v31Actions)).digest('hex'), 'f9857f5134f5c421b0dc7da030f3fe366554558faec4e946a8a73b09cc99a587', 'all 150 v3.1 actions keep their saved ID positions');
 const allActions = core.FOCI.flatMap(focus => focus.actions);
 assert.equal(new Set(allActions).size, allActions.length, 'do not count duplicated action text as a new meaning');
 const memory = new Map();
@@ -64,7 +66,7 @@ const grounded = core.rankFocus({ ...base, themeIds: ['RELATIONSHIP_SET_BOUNDARI
 assert.ok(grounded.find(item => item.focus.id === 'boundary').breakdown.evidenceFit > 0);
 const exhaustedWork = core.FOCI.find(focus => focus.id === 'focus');
 const usedWork = exhaustedWork.actions.map((_, index) => ({ ...base, date: date(30 - index), focusId: 'focus', actionId: `focus-${index}` }));
-assert.equal(core.rankFocus(base, usedWork).find(item => item.focus.id === 'focus').breakdown.actionNovelty, -18);
+assert.equal(core.rankFocus(base, usedWork).find(item => item.focus.id === 'focus').breakdown.actionNovelty, -72);
 assert.equal(core.rankFocus(base, usedWork.map(row => ({ ...row, date: '2025-01-01' }))).find(item => item.focus.id === 'focus').breakdown.actionNovelty, 0, 'expired action use cannot penalize a theme');
 const same = controller.getOrCreate(base, { storage }).reading;
 assert.equal(JSON.stringify(controller.getOrCreate(base, { storage, force: true }).reading), JSON.stringify(same), 'force ignores own same-day history');
@@ -109,6 +111,7 @@ for (const themeCategory of ['overall', 'work', 'love', 'money', 'health', 'fami
     const rows = [];
     for (let day = 1; day <= 30; day++) rows.unshift(core.generate({ ...base, themeCategory, dailyScore, date: date(day) }, rows));
     assert.equal(new Set(rows.map(row => row.story)).size, 30, `${themeCategory}/${dailyScore}: fixed signals still suppress story repetition`);
+    assert.ok(1 - new Set(rows.map(row => row.actionId)).size / 30 <= 0.2 + Number.EPSILON, `${themeCategory}/${dailyScore}: fixed-signal action repetition stays within 20%`);
     fixedMetrics.push({ themeCategory, dailyScore, actionRepeatRate: Number((1 - new Set(rows.map(row => row.actionId)).size / 30).toFixed(3)) });
   }
 }
@@ -118,8 +121,38 @@ for (const profileId of ['second-person', 'third-person', 'fourth-person', 'fift
     for (let day = 1; day <= 30; day++) rows.unshift(core.generate({ ...base, profileId, themeCategory, dailyScore: [0, 44, 45, 69, 70, 100][(day - 1) % 6], date: new Date(Date.UTC(2026, 3, 20 + day)).toISOString().slice(0, 10) }, rows));
     assert.ok(1 - new Set(rows.map(row => row.actionId)).size / 30 <= 0.2 + Number.EPSILON, `${profileId}/${themeCategory}: repeats cannot be hidden by changing profile or date`);
     assert.equal(new Set(rows.map(row => row.story)).size, 30, `${profileId}/${themeCategory}: stories stay distinct across date boundaries`);
+    for (const dailyScore of [0, 50, 100]) {
+      const fixed = [];
+      for (let day = 1; day <= 30; day++) fixed.unshift(core.generate({ ...base, profileId, themeCategory, dailyScore, date: new Date(Date.UTC(2026, 3, 20 + day)).toISOString().slice(0, 10) }, fixed));
+      assert.ok(1 - new Set(fixed.map(row => row.actionId)).size / 30 <= 0.2 + Number.EPSILON, `${profileId}/${themeCategory}/${dailyScore}: fixed-signal repeats stay within 20%`);
+      assert.equal(new Set(fixed.map(row => row.story)).size, 30);
+    }
   }
+}
+const workHistory = [];
+for (let day = 1; day <= 24; day++) workHistory.unshift({ ...base, date: date(day), focusId: day % 2 ? 'prepare' : 'negotiate', actionId: day % 2 ? `prepare-${(day - 1) / 2}` : `negotiate-${(day / 2 - 1) % 10}` });
+const freshWork = core.generate({ ...base, date: date(25), themeCategory: 'work', dailyScore: 0, themeIds: ['WORK_STEADY_PROGRESS'] }, workHistory);
+assert.equal(freshWork.focusId, 'negotiate', 'an exhausted preferred theme cannot force repeated actions while appropriate unused checks remain');
+assert.ok(!workHistory.some(row => row.actionId === freshWork.actionId));
+for (const [themeCategory, themeIds] of [['work', ['WORK_STEADY_PROGRESS']], ['love', ['LOVE_OPEN_COMMUNICATION', 'RELATIONSHIP_SET_BOUNDARIES']], ['decision', ['ACTION_CAREFUL_DECISION']]]) {
+  const rows = [];
+  for (let day = 1; day <= 30; day++) rows.unshift(core.generate({ ...base, date: date(day), themeCategory, themeIds, dailyScore: 0 }, rows));
+  assert.ok(1 - new Set(rows.map(row => row.actionId)).size / 30 <= 0.2 + Number.EPSILON, `${themeCategory}: birth-theme grounding cannot regress protective continuity`);
+  assert.ok(rows.every(row => row.intensity === 'protect'));
+  assert.equal(new Set(rows.map(row => row.story)).size, 30, `${themeCategory}: grounded protective stories remain distinct`);
 }
 console.log(JSON.stringify(metrics, null, 2));
 console.log(JSON.stringify(fixedMetrics));
-console.log('daily reading continuity: ok (1920 readings, preserved v3 action IDs, no random/network APIs, actual UI integration)');
+for (const themeCategory of ['overall', 'work', 'love', 'money', 'health', 'family', 'decision', 'future']) {
+  for (const dailyScore of [0, 50, 100]) {
+    const rows = [];
+    for (let day = 1; day <= 90; day++) {
+      rows.unshift(core.generate({ ...base, profileId: 'rolling', themeCategory, dailyScore, date: date(day) }, rows));
+      if (day < 30) continue;
+      const window = rows.slice(0, 30);
+      assert.ok(1 - new Set(window.map(row => row.actionId)).size / 30 <= 0.2 + Number.EPSILON, `${themeCategory}/${dailyScore}/${day}: expiry must not regress rolling 30-day continuity`);
+      assert.equal(new Set(window.map(row => row.story)).size, 30);
+    }
+  }
+}
+console.log('daily reading continuity: ok (7050 readings, preserved v3.0/v3.1 action IDs, rolling/fixed/varied/grounded signals, actual UI integration)');

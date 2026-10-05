@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.KOYOMI_DAILY_READING_CORE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const VERSION = '3.1.0';
+  const VERSION = '3.2.0';
   const rawFoci = [
     ['complete', '完了', 'work', ['途中の一件を最後まで終わらせる', '返答待ちの案件を一件だけ閉じる', '八割できた作業を提出できる形にする'], ['新しい予定を増やす', '仕上げ前に別の仕事へ逃げる', '細部を直し続けて完了を遅らせる']],
     ['organize', '整理', 'life', ['机の上を15分だけ整える', '不要な通知を三つ止める', '今日使う資料だけを一か所へ集める'], ['整理だけで一日を終える', '思い出の品まで勢いで捨てる', '分類方法を考えるだけで手を止める']],
@@ -52,7 +52,18 @@
     cooperate: ['依頼する作業の完成例を一つ示す', '相談できる時間を相手に確認する', '引き継ぐ情報を一か所にまとめる'],
     observe: ['観察した事実と推測を別の欄へ書く', '比較する基準を一つ決める', '判断に必要だがまだ分からないことを一つ挙げる']
   };
-  const FOCI = Object.freeze(rawFoci.map(([id, label, domain, actions, cautions], index) => ({ id, label, domain, actions: [...actions, ...(EXTRA_ACTIONS[id] || [])], cautions, index })));
+  // More checks and preparation tasks for prolonged protective periods. Eligibility is unchanged.
+  const PROTECTIVE_ACTIONS = {
+    prepare: ['期限までに必要な工程を一つ確認する', '使う資料が最新版か確認する', '作業前の状態を記録しておく', '手順で分からない箇所を担当者に聞く', '困ったときの連絡先を控える', '途中で作業を止める場合の保存方法を確認する'],
+    negotiate: ['納品後に何を確認するか相手と共有する', '修正の回数や受付範囲を確認する', '延期が必要な場合の連絡手順を確認する', '追加の依頼を受ける窓口を確認する', '辞退する場合に必要な引継ぎを確認する', '返答する前に確認すべき資料を一つ指定する'],
+    organize: ['同じ内容のメモを一か所へまとめる', '期限のある書類を取り出しやすい場所へ移す', '使わないアプリのショートカットを一つ整理する'],
+    observe: ['確認した情報がいつのものか調べる', '同じ条件の別の例を一つ調べる', '判断する前に当事者の説明を聞く'],
+    release: ['解約後も必要になる記録を保存する', '借りたまま使っていない物の返却方法を確認する', '続ける約束とやめたい予定を分けて書く'],
+    boundary: ['急な依頼に答える前に自分の予定を確認する', '頼まれた内容のうち保留する部分を伝える'],
+    relationship: ['返事がない場合の次の確認方法を相談する', '会話でまだ決まっていない点を一つ書き出す'],
+    family: ['共有の道具を使う順番を相談する', '家の用事を外へ頼む場合の候補を一つ調べる']
+  };
+  const FOCI = Object.freeze(rawFoci.map(([id, label, domain, actions, cautions], index) => ({ id, label, domain, actions: [...actions, ...(EXTRA_ACTIONS[id] || []), ...(PROTECTIVE_ACTIONS[id] || [])], cautions, index })));
   const STRUCTURES = Object.freeze([
     ['verdict-first', ['conclusion', 'action', 'caution', 'difference', 'time', 'review']],
     ['evidence-turn', ['difference', 'conclusion', 'action', 'time', 'caution', 'review']],
@@ -97,7 +108,7 @@
     history = recentHistory(input, history);
     const intensity = intensityFor(input);
     const protective = ['rest', 'organize', 'prepare', 'observe', 'health', 'money', 'boundary', 'review', 'negotiate', 'relationship', 'family', 'learn', 'release'];
-    return FOCI.filter(focus => (!requested || focus.domain === requested) && (intensity !== 'protect' || protective.includes(focus.id))).map(focus => {
+    const ranked = FOCI.filter(focus => (!requested || focus.domain === requested) && (intensity !== 'protect' || protective.includes(focus.id))).map(focus => {
       let signalFit = 35;
       if (score >= 70 && ['complete', 'contact', 'create', 'focus', 'cooperate'].includes(focus.id)) signalFit += 22;
       if (score < 45 && ['rest', 'organize', 'prepare', 'observe', 'health'].includes(focus.id)) signalFit += 24;
@@ -107,9 +118,23 @@
       const age = recentAge(history, 'focusId', focus.id, input.date);
       const novelty = age === 1 ? -30 : age <= 7 ? -12 : age <= 14 ? -4 : age <= 30 ? 0 : 10;
       const usedActions = new Set(history.filter(item => item.focusId === focus.id).map(item => item.actionId));
-      const actionNovelty = focus.actions.every((_, index) => usedActions.has(`${focus.id}-${index}`)) ? -18 : 0;
+      // Within a requested domain, daily preference (24), evidence fit (12), and recency (30)
+      // must not force a used-up action pool over an eligible pool with fresh checks.
+      const actionNovelty = focus.actions.every((_, index) => usedActions.has(`${focus.id}-${index}`)) ? -72 : 0;
       return { focus, value: signalFit + questionFit + longTermFit + evidenceFit + novelty + actionNovelty, breakdown: { signalFit, questionFit, longTermFit, evidenceFit, novelty, actionNovelty } };
-    }).sort((a, b) => b.value - a.value || a.focus.id.localeCompare(b.focus.id));
+    });
+    // Once every eligible action has appeared, recycle globally by frequency and age.
+    // Otherwise a preferred theme can repeat while another theme's oldest action expires.
+    if (ranked.every(item => item.breakdown.actionNovelty < 0)) {
+      for (const item of ranked) {
+        const index = chooseVariant(item.focus, input, history, 'actionId', item.focus.actions.length);
+        const id = `${item.focus.id}-${index}`;
+        item.breakdown.reuseCount = history.filter(row => row.actionId === id).length;
+        item.breakdown.reuseAge = recentAge(history, 'actionId', id, input.date);
+      }
+      return ranked.sort((a, b) => a.breakdown.reuseCount - b.breakdown.reuseCount || b.breakdown.reuseAge - a.breakdown.reuseAge || b.value - a.value || a.focus.id.localeCompare(b.focus.id));
+    }
+    return ranked.sort((a, b) => b.value - a.value || a.focus.id.localeCompare(b.focus.id));
   }
 
   function chooseVariant(focus, input, history, key, size) {
