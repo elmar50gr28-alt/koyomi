@@ -45,7 +45,9 @@ const cases=[
  {id:'V2-TIAN-YANG4',ju:4,hourIndex:21,palace:1,expected:{valueStar:'天心',valueDoor:'開門',doorTarget:7,door:'生門',heaven:'丙',earth:'丁'}},
  {id:'V2-DI-YANG1',ju:1,hourIndex:27,palace:2,expected:{valueStar:'天冲',valueDoor:'傷門',doorTarget:1,heaven:'乙',earth:'己'}},
  {id:'V2-BIRD-YANG9',ju:9,hourIndex:7,palace:9,expected:{valueStar:'天英',heaven:'丙',earth:'戊'}},
- {id:'V2-TIAN-YIN6',dun:'陰遁',ju:6,hourIndex:56,palace:9,expected:{valueStar:'天蓬',valueDoor:'休門',doorTarget:4,door:'生門',heaven:'丙',earth:'丁'}}
+ {id:'V2-TIAN-YIN6',dun:'陰遁',ju:6,hourIndex:56,palace:9,expected:{valueStar:'天蓬',valueDoor:'休門',doorTarget:4,door:'生門',heaven:'丙',earth:'丁'}},
+ {id:'V1-YANG1-JIACHEN',ju:1,hourIndex:40,palace:5,expected:{valueStar:'天禽',valueDoor:'死門'}},
+ {id:'V1-YIN9-JIACHEN',dun:'陰遁',ju:9,hourIndex:40,palace:5,expected:{valueStar:'天禽',valueDoor:'死門'}}
 ];
 const compare=(run,c)=>{
  const chart=run(c.ju,c.hourIndex,c.dun),p=chart.palaces[c.palace];
@@ -56,9 +58,13 @@ const report=cases.map(c=>({caseId:c.id,expected:c.expected,current:compare(curr
 // Synthetic coverage is a change-impact inventory, not classical ground truth.
 let changedTargets=0,changedDoors=0,centerOrigins=0,centerTargets=0,combinations=0,centerPolicyDifferences=0;
 const centerExamples=[];
+const partitions={neither:0,originOnly:0,targetOnly:0,both:0};
+const jiaHours={total:0,centerOrigin:0,centerTarget:0};
 for(const dun of ['陽遁','陰遁'])for(let ju=1;ju<=9;ju++)for(let hour=0;hour<60;hour++){
  const a=current(ju,hour,dun),b=candidate(ju,hour,dun);
  combinations++;
+ partitions[b.xunPalace===5?(b.doorTarget===5?'both':'originOnly'):(b.doorTarget===5?'targetOnly':'neither')]++;
+ if(hour%10===0){jiaHours.total++;if(b.xunPalace===5)jiaHours.centerOrigin++;if(b.doorTarget===5)jiaHours.centerTarget++;}
  assert.ok(b.doorTarget>=1&&b.doorTarget<=9);
  assert.equal(a.valueStar,b.valueStar);
  assert.equal(a.valueDoor,b.valueDoor);
@@ -84,4 +90,5 @@ for(const dun of ['陽遁','陰遁'])for(let ju=1;ju<=9;ju++)for(let hour=0;hour
  }
  if(b.doorTarget===5&&centerExamples.length<4)centerExamples.push({dun,ju,hourIndex:hour,xunPalace:b.xunPalace,rawDoorTarget:5,to2:doors(b),to8:doors(alternate)});
 }
-console.log(JSON.stringify({scope:'audit_only_not_connected_to_app',centerPolicy:'existing_ringPlace_5_to_2_unverified',cases:report,synthetic:{combinations,changedTargets,changedDoors,centerOrigins,centerTargets},centerSensitivity:{centerPolicyDifferences,examples:centerExamples,sourceApproval:false}},null,2));
+assert.equal(Object.values(partitions).reduce((a,b)=>a+b,0),combinations);
+console.log(JSON.stringify({scope:'audit_only_not_connected_to_app',centerPolicy:'existing_ringPlace_5_to_2_unverified',cases:report,synthetic:{combinations,changedTargets,changedDoors,centerOrigins,centerTargets},centerSensitivity:{centerPolicyDifferences,partitions,jiaHours,examples:centerExamples,sourceApproval:false}},null,2));
