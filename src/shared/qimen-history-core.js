@@ -13,8 +13,8 @@
       old.calculationVersion === record.calculationVersion))].slice(0,100);
   }
   function inputKey(input){
-    return JSON.stringify(['qimen-input-v2', input.date.getTime(), input.purpose.key,
-      input.question.toLowerCase().replace(/\s/g,''), input.location, input.lat, input.lon,
+    return JSON.stringify(['qimen-input-v3', input.date.getTime(), input.purpose.key,
+      input.question.trim(), input.location, input.lat, input.lon,
       input.basis, input.school, input.tz, input.boundary, input.mode, input.situation]);
   }
   function inputSnapshot(input){
