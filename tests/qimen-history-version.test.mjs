@@ -28,3 +28,23 @@ assert.equal(core.save([{key:'same'}],{key:'same'}).length,2,'unversioned record
 assert.ok(app.includes('<script src="./src/shared/qimen-history-core.js"></script>'));
 assert.ok(readFileSync('service-worker.js','utf8').includes("'./src/shared/qimen-history-core.js'"));
 console.log('Qimen saved-reading version preservation passed');
+
+const list={innerHTML:''};
+context.$=()=>list;
+context.$$=()=>[];
+vm.runInContext(app.match(/^function qmdjRenderHistory\(\).*$/m)[0],context);
+vm.runInContext(app.match(/^function qmdjEscape\(.*$/m)[0],context);
+const beforeRender=JSON.stringify(history);
+vm.runInContext('qmdjRenderHistory()',context);
+assert.ok(list.innerHTML.includes('現在と同じ計算方式で保存'));
+assert.ok(list.innerHTML.includes('異なる計算方式で保存'));
+assert.ok(list.innerHTML.includes('計算方式の記録がない鑑定'));
+assert.equal(JSON.stringify(history),beforeRender,'rendering must never rewrite saved readings');
+history=[{id:'unsafe',calculationVersion:'<img src=x onerror=alert(1)>',reading:'saved'}];
+vm.runInContext('qmdjRenderHistory()',context);
+assert.ok(!list.innerHTML.includes('<img'),'unknown version must not become HTML');
+assert.equal(core.versionLabel({calculationVersion:' '}),'計算方式の記録がない鑑定');
+history=[];
+vm.runInContext('qmdjRenderHistory()',context);
+assert.ok(list.innerHTML.includes('保存された奇門鑑定はありません'));
+console.log('Qimen history version presentation passed');
