@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.KOYOMI_DAILY_READING_CORE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const VERSION = '2.0.0';
+  const VERSION = '3.0.0';
   const rawFoci = [
     ['complete', '完了', 'work', ['途中の一件を最後まで終わらせる', '返答待ちの案件を一件だけ閉じる', '八割できた作業を提出できる形にする'], ['新しい予定を増やす', '仕上げ前に別の仕事へ逃げる', '細部を直し続けて完了を遅らせる']],
     ['organize', '整理', 'life', ['机の上を15分だけ整える', '不要な通知を三つ止める', '今日使う資料だけを一か所へ集める'], ['整理だけで一日を終える', '思い出の品まで勢いで捨てる', '分類方法を考えるだけで手を止める']],
@@ -26,7 +26,13 @@
     ['cooperate', '協力', 'work', ['抱えている作業を一件依頼する', '得意な人へ具体的な質問を一つする', '役割と期限を文章で共有する'], ['依頼内容と期限を曖昧にする', '任せた後も全部やり直す', '相手の善意だけを当てにする']],
     ['observe', '観察', 'life', ['予想ではなく数字や行動を一つ確認する', '判断前に一晩分の変化を見る', '気になった事実を評価せず三つ記録する'], ['悪い結果を先回りして決めつける', '観察を先延ばしの口実にする', '一度の出来事を傾向と断定する']]
   ];
-  const FOCI = Object.freeze(rawFoci.map(([id, label, domain, actions, cautions], index) => ({ id, label, domain, actions, cautions, index })));
+  // Keep existing action IDs stable; expand only domains whose small pool forces frequent repeats.
+  const EXTRA_ACTIONS = {
+    money: ['直近の明細と領収書を照合する', '支払日と口座残高を照合する', '使っていない定期購入の解約条件を調べる', '購入後にかかる維持費を書き出す', '契約の更新日と追加料金を確認する', '緊急時に使える資金の置き場所を確認する', '返金や返品の期限を確認する', '今月の残りの支出予定を一覧にする', '家族と共有する費用の分担を確認する'],
+    rest: ['休憩の開始時刻を予定表に入れる', '明日に回せる用事を一つ選ぶ', '休む間に届く連絡への返答時刻を決める'],
+    health: ['無理なく食事を取れる時間を予定に入れる', '作業場所の姿勢や明るさを確認する', '相談時に伝える症状の経過をメモする']
+  };
+  const FOCI = Object.freeze(rawFoci.map(([id, label, domain, actions, cautions], index) => ({ id, label, domain, actions: [...actions, ...(EXTRA_ACTIONS[id] || [])], cautions, index })));
   const STRUCTURES = Object.freeze([
     ['verdict-first', ['conclusion', 'action', 'caution', 'difference', 'time', 'review']],
     ['evidence-turn', ['difference', 'conclusion', 'action', 'time', 'caution', 'review']],
@@ -43,51 +49,74 @@
   ].map(([id, order]) => ({ id, order })));
 
   function hash(value) { let h = 2166136261; for (const char of String(value || '')) h = Math.imul(h ^ char.charCodeAt(0), 16777619); return h >>> 0; }
-  function clamp(value) { return Math.max(0, Math.min(100, Math.round(Number(value) || 50))); }
+  function clamp(value) { return Number.isFinite(Number(value)) && value != null ? Math.max(0, Math.min(100, Math.round(Number(value)))) : 50; }
   function daysSince(current, past) { return (Date.parse(current) - Date.parse(past)) / 86400000; }
-  function categoryDomain(value) { return ({ love: 'relationship', money: 'money', work: 'work', health: 'health' })[value] || null; }
-  function recentAge(history, key, value, date) { const found = (history || []).find(item => item[key] === value && daysSince(date, item.date) >= 0); return found ? daysSince(date, found.date) : Infinity; }
+  function categoryDomain(value) { return ({ love: 'relationship', family: 'relationship', money: 'money', work: 'work', health: 'health', decision: 'life', future: 'life' })[value] || null; }
+  const THEME_FOCI = {
+    ACTION_CAREFUL_DECISION: ['observe', 'decide', 'prepare'], MIND_STRONG_INTUITION: ['observe', 'review'],
+    MIND_OVERTHINKING: ['focus', 'rest', 'review'], WORK_STEADY_PROGRESS: ['complete', 'focus', 'prepare'],
+    MONEY_LONG_TERM_STABILITY: ['money'], WORK_LEADERSHIP: ['cooperate', 'negotiate'],
+    RELATIONSHIP_SET_BOUNDARIES: ['boundary', 'relationship'], LOVE_OPEN_COMMUNICATION: ['contact', 'relationship'],
+    ACTION_START_SMALL: ['prepare', 'create', 'learn'], HEALTH_REST_AND_RECOVERY: ['rest', 'health'],
+    CHANGE_RELEASE_OLD_PATTERN: ['release', 'organize']
+  };
+  function recentHistory(input, history) {
+    return (Array.isArray(history) ? history : []).filter(item => item && item.profileId === input.profileId && daysSince(input.date, item.date) > 0 && daysSince(input.date, item.date) <= 30)
+      .sort((a, b) => b.date.localeCompare(a.date));
+  }
+  function recentAge(history, key, value, date) { return Math.min(Infinity, ...history.filter(item => item[key] === value).map(item => daysSince(date, item.date))); }
+  function intensityFor(input) {
+    const score = clamp(input.dailyScore);
+    if (score < 45) return 'protect';
+    if (input.contradiction || (input.longTermScore != null && clamp(input.longTermScore) < 45) || (input.confidence != null && Number(input.confidence) < 0.5)) return 'test';
+    return score >= 70 ? 'forward' : 'test';
+  }
 
   function rankFocus(input, history) {
     const score = clamp(input.dailyScore), requested = categoryDomain(input.themeCategory);
-    const seed = hash(`${input.profileId}|${input.date}|${input.dayKey}|${input.themeCategory}`);
-    return FOCI.map(focus => {
-      let signalFit = 35 + ((seed >>> (focus.index % 16)) & 15);
-      if (focus.index % 5 === new Date(`${input.date}T12:00:00`).getDay() % 5) signalFit += 12;
+    history = recentHistory(input, history);
+    const intensity = intensityFor(input);
+    const protective = ['rest', 'organize', 'prepare', 'observe', 'health', 'money', 'boundary', 'review', 'negotiate', 'relationship', 'family', 'learn', 'release'];
+    return FOCI.filter(focus => (!requested || focus.domain === requested) && (intensity !== 'protect' || protective.includes(focus.id))).map(focus => {
+      let signalFit = 35;
       if (score >= 70 && ['complete', 'contact', 'create', 'focus', 'cooperate'].includes(focus.id)) signalFit += 22;
       if (score < 45 && ['rest', 'organize', 'prepare', 'observe', 'health'].includes(focus.id)) signalFit += 24;
       const questionFit = requested && focus.domain === requested ? 20 : 0;
       const longTermFit = focus.domain === (input.longTermDomain || '') ? 15 : 0;
+      const evidenceFit = (input.themeIds || []).some(id => THEME_FOCI[id]?.includes(focus.id)) ? 12 : 0;
       const age = recentAge(history, 'focusId', focus.id, input.date);
-      const novelty = age === 1 ? -30 : age <= 7 ? -12 : age <= 14 ? -4 : 10;
-      return { focus, value: signalFit + questionFit + longTermFit + novelty, breakdown: { signalFit, questionFit, longTermFit, novelty } };
+      const novelty = age === 1 ? -30 : age <= 7 ? -12 : age <= 14 ? -4 : age <= 30 ? 0 : 10;
+      return { focus, value: signalFit + questionFit + longTermFit + evidenceFit + novelty, breakdown: { signalFit, questionFit, longTermFit, evidenceFit, novelty } };
     }).sort((a, b) => b.value - a.value || a.focus.id.localeCompare(b.focus.id));
   }
 
   function chooseVariant(focus, input, history, key, size) {
     const seed = hash(`${input.profileId}|${input.date}|${input.dayKey}|${focus.id}|${key}`);
-    const used = new Set((history || []).filter(item => daysSince(input.date, item.date) >= 0 && daysSince(input.date, item.date) <= 7).map(item => item[key]));
-    for (let offset = 0; offset < size; offset++) { const index = (seed + offset) % size; if (!used.has(`${focus.id}-${index}`)) return index; }
-    return seed % size;
+    // Exhaust finite assets honestly: least used, then least recent, with a deterministic tie break.
+    const candidates = Array.from({ length: size }, (_, index) => {
+      const id = `${focus.id}-${index}`, uses = history.filter(item => item[key] === id);
+      return { index, count: uses.length, age: recentAge(history, key, id, input.date), tie: (index + size - seed % size) % size };
+    });
+    candidates.sort((a, b) => a.count - b.count || b.age - a.age || a.tie - b.tie);
+    return candidates[0].index;
   }
 
-  function conclusionFor(style, focus, score) {
-    const forward = score >= 70, quiet = score < 45;
-    const lines = {
-      'verdict-first': `結論から言うわ。今日は「${focus.label}」を選ぶ日。${forward ? '遠慮せず一歩進めて。' : quiet ? '広げず、効く一点だけ整えなさい。' : '大勝負より小さな実行で確かめて。'}`,
-      'evidence-turn': `流れを読むと、今日の鍵は派手な幸運ではなく「${focus.label}」。ここを扱える人から状況が動くわ。`,
-      'action-first': `考え続けるより、今日は「${focus.label}」を形にしなさい。動いた後の情報の方が役に立つ日よ。`,
-      'warning-first': `今日は勢いだけで決めないこと。いま大切にしたいのは「${focus.label}」よ。`,
-      'timeline': `今日の流れは後半ほど輪郭が出るわ。「${focus.label}」に時間を残しておきなさい。`,
-      'contrast': `昨日までの正解を続けるだけでは足りないわ。今日は「${focus.label}」へ重心を移す番。`,
-      'quiet-read': `静かだけれど見逃せない日ね。運は「${focus.label}」という小さな選択に出ているわ。`,
-      'coach': `迷うなら、今日の勝ち筋は一つ。「${focus.label}」を先に済ませることよ。`,
-      'reframe': `問題は運が弱いことじゃないの。「${focus.label}」の扱い方が曖昧なことよ。`,
-      'opportunity': `チャンスは目立つ姿で来ないわ。今日は「${focus.label}」の中に入口がある。`,
-      'two-step': `今日は二段階でいきなさい。まず状況を絞り、その次に「${focus.label}」を実行するの。`,
-      'short-pulse': `今日は「${focus.label}」。迷ったら、増やすより一つ決める。これで十分よ。`
+  function conclusionFor(style, focus) {
+    const openings = {
+      'verdict-first': '今日の軸を一つ決めましょう。',
+      'evidence-turn': '今日の信号を、身近な行動に置き換えてみるわ。',
+      'action-first': '最初の一手から考えましょう。',
+      'warning-first': '先に、無理をしない範囲を決めて。',
+      'timeline': '確認して、取り組んで、振り返る。この順でいきましょう。',
+      'contrast': '今日することと、持ち越すことを分けましょう。',
+      'quiet-read': '小さな選択にも目を向けてみて。',
+      'coach': '一度に全部できなくてもいいわ。',
+      'reframe': '結果だけでなく、取り組み方を見直してみて。',
+      'opportunity': '準備できていることを一つ探してみましょう。',
+      'two-step': 'まず条件を確認し、それから今日の一手を選んで。',
+      'short-pulse': '今日の焦点は一つで十分よ。'
     };
-    return lines[style];
+    return openings[style];
   }
 
   function safetyFor(input, focus) {
@@ -96,37 +125,60 @@
     return '';
   }
 
+  const SCENES = {
+    work: ['作業に取りかかる前に', '予定や担当を相談するときに', '一日の仕事を区切るときに'],
+    relationship: ['連絡の内容を考えるときに', '相手と予定を合わせるときに', '自分の負担を確かめるときに'],
+    health: ['今日の予定を組むときに', '休憩を取るときに', '眠る前に'],
+    money: ['支出の記録を見るときに', '買うかどうか迷ったときに', '来月の予算を考えるときに'],
+    life: ['今日の予定を見渡すときに', '身の回りを見直すときに', '次の予定へ移る前に'],
+    growth: ['学びや制作に取りかかるときに', '途中経過を見直すときに', '今日の成果を確かめるときに']
+  };
+  const INTENSITY = {
+    forward: '準備が整っている一件は、余力の範囲で進めてみて。',
+    test: 'まずは取り消せる小さな一手で、実際の変化を確かめて。',
+    protect: '今日は負担を増やさず、確認と回復を優先して。'
+  };
+  function toText(reading) {
+    return reading.blocks.map(block => `【${block.label}】\n${block.text}`).join('\n\n') + (reading.safetyNotice ? `\n\n${reading.safetyNotice}` : '');
+  }
+
   function generate(input = {}, history = []) {
+    history = recentHistory(input, history);
     const ranked = rankFocus(input, history), focus = ranked[0].focus, score = clamp(input.dailyScore);
+    const intensity = intensityFor(input);
     const actionIndex = chooseVariant(focus, input, history, 'actionId', focus.actions.length);
     const cautionIndex = chooseVariant(focus, input, history, 'cautionId', focus.cautions.length);
-    const recentStructures = new Set((history || []).filter(item => daysSince(input.date, item.date) >= 0 && daysSince(input.date, item.date) <= 5).map(item => item.structureId));
+    const sceneIndex = chooseVariant({ id: focus.domain }, input, history, 'sceneId', SCENES[focus.domain].length);
+    const sceneId = `${focus.domain}-${sceneIndex}`, scene = SCENES[focus.domain][sceneIndex];
+    // Suppress complete story combinations, not only independently recurring parts.
+    const storyHistory = history.filter(item => item.focusId === focus.id && item.sceneId === sceneId && item.intensity === intensity);
     const structureSeed = hash(`${input.profileId}|${input.date}|${input.dayKey}|structure`);
-    let structure = STRUCTURES[structureSeed % STRUCTURES.length];
-    for (let offset = 0; offset < STRUCTURES.length; offset++) {
-      const candidate = STRUCTURES[(structureSeed + offset) % STRUCTURES.length];
-      if (!recentStructures.has(candidate.id)) { structure = candidate; break; }
-    }
+    const structures = STRUCTURES.map((part, index) => ({ index, storyCount: storyHistory.filter(item => item.structureId === part.id).length, count: history.filter(item => item.structureId === part.id).length, age: recentAge(history, 'structureId', part.id, input.date), tie: (index + STRUCTURES.length - structureSeed % STRUCTURES.length) % STRUCTURES.length }));
+    structures.sort((a, b) => a.storyCount - b.storyCount || a.count - b.count || b.age - a.age || a.tie - b.tie);
+    const structureIndex = structures[0].index;
+    const structure = STRUCTURES[structureIndex];
     const yesterday = history.find(item => daysSince(input.date, item.date) === 1);
-    const action = focus.actions[actionIndex], caution = focus.cautions[cautionIndex];
-    const difference = yesterday ? `昨日の「${yesterday.focusLabel}」を引きずるより、今日は「${focus.label}」へ切り替えると流れが通るわ。` : '履歴がたまると、昨日との違いもここで読み分けるわね。';
-    const recommendedTime = input.recommendedTime || (score >= 70 ? '午前中。動けるうちに最初の一手を。' : score < 45 ? '夕方以降。材料が揃ってから。' : '昼過ぎ。周囲の反応を一度見てから。');
-    const review = ['できた量ではなく、状況がどう変わったかを一つ確認して。', '今夜は、予想と実際の違いを一行だけ残して。', '相手の反応ではなく、自分が決められたことを確かめて。'][hash(`${input.date}|review`) % 3];
+    const action = focus.actions[actionIndex], caution = `${focus.cautions[cautionIndex]}ことは避けて。`;
+    const difference = yesterday ? (yesterday.focusId === focus.id ? `昨日の「${focus.label}」を今日も扱うわ。今回は「${action}」を目印にして。` : `昨日の主題は「${yesterday.focusLabel || '前日の課題'}」。今日の主題は「${focus.label}」よ。前日の方針を否定せず、今日の作業を分けて考えて。`) : `今日の主題は「${focus.label}」。前日の記録がないため、日ごとの変化はまだ比べずに読んでいるわ。`;
+    const recommendedTime = input.recommendedTime || '時刻の吉凶はこの信号からは決められないわ。必要な条件が揃い、落ち着いて取り組める時間を選んで。';
+    const review = `今夜は「${action}」を実行できたか、負担や状況がどう変わったかを一行だけ残して。`;
     const labels = { conclusion: '今日の読み', difference: '流れの変化', action: '今日やること', caution: '気をつけること', time: '動く頃合い', review: '今夜の確認' };
-    const texts = { conclusion: conclusionFor(structure.id, focus, score), difference, action, caution, time: recommendedTime, review };
+    const story = `${conclusionFor(structure.id, focus)}${scene}、今日は「${focus.label}」を意識してみて。${INTENSITY[intensity]}`;
+    const texts = { conclusion: story, difference, action, caution, time: recommendedTime, review };
     const evidence = (input.evidence || []).filter(Boolean).slice(0, 3);
     const safetyNotice = safetyFor(input, focus);
     return {
       schemaId: 'koyomi-daily-reading', version: VERSION, profileId: input.profileId, date: input.date,
       focusId: focus.id, focusLabel: focus.label, domain: focus.domain,
+      mainTheme: focus.id, sceneId, scene, intensity, story,
       actionId: `${focus.id}-${actionIndex}`, cautionId: `${focus.id}-${cautionIndex}`, structureId: structure.id,
       conclusionPatternId: structure.id, score, conclusion: texts.conclusion, difference, action, caution, recommendedTime, review,
       blocks: structure.order.map(role => ({ role, label: labels[role], text: texts[role] })),
       safetyNotice, grounding: ranked[0].breakdown,
       evidence: evidence.length ? evidence : [`日運信号 ${score}点`, input.dayKey].filter(Boolean),
-      fingerprint: hash(`${input.profileId}|${input.date}|${focus.id}|${actionIndex}|${structure.id}|${score}`).toString(16)
+      fingerprint: hash(JSON.stringify([input.profileId, input.date, focus.id, actionIndex, cautionIndex, structure.id, sceneId, intensity, score, texts, evidence])).toString(16)
     };
   }
 
-  return Object.freeze({ VERSION, FOCI, STRUCTURES, generate, rankFocus });
+  return Object.freeze({ VERSION, FOCI, STRUCTURES, generate, rankFocus, recentHistory, intensityFor, toText });
 });

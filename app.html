@@ -2308,9 +2308,11 @@ function koyomiBaziLuckStartHtml(luck,locale='ja'){
 function koyomiDailyProfileKey(profile){let value=JSON.stringify({personId:profile.personId||'',name:profile.displayName||'',birth:profile.birthData||{}}),hash=2166136261;for(const char of value)hash=Math.imul(hash^char.charCodeAt(0),16777619);return`profile-${(hash>>>0).toString(16)}`}
 async function koyomiRenderBaziReading(){
   try{
+    const dailyTarget=typeof lastPersonal!=='undefined'?lastPersonal:null;
     const profile=koyomiBaziReadingProfile();
     if(!profile)return;
     await KOYOMI_BAZI.prepareCommonReadingThemes().catch(error=>console.warn('[KOYOMI_COMMON_READING] data unavailable; legacy reading remains active',error));
+    if(dailyTarget!==(typeof lastPersonal!=='undefined'?lastPersonal:null))return;
     profile.baziSettings=window.KOYOMI_BAZI_SETTINGS?.()||{};
     const result=KOYOMI_BAZI.calculateBazi(profile);
     const locale=koyomiBaziLocale();
@@ -2324,9 +2326,18 @@ async function koyomiRenderBaziReading(){
       settingsHash:JSON.stringify(profile.birthData||{}),date:dateKey,
       dayKey:`${readingDayPillar} ${legacyDaily.title}`,
       dailyScore:legacyDaily.score,themeCategory:document.getElementById('theme')?.value||'overall',
+      longTermScore:lastPersonal?.luck?.current?.score,
+      themeIds:commonReading.items?.map(item=>item.themeId)||[],
       evidence:[`${readingDayPillar}の日・${legacyDaily.title}・信号${legacyDaily.score}`,commonReading.items?.[0]?.themeName,commonReading.items?.[0]?.evidence?.map(item=>`${item.type}:${item.value}`).join('／')].filter(Boolean)
     });
     const dailyReading=dailyPack?.reading||null;
+    if(dailyReading&&lastPersonal){
+      lastPersonal.traditionalReading=lastPersonal.traditionalReading||lastPersonal.reading;
+      lastPersonal.dailyReading=dailyReading;
+      lastPersonal.reading=window.KOYOMI_DAILY_READING_CORE.toText(dailyReading)+'\n\n【生まれ持った傾向と総合鑑定】\n'+lastPersonal.traditionalReading;
+      const overall=document.getElementById('overallReading');
+      if(overall)overall.textContent=lastPersonal.reading;
+    }
     result.commonReading=commonReading;
     result.dailyReading=dailyReading;
     const reading={...KOYOMI_BAZI.buildBaziReading(result,{locale}),commonReading};
