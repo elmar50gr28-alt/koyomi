@@ -189,3 +189,19 @@ assert.equal(history.length,0);
 assert.equal(renders,renderCount+1);
 assert.equal(notices[0],'奇門鑑定履歴をすべて削除しました');
 console.log('Qimen individual and full-history deletion failure feedback passed');
+
+history=[{id:'selected',reading:'original'},{id:'other',reading:'old'}];
+context.storageSet=(_area,_key,value)=>{history=JSON.parse(value);return true};
+context.$$=()=>[button];
+button.dataset.qmDelete='selected';
+vm.runInContext(app.match(/^function qmdjRenderHistory\(\).*$/m)[0],context);
+vm.runInContext('qmdjRenderHistory()',context);
+const clickedDelete=button.onclick;
+history=[{id:'new-tab',reading:'new reading'},{id:'selected',reading:'original'},{id:'other',reading:'updated elsewhere',unknown:{keep:true}}];
+clickedDelete();
+assert.deepEqual(history,[{id:'new-tab',reading:'new reading'},{id:'other',reading:'updated elsewhere',unknown:{keep:true}}],
+ 'deleting from stale view must preserve additions and updates made after rendering');
+history=[{id:'latest',reading:'keep'}];
+clickedDelete();
+assert.deepEqual(history,[{id:'latest',reading:'keep'}],'repeat click must not restore deleted records');
+console.log('Qimen stale-view deletion preserves the latest saved history');
