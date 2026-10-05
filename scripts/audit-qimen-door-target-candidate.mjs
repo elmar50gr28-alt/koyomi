@@ -35,7 +35,7 @@ this.run=(ju,hourIndex,dun='陽遁')=>{
  QMDJ_JU['監査入力']=[ju,ju,ju];
  qmdjHourPillar=()=>({index:hourIndex,stem:STEMS[hourIndex%10],branch:BRANCHES[hourIndex%12],stemIndex:hourIndex%10,dayPillar:{stemIndex:0}});
  const c=qmdjChart({tz:0,lon:0,basis:'standard',boundary:0,school:'fixed'});
- return {valueStar:c.valueStar,valueDoor:c.valueDoor,doorTarget:c.doorTarget,xunPalace:c.xunPalace,palaces:c.palaces};
+ return {valueStar:c.valueStar,valueDoor:c.valueDoor,doorTarget:c.doorTarget,targetPalace:c.targetPalace,xunPalace:c.xunPalace,palaces:c.palaces};
 };
 `,ctx);
 return ctx.run;
@@ -47,7 +47,9 @@ const cases=[
  {id:'V2-BIRD-YANG9',ju:9,hourIndex:7,palace:9,expected:{valueStar:'天英',heaven:'丙',earth:'戊'}},
  {id:'V2-TIAN-YIN6',dun:'陰遁',ju:6,hourIndex:56,palace:9,expected:{valueStar:'天蓬',valueDoor:'休門',doorTarget:4,door:'生門',heaven:'丙',earth:'丁'}},
  {id:'V1-YANG1-JIACHEN',ju:1,hourIndex:40,palace:5,expected:{valueStar:'天禽',valueDoor:'死門'}},
- {id:'V1-YIN9-JIACHEN',dun:'陰遁',ju:9,hourIndex:40,palace:5,expected:{valueStar:'天禽',valueDoor:'死門'}}
+ {id:'V1-YIN9-JIACHEN',dun:'陰遁',ju:9,hourIndex:40,palace:5,expected:{valueStar:'天禽',valueDoor:'死門'}},
+ {id:'V2-REN-YANG7',ju:7,hourIndex:12,palace:6,expected:{valueStar:'天任',valueDoor:'生門',targetPalace:5,doorTarget:1,door:'休門',heaven:'丁',deity:'太陰'}},
+ {id:'V2-YUNV-YANG1',ju:1,hourIndex:6,palace:7,expected:{valueDoor:'休門',doorTarget:7,earth:'丁'}}
 ];
 const compare=(run,c)=>{
  const chart=run(c.ju,c.hourIndex,c.dun),p=chart.palaces[c.palace];
