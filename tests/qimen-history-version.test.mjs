@@ -6,7 +6,7 @@ let history=[{id:'legacy',key:'same',reading:'old reading',unknown:{keep:true}},
  {id:'previous',key:'same',calculationVersion:'previous',reading:'previous reading'}];
 const originals=structuredClone(history);
 const context=vm.createContext({Date,Object,JSON,KoyomiQimenHistory:null,
- storageJson:()=>history,storageSet:(_area,_key,value)=>history=JSON.parse(value),
+ storageJson:()=>history,storageSet:(_area,_key,value)=>{history=JSON.parse(value);return true},
  qmdjHistoryKey:()=> 'same',qmdjFormatDateTime:()=> 'time',
  qmdjRenderHistory:()=>{},toast:()=>{},QMDJ_HISTORY:'qmdj_history_v193',
  QMDJ_LAST:{input:{date:new Date('2026-06-21T08:24:00Z'),tz:9,boundary:23,mode:'sister',situation:'ready',location:'test',question:'test',purpose:{label:'general'}},
@@ -139,3 +139,22 @@ assert.equal(history.length,1,'delete only the selected same-millisecond reading
 assert.deepEqual(history[0],retained);
 assert.equal(core.nextId([{id:'qm_1'},{id:'qm_1_1'}],1),'qm_1_2','skip IDs already present after reload');
 console.log('Qimen simultaneous-save IDs and selected deletion passed');
+
+const notices=[];
+let renders=0;
+context.toast=message=>notices.push(message);
+context.qmdjRenderHistory=()=>renders++;
+context.storageSet=()=>false;
+const beforeFailure=JSON.stringify(history);
+vm.runInContext('qmdjSaveCurrent()',context);
+assert.equal(JSON.stringify(history),beforeFailure,'failed save must leave existing history intact');
+assert.equal(renders,0,'failed save must not render a successful update');
+assert.equal(notices.length,1);
+assert.ok(notices[0].includes('保存できませんでした'));
+assert.ok(!notices[0].includes('保存しました'));
+context.storageSet=(_area,_key,value)=>{history=JSON.parse(value);return true};
+notices.length=0;
+vm.runInContext('qmdjSaveCurrent()',context);
+assert.equal(renders,1);
+assert.equal(notices[0],'奇門鑑定を端末内へ保存しました');
+console.log('Qimen save success and storage failure feedback passed');
