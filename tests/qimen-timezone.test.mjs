@@ -14,6 +14,7 @@ function engine() {
   const app = readFileSync('app.html', 'utf8'), lines = app.split(/\r?\n/);
   const context = vm.createContext({ window: {}, console });
   vm.runInContext(readFileSync('src/shared/qimen-time-core.js', 'utf8'), context);
+  vm.runInContext(readFileSync('src/shared/qimen-history-core.js', 'utf8'), context);
   const selected = ['const DAY=', 'const STEMS=', 'const STEM_ELEMENT=', 'const BRANCH_ELEMENT=', 'const TERM_NAMES=']
     .map(prefix => lines.find(line => line.startsWith(prefix)));
   const funcs = ['solarLongitude', 'yearPillar', 'monthPillar', 'qmdjLocalInputValue', 'qmdjHistoryKey', 'qmdjSaveCurrent'].map(name => lines.find(line => line.startsWith('function ' + name + '(')));
