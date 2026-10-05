@@ -61,3 +61,17 @@ assert.equal(core.recentDuplicate([{...recent,savedAt:now-30*60000+1}],'same',no
 for(const savedAt of [now+1,NaN,undefined,'yesterday'])
  assert.equal(core.recentDuplicate([{...recent,savedAt}],'same',now),undefined,'invalid/future timestamps excluded');
 console.log('Qimen repeat warning version and time boundaries passed');
+
+const input={date:new Date('2026-06-21T08:24:00Z'),purpose:{key:'general'},question:'test',location:'Tokyo',lat:35.6812,lon:139.7671,basis:'local',school:'chaibu',tz:9,boundary:23,mode:'sister',situation:'normal'};
+vm.runInContext(app.match(/^function qmdjHistoryKey\(.*$/m)[0],context);
+context.keyInput=input;
+const key=vm.runInContext('qmdjHistoryKey(keyInput)',context);
+assert.equal(key,core.inputKey({...input,date:new Date(input.date)}),'identical conditions remain identical');
+for(const change of [{date:new Date(input.date.getTime()+60000)},{boundary:0},{mode:'zubat'},{situation:'changed'},{lat:35.6813},{lon:139.7672},{basis:'solar'},{school:'fixed'},{tz:0},{purpose:{key:'work'}}]){
+ const other=core.inputKey({...input,...change});
+ assert.notEqual(other,key,'changed conditions must have their own saved reading');
+ assert.equal(core.save([{key,calculationVersion:core.VERSION}],{key:other,calculationVersion:core.VERSION}).length,2);
+ assert.equal(core.recentDuplicate([{key,savedAt:now,calculationVersion:core.VERSION}],other,now),undefined);
+}
+assert.notEqual(core.inputKey({...input,question:'a|b',location:'c'}),core.inputKey({...input,question:'a',location:'b|c'}),'text delimiters cannot collide');
+console.log('Qimen input identity preserves minute and setting changes');
