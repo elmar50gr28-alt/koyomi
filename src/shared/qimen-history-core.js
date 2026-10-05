@@ -1,6 +1,12 @@
 // Bump when chart, scoring, or reading semantics change. Never stamp legacy records.
 (function(root){
   const VERSION = 'ring-door-v1-clock-split-v1-reading-v1';
+  function nextId(history, now){
+    const base='qm_'+now, used=new Set(history.map(record=>record.id));
+    let id=base, suffix=0;
+    while(used.has(id)) id=base+'_'+(++suffix);
+    return id;
+  }
   function save(history, record){
     return [record, ...history.filter(old => !(old.key === record.key &&
       typeof record.calculationVersion === 'string' && record.calculationVersion.length > 0 &&
@@ -40,5 +46,5 @@
       return '計算方式の記録がない鑑定';
     return record.calculationVersion === VERSION ? '現在と同じ計算方式で保存' : '異なる計算方式で保存';
   }
-  root.KoyomiQimenHistory = Object.freeze({VERSION, save, versionLabel, recentDuplicate, inputKey, inputSnapshot, conditionsLabel});
+  root.KoyomiQimenHistory = Object.freeze({VERSION, save, versionLabel, recentDuplicate, inputKey, inputSnapshot, conditionsLabel, nextId});
 })(globalThis);
