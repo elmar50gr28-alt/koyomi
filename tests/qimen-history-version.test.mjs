@@ -205,3 +205,14 @@ history=[{id:'latest',reading:'keep'}];
 clickedDelete();
 assert.deepEqual(history,[{id:'latest',reading:'keep'}],'repeat click must not restore deleted records');
 console.log('Qimen stale-view deletion preserves the latest saved history');
+
+for(const [first,second] of [['A B','AB'],['US','us'],['相談 一','相談一'],['一行\n二行','一行二行']]){
+ const firstKey=core.inputKey({...input,question:first}),secondKey=core.inputKey({...input,question:second});
+ assert.notEqual(firstKey,secondKey,'different saved question text must retain separate readings');
+ const records=core.save([{key:firstKey,calculationVersion:core.VERSION,savedAt:now,question:first}],{key:secondKey,calculationVersion:core.VERSION,question:second});
+ assert.equal(records.length,2);
+ assert.equal(records[1].question,first);
+ assert.equal(core.recentDuplicate(records,secondKey,now),undefined);
+}
+assert.equal(core.inputKey({...input,question:'  same  '}),core.inputKey({...input,question:'same'}),'match existing input trimming');
+console.log('Qimen history preserves meaningful question whitespace and case');
