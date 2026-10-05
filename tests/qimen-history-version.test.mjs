@@ -9,7 +9,7 @@ const context=vm.createContext({Date,Object,JSON,KoyomiQimenHistory:null,
  storageJson:()=>history,storageSet:(_area,_key,value)=>history=JSON.parse(value),
  qmdjHistoryKey:()=> 'same',qmdjFormatDateTime:()=> 'time',
  qmdjRenderHistory:()=>{},toast:()=>{},QMDJ_HISTORY:'qmdj_history_v193',
- QMDJ_LAST:{input:{location:'test',question:'test',purpose:{label:'general'}},
+ QMDJ_LAST:{input:{date:new Date('2026-06-21T08:24:00Z'),tz:9,boundary:23,mode:'sister',situation:'ready',location:'test',question:'test',purpose:{label:'general'}},
  chart:{raw:0,usedDate:0,method:'test',dun:'陽遁',ju:1,dp:{text:'甲子'},hp:{text:'甲子'},valueStar:'天蓬',valueDoor:'休門'},
  ev:{rank:{label:'test'},overall:50,best:{dir:'北'},scored:{}},text:{bestRange:'test',reading:'new reading'}}});
 vm.runInContext(readFileSync('src/shared/qimen-history-core.js','utf8'),context);
@@ -75,3 +75,19 @@ for(const change of [{date:new Date(input.date.getTime()+60000)},{boundary:0},{m
 }
 assert.notEqual(core.inputKey({...input,question:'a|b',location:'c'}),core.inputKey({...input,question:'a',location:'b|c'}),'text delimiters cannot collide');
 console.log('Qimen input identity preserves minute and setting changes');
+
+const snapshot=core.inputSnapshot(input);
+assert.equal(snapshot.date,input.date.toISOString());
+assert.equal(snapshot.boundary,23);
+input.boundary=0;
+assert.equal(snapshot.boundary,23,'saved conditions must not follow later input changes');
+assert.ok(core.conditionsLabel({inputConditions:snapshot}).includes('子刻の開始 23時'));
+assert.equal(core.conditionsLabel({}),'保存時の設定は記録されていません');
+assert.ok(!core.conditionsLabel({inputConditions:{mode:'<img>',situation:'toString'}}).includes('<img'));
+history=[{reading:'original',inputConditions:snapshot}];
+const original=JSON.stringify(history);
+vm.runInContext('qmdjRenderHistory()',context);
+assert.ok(list.innerHTML.includes('保存時の設定'));
+assert.ok(list.innerHTML.includes('子刻の開始 23時'));
+assert.equal(JSON.stringify(history),original);
+console.log('Qimen saved input conditions remain immutable and visible');
