@@ -48,3 +48,16 @@ history=[];
 vm.runInContext('qmdjRenderHistory()',context);
 assert.ok(list.innerHTML.includes('保存された奇門鑑定はありません'));
 console.log('Qimen history version presentation passed');
+
+const now=Date.now(), recent={key:'same',savedAt:now-1,calculationVersion:core.VERSION};
+vm.runInContext(app.match(/^function qmdjDuplicate\(.*$/m)[0],context);
+history=[{...recent,calculationVersion:'previous'},{key:'same',savedAt:now-1}];
+assert.equal(vm.runInContext('qmdjDuplicate({})',context),undefined,'old and legacy readings must not trigger repeat warning');
+history.push(recent);
+assert.equal(vm.runInContext('qmdjDuplicate({})',context),recent,'current same-input repeat still warns');
+assert.equal(core.recentDuplicate([recent],'different',now),undefined);
+assert.equal(core.recentDuplicate([{...recent,savedAt:now-30*60000}],'same',now),undefined,'30-minute boundary excluded');
+assert.equal(core.recentDuplicate([{...recent,savedAt:now-30*60000+1}],'same',now).key,'same');
+for(const savedAt of [now+1,NaN,undefined,'yesterday'])
+ assert.equal(core.recentDuplicate([{...recent,savedAt}],'same',now),undefined,'invalid/future timestamps excluded');
+console.log('Qimen repeat warning version and time boundaries passed');
