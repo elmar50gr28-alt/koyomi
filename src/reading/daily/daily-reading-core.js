@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.KOYOMI_DAILY_READING_CORE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const VERSION = '3.3.0';
+  const VERSION = '3.4.0';
   const rawFoci = [
     ['complete', '完了', 'work', ['途中の一件を最後まで終わらせる', '返答待ちの案件を一件だけ閉じる', '八割できた作業を提出できる形にする'], ['新しい予定を増やす', '仕上げ前に別の仕事へ逃げる', '細部を直し続けて完了を遅らせる']],
     ['organize', '整理', 'life', ['机の上を15分だけ整える', '不要な通知を三つ止める', '今日使う資料だけを一か所へ集める'], ['整理だけで一日を終える', '思い出の品まで勢いで捨てる', '分類方法を考えるだけで手を止める']],
@@ -156,22 +156,37 @@
     return candidates[0].index;
   }
 
-  function conclusionFor(style, focus) {
-    const openings = {
-      'verdict-first': '今日の軸を一つ決めましょう。',
-      'evidence-turn': '今日の信号を、身近な行動に置き換えてみるわ。',
-      'action-first': '最初の一手から考えましょう。',
-      'warning-first': '先に、無理をしない範囲を決めて。',
-      'timeline': '確認して、取り組んで、振り返る。この順でいきましょう。',
-      'contrast': '今日することと、持ち越すことを分けましょう。',
-      'quiet-read': '小さな選択にも目を向けてみて。',
-      'coach': '一度に全部できなくてもいいわ。',
-      'reframe': '結果だけでなく、取り組み方を見直してみて。',
-      'opportunity': '準備できていることを一つ探してみましょう。',
-      'two-step': 'まず条件を確認し、それから今日の一手を選んで。',
-      'short-pulse': '今日の焦点は一つで十分よ。'
+  // Each focus has a real decision tension, rather than a date-specific synonym.
+  const TENSIONS = Object.freeze({
+    complete: ['仕上げたい範囲', '提出できる区切り'], organize: ['残しておきたい物', 'すぐ使える場所'],
+    contact: ['伝えたいこと', '相手が答えられる用件'], negotiate: ['望んでいる条件', 'まだ合意できていない条件'],
+    rest: ['今日済ませたい用事', '休むために空ける時間'], learn: ['集めた情報', '自分で説明できる知識'],
+    create: ['頭の中にある案', '人に見せられる形'], money: ['表示されている金額', '後から必要になる費用や手続き'],
+    boundary: ['頼まれていること', '自分が引き受けられる範囲'], relationship: ['自分の希望', '相手に確認できた事実'],
+    family: ['家で必要な用事', '誰がどこまで担当するか'], health: ['続けたい予定', '体調に合わせて変えられる部分'],
+    move: ['予定どおりの経路', '遅れた場合にも使える手段'], prepare: ['始めたい気持ち', '実際に揃っている条件'],
+    release: ['続ける理由', 'やめる場合に守る約束'], review: ['予想していた結果', '実際に起きたこと'],
+    decide: ['今決める必要のあること', '判断材料を待てること'], focus: ['目に入る用事', '時間を使いたい一件'],
+    cooperate: ['自分で受け持つ部分', '相手に頼みたい部分'], observe: ['気になっている推測', '確認できる事実']
+  });
+  function narrativeFor(style, focus, scene, intensity) {
+    const [want, condition] = TENSIONS[focus.id];
+    const limit = intensity === 'protect' ? '新しく背負う量を増やさず、確認できるところまで。' : intensity === 'test' ? '取り消せる範囲で試し、反応を見てから次を決めて。' : '条件が揃う一件は進めてよい日。余力を残せる区切りまで。';
+    const frames = {
+      'verdict-first': () => '今日の軸は「' + focus.label + '」。' + scene + '、' + want + 'より先に、' + condition + 'を見定めて。',
+      'evidence-turn': () => scene + '、思っていた条件と手元の条件に違いがないか見てみましょう。「' + focus.label + '」では、' + condition + 'が次の一手の判断材料になるわ。',
+      'action-first': () => '「' + focus.label + '」を、頭の中だけで終わらせないために、今回の一手を選んだわ。' + scene + '、それに取り組める条件があるか確かめて。',
+      'warning-first': () => want + 'だけで話を進めると、' + condition + 'が置き去りになりやすい。今日は「' + focus.label + '」の落とし穴を先に確認しましょう。' + scene + '、一度立ち止まれる区切りを作って。',
+      'timeline': () => scene + '、まず' + condition + 'を確認する。次に手を動かし、終わったら残ったことを見直す。「' + focus.label + '」を三つの区切りで扱う日よ。',
+      'contrast': () => '「' + focus.label + '」で並べて見たいのは、' + want + 'と、' + condition + '。同じものとして扱わず、二つに分けてみて。' + scene + '、違いが一つ見えれば判断材料になるわ。',
+      'quiet-read': () => scene + '、まだ答えが出ないなら、' + condition + 'について分かっていることだけ残して。「' + focus.label + '」は、結論を急がず輪郭をつかむところからでも始められるわ。',
+      'coach': () => '今回の一手を試すなら、終えたあとに何を確かめたい？「' + focus.label + '」では、' + condition + 'が少し明確になるかを目印にして。' + scene + '、実行する前にその目印を決めてみて。',
+      'reframe': () => '「' + focus.label + '」を、うまくできたかだけで採点しないで。' + want + 'と' + condition + 'を区別できたか、という見方もあるわ。' + scene + '、自分で確かめられる点を探して。',
+      'opportunity': () => scene + '、「' + condition + '」について、すでに分かっていることはあるかしら。「' + focus.label + '」では、足りないものを全部集める前に、手元の材料でできる一手を選んで。',
+      'two-step': () => '「' + focus.label + '」は二段階で考えましょう。' + scene + '、' + condition + 'が分かっていれば一手を選ぶ。まだ不明なら、まず確認する先を決める。',
+      'short-pulse': () => '今日の問いは、「' + condition + '」について分かっていることと、まだ分からないこと。「' + focus.label + '」について、' + scene + '答えられる部分を一つ拾ってみて。'
     };
-    return openings[style];
+    return frames[style]() + limit;
   }
 
   function safetyFor(input, focus) {
@@ -181,17 +196,12 @@
   }
 
   const SCENES = {
-    work: ['作業に取りかかる前に', '予定や担当を相談するときに', '一日の仕事を区切るときに'],
-    relationship: ['連絡の内容を考えるときに', '相手と予定を合わせるときに', '自分の負担を確かめるときに'],
-    health: ['今日の予定を組むときに', '休憩を取るときに', '眠る前に'],
-    money: ['支出の記録を見るときに', '買うかどうか迷ったときに', '来月の予算を考えるときに'],
-    life: ['今日の予定を見渡すときに', '身の回りを見直すときに', '次の予定へ移る前に'],
-    growth: ['学びや制作に取りかかるときに', '途中経過を見直すときに', '今日の成果を確かめるときに']
-  };
-  const INTENSITY = {
-    forward: '準備が整っている一件は、余力の範囲で進めてみて。',
-    test: 'まずは取り消せる小さな一手で、実際の変化を確かめて。',
-    protect: '今日は負担を増やさず、確認と回復を優先して。'
+    work: ['依頼や締切が重なっているなら', '打合せで役割を決める場面なら', '作業の続きが気になって帰りにくいなら'],
+    relationship: ['返信を書く前に迷っているなら', '会う予定について話す場面なら', '頼み事を引き受けるか迷う場面なら'],
+    health: ['用事の合間に休む時間を探すなら', '食事や休憩の時間がずれそうなら', '寝る準備より用事を優先しそうなら'],
+    money: ['明細に見覚えのない項目があるなら', '値引きや特典に目が向いているなら', '先の支払いが気になっているなら'],
+    life: ['予定に空きがなく選び直したいなら', '物や情報が増えて探し物をするなら', '次の用事へ移るか迷っているなら'],
+    growth: ['教材や道具を選び続けているなら', '途中の案に手を加える場面なら', '成果を人に見せる前に迷うなら']
   };
   const REVIEWS = Object.freeze({
     complete: '今夜は、終えた部分と残っている部分を分けて確認して。',
@@ -243,7 +253,8 @@
     '今夜は、本当に必要な理由と、先送りできる条件を言葉にできたか振り返って。'
   ]);
   function toText(reading) {
-    return reading.blocks.map(block => `【${block.label}】\n${block.text}`).join('\n\n') + (reading.safetyNotice ? `\n\n${reading.safetyNotice}` : '');
+    const selected = reading.blocks.filter(block => (block.role !== 'time' || reading.hasRecommendedTime) && (block.role !== 'difference' || reading.showDifference) && (block.role !== 'review' || !['short-pulse', 'warning-first', 'action-first'].includes(reading.structureId)));
+    return selected.map(block => `【${block.label}】\n${block.text}`).join('\n\n') + (reading.safetyNotice ? `\n\n${reading.safetyNotice}` : '');
   }
 
   function generate(input = {}, history = []) {
@@ -263,11 +274,12 @@
     const structure = STRUCTURES[structureIndex];
     const yesterday = history.find(item => daysSince(input.date, item.date) === 1);
     const action = focus.actions[actionIndex], caution = `${focus.cautions[cautionIndex]}ことは避けて。`;
-    const difference = yesterday ? (yesterday.focusId === focus.id ? `昨日の「${focus.label}」を今日も扱うわ。${yesterday.actionId === `${focus.id}-${actionIndex}` ? '同じ一手が必要なら、今も条件が変わっていないか確かめて。' : '今日は扱う対象を切り替えながら、同じ主題を確かめていきましょう。'}` : `昨日の主題は「${yesterday.focusLabel || '前日の課題'}」。今日の主題は「${focus.label}」よ。前日の方針を否定せず、今日の作業を分けて考えて。`) : `今日の主題は「${focus.label}」。前日の記録がないため、日ごとの変化はまだ比べずに読んでいるわ。`;
+    const strengthNames = { protect: '負担を増やさず確認する', test: '取り消せる範囲で試す', forward: '条件が揃う一件を進める' };
+    const difference = yesterday?.intensity && yesterday.intensity !== intensity ? `昨日の強度は「${strengthNames[yesterday.intensity] || '前日の方針'}」、今日は「${strengthNames[intensity]}」。点数だけで予定を増減せず、今の余力と条件も確かめて。` : yesterday ? (yesterday.focusId === focus.id ? `昨日の「${focus.label}」を今日も扱うわ。${yesterday.actionId === `${focus.id}-${actionIndex}` ? '同じ一手が必要なら、今も条件が変わっていないか確かめて。' : '今日は扱う対象を切り替えながら、同じ主題を確かめていきましょう。'}` : `昨日の主題は「${yesterday.focusLabel || '前日の課題'}」。今日の主題は「${focus.label}」よ。前日の方針を否定せず、今日の作業を分けて考えて。`) : `今日の主題は「${focus.label}」。前日の記録がないため、日ごとの変化はまだ比べずに読んでいるわ。`;
     const recommendedTime = input.recommendedTime || '時刻の吉凶はこの信号からは決められないわ。必要な条件が揃い、落ち着いて取り組める時間を選んで。';
     const review = focus.id === 'money' ? MONEY_REVIEWS[actionIndex] || REVIEWS.money : REVIEWS[focus.id];
     const labels = { conclusion: '今日の読み', difference: '流れの変化', action: '今日やること', caution: '気をつけること', time: '動く頃合い', review: '今夜の確認' };
-    const story = `${conclusionFor(structure.id, focus)}${scene}、今日は「${focus.label}」を意識してみて。${INTENSITY[intensity]}`;
+    const story = narrativeFor(structure.id, focus, scene, intensity);
     const texts = { conclusion: story, difference, action, caution, time: recommendedTime, review };
     const evidence = (input.evidence || []).filter(Boolean).slice(0, 3);
     const safetyNotice = safetyFor(input, focus);
@@ -275,6 +287,8 @@
       schemaId: 'koyomi-daily-reading', version: VERSION, profileId: input.profileId, date: input.date,
       focusId: focus.id, focusLabel: focus.label, domain: focus.domain,
       mainTheme: focus.id, sceneId, scene, intensity, story,
+      hasRecommendedTime: Boolean(input.recommendedTime),
+      showDifference: Boolean(yesterday && yesterday.intensity && yesterday.intensity !== intensity),
       actionId: `${focus.id}-${actionIndex}`, cautionId: `${focus.id}-${cautionIndex}`, structureId: structure.id,
       conclusionPatternId: structure.id, score, conclusion: texts.conclusion, difference, action, caution, recommendedTime, review,
       blocks: structure.order.map(role => ({ role, label: labels[role], text: texts[role] })),
