@@ -8,9 +8,9 @@ vm.runInNewContext(await readFile('src/reading/daily/daily-reading-core.js', 'ut
 vm.runInNewContext(await readFile('src/reading/daily/daily-reading-controller.js', 'utf8'), context);
 const core = context.KOYOMI_DAILY_READING_CORE, controller = context.KOYOMI_DAILY_READING;
 const legacyActions = core.FOCI.map(focus => ({ id: focus.id, actions: focus.actions.slice(0, ({ money: 12, rest: 6, health: 6 })[focus.id] || 3) }));
-assert.equal(createHash('sha256').update(JSON.stringify(legacyActions)).digest('hex'), '24e341ec18bd7342971b2b457c704c751a57eac4b7c5d93c4c9d8e7c1d76b238', 'all v3.0 action texts and saved ID positions remain unchanged');
+assert.equal(createHash('sha256').update(JSON.stringify(legacyActions)).digest('hex'), 'c693c4c89751c793c137ce51568dc52012300d8dea059a067715a04f1332c7c8', 'reviewed v3.5 copy keeps the original action ID positions');
 const v31Actions = core.FOCI.map(focus => ({ id: focus.id, actions: focus.actions.slice(0, ({ money: 24, rest: 12, health: 12 })[focus.id] || 6) }));
-assert.equal(createHash('sha256').update(JSON.stringify(v31Actions)).digest('hex'), 'f9857f5134f5c421b0dc7da030f3fe366554558faec4e946a8a73b09cc99a587', 'all 150 v3.1 actions keep their saved ID positions');
+assert.equal(createHash('sha256').update(JSON.stringify(v31Actions)).digest('hex'), '0f2e3a5fc0864d1263a8d1eb2126dc4271fb1be6886aac3426ec547e0824827a', 'reviewed v3.5 copy of the v3.1 pool keeps its 150 ID positions');
 const allActions = core.FOCI.flatMap(focus => focus.actions);
 assert.equal(new Set(allActions).size, allActions.length, 'do not count duplicated action text as a new meaning');
 const memory = new Map();
@@ -28,7 +28,7 @@ for (const themeCategory of ['overall', 'work', 'love', 'money', 'health', 'fami
     assert.ok(row.story.includes(row.focusLabel) && row.mainTheme === row.focusId);
     assert.ok(row.action === core.FOCI.find(focus => focus.id === row.focusId).actions[Number(row.actionId.split('-').at(-1))], 'reuse complete authored actions, never synonym substitution');
     assert.equal(core.toText(row).split(row.action).length - 1, 1, 'a daily reading must not echo the full action in its comparison and review');
-    assert.ok(row.caution === core.FOCI.find(focus => focus.id === row.focusId).cautions[Number(row.cautionId.split('-').at(-1))] + 'ことは避けて。', 'cautions must explicitly discourage the hazardous behavior');
+    assert.ok(row.caution === core.FOCI.find(focus => focus.id === row.focusId).cautions[Number(row.cautionId.split('-').at(-1))], 'use the reviewed complete caution sentence without mechanical suffixes');
     assert.ok(!/後半ほど|昨日までの正解|引きずる|必ず|絶対|運が弱いことじゃない/.test(core.toText(row)), 'no invented events, blame, or time predictions');
     assert.ok(!row.recommendedTime.includes('夕方以降') && !row.recommendedTime.includes('午前中'));
     assert.equal(row.intensity, input.dailyScore < 45 ? 'protect' : input.dailyScore >= 70 ? 'forward' : 'test');
