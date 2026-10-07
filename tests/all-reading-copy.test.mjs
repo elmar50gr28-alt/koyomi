@@ -63,6 +63,10 @@ for(const {context,commonEngine} of contexts)for(const key of keys) {
     }
     metrics.push({system,path:commonEngine?'common':'fallback',level,mode,days:30,distinctActions:actions.size});
   }
+  for(const state of ['constructor','toString','__proto__']) {
+    const result=context.KOYOMI_PERSONA_ADAPTER.applyDivination('判定済み資料',{system,score:55,state});
+    assert.equal(result.persona.state,'test');assert.equal(result.scenario.state,'試行');check(result.text,'unknown state fallback');
+  }
   const controlled=context.KOYOMI_PERSONA_ADAPTER.applyDivination('判定済み資料',{system,domain:'work',score:70,state:'test'});
   assert.equal(controlled.persona.state,'test');
   assert.equal(controlled.scenario.state,'試行','an explicit computed state wins over a default score threshold');
