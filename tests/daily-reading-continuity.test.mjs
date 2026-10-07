@@ -87,9 +87,9 @@ assert.ok(app.includes('themeIds:commonReading.items?.map(item=>item.themeId)'))
 assert.ok((await readFile('service-worker.js', 'utf8')).includes('daily-story-v3'));
 // Exercise the actual integration function with a minimal DOM, rather than only matching source strings.
 const integrationSource = app.slice(app.indexOf('async function koyomiRenderBaziReading(){'), app.indexOf('window.KOYOMI_BAZI_READING={render:'));
-const traditional = { textContent: '' }, details = { hidden: true }, overall = { textContent: '' }, target = { reading: '従来の三層鑑定', luck: { current: { score: 20 } } };
+const verdictNote = { textContent: '七分咲き／別の宿題' }, traditional = { textContent: '' }, details = { hidden: true }, overall = { textContent: '' }, target = { reading: '従来の三層鑑定', luck: { current: { score: 20 } } };
 const ui = {
-  ...context, lastPersonal: target, document: { getElementById: id => id === 'overallReading' ? overall : id === 'dailyTraditionalReading' ? traditional : id === 'dailyTraditionalDetails' ? details : id === 'theme' ? { value: 'work' } : null },
+  ...context, lastPersonal: target, document: { getElementById: id => id === 'overallReading' ? overall : id === 'personalVerdictNote' ? verdictNote : id === 'dailyTraditionalReading' ? traditional : id === 'dailyTraditionalDetails' ? details : id === 'theme' ? { value: 'work' } : null },
   selectedDate: new Date('2026-01-01'), fmtIso: value => value.toISOString().slice(0, 10),
   koyomiBaziReadingProfile: () => ({ personId: 'fixture', birthData: {} }), koyomiDailyProfileKey: () => 'ui-profile', koyomiBaziLocale: () => 'ja',
   KOYOMI_BAZI: { prepareCommonReadingThemes: async () => {}, calculateBazi: () => ({}), buildCommonReading: () => ({ items: [{ themeId: 'WORK_STEADY_PROGRESS' }] }), buildBaziReading: () => ({}) },
@@ -104,6 +104,7 @@ assert.equal(target.dailyReading.intensity, 'test', 'long-term weakness reaches 
 assert.ok(overall.textContent.includes(target.dailyReading.story) && !overall.textContent.includes('従来の三層鑑定'));
 assert.equal(traditional.textContent, '従来の三層鑑定');
 assert.equal(details.hidden, false);
+assert.equal(verdictNote.textContent, '今日の焦点：' + target.dailyReading.focusLabel, 'visible result note follows the actual daily theme rather than assigning another task');
 assert.ok(target.reading.endsWith('従来の三層鑑定'), 'saved full reading retains the traditional asset');
 await ui.koyomiRenderBaziReading();
 assert.equal(traditional.textContent, '従来の三層鑑定', 'repeat renders do not duplicate the traditional reading');

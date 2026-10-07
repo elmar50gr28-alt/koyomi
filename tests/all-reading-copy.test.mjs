@@ -6,6 +6,7 @@ import { setCommonReadingThemes } from '../src/reading/index.js';
 import { describeMonthlyIndex } from '../src/mundane/western/monthly-trend-core.js';
 
 const app = await readFile('app.html', 'utf8');
+assert.ok(!app.includes('${v196Feel(g.context.score)}／今日の宿題：${g.life.homework}'), 'result note must not reattach a separate fixed homework');
 const themes = JSON.parse(await readFile('data/reading/common_reading_themes.json', 'utf8'));
 setCommonReadingThemes(themes);
 const micro = /小さく(?:試|始|動|進|実行)|小さな(?:一歩|試行|実行)|最小の一手|一件だけ|一つだけ|\d+分(?:だけ|試|実行)|十五分で終わる/;
