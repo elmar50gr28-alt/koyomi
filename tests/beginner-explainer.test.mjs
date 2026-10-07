@@ -50,4 +50,9 @@ const customOrder=renderContext.KOYOMI_PERSONA_RENDERER.render({system:'四柱�
 assert.equal(customOrder.split('明示された行動。').length-1,1);
 const onlyScenario=renderContext.KOYOMI_PERSONA_RENDERER.render({system:'四柱推命',result:'同じ場面',order:['scenario'],scenario:{scene:'同じ場面',observable:'負担'}});
 assert.equal(onlyScenario.split('同じ場面').length-1,1,'a scene cannot disappear if the conclusion section is absent');
+for(const level of ['beginner','standard']){
+ const text=renderContext.KOYOMI_PERSONA_RENDERER.render({system:'四柱推命',order:['evidence'],evidence:['確認された材料です。']},{level});
+ assert.doesNotMatch(text,/。。/);
+ assert.match(text,/確認された材料です。/);
+}
 console.log('Beginner explainer passed');
