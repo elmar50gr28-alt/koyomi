@@ -53,3 +53,64 @@ const answer = fallback.KOYOMI_UNIVERSAL_READING.build({type:'today',score:50});
 assert.doesNotMatch(answer.directAnswer + answer.actionPlan.map(item => item.action).join(''), microTask);
 assert.doesNotMatch(answer.directAnswer, /正解/);
 console.log('reading outcome copy: ok (' + copyCases + ' continuous readings, real legacy advice, common composer and fallback)');
+
+// Validate the real grade generator, main result heading and method summary.
+const gradeContext = {
+  v191zBuildPersonalBase: () => ({score:50,use:{useful:'木'},i:{theme:'work',qResource:''}}),
+  v191zIntegratedReading: () => '具体的な鑑定本文', buildDivinationReadings: () => ({}),
+  v191zThemePlan: () => ['担当と期限を確認する','連絡する','結果を見る','無理をしない'],
+  v191sElementAction: () => '役割を整理する'
+};
+vm.createContext(gradeContext);
+const gradeStart = app.indexOf('function v191zGrade(');
+vm.runInContext(app.slice(gradeStart, app.indexOf('\n', gradeStart)), gradeContext);
+const buildStart = app.indexOf('buildPersonal=function(){const c=v191zBuildPersonalBase();');
+vm.runInContext(app.slice(buildStart, app.indexOf('const v191qFinalBuildPersonalBase=', buildStart)), gradeContext);
+for (let score=0;score<=100;score++) {
+  const grade = gradeContext.v191zGrade(score);
+  const expectedLabel = score>=85?'大吉':score>=72?'吉':score>=60?'小吉':score>=45?'平':score>=34?'小凶':score>=20?'凶':'大凶';
+  assert.equal(grade.label, expectedLabel, 'existing score thresholds stay unchanged');
+  assert.ok(grade.summary && grade.command);
+  assert.doesNotMatch(grade.summary + grade.command, /小さく|育てる|一手|最小/);
+  gradeContext.v191zConsensus = () => ({score,grade});
+  const result = gradeContext.buildPersonal();
+  assert.equal(result.verdict, grade.label + ' — ' + grade.summary);
+  assert.ok(!result.verdict.includes(grade.command), 'a heading explains the grade, while action advice stays separate');
+}
+assert.equal(gradeContext.v191zGrade(65).summary, '好材料はあるが、注意点も残る');
+assert.equal(gradeContext.v191zGrade(100,true).label, '大凶・安全優先');
+const cells = new Map();
+const box = {querySelector: key => {if(!cells.has(key))cells.set(key,{textContent:''});return cells.get(key);}};
+gradeContext.$ = id => id==='fixture-summary'?box:{};
+gradeContext.v191zMethodScore = () => ({score:65,grade:gradeContext.v191zGrade(65),factors:['確認した条件'],conf:{label:'中',score:65}});
+gradeContext.v191zMethodPlan = () => ['担当を確認する','','','無理をしない'];
+const summaryStart = app.indexOf('function v196RenderMethodSummary(');
+vm.runInContext(app.slice(summaryStart, app.indexOf('function v196RenderSukuyoSummary(', summaryStart)), gradeContext);
+gradeContext.v196RenderMethodSummary({},'shichu','fixture-reading','fixture-summary');
+assert.equal(cells.get('[data-method-summary="conclusion"]').textContent, '小吉 65点。好材料はあるが、注意点も残る');
+assert.equal(cells.get('[data-method-summary="action"]').textContent, '担当を確認する');
+const rankStart = app.indexOf('const QMDJ_RANKS=');
+vm.runInContext(app.slice(rankStart, app.indexOf('const QMDJ_PURPOSE_GROUPS=',rankStart)) + ';globalThis.testRanks=QMDJ_RANKS;', gradeContext);
+assert.equal(gradeContext.testRanks.find(rank=>rank.label==='小吉').command, '実行に必要な条件を確かめてから判断する');
+assert.ok(!app.includes('小さく試して育てる'));
+console.log('reading grade headings: ok (101 scores, actual main heading and method summary, danger override and Qimen copy)');
+
+// The final renderer may replace the consensus score; the visible grade must follow it.
+gradeContext.window = gradeContext;
+gradeContext.v202IntegratedRenderBase = result => ({score:result.score,verdict:result.verdict,active:gradeContext.KOYOMI_ACTIVE_JUDGMENT});
+const finalRenderStart = app.indexOf('renderPersonal=function(r){if(!r)return v202IntegratedRenderBase(r);');
+vm.runInContext(app.slice(finalRenderStart, app.indexOf('\n',finalRenderStart)), gradeContext);
+for(const score of [0,44,45,59,60,71,72,84,85,100]) {
+  gradeContext.v202IntegratedJudgment = () => ({score,confidence:70,evidence:[]});
+  const view = gradeContext.renderPersonal({score:65,grade:gradeContext.v191zGrade(65),verdict:'古い見出し'});
+  const grade = gradeContext.v191zGrade(score);
+  assert.equal(view.score,score);
+  assert.equal(view.verdict,grade.label + ' — ' + grade.summary);
+  assert.equal(view.active.score,score);
+  assert.ok(!gradeContext.KOYOMI_ACTIVE_JUDGMENT,'renderer still clears temporary active judgment');
+}
+gradeContext.v202IntegratedJudgment = () => ({score:100,confidence:70,evidence:[]});
+assert.match(gradeContext.renderPersonal({danger:true}).verdict,/大凶・安全優先/);
+gradeContext.v202IntegratedJudgment = () => null;
+assert.equal(gradeContext.renderPersonal({score:65,verdict:'既存の見出し'}).verdict,'既存の見出し','no new judgment preserves the existing view');
+console.log('final reading heading: ok (rendered score, grade and summary agree at all boundaries)');
