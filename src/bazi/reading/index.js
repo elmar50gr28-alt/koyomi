@@ -411,10 +411,10 @@ function buildIntegratedGuidanceJa(facts) {
   const avoid = elementWordsJa(facts.avoid[0] || facts.dayMasterElement);
   const supportBalance = signals.currentLuckSupports - signals.currentLuckPressures;
   const currentFlow = supportBalance > 0
-    ? `現在の運には命式を支える作用が${signals.currentLuckSupports}件あり、追い風を活かしやすい状態です。小さく始めて継続してください。`
+    ? `現在の運には命式を支える作用が${signals.currentLuckSupports}件あり、追い風を活かしやすい状態です。準備が整っている計画は実行に移し、途中の負担や成果を確認してください。`
     : supportBalance < 0
       ? `現在の運には注意して扱う作用が${signals.currentLuckPressures}件あります。急いで結論を出さず、準備と確認を優先してください。`
-      : '現在の運は追い風と注意要素が拮抗しています。大きく決め打ちせず、小さく試して結果を確認してください。';
+      : '現在の運は追い風と注意要素が拮抗しています。実行に必要な条件と、まだ不明な点を分けて確認してください。';
   return {
     strength: `${favorable}を意識すると、命式が持つ${signals.strengths}件の支えを活かしやすくなります。`,
     support: signals.supports ? `命式と運勢から${signals.supports}件の追い風候補を確認しています。` : '明確な追い風は限定的なため、日々の安定を優先してください。',
@@ -885,10 +885,10 @@ function buildIntegratedGuidance(facts) {
   const signals = facts.signals;
   const supportBalance = signals.currentLuckSupports - signals.currentLuckPressures;
   const currentFlow = supportBalance > 0
-    ? `Current luck contains ${signals.currentLuckSupports} supportive signal(s); use the tailwind through small repeatable steps.`
+    ? `Current luck contains ${signals.currentLuckSupports} supportive signal(s); put prepared plans into action and review the effort and results.`
     : supportBalance < 0
       ? `Current luck contains ${signals.currentLuckPressures} pressure signal(s); prioritize preparation and review over speed.`
-      : 'Supportive and cautionary signals are balanced; test decisions in small steps before committing.';
+      : 'Supportive and cautionary signals are balanced; check the conditions for acting and identify what is still uncertain before committing.';
   return {
     strength: `${ELEMENT_WORDS[facts.primaryFavorable] || 'balance'} helps activate ${signals.strengths} existing support signal(s).`,
     support: signals.supports ? `${signals.supports} supportive chart or luck signal(s) are available.` : 'Clear tailwinds are limited, so prioritize stability.',
@@ -1032,7 +1032,7 @@ function avoidanceFor(id, facts) {
   if (id === 'finance') return 'Set a stop line before acting and ask one trusted person to review the assumption.';
   if (id === 'love' || id === 'relationship' || id === 'marriage') return 'Return to direct language: what you need, what you can offer, and what pace is realistic.';
   if (PROFESSIONAL_CATEGORIES.has(id)) return 'Use wider timing windows and review again when new month or year data is available.';
-  return `Return to ${ELEMENT_WORDS[facts.primaryFavorable] || 'balance'} through one small action, then review the result.`;
+  return `Return to ${ELEMENT_WORDS[facts.primaryFavorable] || 'balance'} by identifying the preparation or changes needed, then review the result.`;
 }
 
 function timingFor(id, facts) {
