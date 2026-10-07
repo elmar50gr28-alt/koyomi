@@ -93,7 +93,11 @@ for(const domain of ['overall','work','money','relationship','health','growth','
  for(const local of [context,withoutEngine]){
    const scenario=local.KOYOMI_PERSONA_ADAPTER.concreteScenario({...input,system:'四柱推命'});
    if(domain==='work')assert.doesNotMatch(scenario.go,/睡眠|残高|費用上限/);
-   if(domain==='health'){assert.match(scenario.go,/体調|休息/);assert.doesNotMatch(scenario.go,/担当|残高/);}
+   if(domain==='health'){
+     if(/受診|医療機関|専門家.{0,6}相談/.test(scenario.action))assert.match(scenario.go,/待たず/);
+     else assert.match(scenario.go,/体調|休息/);
+     assert.doesNotMatch(scenario.go,/担当|残高/);
+   }
    if(domain==='relationship')assert.match(scenario.go,/双方|距離/);
    assert.equal(local.KOYOMI_PERSONA_ADAPTER.concreteScenario({...input,action:provided}).action,provided);
    assert.doesNotMatch(scenario.scene,/返信の遅れ・予定超過・疲労/);
