@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const context={};
 for(const file of ['app-narrative-engine.js','universal-reading-engine.js','adaptive-narrative-engine.js'])vm.runInNewContext(await readFile(`src/reading/${file}`,'utf8'),context);
 const engine=context.KOYOMI_APP_NARRATIVE,universal=context.KOYOMI_UNIVERSAL_READING,adaptive=context.KOYOMI_ADAPTIVE_NARRATIVE;
-assert.equal(engine.VERSION,'2.4.0');
+assert.equal(engine.VERSION,'2.5.0');
 assert.ok(engine.CONCEPTS.length>=30);
 
 const surfaces=['personal','compatibility','timeline','oracle','qimen','mundane','today','method'];

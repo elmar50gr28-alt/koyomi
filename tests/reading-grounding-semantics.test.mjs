@@ -76,6 +76,57 @@ assert.match(engine.compose({domain:'health',risk:95,score:99}).text,/受診や�
 assert.match(engine.compose({domain:'relationship',risk:95,score:99}).text,/暴言・脅し・監視/);
 assert.match(engine.compose({domain:'work',caution:'危険な作業は中止して責任者へ相談してください。'}).text,/危険な作業は中止/);
 
+const withoutEngine={};
+vm.runInNewContext(await readFile('src/persona/conversation-adapter.js','utf8'),withoutEngine);
+let alignmentCases=0;
+for(const domain of ['overall','work','money','relationship','health','growth','timing'])for(const [direction,score] of [['protect',30],['test',55],['forward',85]])for(let day=1;day<=30;day++){
+ const input={domain,score,direction,state:direction,variant:day,evidence:['流年65']};
+ const reading=engine.compose(input),action=reading.blocks.find(block=>block.role==='action').text;
+ assert.equal(reading.frame.score,score);assert.equal(reading.frame.direction,direction);
+ if(direction==='protect'){
+   if(domain==='growth')assert.doesNotMatch(action,/試作|見てもらえる/);
+   if(domain==='relationship')assert.doesNotMatch(action,/次に話す日時|話す機会/);
+   if(domain==='work')assert.doesNotMatch(action,/仕事に取りかかり/);
+ }
+ const provided='入力側で選ばれた対応を確認する';
+ assert.equal(engine.compose({...input,action:provided}).blocks.find(b=>b.role==='action').text,provided);
+ for(const local of [context,withoutEngine]){
+   const scenario=local.KOYOMI_PERSONA_ADAPTER.concreteScenario({...input,system:'四柱推命'});
+   if(domain==='work')assert.doesNotMatch(scenario.go,/睡眠|残高|費用上限/);
+   if(domain==='health'){assert.match(scenario.go,/体調|休息/);assert.doesNotMatch(scenario.go,/担当|残高/);}
+   if(domain==='relationship')assert.match(scenario.go,/双方|距離/);
+   assert.equal(local.KOYOMI_PERSONA_ADAPTER.concreteScenario({...input,action:provided}).action,provided);
+   assert.doesNotMatch(scenario.scene,/返信の遅れ・予定超過・疲労/);
+ }
+ alignmentCases++;
+}
+assert.equal(alignmentCases,630);
+const blankActions=engine.compose({domain:'growth',score:30,actions:['','',' ']});
+assert.equal(blankActions.frame.actions.length,0,'blank action placeholders are not explicit actions');
+assert.doesNotMatch(blankActions.blocks.find(b=>b.role==='action').text,/^\d+$|試作/);
+for(const domain of ['work','money','relationship','health','growth','timing'])for(const evidence of [['判定保留','名前が未入力'],['用神が未算出']]){
+ const result=engine.compose({domain,score:90,confidence:95,evidence});
+ assert.equal(result.frame.score,90,'an availability warning does not rewrite the computed score');
+ assert.equal(result.frame.incomplete,true);
+ assert.match(result.blocks.find(b=>b.role==='conclusion').text,/不足している情報/);
+ assert.match(result.blocks.find(b=>b.role==='action').text,/不足|補える/);
+ assert.match(result.blocks.find(b=>b.role==='reason')?.text||result.text,/揃っていない|不足/);
+}
+for(const domain of ['relationship','health']){
+ const result=engine.compose({domain,score:90,risk:95,evidence:['判定保留']});
+ assert.match(result.blocks.find(b=>b.role==='action').text,/相談窓口|医療機関/);
+ assert.doesNotMatch(result.blocks.find(b=>b.role==='action').text,/補える情報/);
+}
+for(const file of ['universal-reading-engine.js','adaptive-narrative-engine.js'])vm.runInNewContext(await readFile('src/reading/'+file,'utf8'),context);
+const unavailable={domain:'growth',score:90,evidence:['判定保留'],caution:'必要な入力が揃うまで、鑑定だけで実行を決めないこと'};
+const universal=context.KOYOMI_UNIVERSAL_READING.build(unavailable);
+assert.match(universal.actionPlan[0].action,/不足|補える/);
+assert.match(universal.directAnswer,/不足している情報/);
+const adaptive=context.KOYOMI_ADAPTIVE_NARRATIVE.compose(unavailable);
+assert.equal(adaptive.meta.semanticFrame.incomplete,true);
+assert.match(adaptive.text,/必要な入力が揃うまで/);
+assert.match(adaptive.text,/不足している情報/);
+
 assert.equal(core.actionKind('睡眠時間を記録して確かめる'),'verify','a sleep observation is not a rest action');
 assert.equal(core.actionKind('依頼の期限を確認する'),'verify','a dependency check is not delegation');
 assert.equal(core.actionKind('急がない仕事を人に依頼する'),'delegate');
