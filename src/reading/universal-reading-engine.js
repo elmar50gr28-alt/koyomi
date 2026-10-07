@@ -32,7 +32,7 @@
     const focus = clean(subject, '今のテーマ');
     if (score >= 72) return `結論から言うわね。${focus}は、条件を確かめたうえで進めていい流れよ。`;
     if (score < 42) return `結論から言うわね。${focus}は、今は無理に進めず守りと確認を優先しなさい。`;
-    return `結論から言うわね。${focus}は、小さく試して結果を見ながら決めるのが正解よ。`;
+    return `結論から言うわね。${focus}は、不明な条件を確かめてから、方針を決めましょう。`;
   }
 
   function build(input = {}) {
@@ -40,7 +40,7 @@
     const policy = POLICY[type];
     const score = clampScore(input.score);
     const evidence = list(input.evidence, `${policy.label}の総合信号 ${score}点`).slice(0, 3);
-    const actions = list(input.actions, '今できる一番小さな行動を一つ終わらせる').slice(0, 2);
+    const actions = list(input.actions, '判断に必要な情報を確かめ、次の対応を決める').slice(0, 2);
     const question = clean(input.question);
     const subject = clean(input.subject, question || policy.label);
     const caution = clean(input.caution, '焦って結論を固定したり、一度に予定を増やしすぎないこと');

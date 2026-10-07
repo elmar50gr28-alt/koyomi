@@ -48,7 +48,7 @@ for (const themeCategory of ['work', 'love', 'money', 'health', 'growth', 'decis
     assert.ok(!text.includes('時刻の吉凶') && !text.includes('前日の記録がない') && !text.includes('昨日の主題'), 'unavailable timing and unchanged daily comparisons do not pad every reading');
     assert.ok(!/下の一手|一手を下に|今日は「.+」を意識してみて/.test(text), 'avoid position-dependent instructions and the old universal formula');
     assert.equal(text.split(row.action).length - 1, 1);
-    assert.ok(row.story.includes('なら'), 'a scene is conditional, never a claimed personal event');
+    assert.ok(/なら|たら/.test(row.story), 'a scene is conditional, never a claimed personal event');
     rows.push(row); chain.unshift(row);
   }
   assert.equal(new Set(rows.map(row => row.story)).size, 30);
