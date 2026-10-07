@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.KOYOMI_DAILY_READING_CORE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const VERSION = '3.6.0';
+  const VERSION = '3.7.0';
   const rawFoci = [
     ['complete', '完了', 'work', ['途中になっている仕事を、完了と伝えられる状態に仕上げる', '返答待ちの案件について、完了できるか相手に確認する', '仕上げの残っている成果物を、提出できる形にする'], ["新しい予定を増やす前に、残っている仕事を確認して。","仕上げが残っているうちに、別の仕事へ移らないで。","修正を続けるなら、どこで完了とするか決めておいて。"]],
     ['organize', '整理', 'life', ['机の上を、必要な物がすぐ取り出せる状態に整える', '作業を妨げている通知を止める', '今日使う資料を、探し回らずに済む場所へまとめる'], ["片づけだけで一日が終わらないよう、用事の時間も残して。","思い出の品まで、勢いで捨てないこと。","分類に迷ったら、まず取り出しやすい場所へまとめて。"]],
@@ -104,6 +104,38 @@
       .sort((a, b) => b.date.localeCompare(a.date));
   }
   function recentAge(history, key, value, date) { return Math.min(Infinity, ...history.filter(item => item[key] === value).map(item => daysSince(date, item.date))); }
+  // Classify authored actions by purpose, independently of their wording or focus ID.
+  // This is a preference among eligible assets, never permission to change the judgment.
+  function actionKind(action, focusId = '') {
+    const text = String(action || '');
+    const groups = [
+      ['rest', /休む|休息(?:を|の時間を)|睡眠時間.*(?:確保|戻)|寝る|食事.*(?:優先|確保)|水分.*(?:摂|補)/],
+      ['release', /手放|断る|取り消|解約|中止|後日に回|減ら|削る/],
+      ['delegate', /依頼する|依頼して|任せられる|任せる|分担.*(?:決め|相談)|人に頼む/],
+      ['communicate', /伝え|相談(?:する|して)|話し合|連絡(?:する|して|を送)|聞く|聞いて|返答(?:する|して)|返信(?:する|して)/],
+      ['complete', /仕上げ|完了|提出|精算/],
+      ['create', /試作|作る|作り|形に|書いて|書き出/],
+      ['learn', /学び|教材|説明|練習/],
+      ['organize', /置き場所|整える|片づ|整理|分類/],
+      ['decide', /決め|選ぶ|選び|比較|比べ/],
+      ['verify', /確認|確かめ|調べ|記録|見直/]
+    ];
+    return groups.find(([, pattern]) => pattern.test(text))?.[0] || (/続け|維持/.test(text) ? 'maintain' : 'other');
+  }
+  function historyKind(row) {
+    if (row.actionKind) return row.actionKind;
+    const focus = FOCI.find(item => item.id === row.focusId);
+    if (!String(row.actionId || '').startsWith(`${row.focusId}-`)) return '';
+    const index = Number(String(row.actionId).split('-').at(-1));
+    return focus && Number.isInteger(index) && focus.actions[index] ? actionKind(focus.actions[index], focus.id) : '';
+  }
+  function semanticCost(kind, history, date) {
+    if (kind === 'other') return 0; // Unclassified copy is not proof of a new meaning.
+    return history.reduce((sum, row) => {
+      const age = daysSince(date, row.date);
+      return sum + (historyKind(row) === kind ? (age === 1 ? 8 : age === 2 ? 2 : age === 3 ? 1 : 0) : 0);
+    }, 0);
+  }
   function intensityFor(input) {
     const score = clamp(input.dailyScore);
     if (score < 45) return 'protect';
@@ -150,9 +182,9 @@
     // Exhaust finite assets honestly: least used, then least recent, with a deterministic tie break.
     const candidates = Array.from({ length: size }, (_, index) => {
       const id = `${focus.id}-${index}`, uses = history.filter(item => item[key] === id);
-      return { index, count: uses.length, age: recentAge(history, key, id, input.date), tie: (index + size - seed % size) % size };
+      return { index, count: uses.length, semantic: key === 'actionId' ? semanticCost(actionKind(focus.actions[index], focus.id), history, input.date) : 0, age: recentAge(history, key, id, input.date), tie: (index + size - seed % size) % size };
     });
-    candidates.sort((a, b) => a.count - b.count || b.age - a.age || a.tie - b.tie);
+    candidates.sort((a, b) => a.count - b.count || b.age - a.age || a.semantic - b.semantic || a.tie - b.tie);
     return candidates[0].index;
   }
 
@@ -371,6 +403,14 @@
     return selected.map(block => `【${block.label}】\n${block.text}`).join('\n\n') + (reading.safetyNotice ? `\n\n${reading.safetyNotice}` : '');
   }
 
+  function groundingFor(input, focus, intensity) {
+    const theme = (input.themeEvidence || []).find(item => (input.themeIds || []).includes(item?.id) && THEME_FOCI[item.id]?.includes(focus.id));
+    const name = String(theme?.label || '').replace(/[\n\r]/g, ' ').trim();
+    const basis = name && name.length <= 30 ? `鑑定で出た「${name}」を、今日の焦点に結びつけています。` : `日運の強さと相談分野から、今日扱う焦点を選んでいます。`;
+    const qualification = clamp(input.dailyScore) >= 70 && input.longTermScore != null && clamp(input.longTermScore) < 45 ? '日運は強めでも長期の判定は慎重なため、条件の確認を優先します。' : input.contradiction ? '長期の傾向と日運が一致しないため、結論は急がずに読みます。' : input.confidence != null && Number(input.confidence) < 0.5 ? '判断材料が限られるため、現実の条件を確かめる読み方です。' : intensity === 'protect' ? '日運の判定に合わせ、負担を増やさない対応を優先します。' : intensity === 'test' ? '日運の判定に合わせ、条件を確かめてから判断する読み方です。' : '日運の判定に合わせ、準備済みのことを進める読み方です。';
+    return { basis, qualification, themeId: name && name.length <= 30 ? theme.id : null };
+  }
+
   function generate(input = {}, history = []) {
     history = recentHistory(input, history);
     const ranked = rankFocus(input, history), focus = ranked[0].focus, score = clamp(input.dailyScore);
@@ -393,7 +433,8 @@
     const recommendedTime = input.recommendedTime || '時刻の吉凶はこの信号からは決められないわ。必要な条件が揃い、落ち着いて取り組める時間を選んで。';
     const review = focus.id === 'money' ? MONEY_REVIEWS[actionIndex] || REVIEWS.money : REVIEWS[focus.id];
     const labels = { conclusion: '今日の読み', difference: '流れの変化', action: '今日やること', caution: '気をつけること', time: '動く頃合い', review: '今夜の確認' };
-    const story = narrativeFor(structure.id, focus, scene, intensity);
+    const rationale = groundingFor(input, focus, intensity);
+    const story = narrativeFor(structure.id, focus, scene, intensity) + '\n' + rationale.basis + rationale.qualification;
     const texts = { conclusion: story, difference, action, caution, time: recommendedTime, review };
     const evidence = (input.evidence || []).filter(Boolean).slice(0, 3);
     const safetyNotice = safetyFor(input, focus);
@@ -403,14 +444,14 @@
       mainTheme: focus.id, sceneId, scene, intensity, story,
       hasRecommendedTime: Boolean(input.recommendedTime),
       showDifference: Boolean(yesterday && yesterday.intensity && yesterday.intensity !== intensity),
-      actionId: `${focus.id}-${actionIndex}`, cautionId: `${focus.id}-${cautionIndex}`, structureId: structure.id,
+      actionId: `${focus.id}-${actionIndex}`, actionKind: actionKind(action, focus.id), cautionId: `${focus.id}-${cautionIndex}`, structureId: structure.id,
       conclusionPatternId: structure.id, score, conclusion: texts.conclusion, difference, action, caution, recommendedTime, review,
       blocks: structure.order.map(role => ({ role, label: labels[role], text: texts[role] })),
-      safetyNotice, grounding: ranked[0].breakdown,
+      safetyNotice, grounding: ranked[0].breakdown, rationale,
       evidence: evidence.length ? evidence : [`日運信号 ${score}点`, input.dayKey].filter(Boolean),
       fingerprint: hash(JSON.stringify([input.profileId, input.date, focus.id, actionIndex, cautionIndex, structure.id, sceneId, intensity, score, texts, evidence])).toString(16)
     };
   }
 
-  return Object.freeze({ VERSION, FOCI, STRUCTURES, generate, rankFocus, recentHistory, intensityFor, toText, requestedDomain });
+  return Object.freeze({ VERSION, FOCI, STRUCTURES, generate, rankFocus, recentHistory, intensityFor, toText, requestedDomain, actionKind });
 });

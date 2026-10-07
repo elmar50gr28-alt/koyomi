@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const context={};
 for(const file of ['app-narrative-engine.js','universal-reading-engine.js','adaptive-narrative-engine.js'])vm.runInNewContext(await readFile(`src/reading/${file}`,'utf8'),context);
 const engine=context.KOYOMI_APP_NARRATIVE,universal=context.KOYOMI_UNIVERSAL_READING,adaptive=context.KOYOMI_ADAPTIVE_NARRATIVE;
-assert.equal(engine.VERSION,'2.2.0');
+assert.equal(engine.VERSION,'2.3.0');
 assert.ok(engine.CONCEPTS.length>=30);
 
 const surfaces=['personal','compatibility','timeline','oracle','qimen','mundane','today','method'];
@@ -36,7 +36,7 @@ assert.match(serious.text,/暴言・脅し・監視/);
 const contradiction=engine.compose({surface:'personal',domain:'work',contradiction:true,seed:'contradiction'});
 assert.ok(contradiction.blocks.some(block=>block.role==='contrast'));
 const lowConfidence=engine.compose({surface:'personal',domain:'timing',confidence:30,seed:'low-confidence'});
-assert.match(lowConfidence.text,/可能性の一つ/);
+assert.match(lowConfidence.text,/判断材料が限られる/);
 assert.match(lowConfidence.text,/進み具合・負担・条件の変化/);
 
 const ordinary=engine.compose({surface:'personal',domain:'overall',subject:'人格を尊重する選択',evidence:'運命を考える',seed:'ordinary'});
