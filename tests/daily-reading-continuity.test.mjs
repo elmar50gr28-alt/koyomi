@@ -27,6 +27,7 @@ for (const themeCategory of ['overall', 'work', 'love', 'money', 'health', 'fami
     assert.equal(JSON.stringify(core.generate(input, history)), JSON.stringify(row));
     assert.ok(row.story.includes(row.focusLabel) && row.mainTheme === row.focusId);
     assert.ok(row.action === core.FOCI.find(focus => focus.id === row.focusId).actions[Number(row.actionId.split('-').at(-1))], 'reuse complete authored actions, never synonym substitution');
+    assert.equal(core.toText(row).split(row.action).length - 1, 1, 'a daily reading must not echo the full action in its comparison and review');
     assert.ok(row.caution === core.FOCI.find(focus => focus.id === row.focusId).cautions[Number(row.cautionId.split('-').at(-1))] + 'ことは避けて。', 'cautions must explicitly discourage the hazardous behavior');
     assert.ok(!/後半ほど|昨日までの正解|引きずる|必ず|絶対|運が弱いことじゃない/.test(core.toText(row)), 'no invented events, blame, or time predictions');
     assert.ok(!row.recommendedTime.includes('夕方以降') && !row.recommendedTime.includes('午前中'));
@@ -89,12 +90,15 @@ const integrationSource = app.slice(app.indexOf('async function koyomiRenderBazi
 const overall = { textContent: '' }, target = { reading: '従来の三層鑑定', luck: { current: { score: 20 } } };
 const ui = {
   ...context, lastPersonal: target, document: { getElementById: id => id === 'overallReading' ? overall : id === 'theme' ? { value: 'work' } : null },
+  selectedDate: new Date('2026-01-01'), fmtIso: value => value.toISOString().slice(0, 10),
   koyomiBaziReadingProfile: () => ({ personId: 'fixture', birthData: {} }), koyomiDailyProfileKey: () => 'ui-profile', koyomiBaziLocale: () => 'ja',
   KOYOMI_BAZI: { prepareCommonReadingThemes: async () => {}, calculateBazi: () => ({}), buildCommonReading: () => ({ items: [{ themeId: 'WORK_STEADY_PROGRESS' }] }), buildBaziReading: () => ({}) },
   KOYOMI_DAILY_CONTEXT: { selectedDate: () => new Date('2026-01-01'), formatDate: () => '2026-01-01', dailySignal: () => ({ score: 90, title: 'fixture' }), dayPillar: () => ({ text: '甲子' }) },
   KOYOMI_DAILY_READING: { getOrCreate: input => ({ reading: core.generate(input) }) }, console
 };
-ui.window = ui; vm.createContext(ui); vm.runInContext(integrationSource, ui);
+ui.window = ui; vm.createContext(ui);
+vm.runInContext(app.slice(app.indexOf('function koyomiPersonalReadingKey('), app.indexOf('function koyomiOpenGeneratedPersonalReading(')), ui);
+vm.runInContext(integrationSource, ui);
 await ui.koyomiRenderBaziReading();
 assert.equal(target.dailyReading.intensity, 'test', 'long-term weakness reaches the UI');
 assert.ok(overall.textContent.includes(target.dailyReading.story) && overall.textContent.endsWith('従来の三層鑑定'));

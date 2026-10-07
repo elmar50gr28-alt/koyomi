@@ -1906,13 +1906,19 @@ async function koyomiEditOwnProfile(){
  $('ledgerFormTitle').textContent='あなたのプロフィールを登録';
  return null;
 }
-let koyomiRenderedPersonalKey='';
-function koyomiPersonalReadingKey(profile,date=selectedDate||new Date()){return `${profile?.id||profile?.personId||''}|${fmtIso(date)}|${JSON.stringify(profile?.birthData||{})}`}
+let koyomiRenderedPersonalKey='',koyomiRenderedPersonalView=null;
+function koyomiPersonalReadingKey(profile,date=selectedDate||new Date()){
+ const daily=window.KOYOMI_DAILY_READING;
+ const state=typeof LedgerState!=='undefined'?LedgerState:window.LedgerState;
+ const fields=Object.fromEntries((daily?.REQUEST_FIELDS||[]).map(id=>[id,document.getElementById(id)?.value||'']));
+ return daily?.requestKey?.(profile,fmtIso(date),{fields,activeProfile:state?.selectedPrimary||profile?.id||profile?.personId||'',baziSettings:window.KOYOMI_BAZI_SETTINGS?.()||{},locale:window.KOYOMI_BAZI_READING?.locale?.()||document.documentElement?.lang||'',mode:typeof v191zMode==='function'?v191zMode():''})||`${profile?.id||profile?.personId||''}|${fmtIso(date)}|${JSON.stringify(profile?.birthData||{})}`;
+}
+function koyomiPersonalViewMatches(){return window.KOYOMI_DAILY_READING?.isSameView?.(koyomiRenderedPersonalView,lastPersonal,window.KOYOMI_LAST_BAZI_READING,document.getElementById('overallReading')?.textContent||'')||false}
 function koyomiOpenGeneratedPersonalReading(){setPage('personal');requestAnimationFrame(()=>($('overallReading')||$('personalResult'))?.scrollIntoView({behavior:'smooth',block:'start'}))}
-async function koyomiGeneratePersonalOnce(profile){const result=buildPersonal();if(!result)return null;renderPersonal(result);await window.KOYOMI_BAZI_READING?.render();const daily=window.KOYOMI_LAST_BAZI_READING?.result?.dailyReading||result.dailyReading||null;if(daily)koyomiRenderedPersonalKey=koyomiPersonalReadingKey(profile);return daily}
-async function koyomiStartPersonalReading(){const button=$('koyomiStartReading');if(button?.disabled)return;selectedDate=startOfDay(new Date());renderCalendar();const p=await koyomiRequireProfile();if(!p)return;const key=koyomiPersonalReadingKey(p);if(koyomiRenderedPersonalKey===key&&window.KOYOMI_LAST_BAZI_READING){if(button)button.textContent='今日の本鑑定へ戻る';koyomiOpenGeneratedPersonalReading();return}try{if(button){button.disabled=true;button.textContent='今日の本鑑定を作成中…'}const daily=await koyomiGeneratePersonalOnce(p);if(daily){sessionStorage.removeItem('koyomi.pending-reading.v1');koyomiOpenGeneratedPersonalReading()}}finally{if(button){button.disabled=false;button.textContent=koyomiRenderedPersonalKey===key?'今日の本鑑定へ戻る':'今日の鑑定を見る'}}}
+async function koyomiGeneratePersonalOnce(profile){const key=koyomiPersonalReadingKey(profile),previous=window.KOYOMI_LAST_BAZI_READING,result=buildPersonal();if(!result)return null;koyomiRenderedPersonalKey='';koyomiRenderedPersonalView=null;renderPersonal(result);await window.KOYOMI_BAZI_READING?.render();if(lastPersonal!==result||key!==koyomiPersonalReadingKey(profile))return null;const current=window.KOYOMI_LAST_BAZI_READING,daily=result.dailyReading||(current!==previous?current?.result?.dailyReading:null)||null;if(daily){koyomiRenderedPersonalKey=key;koyomiRenderedPersonalView={personal:result,bazi:current,text:document.getElementById('overallReading')?.textContent||''}}return daily}
+async function koyomiStartPersonalReading(){const button=$('koyomiStartReading');if(button?.disabled)return;selectedDate=startOfDay(new Date());renderCalendar();const p=await koyomiRequireProfile();if(!p)return;const key=koyomiPersonalReadingKey(p);if(koyomiRenderedPersonalKey===key&&window.KOYOMI_LAST_BAZI_READING&&koyomiPersonalViewMatches()){if(button)button.textContent='今日の本鑑定へ戻る';koyomiOpenGeneratedPersonalReading();return}try{if(button){button.disabled=true;button.textContent='今日の本鑑定を作成中…'}const daily=await koyomiGeneratePersonalOnce(p);if(daily){sessionStorage.removeItem('koyomi.pending-reading.v1');koyomiOpenGeneratedPersonalReading()}}finally{if(button){button.disabled=false;button.textContent=koyomiRenderedPersonalKey===key&&koyomiPersonalViewMatches()?'今日の本鑑定へ戻る':'今日の鑑定を見る'}}}
 function koyomiToggleDatePicker(){const panel=$('koyomiDatePicker'),button=$('koyomiChooseReadingDate');if(!panel)return;panel.hidden=!panel.hidden;button?.setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden){$('koyomiReadingDate').value=fmtIso(selectedDate);$('koyomiReadingDate').focus()}}
-async function koyomiStartSelectedDateReading(){const date=safeDate($('koyomiReadingDate')?.value);if(!date){toast('鑑定する日付を選んでください');return}selectedDate=startOfDay(date);renderCalendar();const panel=$('koyomiDatePicker');if(panel)panel.hidden=true;$('koyomiChooseReadingDate')?.setAttribute('aria-expanded','false');const p=await koyomiRequireProfile();if(!p)return;const key=koyomiPersonalReadingKey(p);if(koyomiRenderedPersonalKey!==key||!window.KOYOMI_LAST_BAZI_READING)await koyomiGeneratePersonalOnce(p);koyomiOpenGeneratedPersonalReading()}
+async function koyomiStartSelectedDateReading(){const date=safeDate($('koyomiReadingDate')?.value);if(!date){toast('鑑定する日付を選んでください');return}selectedDate=startOfDay(date);renderCalendar();const panel=$('koyomiDatePicker');if(panel)panel.hidden=true;$('koyomiChooseReadingDate')?.setAttribute('aria-expanded','false');const p=await koyomiRequireProfile();if(!p)return;const key=koyomiPersonalReadingKey(p);if(koyomiRenderedPersonalKey!==key||!window.KOYOMI_LAST_BAZI_READING||!koyomiPersonalViewMatches()){const daily=await koyomiGeneratePersonalOnce(p);if(!daily)return}koyomiOpenGeneratedPersonalReading()}
 async function koyomiPrepareCompat(){
  const p=await koyomiApplyPrimaryProfile();
  if(!p)return;
@@ -2311,8 +2317,10 @@ async function koyomiRenderBaziReading(){
     const dailyTarget=typeof lastPersonal!=='undefined'?lastPersonal:null;
     const profile=koyomiBaziReadingProfile();
     if(!profile)return;
+    const requestKey=koyomiPersonalReadingKey(profile);
     await KOYOMI_BAZI.prepareCommonReadingThemes().catch(error=>console.warn('[KOYOMI_COMMON_READING] data unavailable; legacy reading remains active',error));
     if(dailyTarget!==(typeof lastPersonal!=='undefined'?lastPersonal:null))return;
+    if(requestKey!==koyomiPersonalReadingKey(profile))return;
     profile.baziSettings=window.KOYOMI_BAZI_SETTINGS?.()||{};
     const result=KOYOMI_BAZI.calculateBazi(profile);
     const locale=koyomiBaziLocale();
@@ -2323,9 +2331,11 @@ async function koyomiRenderBaziReading(){
     const readingDayPillar=dailyContext?.dayPillar?.(readingDate)?.text||dateKey;
     const dailyPack=window.KOYOMI_DAILY_READING?.getOrCreate({
       profileId:koyomiDailyProfileKey(profile),
-      settingsHash:JSON.stringify(profile.birthData||{}),date:dateKey,
+      settingsHash:JSON.stringify({birthData:profile.birthData||{},baziSettings:profile.baziSettings,requestKey}),date:dateKey,
       dayKey:`${readingDayPillar} ${legacyDaily.title}`,
       dailyScore:legacyDaily.score,themeCategory:document.getElementById('theme')?.value||'overall',
+      focusCategory:document.getElementById('qFocus')?.value||'nature',
+      questionCategory:commonReading.answer?.hasQuestion?commonReading.answer.category:undefined,
       longTermScore:lastPersonal?.luck?.current?.score,
       themeIds:commonReading.items?.map(item=>item.themeId)||[],
       evidence:[`${readingDayPillar}の日・${legacyDaily.title}・信号${legacyDaily.score}`,commonReading.items?.[0]?.themeName,commonReading.items?.[0]?.evidence?.map(item=>`${item.type}:${item.value}`).join('／')].filter(Boolean)
@@ -2373,7 +2383,7 @@ async function koyomiRenderBaziReading(){
     console.error('[KOYOMI_BAZI_READING] render failed',error);
   }
 }
-window.KOYOMI_BAZI_READING={render:koyomiRenderBaziReading,profile:koyomiBaziReadingProfile};
+window.KOYOMI_BAZI_READING={render:koyomiRenderBaziReading,profile:koyomiBaziReadingProfile,locale:koyomiBaziLocale};
 document.addEventListener('submit',event=>{
   if(event.target?.id==='personalForm')setTimeout(koyomiRenderBaziReading,0);
 },true);
