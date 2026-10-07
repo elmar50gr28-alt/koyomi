@@ -6,7 +6,7 @@ const context={Math:Object.assign(Object.create(Math),{random(){throw Error('ran
 for(const file of ['src/reading/app-narrative-engine.js','src/persona/conversation-adapter.js','src/reading/daily/daily-reading-core.js','src/reading/daily/daily-reading-controller.js'])vm.runInNewContext(await readFile(file,'utf8'),context);
 const engine=context.KOYOMI_APP_NARRATIVE,core=context.KOYOMI_DAILY_READING_CORE,adapter=context.KOYOMI_PERSONA_ADAPTER,controller=context.KOYOMI_DAILY_READING;
 
-for(const [raw,expected] of [['大運65','長期の指標65'],['流年42','年ごとの指標42'],['調和トランジット強度3.2','調和を示す配置の強さ3.2'],['自分の立場愚者逆位置','自分の立場愚者（反転）']]){
+for(const [raw,expected] of [['大運65','長期の判定は65点'],['流年42','年ごとの判定は42点'],['調和トランジット強度3.2','調和を示す配置の強さ3.2'],['自分の立場愚者逆位置','自分の立場愚者（反転）']]){
  assert.equal(engine.publicEvidence(raw),expected);
  const result=engine.compose({domain:'work',score:60,evidence:[raw],confidence:80});
  assert.ok(result.blocks.find(b=>b.role==='conclusion').text.includes(expected));
@@ -22,6 +22,37 @@ assert.doesNotMatch(missing.text,/複数の材料が同じ方向|準備と状況
 for(const flag of [{confidence:30},{contradiction:true},{risk:95}]){
  const result=engine.compose({domain:'work',score:88,evidence:['長期の指標80'],...flag});
  assert.match(result.blocks.find(b=>b.role==='conclusion').text,/限られる|異なる傾向|安全上/);
+}
+for(const value of ['大運0','大運100','流年42.5','選択日65']){
+ const text=engine.publicEvidence(value);
+ assert.match(text,/判定は\d+(?:\.\d+)?点$/);
+ assert.equal(text.match(/\d+(?:\.\d+)?/)[0],value.match(/\d+(?:\.\d+)?/)[0]);
+}
+for(const value of ['日五行→用神補正+5','個人年8','星差3'])assert.doesNotMatch(engine.publicEvidence(value),/点/,'adjustments and classifications are not scores');
+const incomplete=engine.compose({surface:'personal',score:85,confidence:95,evidence:['判定保留','ローマ字名が未入力']});
+assert.match(incomplete.blocks.find(b=>b.role==='conclusion').text,/揃っていない/);
+assert.match(incomplete.blocks.find(b=>b.role==='reason').text,/不足している情報/);
+assert.doesNotMatch(incomplete.text,/比較的目立ち|複数の材料が同じ方向/);
+const materials=[['大運65','流年42'],['本人角宿','選択日亢宿','安壊'],['本命3','日盤6','星差3'],['天文計算 local','調和トランジット強度3.2','緊張トランジット強度2.1'],['自分の立場愚者正位置','最終結果世界逆位置'],['現在フェフ','課題ウルズ','次手アンスズ反転'],['人格15','地格24','外格13'],['ライフパス8','個人年4'],['生年月日核8','名前核4','橋数4'],['年運種子','月運安定'],['大運安定','流年調整']];
+let displayCases=0;
+for(const [index,system] of Object.keys(adapter.DOMAINS).entries())for(let day=1;day<=30;day++){
+ const score=[0,42,68,90][day%4],input={system,domain:'work',score,confidence:65,evidence:materials[index],level:'detailed',date:`2026-01-${String(day).padStart(2,'0')}`,variant:day};
+ const before=JSON.stringify(input),source='【算出資料】\n'+materials[index].join('／');
+ const result=adapter.applyDivination(source,input);
+ assert.equal(JSON.stringify(input),before);
+ assert.match(result.text,/【詳しい鑑定資料】/);
+ assert.ok(result.text.includes(source),'raw evidence remains available in detailed mode');
+ assert.doesNotMatch(result.text.split('【詳しい鑑定資料】')[0],/に変化が表れやすいでしょう|この傾向が比較的目立ちます/);
+ assert.equal(result.narrative.quality.pass,true,system);
+ assert.equal(adapter.applyDivination(source,input).text,result.text);
+ displayCases++;
+}
+assert.equal(displayCases,330);
+for(const surface of ['personal','compatibility','timeline','oracle','qimen','mundane','today','method'])for(const domain of ['work','money','relationship','health','growth','timing','overall']){
+ const result=engine.compose({surface,domain,evidence:['流年42'],score:60,seed:'scene-check'});
+ const scene=result.blocks.find(b=>b.role==='scene');
+ if(scene){assert.equal(scene.label,'現実で確かめること');assert.match(scene.text,/状況と照らし合わせる|確かめて/);}
+ assert.doesNotMatch(result.text,/に変化が表れやすいでしょう/);
 }
 
 const expected={work:/担当|期限/,money:/総額|継続費/,relationship:/約束|距離/,health:/悪化|医療機関/,growth:/教材|理解/,timing:/準備|合意/};

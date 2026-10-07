@@ -1,6 +1,6 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;root.KOYOMI_APP_NARRATIVE=api})(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
-const VERSION='2.3.0';
+const VERSION='2.4.0';
 const SURFACES={personal:{length:'long',review:'7日後'},compatibility:{length:'long',review:'14日後'},timeline:{length:'medium',review:'3か月後'},oracle:{length:'medium',review:'7日後'},qimen:{length:'medium',review:'行動後'},mundane:{length:'medium',review:'翌月'},today:{length:'short',review:'今夜'},method:{length:'medium',review:'7日後'}};
 const CONCEPTS=['advance','test','protect','complete','organize','contact','negotiate','rest','learn','create','budget','boundary','repair','prepare','release','review','decide','focus','cooperate','observe','recover','communicate','compare','pause','delegate','simplify','verify','schedule','maintain','reframe','prioritize','withdraw'];
 const DOMAINS={
@@ -26,7 +26,7 @@ const BRIDGES=['ここで大切なのは、運の強さより現実の条件で�
 const CLOSES=['実際に分かったことを、次に判断するときの材料にしてください。','あとから自分に説明できる選択を大切にしてください。','運は判決ではありません。現実を確かめながら選び直せます。','急がなくても大丈夫です。条件を言葉にできれば迷いは整理できます。','急ぐことと待てることを分け、今の都合に合う進め方を選んでください。'];
 const METRICS={overall:'進み具合・負担・続けやすさ',work:'進み具合・作業量・期限',money:'残高・総額・継続費',relationship:'約束した行動・負担・安心感',health:'睡眠・症状・疲れ',growth:'理解できたこと・作れたもの・続けやすさ',timing:'進み具合・負担・条件の変化'};
 const STRUCTURES={long:[['conclusion','scene','reason','action','stop','review'],['scene','conclusion','action','reason','stop','review'],['conclusion','reason','contrast','action','stop','review'],['action','conclusion','scene','reason','stop','review']],medium:[['conclusion','reason','action','stop','review'],['action','conclusion','reason','stop','review'],['conclusion','contrast','action','review','stop']],short:[['conclusion','action','stop'],['action','conclusion','stop'],['conclusion','contrast','action']]};
-const HEADINGS={conclusion:'結論',scene:'現実に表れやすいこと',reason:'そう読む理由',contrast:'判断の分け方',action:'今できること',stop:'控えること',review:'見直す時'};
+const HEADINGS={conclusion:'結論',scene:'現実で確かめること',reason:'そう読む理由',contrast:'判断の分け方',action:'今できること',stop:'控えること',review:'見直す時'};
 const FORBIDDEN=/(四柱推命|宿曜|九星(?:気学)?|西洋占星術|タロット|ルーン|姓名判断|数秘(?:術)?|カバラ|六星|大運|流年|日主|用神|喜神|忌神|五行|空亡|命式|トランジット|アスペクト|正位置|逆位置|第(?:1[0-2]|[1-9])室|\b(?:ASC|MC)\b)/;
 const CERTAINTY=/(必ず|絶対|確実に|間違いなく).{0,15}(成功|失敗|起きる|治る|別れる|結婚)/;
 function clean(v,fallback=''){const value=String(v??'').replace(/[\u0000-\u001f\u007f]+/g,' ').replace(/\s+/g,' ').trim();return value||fallback}
@@ -49,6 +49,8 @@ function boundary(input={}){return BOUNDARIES[domain(input.domain)]}
 function publicEvidence(value){
  let text=clean(value);
  if (/^天文計算|^入力条件を確認済み$/.test(text)) return '';
+ const score=text.match(/^(大運|流年|選択日)(\d+(?:\.\d+)?)$/);
+ if(score&&Number(score[2])<=100)return `${{大運:'長期',流年:'年ごと',選択日:'選択日'}[score[1]]}の判定は${score[2]}点`;
  // Translate only known computed labels; do not invent an interpretation or event.
  const labels=[['調和トランジット強度','調和を示す配置の強さ'],['緊張トランジット強度','緊張を示す配置の強さ'],['主要トランジット','参照した配置'],['日五行→用神補正','選択日の相性補正'],['大運','長期の指標'],['流年','年ごとの指標'],['ライフパス','生年月日からの基礎数'],['個人年','今年の周期数'],['本命','出生年の分類'],['日盤','選択日の分類'],['星差','二つの分類の差'],['生年月日核','生年月日からの基礎数'],['名前核','名前からの基礎数'],['橋数','二つの基礎数の差']];
  for(const [label,replacement] of labels)text=text.split(label).join(replacement);
@@ -57,14 +59,21 @@ function publicEvidence(value){
 }
 function grounding(f){
  if(f.serious)return '安全上の懸念があるため、鑑定の強さより保護を優先して読みます。';
+ if(f.evidence.some(value=>/判定保留|未入力|未登録|未算出/.test(value)))return '必要な入力や算出結果が揃っていないため、結論は参考として扱います。';
  if(f.contradiction)return '判断材料に異なる傾向があるため、進める部分と保留する部分を分けて読みます。';
  if(f.confidence<50)return '判断材料が限られるため、確定した見通しではなく確認の手掛かりとして読みます。';
  const evidence=f.evidence.find(value=>value.length<=42&&!/入力条件を確認済み|総合信号|信号\s*\d|^\d+点$/.test(value));
  const reading={forward:'準備済みのことを進める',test:'条件を確かめて判断する',protect:'負担を増やさない'}[f.direction];
  return evidence?`「${evidence.replace(/[。]+$/,'')}」を判断材料に、${reading}読み方です。`:`今回の判定に合わせ、${reading}読み方です。`;
 }
+function reasonFor(f){
+ if(!f.evidence.length)return '具体的な根拠の説明が渡されていないため、判定に沿った一般的な助言です。';
+ const material=f.evidence.map(value=>value.replace(/[。]+$/,'')).join('。')+'。';
+ const limit=f.evidence.some(value=>/判定保留|未入力|未登録|未算出/.test(value))?'不足している情報は、入力や算出を確認してから読み直してください。':f.contradiction?'異なる傾向を一つの見通しにまとめず、条件を分けて考えます。':f.confidence<50?'材料が限られるため、現実の状況と照らし合わせてください。':'これらは鑑定に使った材料で、現実に起きる出来事を確定するものではありません。';
+ return material+limit;
+}
 function frame(input={}){const surface=SURFACES[input.surface||input.type]?input.surface||input.type:'personal',score=Math.max(0,Math.min(100,Math.round(input.score!=null&&Number.isFinite(Number(input.score))?Number(input.score):50))),risk=Math.max(0,Math.min(100,Number(input.risk)||0)),d=domain(input.domain),dir=Boolean(input.serious)||risk>=70?'protect':direction(input.direction||input.state,score),conf=confidence(input.confidence),serious=Boolean(input.serious)||risk>=70;return{surface,score,risk,domain:d,direction:dir,confidence:conf,serious,contradiction:Boolean(input.contradiction),question:clean(input.question),subject:clean(input.subject,DOMAINS[d].subject),evidence:list(input.evidence||input.reasons).map(publicEvidence).filter(Boolean).slice(0,3),actions:list(input.actions||input.action).map(clean).filter(Boolean),caution:clean(input.caution||input.stop),review:clean(input.review,SURFACES[surface].review),seed:clean(input.seed)||[surface,d,dir,score,input.variant||0].join('|')}}
-function buildParts(f,attempt){const d=DOMAINS[f.domain],flow=DIRECTIONS[f.direction],seed=`${f.seed}|${attempt}`;let action=f.actions[0]||pick(d.actions,seed,4),stop=f.caution||boundary(f);if(f.serious&&f.domain==='relationship'){action='一人で抱えず、信頼できる人や相談窓口へ状況を共有する';stop='暴言・脅し・監視・金銭支配・強要を我慢すること'}if(f.serious&&f.domain==='health'){action='安全を確保し、急な悪化や強い症状は医療機関へ相談する';stop='占いの結果を理由に受診や休息を遅らせること'}const certainty=f.confidence>=80?'材料の確かさと、将来の結果が確定することは別です。':f.confidence<50?'ただし、判断材料が限られるため可能性の一つとして扱います。':'いくつかの材料を重ねると、この傾向が比較的目立ちます。',reason=f.evidence.length?`${f.evidence.join('。')}。${f.evidence.length>1?certainty:'この材料と判定を合わせて読んでいます。'}`:'具体的な根拠の説明が渡されていないため、判定に沿った一般的な助言です。',scene=`${pick(d.scenes,seed,1)}に変化が表れやすいでしょう。`,contrast=f.contradiction?'進められる部分と、まだ約束しない部分を分けて考えましょう。':pick(BRIDGES,seed,3),conclusion=`今回の焦点は「${f.subject}」です。${grounding(f)}\n${DECISION_COPY[f.direction][f.domain]}`,review=`${/^\d+日$/.test(f.review)?f.review+'後':f.review}を目安に、${METRICS[f.domain]}を確認し、前回との違いを比べてください。`,close=pick(CLOSES,seed,6);return{conclusion,scene,reason,contrast,action,stop,review,close}}
+function buildParts(f,attempt){const d=DOMAINS[f.domain],flow=DIRECTIONS[f.direction],seed=`${f.seed}|${attempt}`;let action=f.actions[0]||pick(d.actions,seed,4),stop=f.caution||boundary(f);if(f.serious&&f.domain==='relationship'){action='一人で抱えず、信頼できる人や相談窓口へ状況を共有する';stop='暴言・脅し・監視・金銭支配・強要を我慢すること'}if(f.serious&&f.domain==='health'){action='安全を確保し、急な悪化や強い症状は医療機関へ相談する';stop='占いの結果を理由に受診や休息を遅らせること'}const reason=reasonFor(f),scene=`現実の状況と照らし合わせるなら、${pick(d.scenes,seed,1)}を確かめてください。`,contrast=f.contradiction?'進められる部分と、まだ約束しない部分を分けて考えましょう。':pick(BRIDGES,seed,3),conclusion=`今回の焦点は「${f.subject}」です。${grounding(f)}\n${DECISION_COPY[f.direction][f.domain]}`,review=`${/^\d+日$/.test(f.review)?f.review+'後':f.review}を目安に、${METRICS[f.domain]}を確認し、前回との違いを比べてください。`,close=pick(CLOSES,seed,6);return{conclusion,scene,reason,contrast,action,stop,review,close}}
 function structure(f,attempt){let pool=STRUCTURES[SURFACES[f.surface].length];if(f.contradiction)pool=pool.filter(order=>order.includes('contrast'));const recent=(f.history||[]).map(x=>x?.structure).filter(Boolean).slice(0,2),ordered=pool.map((x,i)=>pool[(i+hash(`${f.seed}|${attempt}`))%pool.length]),fresh=ordered.find(x=>!recent.includes(x.join('-')));return fresh||ordered[0]}
 function render(f,parts,order){const blocks=order.map(role=>({role,label:HEADINGS[role],text:parts[role]}));if(SURFACES[f.surface].length!=='short')blocks.push({role:'close',label:'最後に',text:parts.close});return{blocks,text:blocks.map(b=>`【${b.label}】\n${b.text}`).join('\n\n')}}
 function audit(text,f={}){const issues=[],source=clean(text),sentences=source.split(/[。！？\n]+/).map(clean).filter(x=>x.length>6),seen=new Set();if(FORBIDDEN.test(source))issues.push('technical-term');if(CERTAINTY.test(source))issues.push('unsupported-certainty');if(!/【(?:今できること|結論|判断の分け方)】/.test(source))issues.push('missing-action');if(!/控える|止|守|約束しない|増や/.test(source))issues.push('missing-boundary');for(const sentence of sentences){const key=sentence.replace(/[、， ]/g,'').slice(0,22);if(seen.has(key))issues.push('repetition');seen.add(key)}if(source.length>(f.surface==='today'?420:1400))issues.push('too-long');if(f.serious&&/(冗談|笑って|景気よく)/.test(source))issues.push('unsafe-tone');return{pass:issues.length===0,issues:[...new Set(issues)],score:Math.max(0,100-[...new Set(issues)].length*18)}}
