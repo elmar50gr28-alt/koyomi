@@ -14,4 +14,40 @@ for (const system of Object.keys(explainer.examples)) assert.ok(explainer.exampl
 for (const label of ['いつ：','使うもの：','やること：','完了の目印：']) assert.ok(first.example.includes(label));
 assert.ok(first.alternative.startsWith('難しい場合：'));
 assert.equal(Object.keys(explainer.guides).length, Object.keys(explainer.examples).length);
+const supplied={...model,scenario:{...model.scenario,action:'急がない用事を後日に回し、休む時間を確保する。',go:'体調に無理がなく、休息を確保できること'}};
+const suppliedExample=explainer.explain(supplied,{date:'2026-01-01'});
+assert.match(suppliedExample.example,/やること：急がない用事/);
+assert.match(suppliedExample.example,/体調に無理がなく/);
+assert.doesNotMatch(suppliedExample.example,/カードの示唆|。。/);
+assert.equal(explainer.explain(supplied,{date:'2026-01-30'}).primaryAction,supplied.scenario.action,'date changes must not replace an actual action with a different example');
+for(const state of ['constructor','toString','__proto__'])assert.doesNotMatch(explainer.explain({...model,system:state,scenario:{state}}).meaning,/undefined|function/);
+const renderContext={};
+for(const file of ['sister-lexicon.js','sister-renderer.js','persona-policy.js','reading-structure-planner.js','beginner-explainer.js','conversation-adapter.js'])vm.runInNewContext(await readFile('src/persona/'+file,'utf8'),renderContext);
+const adapter=renderContext.KOYOMI_PERSONA_ADAPTER;
+let displayCases=0;
+for(const system of Object.keys(explainer.examples))for(let day=1;day<=30;day++)for(const level of ['beginner','standard','detailed'])for(const mode of ['sister','zubat']){
+ const action='急がない用事を後日に回し、休む時間を確保する。',input={system,domain:'health',score:[30,55,85][day%3],action,level,mode,date:`2026-01-${String(day).padStart(2,'0')}`,evidence:['体調と予定の負担を確認'],variant:day};
+ const rendered=adapter.applyDivination('原資料：検証用の数値と条件',input);
+ assert.equal(rendered.text.split(action).length-1,1,`${system}/${day}/${level}: show actual action once`);
+ assert.equal(rendered.text.split(rendered.scenario.scene).length-1,1,'do not repeat the conclusion as a separate scene');
+ assert.doesNotMatch(rendered.text,/。。|わ。目に見える変化|に出てくるわよ/);
+ assert.equal(adapter.applyDivination('原資料：検証用の数値と条件',input).text,rendered.text);
+ if(level==='beginner')assert.doesNotMatch(rendered.text,/カードの示唆|名前の表記と肩書き|担当・期限・完了条件を確かめる/);
+ displayCases++;
+}
+assert.equal(displayCases,1980);
+for(const domain of ['health','relationship']){
+ const input={system:'四柱推命',domain,score:90,psychRisk:95,level:'beginner',action:domain==='health'?'必要な受診を優先する':'安全な距離と支援を確保する'};
+ const out=adapter.applyDivination('安全確認の元資料',input);
+ assert.match(out.scenario.go,/待たず/);
+ assert.doesNotMatch(out.scenario.go,/体調に無理がなく|双方の都合/);
+ assert.match(out.text,/安全確保|安全な距離|受診/);
+}
+const medical=adapter.applyDivination('元の資料',{system:'四柱推命',domain:'health',score:55,level:'beginner',action:'必要な受診を優先する'});
+assert.match(medical.scenario.go,/待たず/);
+assert.doesNotMatch(medical.text,/体調に無理がなく|実行を急がず/);
+const customOrder=renderContext.KOYOMI_PERSONA_RENDERER.render({system:'四柱推命',result:'同じ場面',scenario:{scene:'同じ場面',action:'明示された行動。',go:'続行の条件',stop:'注意文。',observable:'負担'}},{level:'beginner'});
+assert.equal(customOrder.split('明示された行動。').length-1,1);
+const onlyScenario=renderContext.KOYOMI_PERSONA_RENDERER.render({system:'四柱推命',result:'同じ場面',order:['scenario'],scenario:{scene:'同じ場面',observable:'負担'}});
+assert.equal(onlyScenario.split('同じ場面').length-1,1,'a scene cannot disappear if the conclusion section is absent');
 console.log('Beginner explainer passed');
