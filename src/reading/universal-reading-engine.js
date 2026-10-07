@@ -40,7 +40,7 @@
     const policy = POLICY[type];
     const score = clampScore(input.score);
     const evidence = list(input.evidence, `${policy.label}の総合信号 ${score}点`).slice(0, 3);
-    const actions = list(input.actions, '判断に必要な情報を確かめ、次の対応を決める').slice(0, 2);
+    const actions = list(input.actions, globalThis.KOYOMI_APP_NARRATIVE?.defaultActionFor({...input,direction:input.state})||'判断に必要な情報を確かめ、次の対応を決める').slice(0, 2);
     const question = clean(input.question);
     const subject = clean(input.subject, question || policy.label);
     const caution = clean(input.caution, globalThis.KOYOMI_APP_NARRATIVE?.boundary(input)||'焦って結論を固定したり、一度に予定を増やしすぎないこと');

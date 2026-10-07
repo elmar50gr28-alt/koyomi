@@ -1,6 +1,6 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;root.KOYOMI_APP_NARRATIVE=api})(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
-const VERSION='2.4.0';
+const VERSION='2.5.0';
 const SURFACES={personal:{length:'long',review:'7日後'},compatibility:{length:'long',review:'14日後'},timeline:{length:'medium',review:'3か月後'},oracle:{length:'medium',review:'7日後'},qimen:{length:'medium',review:'行動後'},mundane:{length:'medium',review:'翌月'},today:{length:'short',review:'今夜'},method:{length:'medium',review:'7日後'}};
 const CONCEPTS=['advance','test','protect','complete','organize','contact','negotiate','rest','learn','create','budget','boundary','repair','prepare','release','review','decide','focus','cooperate','observe','recover','communicate','compare','pause','delegate','simplify','verify','schedule','maintain','reframe','prioritize','withdraw'];
 const DOMAINS={
@@ -55,6 +55,28 @@ const REALITY_CHECKS={
  timing:['実行を考えているなら、準備済みの部分と未確認の部分を分けてください。','急ぐ用事があるなら、今対応が必要な範囲と待てる範囲を確認してください。','判断を保留するなら、何が分かれば再検討するか決めてください。']
 };
 function boundary(input={}){return BOUNDARIES[domain(input.domain)]}
+const PROTECT_ACTIONS={
+ overall:[DOMAINS.overall.actions[1],DOMAINS.overall.actions[2],'負担になっている予定を見渡し、延期できる用事を分ける'],
+ work:[DOMAINS.work.actions[0],DOMAINS.work.actions[2],'今の仕事量を確認し、急がない仕事の期限を相談する'],
+ money:DOMAINS.money.actions,
+ relationship:[DOMAINS.relationship.actions[2],'返事や約束を急がず、自分が引き受けられる範囲を確かめる','守りたい距離を整理し、無理な連絡や面会を控える'],
+ health:DOMAINS.health.actions,
+ growth:[DOMAINS.growth.actions[0],'使っている教材や課題を見渡し、負担になっているものを減らす','学び直したい点を整理し、続けられる進め方を考える'],
+ timing:DOMAINS.timing.actions
+};
+function incomplete(f){return Boolean(f.incomplete)||f.evidence.some(value=>/判定保留|未入力|未登録|未算出/.test(value))}
+function defaultAction(f,seed){
+ if(f.serious&&f.domain==='relationship')return '一人で抱えず、信頼できる人や相談窓口へ状況を共有する';
+ if(f.serious&&f.domain==='health')return '安全を確保し、急な悪化や強い症状は医療機関へ相談する';
+ if(incomplete(f))return '不足している入力や算出結果を確認し、補える情報があるか確かめる';
+ return pick(f.direction==='protect'?PROTECT_ACTIONS[f.domain]:DOMAINS[f.domain].actions,seed,4);
+}
+function defaultActionFor(input={}){const f=frame(input);return defaultAction(f,`${f.seed}|0`)}
+function decision(f){
+ if(f.serious)return DECISION_COPY[f.direction][f.domain];
+ if(incomplete(f))return '不足している情報を確かめ、鑑定結果だけで実行を決めないようにしましょう。';
+ return DECISION_COPY[f.direction][f.domain];
+}
 function publicEvidence(value){
  let text=clean(value);
  if (/^天文計算|^入力条件を確認済み$/.test(text)) return '';
@@ -68,7 +90,7 @@ function publicEvidence(value){
 }
 function grounding(f){
  if(f.serious)return '安全上の懸念があるため、鑑定の強さより保護を優先して読みます。';
- if(f.evidence.some(value=>/判定保留|未入力|未登録|未算出/.test(value)))return '必要な入力や算出結果が揃っていないため、結論は参考として扱います。';
+ if(incomplete(f))return '必要な入力や算出結果が揃っていないため、結論は参考として扱います。';
  if(f.contradiction)return '判断材料に異なる傾向があるため、進める部分と保留する部分を分けて読みます。';
  if(f.confidence<50)return '判断材料が限られるため、確定した見通しではなく確認の手掛かりとして読みます。';
  const evidence=f.evidence.find(value=>value.length<=42&&!/入力条件を確認済み|総合信号|信号\s*\d|^\d+点$/.test(value));
@@ -76,16 +98,16 @@ function grounding(f){
  return evidence?`「${evidence.replace(/[。]+$/,'')}」を判断材料に、${reading}読み方です。`:`今回の判定に合わせ、${reading}読み方です。`;
 }
 function reasonFor(f){
- if(!f.evidence.length)return '具体的な根拠の説明が渡されていないため、判定に沿った一般的な助言です。';
+ if(!f.evidence.length)return incomplete(f)?'必要な入力や算出結果が揃っていないため、補える情報を確認してください。':'具体的な根拠の説明が渡されていないため、判定に沿った一般的な助言です。';
  const material=f.evidence.map(value=>value.replace(/[。]+$/,'')).join('。')+'。';
- const limit=f.evidence.some(value=>/判定保留|未入力|未登録|未算出/.test(value))?'不足している情報は、入力や算出を確認してから読み直してください。':f.contradiction?'異なる傾向を一つの見通しにまとめず、条件を分けて考えます。':f.confidence<50?'材料が限られるため、現実の状況と照らし合わせてください。':'これらは鑑定に使った材料で、現実に起きる出来事を確定するものではありません。';
+ const limit=incomplete(f)?'不足している情報は、入力や算出を確認してから読み直してください。':f.contradiction?'異なる傾向を一つの見通しにまとめず、条件を分けて考えます。':f.confidence<50?'材料が限られるため、現実の状況と照らし合わせてください。':'これらは鑑定に使った材料で、現実に起きる出来事を確定するものではありません。';
  return material+limit;
 }
-function frame(input={}){const surface=SURFACES[input.surface||input.type]?input.surface||input.type:'personal',score=Math.max(0,Math.min(100,Math.round(input.score!=null&&Number.isFinite(Number(input.score))?Number(input.score):50))),risk=Math.max(0,Math.min(100,Number(input.risk)||0)),d=domain(input.domain),dir=Boolean(input.serious)||risk>=70?'protect':direction(input.direction||input.state,score),conf=confidence(input.confidence),serious=Boolean(input.serious)||risk>=70;return{surface,score,risk,domain:d,direction:dir,confidence:conf,serious,contradiction:Boolean(input.contradiction),question:clean(input.question),subject:clean(input.subject,DOMAINS[d].subject),evidence:list(input.evidence||input.reasons).map(publicEvidence).filter(Boolean).slice(0,3),actions:list(input.actions||input.action).map(clean).filter(Boolean),caution:clean(input.caution||input.stop),review:clean(input.review,SURFACES[surface].review),seed:clean(input.seed)||[surface,d,dir,score,input.variant||0].join('|')}}
-function buildParts(f,attempt){const d=DOMAINS[f.domain],flow=DIRECTIONS[f.direction],seed=`${f.seed}|${attempt}`;let action=f.actions[0]||pick(d.actions,seed,4),stop=f.caution||boundary(f);if(f.serious&&f.domain==='relationship'){action='一人で抱えず、信頼できる人や相談窓口へ状況を共有する';stop='暴言・脅し・監視・金銭支配・強要を我慢すること'}if(f.serious&&f.domain==='health'){action='安全を確保し、急な悪化や強い症状は医療機関へ相談する';stop='占いの結果を理由に受診や休息を遅らせること'}const reason=reasonFor(f),scene=pick(REALITY_CHECKS[f.domain],seed,1),contrast=f.contradiction?'進められる部分と、まだ約束しない部分を分けて考えましょう。':pick(BRIDGES,seed,3),conclusion=`今回の焦点は「${f.subject}」です。${grounding(f)}\n${DECISION_COPY[f.direction][f.domain]}`,review=`${/^\d+日$/.test(f.review)?f.review+'後':f.review}を目安に、${METRICS[f.domain]}を確認し、前回との違いを比べてください。`,close=pick(CLOSES,seed,6);return{conclusion,scene,reason,contrast,action,stop,review,close}}
+function frame(input={}){const surface=SURFACES[input.surface||input.type]?input.surface||input.type:'personal',score=Math.max(0,Math.min(100,Math.round(input.score!=null&&Number.isFinite(Number(input.score))?Number(input.score):50))),risk=Math.max(0,Math.min(100,Number(input.risk)||0)),d=domain(input.domain),dir=Boolean(input.serious)||risk>=70?'protect':direction(input.direction||input.state,score),conf=confidence(input.confidence),serious=Boolean(input.serious)||risk>=70;return{surface,score,risk,domain:d,direction:dir,confidence:conf,serious,incomplete:list(input.evidence||input.reasons).some(value=>/判定保留|未入力|未登録|未算出/.test(clean(value))),contradiction:Boolean(input.contradiction),question:clean(input.question),subject:clean(input.subject,DOMAINS[d].subject),evidence:list(input.evidence||input.reasons).map(publicEvidence).filter(Boolean).slice(0,3),actions:list(input.actions||input.action).map(value=>clean(value)).filter(Boolean),caution:clean(input.caution||input.stop),review:clean(input.review,SURFACES[surface].review),seed:clean(input.seed)||[surface,d,dir,score,input.variant||0].join('|')}}
+function buildParts(f,attempt){const d=DOMAINS[f.domain],flow=DIRECTIONS[f.direction],seed=`${f.seed}|${attempt}`;let action=f.actions[0]||defaultAction(f,seed),stop=f.caution||boundary(f);if(f.serious&&f.domain==='relationship'){action='一人で抱えず、信頼できる人や相談窓口へ状況を共有する';stop='暴言・脅し・監視・金銭支配・強要を我慢すること'}if(f.serious&&f.domain==='health'){action='安全を確保し、急な悪化や強い症状は医療機関へ相談する';stop='占いの結果を理由に受診や休息を遅らせること'}const reason=reasonFor(f),scene=pick(REALITY_CHECKS[f.domain],seed,1),contrast=f.contradiction?'進められる部分と、まだ約束しない部分を分けて考えましょう。':pick(BRIDGES,seed,3),conclusion=`今回の焦点は「${f.subject}」です。${grounding(f)}\n${decision(f)}`,review=`${/^\d+日$/.test(f.review)?f.review+'後':f.review}を目安に、${METRICS[f.domain]}を確認し、前回との違いを比べてください。`,close=pick(CLOSES,seed,6);return{conclusion,scene,reason,contrast,action,stop,review,close}}
 function structure(f,attempt){let pool=STRUCTURES[SURFACES[f.surface].length];if(f.contradiction)pool=pool.filter(order=>order.includes('contrast'));const recent=(f.history||[]).map(x=>x?.structure).filter(Boolean).slice(0,2),ordered=pool.map((x,i)=>pool[(i+hash(`${f.seed}|${attempt}`))%pool.length]),fresh=ordered.find(x=>!recent.includes(x.join('-')));return fresh||ordered[0]}
 function render(f,parts,order){const blocks=order.map(role=>({role,label:HEADINGS[role],text:parts[role]}));if(SURFACES[f.surface].length!=='short')blocks.push({role:'close',label:'最後に',text:parts.close});return{blocks,text:blocks.map(b=>`【${b.label}】\n${b.text}`).join('\n\n')}}
 function audit(text,f={}){const issues=[],source=clean(text),sentences=source.split(/[。！？\n]+/).map(clean).filter(x=>x.length>6),seen=new Set();if(FORBIDDEN.test(source))issues.push('technical-term');if(CERTAINTY.test(source))issues.push('unsupported-certainty');if(!/【(?:今できること|結論|判断の分け方)】/.test(source))issues.push('missing-action');if(!/控える|止|守|約束しない|増や/.test(source))issues.push('missing-boundary');for(const sentence of sentences){const key=sentence.replace(/[、， ]/g,'').slice(0,22);if(seen.has(key))issues.push('repetition');seen.add(key)}if(source.length>(f.surface==='today'?420:1400))issues.push('too-long');if(f.serious&&/(冗談|笑って|景気よく)/.test(source))issues.push('unsafe-tone');return{pass:issues.length===0,issues:[...new Set(issues)],score:Math.max(0,100-[...new Set(issues)].length*18)}}
 function compose(input={}){const f=frame(input);f.history=input.history||[];let best=null;for(let attempt=0;attempt<9;attempt++){const order=structure(f,attempt),out=render(f,buildParts(f,attempt),order),quality=audit(out.text,f),candidate={text:out.text,blocks:out.blocks,frame:f,meta:{version:VERSION,structure:order.join('-'),attempt,quality,vocabulary:{concepts:CONCEPTS.length,domain:f.domain,direction:f.direction}}};if(!best||quality.score>best.meta.quality.score)best=candidate;if(quality.pass)return candidate}return best}
-return Object.freeze({VERSION,SURFACES,CONCEPTS,DOMAINS,DIRECTIONS,FORBIDDEN,frame,compose,audit,boundary,publicEvidence});
+return Object.freeze({VERSION,SURFACES,CONCEPTS,DOMAINS,DIRECTIONS,FORBIDDEN,frame,compose,audit,boundary,publicEvidence,defaultActionFor});
 });
