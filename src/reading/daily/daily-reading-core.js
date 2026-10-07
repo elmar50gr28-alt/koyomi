@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.KOYOMI_DAILY_READING_CORE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const VERSION = '3.2.0';
+  const VERSION = '3.3.0';
   const rawFoci = [
     ['complete', '完了', 'work', ['途中の一件を最後まで終わらせる', '返答待ちの案件を一件だけ閉じる', '八割できた作業を提出できる形にする'], ['新しい予定を増やす', '仕上げ前に別の仕事へ逃げる', '細部を直し続けて完了を遅らせる']],
     ['organize', '整理', 'life', ['机の上を15分だけ整える', '不要な通知を三つ止める', '今日使う資料だけを一か所へ集める'], ['整理だけで一日を終える', '思い出の品まで勢いで捨てる', '分類方法を考えるだけで手を止める']],
@@ -82,7 +82,15 @@
   function hash(value) { let h = 2166136261; for (const char of String(value || '')) h = Math.imul(h ^ char.charCodeAt(0), 16777619); return h >>> 0; }
   function clamp(value) { return Number.isFinite(Number(value)) && value != null ? Math.max(0, Math.min(100, Math.round(Number(value)))) : 50; }
   function daysSince(current, past) { return (Date.parse(current) - Date.parse(past)) / 86400000; }
-  function categoryDomain(value) { return ({ love: 'relationship', family: 'relationship', money: 'money', work: 'work', health: 'health', decision: 'life', future: 'life' })[value] || null; }
+  function categoryDomain(value) {
+    const domains = { love: 'relationship', relationship: 'relationship', family: 'relationship', money: 'money', work: 'work', health: 'health', decision: 'life', future: 'life', growth: 'growth' };
+    return Object.prototype.hasOwnProperty.call(domains, value) ? domains[value] : null;
+  }
+  const FOCUS_DOMAINS = Object.freeze({ talent: 'growth', career: 'work', changejob: 'work', business: 'work', income: 'money', purchase: 'money', encounter: 'relationship', relationship: 'relationship', marriage: 'relationship', reconcile: 'relationship', family: 'relationship', healthrhythm: 'health', study: 'growth', creative: 'growth', relocation: 'life', timing: 'life', choice: 'life' });
+  function requestedDomain(input) {
+    const focused = Object.prototype.hasOwnProperty.call(FOCUS_DOMAINS, input.focusCategory) ? FOCUS_DOMAINS[input.focusCategory] : null;
+    return focused || categoryDomain(input.questionCategory) || categoryDomain(input.themeCategory);
+  }
   const THEME_FOCI = {
     ACTION_CAREFUL_DECISION: ['observe', 'decide', 'prepare'], MIND_STRONG_INTUITION: ['observe', 'review'],
     MIND_OVERTHINKING: ['focus', 'rest', 'review'], WORK_STEADY_PROGRESS: ['complete', 'focus', 'prepare'],
@@ -104,7 +112,7 @@
   }
 
   function rankFocus(input, history) {
-    const score = clamp(input.dailyScore), requested = categoryDomain(input.themeCategory);
+    const score = clamp(input.dailyScore), requested = requestedDomain(input);
     history = recentHistory(input, history);
     const intensity = intensityFor(input);
     const protective = ['rest', 'organize', 'prepare', 'observe', 'health', 'money', 'boundary', 'review', 'negotiate', 'relationship', 'family', 'learn', 'release'];
@@ -168,7 +176,7 @@
 
   function safetyFor(input, focus) {
     if (focus.domain === 'health') return '症状が強い、急に悪化した、長く続く場合は、占いより医療機関への相談を優先してね。';
-    if (focus.domain === 'money' && ['money', 'legal'].includes(input.themeCategory)) return '大きな契約や投資は、占いだけで確定せず条件と専門情報を確認して。';
+    if (focus.domain === 'money' && (requestedDomain(input) === 'money' || input.themeCategory === 'legal')) return '大きな契約や投資は、占いだけで確定せず条件と専門情報を確認して。';
     return '';
   }
 
@@ -185,6 +193,55 @@
     test: 'まずは取り消せる小さな一手で、実際の変化を確かめて。',
     protect: '今日は負担を増やさず、確認と回復を優先して。'
   };
+  const REVIEWS = Object.freeze({
+    complete: '今夜は、終えた部分と残っている部分を分けて確認して。',
+    organize: '今夜は、必要な物や情報を次に取り出しやすくなったか確かめて。',
+    contact: '今夜は、用件や次に確認する方法が整理できたか振り返って。',
+    negotiate: '今夜は、曖昧な条件が減り、次に確かめることが分かったか確認して。',
+    rest: '今夜は、休める時間や、休みにくくしている原因を把握できたか振り返って。',
+    learn: '今夜は、理解できたことと、まだ分からないことを一つずつ残して。',
+    create: '今夜は、形にできたことと、次の制作に必要なことを分けてみて。',
+    money: '今夜は、支出・金額・期限・条件の不明点が一つ減ったか確認して。',
+    boundary: '今夜は、自分ができる範囲と保留する範囲が言葉になったか確かめて。',
+    relationship: '今夜は、決まったことと、相手にまだ確認していないことを分けて。',
+    family: '今夜は、家の用事や共有ルールで確認できたことを一つ残して。',
+    health: '今夜は、体調や生活について分かったことと、明日のために必要な準備をメモして。',
+    move: '今夜は、移動の不確かな点が減り、まだ確認が必要な点が分かったか振り返って。',
+    prepare: '今夜は、始めるための物や条件が揃ったか、残る不足を一つ確認して。',
+    release: '今夜は、手放したいものと、守る必要のある約束を区別できたか振り返って。',
+    review: '今夜は、次も残す手順と、変える点が一つずつ見つかったか確認して。',
+    decide: '今夜は、決める条件と、まだ必要な判断材料を分けてみて。',
+    focus: '今夜は、取り組む対象と区切り方が明確になったか確かめて。',
+    cooperate: '今夜は、相手に頼むことと、自分が受け持つ部分を整理して。',
+    observe: '今夜は、確かな事実と、まだ判断できないことを分けて残して。'
+  });
+  // Match verification targets to stable action IDs, rather than rephrasing by date.
+  const MONEY_REVIEWS = Object.freeze([
+    '今夜は、続けたい定期支出と、見直せそうな支出を分けられたか確かめて。',
+    '今夜は、候補ごとの違いが一つ分かり、比較の基準を持てたか振り返って。',
+    '今夜は、使ってよい範囲と、上限を超えそうなときの対応をメモして。',
+    '今夜は、記録の食い違いがなかったか、調べ直す点を整理して。',
+    '今夜は、支払時期の残高に不明点がなく、必要な準備が分かったか確認して。',
+    '今夜は、使わないサービスと、やめる場合の手続きが分かったか確かめて。',
+    '今夜は、買うとき以外にかかる費用をどこまで見通せたか振り返って。',
+    '今夜は、契約を見直す期限と、料金が変わる条件を整理して。',
+    '今夜は、必要なときに資金をどこから取り出せるか、分かったことを記録して。',
+    '今夜は、返金や返品について、いつまでに何を連絡するか整理できたか振り返って。',
+    '今夜は、これから必要な支払いを見渡し、残しておく資金が分かったか確認して。',
+    '今夜は、誰がどの費用を受け持つか、まだ合意が必要な点を分けて。',
+    '今夜は、精算が済んでいない案件と、次に確認する相手を整理して。',
+    '今夜は、毎月の支払いとは別に、まとまった出費へ備える時期を確認して。',
+    '今夜は、購入以外の方法と、その利用条件が一つ分かったか振り返って。',
+    '今夜は、割引の表示だけでなく、数量あたりの費用を比べられたか確かめて。',
+    '今夜は、実際に使う予定の量と、余りそうな量を分けてみて。',
+    '今夜は、届いた品に不足や違いがなかったか、連絡が必要な点を整理して。',
+    '今夜は、支払先について不明な点と、送金前に確認する相手を分けて。',
+    '今夜は、積み重なる手数料と、見直せる手続きが分かったか確認して。',
+    '今夜は、必要な記録をあとから取り出せる形に整理できたか振り返って。',
+    '今夜は、ポイントの利用期限の有無と、期限がある場合の日付をメモして。',
+    '今夜は、支出の使い道が分かる記録になり、分類が残る項目が減ったか確認して。',
+    '今夜は、本当に必要な理由と、先送りできる条件を言葉にできたか振り返って。'
+  ]);
   function toText(reading) {
     return reading.blocks.map(block => `【${block.label}】\n${block.text}`).join('\n\n') + (reading.safetyNotice ? `\n\n${reading.safetyNotice}` : '');
   }
@@ -206,9 +263,9 @@
     const structure = STRUCTURES[structureIndex];
     const yesterday = history.find(item => daysSince(input.date, item.date) === 1);
     const action = focus.actions[actionIndex], caution = `${focus.cautions[cautionIndex]}ことは避けて。`;
-    const difference = yesterday ? (yesterday.focusId === focus.id ? `昨日の「${focus.label}」を今日も扱うわ。今回は「${action}」を目印にして。` : `昨日の主題は「${yesterday.focusLabel || '前日の課題'}」。今日の主題は「${focus.label}」よ。前日の方針を否定せず、今日の作業を分けて考えて。`) : `今日の主題は「${focus.label}」。前日の記録がないため、日ごとの変化はまだ比べずに読んでいるわ。`;
+    const difference = yesterday ? (yesterday.focusId === focus.id ? `昨日の「${focus.label}」を今日も扱うわ。${yesterday.actionId === `${focus.id}-${actionIndex}` ? '同じ一手が必要なら、今も条件が変わっていないか確かめて。' : '今日は扱う対象を切り替えながら、同じ主題を確かめていきましょう。'}` : `昨日の主題は「${yesterday.focusLabel || '前日の課題'}」。今日の主題は「${focus.label}」よ。前日の方針を否定せず、今日の作業を分けて考えて。`) : `今日の主題は「${focus.label}」。前日の記録がないため、日ごとの変化はまだ比べずに読んでいるわ。`;
     const recommendedTime = input.recommendedTime || '時刻の吉凶はこの信号からは決められないわ。必要な条件が揃い、落ち着いて取り組める時間を選んで。';
-    const review = `今夜は「${action}」を実行できたか、負担や状況がどう変わったかを一行だけ残して。`;
+    const review = focus.id === 'money' ? MONEY_REVIEWS[actionIndex] || REVIEWS.money : REVIEWS[focus.id];
     const labels = { conclusion: '今日の読み', difference: '流れの変化', action: '今日やること', caution: '気をつけること', time: '動く頃合い', review: '今夜の確認' };
     const story = `${conclusionFor(structure.id, focus)}${scene}、今日は「${focus.label}」を意識してみて。${INTENSITY[intensity]}`;
     const texts = { conclusion: story, difference, action, caution, time: recommendedTime, review };
@@ -227,5 +284,5 @@
     };
   }
 
-  return Object.freeze({ VERSION, FOCI, STRUCTURES, generate, rankFocus, recentHistory, intensityFor, toText });
+  return Object.freeze({ VERSION, FOCI, STRUCTURES, generate, rankFocus, recentHistory, intensityFor, toText, requestedDomain });
 });
