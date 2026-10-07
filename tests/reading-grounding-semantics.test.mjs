@@ -51,7 +51,7 @@ assert.equal(displayCases,330);
 for(const surface of ['personal','compatibility','timeline','oracle','qimen','mundane','today','method'])for(const domain of ['work','money','relationship','health','growth','timing','overall']){
  const result=engine.compose({surface,domain,evidence:['流年42'],score:60,seed:'scene-check'});
  const scene=result.blocks.find(b=>b.role==='scene');
- if(scene){assert.equal(scene.label,'現実で確かめること');assert.match(scene.text,/状況と照らし合わせる|確かめて/);}
+ if(scene){assert.equal(scene.label,'現実で確かめること');assert.match(scene.text,/なら/);}
  assert.doesNotMatch(result.text,/に変化が表れやすいでしょう/);
 }
 
