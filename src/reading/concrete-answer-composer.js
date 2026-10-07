@@ -46,13 +46,13 @@ function directAnswer(context, item, reading, sister) {
   }
   if (context.intent === 'timing') {
     return sister
-      ? `時期だけ先に言うわね。${topic}は、待ち続けるより今日から小さく確かめる時よ。まず${action}`
-      : `${topic}は、今日から小さく確認を始める時期です。まず${action}`;
+      ? `時期だけ先に言うわね。${topic}は、実行の条件が揃っているかを確認してから時期を決めましょう。${action}`
+      : `${topic}は、必要な準備と確認事項を整理してから時期を判断しましょう。${action}`;
   }
   if (context.intent === 'decision') {
     return sister
-      ? `結論は「条件を一つ確かめてから進む」よ。勢いだけで決めず、まず${action}`
-      : `条件を一つ確認してから進む判断が適しています。まず${action}`;
+      ? `結論は「判断に必要な条件を確かめる」よ。勢いだけで決めず、まず${action}`
+      : `判断に必要な条件を確認してから方針を決めましょう。まず${action}`;
   }
   if (context.intent === 'outlook') {
     return sister

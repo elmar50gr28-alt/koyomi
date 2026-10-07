@@ -121,7 +121,7 @@
 
   function describeMonthlyIndex(support, pressure, change) {
     const supportLevel = support < 25 ? '小さい' : support < 50 ? 'やや目立つ' : support < 75 ? '強い' : '非常に強い', pressureLevel = pressure < 25 ? '小さい' : pressure < 50 ? 'やや目立つ' : pressure < 75 ? '強い' : '非常に強い', changeLabel = change === null ? '年間比較の起点' : change < 35 ? '前月の流れを引き継ぐ' : change < 65 ? '前月から変化あり' : '流れの切り替わりが大きい';
-    let stance = '様子を見る', summary = '追い風と圧力の差が小さいため、条件を確認しながら小さく進める月です。';
+    let stance = '様子を見る', summary = '追い風と圧力が拮抗しています。実行の条件と注意点を確認してから判断したい月です。';
     if (support >= 60 && pressure >= 60) { stance = '動く前に条件確認'; summary = '動きは大きい一方で衝突も増えやすいため、進める条件と止める条件を先に決める月です。'; }
     else if (support - pressure >= 20) { stance = '準備済みなら進める'; summary = '圧力より追い風が目立ちます。準備済みの計画を一段進める候補月です。'; }
     else if (pressure - support >= 20) { stance = '確認と調整を優先'; summary = '追い風より圧力が目立ちます。新規拡大より、費用・安全・責任の確認を優先する月です。'; }

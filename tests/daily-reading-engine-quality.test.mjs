@@ -58,6 +58,6 @@ for (const themeCategory of ['work', 'love', 'money', 'health', 'growth', 'decis
 const timed = core.generate({ profileId: 'timed', date: '2026-04-01', dailyScore: 50, recommendedTime: '入力された時刻の案内' });
 assert.ok(core.toText(timed).includes('入力された時刻の案内'), 'provided timing remains visible');
 const changedStrength = core.generate({ profileId: 'transition', date: '2026-04-02', dailyScore: 90, themeCategory: 'work' }, [{ profileId: 'transition', date: '2026-04-01', intensity: 'protect', focusId: 'prepare' }]);
-assert.ok(core.toText(changedStrength).includes('昨日の強度は「負担を増やさず確認する」、今日は「条件が揃う一件を進める」'));
+assert.ok(core.toText(changedStrength).includes('昨日の強度は「負担を見直し、休息や確認を優先する」、今日は「準備が揃ったことを実行する」'));
 assert.ok(!core.toText(changedStrength).includes('できたから'), 'history never proves the user performed a suggested action');
 console.log('daily narrative depth: ok (180 fixed-signal readings, conditional scenes, variable visible depth, timing and strength transitions)');

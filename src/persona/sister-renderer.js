@@ -14,7 +14,7 @@
  registerSection('result',c=>`【${c.voice.result}】\n${c.phrase(c.scenario?.state==='前進'?'forward':c.scenario?.state==='防御'?'defense':'trial')}\n${line(c.result,c.scenario?.scene)}`);
  registerSection('scenario',c=>`【${line(c.headings?.scenario,'現実に出やすい形')}】\n${line(c.scenario?.scene)}わ。目に見える変化なら、${line(c.scenario?.observable,'進み具合や負担')}に出てくるわよ。`);
  registerSection('beginner',c=>c.beginner?`【簡単にいうと】\n${c.beginner.meaning}\n\n【今日の具体例】\n${c.beginner.example}\n\n${c.beginner.alternative}`:'');
- registerSection('action',c=>`【${line(c.headings?.action,c.voice.action)}】\n${c.phrase('transition')} ${line(c.scenario?.action)}。${line(c.scenario?.go)}なら、そのまま続けていいわ。`);
+ registerSection('action',c=>`【${line(c.headings?.action,c.voice.action)}】\n${c.phrase('transition')} ${line(c.scenario?.action)}。続ける条件は、${line(c.scenario?.go)}。条件が変わったら、進め方も見直して。`);
  registerSection('stop',c=>`【${line(c.headings?.stop,c.voice.stop)}】\n${line(c.scenario?.stop)}。そうなったら、いったん手を放して立て直しなさい。`);
  registerSection('review',c=>`【${line(c.headings?.review,c.voice.review)}】\n${line(c.scenario?.review,'14日')}ほど経った頃に、負担が減ったか、相手や状況が実際に動いたかを見てちょうだい。`);
  registerSection('evidence',c=>{const raw=(c.evidence||[]).filter(Boolean).join('／')||'算出結果を確認済み',glossary=globalThis.KOYOMI_DIVINATION_GLOSSARY;if(c.level==='beginner'){if(glossary){const g=glossary.beginner(raw);return`【${c.voice.evidence}】\n占いの結果を普通の言葉に直すと、${g.plain}。${g.notes.length?`\n\n【専門用語と読み】\n${g.notes.join('\n')}`:''}`}return`【${c.voice.evidence}】\n占いの結果を普通の言葉に直すと、${c.plain(raw)}。`}return`【${line(c.headings?.evidence,c.voice.evidence)}】\n${c.phrase('evidence')}\n${glossary?glossary.annotate(raw):raw}。`});
