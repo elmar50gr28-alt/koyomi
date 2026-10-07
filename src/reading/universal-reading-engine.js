@@ -43,7 +43,7 @@
     const actions = list(input.actions, '判断に必要な情報を確かめ、次の対応を決める').slice(0, 2);
     const question = clean(input.question);
     const subject = clean(input.subject, question || policy.label);
-    const caution = clean(input.caution, '焦って結論を固定したり、一度に予定を増やしすぎないこと');
+    const caution = clean(input.caution, globalThis.KOYOMI_APP_NARRATIVE?.boundary(input)||'焦って結論を固定したり、一度に予定を増やしすぎないこと');
     const window = clean(input.window, policy.window);
     const review = clean(input.review, policy.review);
     const narrativeEngine=globalThis.KOYOMI_APP_NARRATIVE;

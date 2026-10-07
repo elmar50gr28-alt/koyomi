@@ -2340,6 +2340,7 @@ async function koyomiRenderBaziReading(){
       questionCategory:commonReading.answer?.hasQuestion?commonReading.answer.category:undefined,
       longTermScore:lastPersonal?.luck?.current?.score,
       themeIds:commonReading.items?.map(item=>item.themeId)||[],
+      themeEvidence:commonReading.items?.map(item=>({id:item.themeId,label:item.themeName}))||[],
       evidence:[`${readingDayPillar}の日・${legacyDaily.title}・信号${legacyDaily.score}`,commonReading.items?.[0]?.themeName,commonReading.items?.[0]?.evidence?.map(item=>`${item.type}:${item.value}`).join('／')].filter(Boolean)
     });
     const dailyReading=dailyPack?.reading||null;
