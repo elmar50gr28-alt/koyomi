@@ -81,15 +81,15 @@ for (const corrupt of ['null', '{"history":{}}', '{"cache":[],"history":[null]}'
   assert.ok(controller.getOrCreate(base, { storage }).reading.action);
 }
 const app = await readFile('app.html', 'utf8');
-assert.ok(app.includes("overall.textContent=lastPersonal.reading"));
+assert.ok(app.includes('id="dailyTraditionalDetails" hidden'), "traditional detail starts collapsed");
 assert.ok(app.includes('KOYOMI_DAILY_READING_CORE.toText(dailyReading)'));
 assert.ok(app.includes('themeIds:commonReading.items?.map(item=>item.themeId)'));
 assert.ok((await readFile('service-worker.js', 'utf8')).includes('daily-story-v3'));
 // Exercise the actual integration function with a minimal DOM, rather than only matching source strings.
 const integrationSource = app.slice(app.indexOf('async function koyomiRenderBaziReading(){'), app.indexOf('window.KOYOMI_BAZI_READING={render:'));
-const overall = { textContent: '' }, target = { reading: '従来の三層鑑定', luck: { current: { score: 20 } } };
+const traditional = { textContent: '' }, details = { hidden: true }, overall = { textContent: '' }, target = { reading: '従来の三層鑑定', luck: { current: { score: 20 } } };
 const ui = {
-  ...context, lastPersonal: target, document: { getElementById: id => id === 'overallReading' ? overall : id === 'theme' ? { value: 'work' } : null },
+  ...context, lastPersonal: target, document: { getElementById: id => id === 'overallReading' ? overall : id === 'dailyTraditionalReading' ? traditional : id === 'dailyTraditionalDetails' ? details : id === 'theme' ? { value: 'work' } : null },
   selectedDate: new Date('2026-01-01'), fmtIso: value => value.toISOString().slice(0, 10),
   koyomiBaziReadingProfile: () => ({ personId: 'fixture', birthData: {} }), koyomiDailyProfileKey: () => 'ui-profile', koyomiBaziLocale: () => 'ja',
   KOYOMI_BAZI: { prepareCommonReadingThemes: async () => {}, calculateBazi: () => ({}), buildCommonReading: () => ({ items: [{ themeId: 'WORK_STEADY_PROGRESS' }] }), buildBaziReading: () => ({}) },
@@ -101,9 +101,12 @@ vm.runInContext(app.slice(app.indexOf('function koyomiPersonalReadingKey('), app
 vm.runInContext(integrationSource, ui);
 await ui.koyomiRenderBaziReading();
 assert.equal(target.dailyReading.intensity, 'test', 'long-term weakness reaches the UI');
-assert.ok(overall.textContent.includes(target.dailyReading.story) && overall.textContent.endsWith('従来の三層鑑定'));
+assert.ok(overall.textContent.includes(target.dailyReading.story) && !overall.textContent.includes('従来の三層鑑定'));
+assert.equal(traditional.textContent, '従来の三層鑑定');
+assert.equal(details.hidden, false);
+assert.ok(target.reading.endsWith('従来の三層鑑定'), 'saved full reading retains the traditional asset');
 await ui.koyomiRenderBaziReading();
-assert.equal((overall.textContent.match(/生まれ持った傾向と総合鑑定/g) || []).length, 1, 'repeat renders do not duplicate the traditional reading');
+assert.equal(traditional.textContent, '従来の三層鑑定', 'repeat renders do not duplicate the traditional reading');
 let release;
 ui.KOYOMI_BAZI.prepareCommonReadingThemes = () => new Promise(resolve => { release = resolve; });
 const pending = ui.koyomiRenderBaziReading();

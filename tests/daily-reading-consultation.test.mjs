@@ -5,6 +5,7 @@ import { interpretReadingQuestion } from '../src/reading/question-interpreter.js
 
 const app = await readFile('app.html', 'utf8');
 const nodes = new Map(['theme', 'qFocus', 'memo', 'qRisk', 'qBodyState', 'readingModeSetting', 'koyomiReadingDate'].map(id => [id, { value: '' }]));
+nodes.set('dailyTraditionalReading', { textContent: '' }); nodes.set('dailyTraditionalDetails', { hidden: true, open: false });
 nodes.set('overallReading', { textContent: '' }); nodes.set('koyomiStartReading', { disabled: false, textContent: '' });
 nodes.get('theme').value = 'overall'; nodes.get('qFocus').value = 'career';
 const memory = new Map(), errors = [];
@@ -28,6 +29,9 @@ ctx.window = ctx; vm.createContext(ctx);
 for (const file of ['src/reading/daily/daily-reading-core.js', 'src/reading/daily/daily-reading-controller.js']) vm.runInContext(await readFile(file, 'utf8'), ctx);
 ctx.KOYOMI_DAILY_CONTEXT = { selectedDate: () => new Date(ctx.selectedDate), formatDate: ctx.fmtIso, dailySignal: () => ({ score: 65, title: '検証' }), dayPillar: () => ({ text: '甲子' }) };
 const extract = (start, end) => app.slice(app.indexOf(start), app.indexOf(end));
+ctx.v196RenderPersonalBase = ctx.renderPersonal;
+const resetStart = app.indexOf('renderPersonal=function(r){v196RenderPersonalBase(r);');
+vm.runInContext(app.slice(resetStart, app.indexOf('const q=', resetStart)) + '}', ctx);
 for (const [start, end] of [
   ['function koyomiPersonalReadingKey(', 'function koyomiOpenGeneratedPersonalReading('],
   ['async function koyomiGeneratePersonalOnce(', 'async function koyomiStartPersonalReading('],
@@ -76,7 +80,10 @@ assert.equal(await pending, null); assert.equal(ctx.koyomiRenderedPersonalKey, '
 assert.notEqual(ctx.koyomiRenderedPersonalKey, beforePending);
 ctx.KOYOMI_BAZI.prepareCommonReadingThemes = async () => {};
 await ctx.koyomiStartPersonalReading(); assert.equal(ctx.lastPersonal.dailyReading.domain, 'money');
-assert.equal((nodes.get('overallReading').textContent.match(/生まれ持った傾向と総合鑑定/g) || []).length, 1);
+assert.ok(!nodes.get('overallReading').textContent.includes('生まれ持った傾向と総合鑑定'));
+assert.ok(nodes.get('dailyTraditionalReading').textContent.startsWith('従来鑑定:'));
+assert.equal(nodes.get('dailyTraditionalDetails').hidden, false);
+assert.equal(nodes.get('dailyTraditionalDetails').open, false, 'new render collapses prior traditional details');
 ctx.KOYOMI_BAZI.prepareCommonReadingThemes = () => new Promise(resolve => { release = resolve; });
 const pendingPerson = ctx.koyomiGeneratePersonalOnce(profile);
 ctx.LedgerState.selectedPrimary = 'another-person'; release();

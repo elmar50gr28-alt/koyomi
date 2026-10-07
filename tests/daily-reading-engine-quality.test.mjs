@@ -38,3 +38,26 @@ const sameA = core.generate({ profileId: 'stable', date: '2026-05-02', dayKey: '
 const sameB = core.generate({ profileId: 'stable', date: '2026-05-02', dayKey: 'same', dailyScore: 72, themeCategory: 'love' }, []);
 assert.equal(JSON.stringify(sameA), JSON.stringify(sameB), 'same inputs must stay deterministic');
 console.log('daily reading engine quality: ok');
+
+// The visible reading must differ in its reasoning, not merely section order.
+for (const themeCategory of ['work', 'love', 'money', 'health', 'growth', 'decision']) {
+  const chain = [], rows = [];
+  for (let day = 1; day <= 30; day++) {
+    const row = core.generate({ profileId: 'narrative-' + themeCategory, date: new Date(Date.UTC(2026, 3, day)).toISOString().slice(0, 10), themeCategory, dailyScore: 50 }, chain);
+    const text = core.toText(row);
+    assert.ok(!text.includes('時刻の吉凶') && !text.includes('前日の記録がない') && !text.includes('昨日の主題'), 'unavailable timing and unchanged daily comparisons do not pad every reading');
+    assert.ok(!/下の一手|一手を下に|今日は「.+」を意識してみて/.test(text), 'avoid position-dependent instructions and the old universal formula');
+    assert.equal(text.split(row.action).length - 1, 1);
+    assert.ok(row.story.includes('なら'), 'a scene is conditional, never a claimed personal event');
+    rows.push(row); chain.unshift(row);
+  }
+  assert.equal(new Set(rows.map(row => row.story)).size, 30);
+  assert.ok(new Set(rows.map(row => row.structureId)).size >= 10);
+  assert.deepEqual([...new Set(rows.map(row => core.toText(row).split('【').length - 1))].sort(), [3, 4], 'short and reflective readings have different visible depth');
+}
+const timed = core.generate({ profileId: 'timed', date: '2026-04-01', dailyScore: 50, recommendedTime: '入力された時刻の案内' });
+assert.ok(core.toText(timed).includes('入力された時刻の案内'), 'provided timing remains visible');
+const changedStrength = core.generate({ profileId: 'transition', date: '2026-04-02', dailyScore: 90, themeCategory: 'work' }, [{ profileId: 'transition', date: '2026-04-01', intensity: 'protect', focusId: 'prepare' }]);
+assert.ok(core.toText(changedStrength).includes('昨日の強度は「負担を増やさず確認する」、今日は「条件が揃う一件を進める」'));
+assert.ok(!core.toText(changedStrength).includes('できたから'), 'history never proves the user performed a suggested action');
+console.log('daily narrative depth: ok (180 fixed-signal readings, conditional scenes, variable visible depth, timing and strength transitions)');
