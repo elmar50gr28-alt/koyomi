@@ -18,7 +18,7 @@ assert.equal(translator.containsForbidden('今日は小さく試してくださ�
 const app=await readFile('app.html','utf8');
 assert.ok(app.includes('if(r?.meaningEvidence?.length)return r.meaningEvidence.slice(0,4)'));
 assert.ok(!app.includes('judgment.evidence.map(item=>`${item.system}：${item.text}`)'));
-assert.ok(app.includes("evidence:requestedLevel==='detailed'?method.factors:publicEvidence"));
+assert.ok(app.includes('evidence:method.factors,methodId:key'),'method readings must receive their computed factors, not a shared generic conclusion');
 assert.ok(app.includes("level:requestedLevel==='detailed'?'detailed':'beginner'"));
 assert.ok(app.includes("system:requestedLevel==='detailed'?(V191Z_METHOD_LABEL[key]||key):'今日の流れ'"));
 console.log('Meaning evidence translator passed');
