@@ -1,6 +1,6 @@
 (function(root,factory){const api=factory(root);if(typeof module==='object'&&module.exports)module.exports=api;root.KOYOMI_METHOD_CONTINUITY=api})(typeof globalThis!=='undefined'?globalThis:this,function(root){
 'use strict';
-const VERSION='1.0.0',KEY='koyomi.method-continuity.v1';
+const VERSION='1.0.1',KEY='koyomi.method-continuity.v1';
 const ANGLES={
  overall:[['優先順位','急ぐ理由と、後日に回せる条件を分けて考えます。'],['事実と推測','確認できたことと、まだ想像していることを分けて読みます。'],['続ける負担','続けたい理由と、続けるために必要な余力を見ます。'],['見直す条件','何が変われば判断を変えるかを先に考えます。'],['使える支援','自分で動かせることと、人の助けが必要なことを分けます。']],
  work:[['担当と合意','引き受ける範囲と、相手が期待している範囲を照らし合わせます。'],['期限と区切り','作業量より、どこで完了とできるかを扱います。'],['準備と障害','進める前に足りない物や手順を見つける論点です。'],['任せる範囲','自分で担う部分と、人に頼める部分を分けて考えます。'],['優先する仕事','忙しさと重要性を分け、今の余力をどこに使うかを見ます。']],
@@ -43,7 +43,7 @@ function plan(input,options={}){
  const angleText=angle.text+(!missing&&!care&&!serious?stages[step]:'');
  const visible=raw.map(v=>root.KOYOMI_APP_NARRATIVE?.publicEvidence(v)||'').filter(Boolean),differenceIndex=visible.findIndex((v,i)=>yesterday?.evidence?.[i]&&yesterday.evidence[i]!==v),specific=differenceIndex>=0&&visible[differenceIndex].length<=45&&yesterday.evidence[differenceIndex].length<=45?`「${yesterday.evidence[differenceIndex]}」から「${visible[differenceIndex]}」へ変わっています。`:'';
  const evidenceKey=hash(JSON.stringify(input.evidence)),changed=Boolean(yesterday&&Number.isFinite(yesterday.score)&&yesterday.score!==score),note=!yesterday?'':changed?`昨日は${yesterday.score}点、今日は${score}点です。数値の変化と現実の条件を合わせて読みます。`:yesterday.state!==state?'点数は同じでも、今回は安全や慎重さを優先する条件が変わっています。':yesterday.evidenceKey&&yesterday.evidenceKey!==evidenceKey?`点数は同じでも、判断材料は昨日と異なります。${specific}今日の材料と現実の条件を照らし合わせて読みます。`:yesterday.angleId!==angle.id?`点数は昨日と同じですが、今日は「${angle.label}」を扱います。結果を変えたのではなく、確かめる論点を切り替えています。`:'同じ論点を続けます。昨日の提案を扱ったなら未確認の条件を、まだなら取り組むうえでの障害を確かめてください。';
- const result={action,angle:{id:angle.id,label:angle.label,text:angleText},note,history:recent.map(r=>({structure:r.structure})),signature,scope};
+ const result={action,angle:{id:angle.id,label:angle.label,text:angleText},note,history:recent.map(r=>({date:r.date,action:r.plan?.action,structure:r.structure})),signature,scope};
  if(input.profileId){const row={scope,date:input.date,signature,score,state,evidence:visible,evidenceKey,step,angleId:angle.id,actionId,plan:result},counts=new Map();const kept=[row,...records.filter(r=>!(r.scope===scope&&r.date===input.date))].sort((a,b)=>b.date.localeCompare(a.date)).filter(r=>{const n=(counts.get(r.scope)||0)+1;counts.set(r.scope,n);return n<=30}).slice(0,2000);try{storage?.setItem(KEY,JSON.stringify(kept))}catch{}}
  return result;
 }
