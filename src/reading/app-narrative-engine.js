@@ -133,6 +133,7 @@ function composeStory(f){
   {role:'action',label:'今日の一歩',text:f.actions[0]||clean(f.story.invitation)},
   {role:'reason',label:'読みの根拠',text:clean(f.story.evidence)},
   {role:'stop',label:'気をつけたいこと',text:f.caution||boundary(f)}];
+ if(f.story.keepsake)blocks.splice(2,0,{role:'keepsake',label:'今日のお守り',text:f.story.keepsake.name+'\n'+f.story.keepsake.line+(f.story.alternative?'\n手元になければ、'+f.story.alternative.name+'でも。':'')});
  if(f.continuity)blocks.push({role:'continuity',label:'昨日との違い',text:/^点数は昨日と同じですが|^同じ論点を続けます/.test(f.continuity)?'昨日と同じ傾向が続いています。今日も、この読みを今の状況と重ねてみてください。':f.continuity});
  const text=blocks.map(b=>`【${b.label}】\n${b.text}`).join('\n\n'),quality=audit(text,f);
  return{text,blocks,frame:f,meta:{version:VERSION,structure:'symbolic-story',attempt:0,quality,vocabulary:{concepts:CONCEPTS.length,domain:f.domain,direction:f.direction}}};
