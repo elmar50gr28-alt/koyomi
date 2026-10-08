@@ -58,5 +58,12 @@ vm.createContext(integration);const start=app.indexOf('renderPersonal=function(r
 vm.runInContext(app.slice(start,end),integration);
 integration.renderPersonal({i:{name:'検証用',birthDate:'1990-01-01',theme:'work'},score:55,divinations:Object.fromEntries(methods.map(k=>[k,'元の資料']))});
 assert.equal(calls.length,11);for(const call of calls){assert.equal(call.evidence[0],call.methodId+'の実際の根拠');assert.equal(call.generatedAction,true);assert.ok(call.profileId);assert.equal(call.date,'2026-01-02');}
+const fields=Object.fromEntries(['name','line','alternative','source'].map(key=>[key,{textContent:''}])),luckyTarget={hidden:true,querySelector:selector=>fields[selector.match(/data-lucky-(\w+)/)?.[1]]};
+vm.runInContext(await readFile('src/reading/reading-keepsake.js','utf8'),integration);integration.window.KOYOMI_READING_KEEPSAKE=integration.KOYOMI_READING_KEEPSAKE;
+integration.$=id=>id==='readingModeSetting'?ui:id==='personalLuckyItem'?luckyTarget:null;
+integration.window.KOYOMI_PERSONA_ADAPTER.applyDivination=(text,input)=>({text:'rendered',keepsake:{id:input.methodId,name:input.methodId+'のお守り',line:'今日の一言'},keepsakeAlternative:{name:'代替の物'}});
+const actualResult={i:{name:'検証用',birthDate:'1990-01-01',theme:'work',qMethodPriority:'oracle'},score:55,divinations:Object.fromEntries(methods.map(k=>[k,'元の資料']))};
+integration.renderPersonal(actualResult);assert.equal(luckyTarget.hidden,false);assert.equal(fields.name.textContent,'tarotのお守り');assert.equal(actualResult.luckyItem.methodId,'tarot');
+integration.window.KOYOMI_PERSONA_ADAPTER.applyDivination=()=>({text:'保護を優先する鑑定',keepsake:null});integration.renderPersonal(actualResult);assert.equal(luckyTarget.hidden,true);assert.equal(fields.name.textContent,'');assert.equal(actualResult.luckyItem,null);
 if(process.env.KOYOMI_METHOD_REPORT)await writeFile(process.env.KOYOMI_METHOD_REPORT,JSON.stringify({cases,metrics,samples:rows,scope:'Fixed computed-result fixtures stress 30-day method-specific continuity; these are not thousands of astronomical recalculations.'},null,2));
 console.log('Method continuity passed: '+cases+' method/date cases');

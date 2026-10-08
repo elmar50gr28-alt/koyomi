@@ -19,5 +19,15 @@
   if(self?.name==='星'&&/希望/.test(self.meaning))candidates.splice(0,1,{id:'blue',name:'手元の青い小物',line:'希望を、目に見えるところへ。',axis});
   return {...interpretation.story,axis,mode,title:mode==='zubat'?VOICE[axis][1]:interpretation.story.title,keepsakeCandidates:candidates};
  }
- root.KOYOMI_READING_KEEPSAKE=Object.freeze({BANK,decorate});
+ function renderSummary(target,entries=[],priority=''){
+  const groups={shichu:['shichu','timing'],astrology:['astrology'],sukuyo:['sukuyo','kyusei','timing'],oracle:['tarot','runes'],name:['name','numerology','kabbalah'],timing:['timing','shichu','astrology']};
+  const valid=entries.filter(x=>x?.keepsake?.name&&x.keepsake.line),selected=(groups[priority]||[]).map(id=>valid.find(x=>x.methodId===id)).find(Boolean)||valid[0]||null;
+  if(target){
+   const values={name:selected?.keepsake.name||'',line:selected?.keepsake.line||'',alternative:selected?.alternative?.name?`手元になければ、${selected.alternative.name}でも。`:'',source:selected?`${selected.label||selected.methodId}の鑑定から`:''};
+   for(const [key,value] of Object.entries(values)){const element=target.querySelector(`[data-lucky-${key}]`);if(element)element.textContent=value;}
+   target.hidden=!selected;
+  }
+  return selected;
+ }
+ root.KOYOMI_READING_KEEPSAKE=Object.freeze({BANK,decorate,renderSummary});
 })(typeof globalThis!=='undefined'?globalThis:this);
