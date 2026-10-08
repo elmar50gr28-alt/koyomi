@@ -29,5 +29,16 @@
   }
   return selected;
  }
- root.KOYOMI_READING_KEEPSAKE=Object.freeze({BANK,decorate,renderSummary});
+ function appendSelected(target,selected,methodId){
+  if(!target)return;
+  target.querySelector('[data-reading-keepsake]')?.remove();
+  if(selected?.methodId!==methodId||!selected.keepsake?.name)return;
+  const doc=target.ownerDocument||root.document;if(!doc?.createElement)return;
+  const card=doc.createElement('section');card.className='result-card';card.setAttribute('data-reading-keepsake',methodId);
+  const title=doc.createElement('h4');title.textContent='今日のお守り';card.appendChild(title);
+  for(const [key,tag] of [['name','strong'],['line','p'],['alternative','p'],['source','small']]){const child=doc.createElement(tag);child.setAttribute(`data-lucky-${key}`,'');card.appendChild(child);}
+  renderSummary(card,[selected]);target.appendChild(card);
+ }
+ function selectedText(text,selected,methodId){return selected?.methodId===methodId&&selected.keepsake?.name?`${text}\n\n【今日のお守り】\n${selected.keepsake.name}\n${selected.keepsake.line}${selected.alternative?.name?'\n手元になければ、'+selected.alternative.name+'でも。':''}`:text;}
+ root.KOYOMI_READING_KEEPSAKE=Object.freeze({BANK,decorate,renderSummary,appendSelected,selectedText});
 })(typeof globalThis!=='undefined'?globalThis:this);
