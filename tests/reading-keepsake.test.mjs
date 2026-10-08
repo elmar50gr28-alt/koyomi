@@ -35,5 +35,20 @@ const selected=engine.renderSummary(target,[{methodId:'shichu',label:'四柱推�
 const astroEntry={methodId:'astrology',label:'西洋占星術',keepsake:{id:'other',name:'別の物',line:'別の読み'}};assert.equal(engine.renderSummary(target,[selected,astroEntry],'astrology'),astroEntry);assert.equal(fields.name.textContent,'別の物');assert.equal(engine.renderSummary(target,[selected],'astrology'),selected);
 engine.renderSummary(target,[]);assert.equal(target.hidden,true);for(const field of Object.values(fields))assert.equal(field.textContent,'','old lucky item must disappear when there is no eligible reading');
 assert.ok(app.includes('id="personalLuckyItem"'));assert.ok(app.includes('今日のラッキーアイテム'));assert.ok(app.includes('luckyEntries.push'));assert.ok(app.includes('r.i?.qMethodPriority'));
+function element(tag){return {tag,children:[],attrs:{},textContent:'',setAttribute(k,v){this.attrs[k]=v},appendChild(child){child.parent=this;this.children.push(child)},remove(){this.parent.children=this.parent.children.filter(x=>x!==this)},querySelector(selector){const key=selector.match(/\[([^\]]+)\]/)?.[1];return this.children.find(x=>Object.hasOwn(x.attrs,key))||null}}}
+const doc={createElement:element},readingTarget=element('div');readingTarget.ownerDocument=doc;
+engine.appendSelected(readingTarget,selected,'shichu');assert.equal(readingTarget.children.length,1);assert.equal(readingTarget.children[0].querySelector('[data-lucky-name]').textContent,out.keepsake.name);
+engine.appendSelected(readingTarget,selected,'shichu');assert.equal(readingTarget.children.length,1,'rerender must replace, not duplicate the attachment');
+engine.appendSelected(readingTarget,astroEntry,'shichu');assert.equal(readingTarget.children.length,0,'a different method must not borrow the selected item');
+assert.ok(engine.selectedText('新しい精密鑑定',selected,'shichu').includes(out.keepsake.name));assert.equal(engine.selectedText('新しい精密鑑定',astroEntry,'shichu'),'新しい精密鑑定');
+assert.ok(app.includes('appendSelected(shichu'));assert.ok(app.includes('selectedText(reading.beginnerText'));
+// Execute the real profile invalidation path with local data stubs.
+context.LedgerState={settings:{}};context.lastPersonal={luckyItem:selected};context.ledgerList=async()=>[];context.ledgerSaveAppSettings=async()=>{};const overall={textContent:'前の鑑定'};
+context.$=id=>id==='personalLuckyItem'?target:id==='shichuReading'?readingTarget:id==='overallReading'?overall:null;
+engine.renderSummary(target,[selected]);engine.appendSelected(readingTarget,selected,'shichu');
+for(const prefix of ['function koyomiProfileCoreChanged(','async function koyomiInvalidateProfileReadings('])vm.runInContext(app.split(/\r?\n/).find(line=>line.startsWith(prefix)),context);
+context.window={KOYOMI_READING_KEEPSAKE:engine};
+assert.equal(await context.koyomiInvalidateProfileReadings('profile',{displayName:'同じ'},{displayName:'同じ'}),false);assert.equal(target.hidden,false);
+await context.koyomiInvalidateProfileReadings('profile',{displayName:'前'},{displayName:'後'});assert.equal(context.lastPersonal,null);assert.equal(target.hidden,true);assert.equal(fields.name.textContent,'');assert.equal(readingTarget.children.length,0);assert.match(overall.textContent,/再計算/);
 if(process.env.KOYOMI_KEEPSAKE_REPORT)await writeFile(process.env.KOYOMI_KEEPSAKE_REPORT,JSON.stringify({cases,metrics,samples},null,2));
 console.log(`Reading voice/keepsake passed: ${cases} cases / six axes / 30 days / both voices`);
