@@ -28,5 +28,12 @@ const starInput={...base,methodId:'tarot',evidence:[],symbols:[{pos:'自分の�
 const otherInput={...starInput,symbols:[{pos:'自分の立場',name:'月',meaning:'不安を素直に使う'}]};assert.ok(!engine.decorate(otherInput,interpret(otherInput)).keepsakeCandidates.some(x=>x.id==='blue'),'a Star-specific keepsake must not leak into another symbol');
 assert.doesNotThrow(()=>planner.plan({...base,date:'2026-06-03',keepsakeCandidates:[]},{storage:{getItem(){throw Error('blocked')},setItem(){throw Error('blocked')}}}));
 const app=await readFile('app.html','utf8'),worker=await readFile('service-worker.js','utf8');assert.ok(app.includes('src/reading/reading-keepsake.js'));assert.ok(worker.includes('./src/reading/reading-keepsake.js'));
+const fields=Object.fromEntries(['name','line','alternative','source'].map(key=>[key,{textContent:''}])),target={hidden:true,querySelector:selector=>fields[selector.match(/data-lucky-(\w+)/)?.[1]]};
+const input={...base,date:'2026-07-01',mode:'sister'},out=adapter.applyDivination('元資料',input);
+assert.ok(out.keepsake);assert.ok(out.text.includes(out.keepsake.name));
+const selected=engine.renderSummary(target,[{methodId:'shichu',label:'四柱推命',keepsake:out.keepsake,alternative:out.keepsakeAlternative}]);assert.equal(selected.keepsake,out.keepsake);assert.equal(target.hidden,false);assert.equal(fields.name.textContent,out.keepsake.name);assert.equal(fields.line.textContent,out.keepsake.line);assert.match(fields.source.textContent,/四柱推命/);
+const astroEntry={methodId:'astrology',label:'西洋占星術',keepsake:{id:'other',name:'別の物',line:'別の読み'}};assert.equal(engine.renderSummary(target,[selected,astroEntry],'astrology'),astroEntry);assert.equal(fields.name.textContent,'別の物');assert.equal(engine.renderSummary(target,[selected],'astrology'),selected);
+engine.renderSummary(target,[]);assert.equal(target.hidden,true);for(const field of Object.values(fields))assert.equal(field.textContent,'','old lucky item must disappear when there is no eligible reading');
+assert.ok(app.includes('id="personalLuckyItem"'));assert.ok(app.includes('今日のラッキーアイテム'));assert.ok(app.includes('luckyEntries.push'));assert.ok(app.includes('r.i?.qMethodPriority'));
 if(process.env.KOYOMI_KEEPSAKE_REPORT)await writeFile(process.env.KOYOMI_KEEPSAKE_REPORT,JSON.stringify({cases,metrics,samples},null,2));
 console.log(`Reading voice/keepsake passed: ${cases} cases / six axes / 30 days / both voices`);
