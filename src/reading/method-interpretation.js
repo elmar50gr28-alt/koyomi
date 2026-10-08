@@ -36,7 +36,7 @@
   const mixed=items.some(x=>x.kind==='support')&&items.some(x=>x.kind==='caution');
   const condition=CONDITIONS[input.domain]||CONDITIONS.overall;
   const limit=Number(input.confidence)<50?'入力の確度が低いため、この解釈は確認の手掛かりに留めます。':'';
-  return {items,mixed,key:JSON.stringify(items.map(x=>[x.id,x.basis,x.reading])),text:items.map(x=>`「${root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis}」から、${x.reading}`).join('\n')+ (mixed?'\n後押しと注意の両方があります。進められる部分と、調整が必要な部分を分けます。':'')+(limit?'\n'+limit:''),application:`相談では、${condition}を現実の情報と照らし合わせます。${mixed?'準備済みの部分は進め、未合意や負担の大きい部分は確認してから判断してください。':'条件が揃う部分から判断し、未確認の部分は保留してください。'}`};
+  return {items,mixed,check:`相談では、${condition}を現実の情報と照らし合わせます。`,key:JSON.stringify(items.map(x=>[x.id,x.basis,x.reading])),text:items.map(x=>`「${root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis}」から、${x.reading}`).join('\n')+ (mixed?'\n後押しと注意の両方があります。進められる部分と、調整が必要な部分を分けます。':'')+(limit?'\n'+limit:''),application:`相談では、${condition}を現実の情報と照らし合わせます。${mixed?'準備済みの部分は進め、未合意や負担の大きい部分は確認してから判断してください。':'条件が揃う部分から判断し、未確認の部分は保留してください。'}`};
  }
  root.KOYOMI_METHOD_INTERPRETATION=Object.freeze({interpret});
 })(typeof globalThis!=='undefined'?globalThis:this);
