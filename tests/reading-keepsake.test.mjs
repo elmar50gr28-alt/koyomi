@@ -6,18 +6,21 @@ for(const path of ['src/reading/daily/daily-reading-core.js','src/reading/method
 const engine=context.KOYOMI_READING_KEEPSAKE,interpret=context.KOYOMI_METHOD_INTERPRETATION.interpret,adapter=context.KOYOMI_PERSONA_ADAPTER,planner=context.KOYOMI_METHOD_CONTINUITY;
 const base={profileId:'keepsake',domain:'work',methodId:'shichu',confidence:80,score:55,evidence:['大運85','流年30','選択日70'],generatedAction:true,action:'元の行動'};
 const fixtures=[['start',{...base,evidence:['大運85','流年85','選択日85']}],['boundary',base],['rest',{...base,evidence:['大運30','流年30','選択日30']}],['choice',{...base,methodId:'tarot',evidence:[],symbols:[{pos:'自分の立場',name:'正義',meaning:'思考・決断を素直に使う'}]}],['release',{...base,methodId:'runes',evidence:[],symbols:[{pos:'次の一手',name:'ハガラズ',meaning:'崩壊・刷新'}]}],['grow',{...base,methodId:'numerology',evidence:['個人年4','秩序を作り、積み上げる数']}]];
+const allIds=new Set(Object.values(engine.BANK).flat().map(row=>row[0]));assert.ok(allIds.size>=32,'expand real item categories, not just repeat the same objects across axes');
+for(const pool of Object.values(engine.BANK)){assert.equal(pool.length,12);assert.equal(new Set(pool.map(row=>row[0])).size,12);for(const row of pool)assert.ok(row.length===3&&row.every(x=>typeof x==='string'&&x.length>0));}
 let cases=0;const metrics=[],samples=[];
-for(const [axis,input] of fixtures){storage.clear();const ids=new Set();let last='',repeated=0;
+for(const [axis,input] of fixtures){storage.clear();const ids=new Set(),alternatives=new Set();let last='',repeated=0,lastAlternative='',repeatedAlternative=0;
  for(let day=1;day<=30;day++){
   const date=new Date(Date.UTC(2026,4,day)).toISOString().slice(0,10),current={...input,profileId:axis,date,mode:'sister'},before=JSON.stringify(current),parsed=interpret(current),story=engine.decorate(current,parsed),out=adapter.applyDivination('元資料',current);
   assert.equal(story.axis,axis);assert.equal(JSON.stringify(current),before);assert.equal(out.narrative.quality.pass,true,out.narrative.quality.issues.join(','));assert.match(out.text,/今日のお守り/);assert.match(out.text,/手元になければ/);assert.doesNotMatch(out.text,/買って|購入して|必ず|絶対/);
   const plan=planner.plan({...current,action:story.invitation,generatedAction:false,keepsakeCandidates:story.keepsakeCandidates});assert.equal(plan.keepsake.axis,axis);assert.ok(out.text.includes(plan.keepsake.name));ids.add(plan.keepsake.id);if(last===plan.keepsake.id)repeated++;last=plan.keepsake.id;
+  assert.equal(plan.alternative.axis,axis);assert.notEqual(plan.alternative.id,plan.keepsake.id);alternatives.add(plan.alternative.id);if(lastAlternative===plan.alternative.id)repeatedAlternative++;lastAlternative=plan.alternative.id;assert.ok(out.text.includes(plan.alternative.name));
   assert.equal(out.text,adapter.applyDivination('元資料',current).text);
   const sharp={...current,mode:'zubat'},sharpStory=engine.decorate(sharp,parsed),sharpOut=adapter.applyDivination('元資料',sharp);
   assert.equal(sharpStory.axis,axis);assert.equal(sharpStory.body,story.body);assert.equal(sharpStory.evidence,story.evidence);assert.notEqual(sharpStory.title,story.title);assert.equal(sharpOut.narrative.quality.pass,true,sharpOut.narrative.quality.issues.join(','));assert.ok(sharpOut.text.includes(plan.keepsake.name),'changing voice must not reroll the keepsake');
   if(day<=2&&axis==='boundary')samples.push({date,sister:out.text,zubat:sharpOut.text});cases+=2;
  }
- assert.equal(ids.size,3);assert.equal(repeated,0);metrics.push({axis,days:30,distinctKeepsakes:ids.size,adjacentRepeated:repeated});
+ assert.equal(ids.size,12);assert.equal(repeated,0);assert.equal(alternatives.size,12);assert.equal(repeatedAlternative,0);metrics.push({axis,days:30,distinctKeepsakes:ids.size,adjacentRepeated:repeated,distinctAlternatives:alternatives.size,adjacentRepeatedAlternative:repeatedAlternative});
 }
 for(const special of [{confidence:20},{psychRisk:95},{risk:95},{evidence:['判定保留']},{domain:'healthrhythm',action:'必要な受診を優先する'}]){
  const out=adapter.applyDivination('元資料',{...base,date:'2026-06-01',...special});assert.doesNotMatch(out.text,/今日のお守り/);assert.notEqual(out.narrative.structure,'symbolic-story');
@@ -87,5 +90,5 @@ context.saveState=()=>{};context.setPage=()=>{};context.ledgerSetPanel=()=>{};co
 vm.runInContext(app.split(/\r?\n/).find(line=>line.startsWith('async function koyomiSelectTheme(')),context);
 await context.koyomiSelectTheme('purchase','money');assert.equal(settingFields.qFocus.value,'purchase');assert.equal(settingFields.theme.value,'money');assert.equal(target.hidden,true,'the shortcut theme picker must synchronize even without a native change event');
 settingFields.qFocus.value='';settingFields.theme.value='overall';onChange({target:{id:'theme'}});assert.equal(target.hidden,false);onChange({target:{id:'oracleModeSetting'}});assert.equal(target.hidden,false,'voice changes alone must not invalidate the lucky item');
-if(process.env.KOYOMI_KEEPSAKE_REPORT)await writeFile(process.env.KOYOMI_KEEPSAKE_REPORT,JSON.stringify({cases,metrics,samples},null,2));
-console.log(`Reading voice/keepsake passed: ${cases} cases / six axes / 30 days / both voices`);
+if(process.env.KOYOMI_KEEPSAKE_REPORT)await writeFile(process.env.KOYOMI_KEEPSAKE_REPORT,JSON.stringify({cases,itemCategories:allIds.size,themeEntries:Object.values(engine.BANK).flat().length,metrics,samples},null,2));
+console.log(`Reading voice/keepsake passed: ${cases} cases / ${allIds.size} item categories / six axes / 30 days / both voices`);
