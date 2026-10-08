@@ -59,5 +59,19 @@ context.selectedDate='2026-07-02';context.koyomiSyncLuckyItemView();assert.equal
 context.selectedDate='2026-07-01';context.LedgerState.selectedPrimary='person-b';context.koyomiSyncLuckyItemView();assert.equal(target.hidden,true);await context.ledgerCapturePersonal();assert.equal(saved.length,0);assert.equal(notices.length,2);
 context.LedgerState.selectedPrimary='person-a';context.koyomiSyncLuckyItemView();assert.equal(target.hidden,false);assert.equal(fields.name.textContent,out.keepsake.name);await context.ledgerCapturePersonal();assert.equal(saved.length,1);assert.equal(saved[0][1][0],'person-a');assert.match(saved[0][2],/【鑑定日】\n2026-07-01/);assert.equal(saved[0][3].readingDate,'2026-07-01');assert.equal(saved[0][3].luckyItem.keepsake.id,out.keepsake.id);
 assert.ok(app.includes('renderCalendar(){koyomiSyncLuckyItemView()'));assert.ok(app.includes('v197LedgerApplyPersonalBase(p);koyomiSyncLuckyItemView(p.id)'));
+const attachLine=app.split(/\r?\n/).find(line=>line.includes('appendSelected(shichu,')),recordLine=app.split(/\r?\n/).find(line=>line.includes('personalResult.divinations.shichu='));
+context.shichu=readingTarget;context.personalResult=context.lastPersonal;context.reading={beginnerText:'更新された精密鑑定'};
+for(const change of ['date','profile']){
+ context.selectedDate=change==='date'?'2026-07-02':'2026-07-01';context.LedgerState.selectedPrimary=change==='profile'?'person-b':'person-a';context.koyomiSyncLuckyItemView();assert.equal(readingTarget.children.length,0);
+ vm.runInContext(attachLine,context);assert.equal(readingTarget.children.length,0,'a later precision render must not resurrect a hidden, mismatched item');
+ vm.runInContext(recordLine,context);assert.equal(context.personalResult.divinations.shichu,context.reading.beginnerText,'the precision text must not mix an old item into the current result');
+}
+context.selectedDate='2026-07-01';context.LedgerState.selectedPrimary='person-a';vm.runInContext(attachLine,context);assert.equal(readingTarget.children.length,1);vm.runInContext(recordLine,context);assert.ok(context.personalResult.divinations.shichu.includes(out.keepsake.name));
+// The existing asynchronous request guard must also survive these changes.
+const precisionStart=app.indexOf('async function koyomiRenderBaziReading(){'),precisionEnd=app.indexOf('\nwindow.KOYOMI_BAZI_READING=',precisionStart);assert.ok(precisionStart>=0&&precisionEnd>precisionStart);
+vm.runInContext(app.slice(precisionStart,precisionEnd),context);
+let release,calculations=0;context.koyomiBaziReadingProfile=()=>({id:'person-a'});context.koyomiPersonalReadingKey=()=>context.selectedDate+'|'+context.LedgerState.selectedPrimary;
+context.KOYOMI_BAZI={prepareCommonReadingThemes:()=>new Promise(resolve=>{release=resolve}),calculateBazi:()=>{calculations++;return {}}};
+for(const change of ['date','profile']){context.selectedDate='2026-07-01';context.LedgerState.selectedPrimary='person-a';const pending=context.koyomiRenderBaziReading();if(change==='date')context.selectedDate='2026-07-02';else context.LedgerState.selectedPrimary='person-b';release();await pending;assert.equal(calculations,0,'a pending precision request must stop after its date or profile changes');}
 if(process.env.KOYOMI_KEEPSAKE_REPORT)await writeFile(process.env.KOYOMI_KEEPSAKE_REPORT,JSON.stringify({cases,metrics,samples},null,2));
 console.log(`Reading voice/keepsake passed: ${cases} cases / six axes / 30 days / both voices`);
