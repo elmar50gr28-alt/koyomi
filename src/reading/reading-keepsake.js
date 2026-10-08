@@ -40,7 +40,9 @@
   renderSummary(card,[selected]);target.appendChild(card);
  }
  function selectedText(text,selected,methodId){return selected?.methodId===methodId&&selected.keepsake?.name?`${text}\n\n【今日のお守り】\n${selected.keepsake.name}\n${selected.keepsake.line}${selected.alternative?.name?'\n手元になければ、'+selected.alternative.name+'でも。':''}`:text;}
- function isCurrent(reading,current){return Boolean(reading?.luckyContext&&current&&reading.luckyContext.date===current.date&&reading.luckyContext.profileId===current.profileId);}
+ function selectionKey(values={}){return JSON.stringify({theme:values.theme||'overall',focus:values.focus||'',priority:values.priority||'integrated'});}
+ function watchSettings(doc,onChange){doc?.addEventListener?.('change',event=>{if(['theme','qFocus','qMethodPriority'].includes(event.target?.id))onChange();});}
+ function isCurrent(reading,current){return Boolean(reading?.luckyContext&&current&&reading.luckyContext.date===current.date&&reading.luckyContext.profileId===current.profileId&&(reading.luckyContext.selectionKey||'')===(current.selectionKey||''));}
  function currentSelection(reading,current){return isCurrent(reading,current)?reading?.luckyItem||null:null;}
  function syncView(target,reading,current,methodTarget){
   const selected=currentSelection(reading,current);
@@ -48,5 +50,5 @@
   if(methodTarget)appendSelected(methodTarget,selected,'shichu');
   return Boolean(selected);
  }
- root.KOYOMI_READING_KEEPSAKE=Object.freeze({BANK,decorate,renderSummary,appendSelected,selectedText,isCurrent,currentSelection,syncView});
+ root.KOYOMI_READING_KEEPSAKE=Object.freeze({BANK,decorate,renderSummary,appendSelected,selectedText,selectionKey,watchSettings,isCurrent,currentSelection,syncView});
 })(typeof globalThis!=='undefined'?globalThis:this);

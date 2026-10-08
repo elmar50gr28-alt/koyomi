@@ -51,7 +51,7 @@ context.window={KOYOMI_READING_KEEPSAKE:engine};
 assert.equal(await context.koyomiInvalidateProfileReadings('profile',{displayName:'同じ'},{displayName:'同じ'}),false);assert.equal(target.hidden,false);
 await context.koyomiInvalidateProfileReadings('profile',{displayName:'前'},{displayName:'後'});assert.equal(context.lastPersonal,null);assert.equal(target.hidden,true);assert.equal(fields.name.textContent,'');assert.equal(readingTarget.children.length,0);assert.match(overall.textContent,/再計算/);
 fields.date={textContent:''};context.selectedDate='2026-07-01';context.fmtIso=value=>value;context.LedgerState.selectedPrimary='person-a';context.v191zOracleMode='sister';
-context.lastPersonal={reading:'鑑定本文',divinations:{shichu:'四柱推命の文章'},luckyItem:selected,luckyContext:{date:'2026-07-01',profileId:'person-a'}};
+context.lastPersonal={reading:'鑑定本文',divinations:{shichu:'四柱推命の文章'},luckyItem:selected,luckyContext:{date:'2026-07-01',profileId:'person-a',selectionKey:engine.selectionKey()}};
 const saved=[],notices=[];context.ledgerSaveReadingRecord=async(...args)=>saved.push(args);context.ledgerNotify=text=>notices.push(text);
 for(const prefix of ['function koyomiLuckyItemContext(','function koyomiSyncLuckyItemView(','function ledgerPersonalInputSnapshot(','async function ledgerCapturePersonal('])vm.runInContext(app.split(/\r?\n/).find(line=>line.startsWith(prefix)),context);
 context.koyomiSyncLuckyItemView();assert.equal(target.hidden,false);assert.equal(fields.date.textContent,'鑑定日：2026-07-01');assert.equal(readingTarget.children.length,1);
@@ -68,10 +68,24 @@ for(const change of ['date','profile']){
 }
 context.selectedDate='2026-07-01';context.LedgerState.selectedPrimary='person-a';vm.runInContext(attachLine,context);assert.equal(readingTarget.children.length,1);vm.runInContext(recordLine,context);assert.ok(context.personalResult.divinations.shichu.includes(out.keepsake.name));
 // The existing asynchronous request guard must also survive these changes.
-const precisionStart=app.indexOf('async function koyomiRenderBaziReading(){'),precisionEnd=app.indexOf('\nwindow.KOYOMI_BAZI_READING=',precisionStart);assert.ok(precisionStart>=0&&precisionEnd>precisionStart);
+const precisionStart=app.indexOf('async function koyomiRenderBaziReading(){'),precisionEnd=app.indexOf('\nwindow.KOYOMI_READING_KEEPSAKE?.watchSettings(',precisionStart);assert.ok(precisionStart>=0&&precisionEnd>precisionStart);
 vm.runInContext(app.slice(precisionStart,precisionEnd),context);
 let release,calculations=0;context.koyomiBaziReadingProfile=()=>({id:'person-a'});context.koyomiPersonalReadingKey=()=>context.selectedDate+'|'+context.LedgerState.selectedPrimary;
 context.KOYOMI_BAZI={prepareCommonReadingThemes:()=>new Promise(resolve=>{release=resolve}),calculateBazi:()=>{calculations++;return {}}};
 for(const change of ['date','profile']){context.selectedDate='2026-07-01';context.LedgerState.selectedPrimary='person-a';const pending=context.koyomiRenderBaziReading();if(change==='date')context.selectedDate='2026-07-02';else context.LedgerState.selectedPrimary='person-b';release();await pending;assert.equal(calculations,0,'a pending precision request must stop after its date or profile changes');}
+const settingFields={theme:{value:'overall'},qFocus:{value:''},qMethodPriority:{value:'integrated'}};
+context.$=id=>settingFields[id]|| (id==='personalLuckyItem'?target:id==='shichuReading'?readingTarget:id==='overallReading'?overall:null);
+context.selectedDate='2026-07-01';context.LedgerState.selectedPrimary='person-a';context.koyomiSyncLuckyItemView();assert.equal(target.hidden,false);
+let onChange;engine.watchSettings({addEventListener:(type,handler)=>{assert.equal(type,'change');onChange=handler}},()=>context.koyomiSyncLuckyItemView());
+for(const [id,value] of [['theme','money'],['qFocus','purchase'],['qMethodPriority','oracle']]){
+ const before=settingFields[id].value;settingFields[id].value=value;onChange({target:{id}});assert.equal(target.hidden,true);assert.equal(readingTarget.children.length,0);const count=saved.length;await context.ledgerCapturePersonal();assert.equal(saved.length,count,'changed consultation settings must not be saved against an old reading');
+ vm.runInContext(attachLine,context);assert.equal(readingTarget.children.length,0);settingFields[id].value=before;onChange({target:{id}});assert.equal(target.hidden,false);assert.equal(fields.name.textContent,out.keepsake.name);
+}
+await context.ledgerCapturePersonal();assert.equal(saved.at(-1)[3].readingSelection.priority,'integrated');assert.equal(saved.at(-1)[3].readingSelection.theme,'overall');
+assert.ok(app.includes('saveState(false);koyomiSyncLuckyItemView();const panel='));
+context.saveState=()=>{};context.setPage=()=>{};context.ledgerSetPanel=()=>{};context.toast=()=>{};context.ledgerList=async()=>[];
+vm.runInContext(app.split(/\r?\n/).find(line=>line.startsWith('async function koyomiSelectTheme(')),context);
+await context.koyomiSelectTheme('purchase','money');assert.equal(settingFields.qFocus.value,'purchase');assert.equal(settingFields.theme.value,'money');assert.equal(target.hidden,true,'the shortcut theme picker must synchronize even without a native change event');
+settingFields.qFocus.value='';settingFields.theme.value='overall';onChange({target:{id:'theme'}});assert.equal(target.hidden,false);onChange({target:{id:'oracleModeSetting'}});assert.equal(target.hidden,false,'voice changes alone must not invalidate the lucky item');
 if(process.env.KOYOMI_KEEPSAKE_REPORT)await writeFile(process.env.KOYOMI_KEEPSAKE_REPORT,JSON.stringify({cases,metrics,samples},null,2));
 console.log(`Reading voice/keepsake passed: ${cases} cases / six axes / 30 days / both voices`);
