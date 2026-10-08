@@ -83,3 +83,25 @@ for(const domain of ['overall','work','money','relationship','health','growth','
 }
 if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({domainMetrics,samples},null,2));
 console.log('All-domain reflective continuity passed: '+JSON.stringify(domainMetrics));
+
+const combinations=[
+ [['大運85','流年30','選択日70'],'長期には前へ進む材料','今年は負担を見直す'],
+ [['大運30','流年85','選択日70'],'今年には前へ進む材料','長期には負担を見直す'],
+ [['大運55','流年85','選択日30'],'今年の取り組みには後押し','今日は条件を見直す'],
+ [['大運55','流年30','選択日85'],'今日は前へ進む材料','今年の負担への注意']
+];
+for(const [evidence,support,caution] of combinations){const result=interpret({...mixed,evidence});assert.ok(result.connection.includes(support));assert.ok(result.connection.includes(caution));assert.doesNotMatch(result.text,/後押しと注意の両方があります/,'do not repeat a generic summary after a specific connection');}
+assert.equal(interpret({...mixed,evidence:['大運85']}).connection,'','a missing comparison must not be invented');
+assert.equal(interpret({...mixed,evidence:['大運85','流年85','選択日85']}).connection,'','consistent signals must not invent conflicting periods');
+assert.match(spread.connection,/最終結果だけを結論にせず/);
+assert.equal(interpret({...base,methodId:'tarot',symbols:[card]}).connection,'','missing positions must not be filled in');
+assert.match(astro.connection,/調和と緊張/);
+let connectionCases=0;
+for(const long of [30,55,85])for(const year of [30,55,85])for(const today of [30,55,85])for(let day=1;day<=30;day++){
+ const input={...mixed,score:55,evidence:[`大運${long}`,`流年${year}`,`選択日${today}`],date:new Date(Date.UTC(2026,2,day)).toISOString().slice(0,10)};
+ const parsed=interpret(input),out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);
+ assert.equal(out.narrative.quality.pass,true);assert.match(out.text,new RegExp(`長期の判定は${long}点`));assert.match(out.text,new RegExp(`年ごとの判定は${year}点`));assert.match(out.text,new RegExp(`選択日の判定は${today}点`));
+ for(const item of parsed.items){const value=Number(item.basis.replace(/^(大運|流年|選択日)/,''));assert.equal(item.kind,value>=68?'support':value<45?'caution':'neutral')}
+ assert.equal(parsed.connection,interpret({...input,date:'2026-12-01'}).connection,'the date must not change the meaning of identical computed evidence');connectionCases++;
+}
+console.log(`Evidence connection passed: ${connectionCases} opposing/neutral/aligned period cases`);
