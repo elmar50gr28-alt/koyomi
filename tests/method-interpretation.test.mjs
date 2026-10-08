@@ -22,67 +22,33 @@ const spread=interpret({...base,methodId:'tarot',symbols:origin});for(const x of
 assert.match(interpret({...base,methodId:'timing',evidence:['大運甲子'],interpretationAssets:[{basis:'大運85'},{basis:'流年30'}]}).text,/長期の方針/);
 let count=0;for(const methodId of ['shichu','astrology','tarot','runes','numerology','sukuyo','kyusei','name','kabbalah','rokusei','timing'])for(const domain of ['overall','work','money','relationship','health','growth','timing'])for(let day=1;day<=30;day++){
  const input={...base,methodId,domain,date:`2026-01-${String(day).padStart(2,'0')}`,evidence:['shichu','timing'].includes(methodId)?mixed.evidence:methodId==='astrology'?['調和トランジット強度1.0','緊張トランジット強度6.0']:methodId==='numerology'?['個人年4','秩序を作り、積み上げる数']:methodId==='sukuyo'?['栄親：支え合いやすい距離']:methodId==='kabbalah'?['生年月日核4','名前核7','橋数3']:[],interpretationAssets:[{basis:'検証用の算出分類',meaning:'既存辞書の解釈'}],symbols:methodId==='tarot'?[card]:[{pos:'次の一手',name:'イサ',meaning:'停止・集中'}]};
- const result=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);assert.match(result.text,/そう読む理由/);assert.match(result.text,/相談では/);assert.equal(result.narrative.quality.pass,true,result.narrative.quality.issues.join(','));assert.equal(result.text,context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input).text);assert.ok(result.text.startsWith('【結論】\n'));assert.equal(result.narrative.structure,'conclusion-reason-action-stop-review');assert.doesNotMatch(result.text,/【判断の分け方】|【現実で確かめること】/);count++;
+ const result=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);assert.match(result.text,/読みの根拠/);assert.match(result.text,/今日の一歩/);assert.equal(result.narrative.quality.pass,true,result.narrative.quality.issues.join(','));assert.equal(result.text,context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input).text);assert.ok(result.text.startsWith('【今日の読み】\n'));assert.equal(result.narrative.structure,'symbolic-story');assert.doesNotMatch(result.text,/【判断の分け方】|【現実で確かめること】/);count++;
 }
 console.log(`Grounded interpretation passed: ${count} method/domain/date cases`);
 
-// The reflection must follow the chosen action, retain opposing evidence and
-// remain conditional; it must not impersonate a known personal history.
-const engine=context.KOYOMI_APP_NARRATIVE;
-for(const [domain,action,expected] of [['work','担当する範囲を確認する','引き受ける範囲'],['money','継続費用を確認する','今の暮らし'],['relationship','休める距離を考える','自分が休める距離'],['health','必要な受診を優先する','占いの答えを待たず'],['growth','学んだことを使う','結果を見て直せる'],['timing','期限を確認する','後で見直せる'],['overall','人に相談する','確認できる相手']]){
- const input={surface:'method',domain,confidence:80,evidence:mixed.evidence,actions:[action],interpretation:interpret({...mixed,domain})};
- const result=engine.compose(input);assert.ok(result.blocks.find(x=>x.role==='conclusion').text.includes(expected));assert.match(result.text,/もし/);assert.equal(result.meta.quality.pass,true);
- for(const special of [{confidence:20},{serious:true},{evidence:['判定保留']}])assert.doesNotMatch(engine.compose({...input,...special}).blocks.find(x=>x.role==='conclusion').text,/もし/);
+// New ordinary readings center the symbols; protective/uncertain inputs retain
+// the explicit factual path instead of acquiring poetic reassurance.
+for(const special of [{confidence:20},{psychRisk:95},{evidence:['判定保留']}]){
+ const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...mixed,...special});
+ assert.notEqual(out.narrative.structure,'symbolic-story');assert.doesNotMatch(out.text,/【今日の読み】/);
 }
-const historyStore=new Map();context.localStorage={getItem:k=>historyStore.get(k)||null,setItem:(k,v)=>historyStore.set(k,v)};
+const care=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...mixed,domain:'health',action:'必要な受診を優先する'});assert.notEqual(care.narrative.structure,'symbolic-story');assert.match(care.text,/受診/);
+for(const domain of ['healthrhythm','overall']){const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...mixed,domain,generatedAction:true,action:'必要な受診を優先する'});assert.notEqual(out.narrative.structure,'symbolic-story');assert.match(out.text,/受診/)}
+const spreadInput={...base,methodId:'tarot',evidence:[],symbols:[{pos:'自分の立場',name:'月',meaning:'不安を素直に使う',reversed:false},{pos:'障害',name:'皇帝',meaning:'統率を素直に使う',reversed:false},{pos:'最終結果',name:'世界',meaning:'完成を素直に使う',reversed:false}]};
+const story=interpret(spreadInput).story;assert.match(story.title,/輪郭が見えない/);assert.match(story.body,/葛藤/);for(const x of spreadInput.symbols)assert.ok(story.body.includes(x.meaning));
+assert.doesNotMatch(interpret({...spreadInput,symbols:spreadInput.symbols.map(x=>({...x,reversed:true}))}).story.title,/輪郭が見えない/,'reversed cards must not reuse an upright pair reading');
+const store=new Map();context.localStorage={getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)};
 for(const path of ['src/reading/daily/daily-reading-core.js','src/reading/method-reading-continuity.js'])vm.runInContext(await readFile(path,'utf8'),context);
-const samples=[],openings=new Set(),closings=new Set();
+const samples=[];
 for(let day=1;day<=30;day++){
- const input={...mixed,profileId:'reflection-review',generatedAction:true,date:`2026-01-${String(day).padStart(2,'0')}`,action:'担当と期限を確認する'};
- const result=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);
- assert.equal(result.narrative.quality.pass,true);assert.match(result.text,/長期の方針は準備/);assert.match(result.text,/今年の取り組みは負担/);assert.doesNotMatch(result.text,/あなたは.*(?:疲れ|我慢|頑張)|昨日.*(?:実行した|完了した)/);
- const conclusion=result.text.split('【結論】\n')[1]?.split('\n\n')[0]||'',opening=conclusion.split('\n').find(x=>x.startsWith('もし')),closing=result.text.split('【最後に】\n')[1]?.split('\n\n')[0];if(opening)openings.add(opening);if(closing)closings.add(closing);
- if(day<=4)samples.push(result.text);
+ const input={...mixed,generatedAction:true,profileId:'new-reading',date:new Date(Date.UTC(2026,2,day)).toISOString().slice(0,10)};
+ const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input),plan=context.KOYOMI_METHOD_CONTINUITY.plan({...input,action:interpret(input).story.invitation,generatedAction:false});
+ assert.equal(out.narrative.quality.pass,true);assert.ok(out.text.includes(plan.action));for(const value of ['長期の判定は85点','年ごとの判定は30点','選択日の判定は70点','相性補正-5'])assert.ok(out.text.includes(value));
+ assert.doesNotMatch(out.text,/相談では|担当・期限・完了条件|今回扱うのは|今日の確認点|【見直す時】/);if(day>1)assert.match(out.text,/昨日との違い/);
+ assert.equal(out.text,context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input).text);if(day<=3)samples.push(out.text);
 }
-assert.ok(openings.size>=3);assert.ok(closings.size>=3);
-const prepared=engine.compose({surface:'method',domain:'work',confidence:80,actions:['作業に必要な物を揃える'],interpretation:a,evidence:mixed.evidence});assert.match(prepared.blocks.find(x=>x.role==='conclusion').text,/足りない物や情報/);assert.doesNotMatch(prepared.blocks.find(x=>x.role==='close').text,/返事/);
-assert.deepEqual(Array.from(prepared.blocks.slice(0,5),x=>x.role),['conclusion','reason','action','stop','review']);
-for(const block of prepared.blocks)assert.equal(block.text,block.text.trim(),'section text must not add blank paragraphs');
-const limited=engine.compose({surface:'method',domain:'work',confidence:20,actions:['担当と期限を確認する'],interpretation:interpret({...mixed,confidence:20}),evidence:mixed.evidence});assert.match(limited.text,/確度が低い/);
-const externalConflict=engine.compose({surface:'method',domain:'work',contradiction:true,confidence:80,actions:['担当を確認する'],interpretation:interpret({...mixed,evidence:['大運85']}),evidence:['大運85']});assert.ok(externalConflict.blocks.some(x=>x.role==='contrast'),'conflict supplied by caller must remain visible even when selected interpretation is not mixed');
-if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,distinctOpenings:openings.size,distinctClosings:closings.size,samples},null,2));
-console.log(`Reflective continuity passed: 30 days / ${openings.size} action-linked openings / ${closings.size} endings`);
-
-for(const [domain,action,expected,unrelated] of [
- ['work','作業を妨げている通知を止める','集中が途切れる','返事を急ぎ'],
- ['money','振込前に支払先と請求の内容を確認する','支払いの内容','続けて払って'],
- ['money','購入費用と使う場面を比較する','買った後','続けて払って'],
- ['relationship','判断する前に約束を確認する','具体的な希望','休める距離'],
- ['relationship','会う日時を相手と相談する','落ち着いて話せる','返事のない時間'],
- ['health','食事と水分を取れる時間を確保する','食事や水分','予定で減らせる'],
- ['growth','学習の結果を振り返る','前と比べて','使うのが不安']
-]){
- const result=engine.compose({surface:'method',domain,confidence:80,actions:[action],interpretation:interpret({...mixed,domain}),evidence:mixed.evidence});
- assert.match(result.text,new RegExp(expected));assert.doesNotMatch(result.text,new RegExp(unrelated));assert.equal(result.meta.quality.pass,true);
-}
-const domainMetrics=[];
-for(const domain of ['overall','work','money','relationship','health','growth','timing']){
- const scenes=new Set(),ends=new Set(),actions=new Set();let adjacent=0,previous='',omitted=0;
- for(let day=1;day<=30;day++){
-  const input={...mixed,domain,profileId:'all-domain-'+domain,generatedAction:true,date:`2026-02-${String(day<=28?day:day-28).padStart(2,'0')}`,action:'現実の条件を確かめる'};
-  // Use a real continuous interval, including the month boundary.
-  input.date=new Date(Date.UTC(2026,1,day)).toISOString().slice(0,10);
-  const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input),plan=context.KOYOMI_METHOD_CONTINUITY.plan(input);
-  assert.equal(out.narrative.quality.pass,true,domain+'/'+day+': '+out.narrative.quality.issues);
-  const scene=out.text.split('\n').find(x=>x.startsWith('もし')),end=out.text.split('【最後に】\n')[1]?.split('\n\n')[0];
-  if(day>1&&scene&&scene===previous)adjacent++;previous=scene;if(scene)scenes.add(scene);else omitted++;if(end)ends.add(end);actions.add(plan.action);
-  assert.match(out.text,/長期の方針は準備/);assert.match(out.text,/今年の取り組みは負担/);
- }
- assert.equal(adjacent,0,domain+': the same reflective sentence must not appear on consecutive days');
- domainMetrics.push({domain,days:30,distinctActions:actions.size,distinctScenes:scenes.size,distinctEndings:ends.size,adjacentSameScene:adjacent,daysWithoutReflection:omitted});
-}
-if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({domainMetrics,samples},null,2));
-console.log('All-domain reflective continuity passed: '+JSON.stringify(domainMetrics));
+if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples},null,2));
+console.log('Symbolic reading continuity passed: 30 days, story-linked advice and preserved evidence');
 
 const combinations=[
  [['大運85','流年30','選択日70'],'長期には前へ進む材料','今年は負担を見直す'],
@@ -96,12 +62,36 @@ assert.equal(interpret({...mixed,evidence:['大運85','流年85','選択日85']}
 assert.match(spread.connection,/最終結果だけを結論にせず/);
 assert.equal(interpret({...base,methodId:'tarot',symbols:[card]}).connection,'','missing positions must not be filled in');
 assert.match(astro.connection,/調和と緊張/);
-let connectionCases=0;
+let connectionCases=0;const storyTitles=new Set();
 for(const long of [30,55,85])for(const year of [30,55,85])for(const today of [30,55,85])for(let day=1;day<=30;day++){
  const input={...mixed,score:55,evidence:[`大運${long}`,`流年${year}`,`選択日${today}`],date:new Date(Date.UTC(2026,2,day)).toISOString().slice(0,10)};
  const parsed=interpret(input),out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);
+ storyTitles.add(parsed.story.title);
  assert.equal(out.narrative.quality.pass,true);assert.match(out.text,new RegExp(`長期の判定は${long}点`));assert.match(out.text,new RegExp(`年ごとの判定は${year}点`));assert.match(out.text,new RegExp(`選択日の判定は${today}点`));
  for(const item of parsed.items){const value=Number(item.basis.replace(/^(大運|流年|選択日)/,''));assert.equal(item.kind,value>=68?'support':value<45?'caution':'neutral')}
  assert.equal(parsed.connection,interpret({...input,date:'2026-12-01'}).connection,'the date must not change the meaning of identical computed evidence');connectionCases++;
 }
+assert.ok(storyTitles.size>=5,'different computed combinations must produce different central readings');
+const explicit=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...mixed,action:'依頼者が指定した行動を保持する'});assert.match(explicit.text,/依頼者が指定した行動を保持する/);
+const quote=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...spreadInput,generatedAction:true,action:'旧来の確認作業'});assert.doesNotMatch(quote.text,/旧来の確認作業/);assert.match(quote.text,/まだ決められない理由/);assert.equal(quote.narrative.quality.pass,true);
 console.log(`Evidence connection passed: ${connectionCases} opposing/neutral/aligned period cases`);
+
+// Exercise the existing local spreads rather than only manually authored cards.
+const appSource=await readFile('app.html','utf8'),appLines=appSource.split(/\r?\n/);
+for(const name of ['RUNES','RUNE_MEAN','TAROT_MAJOR','SUITS','TAROT'])vm.runInContext(appLines.find(x=>x.startsWith('const '+name+'=')),context);
+const hashLine=appLines.find(x=>x.includes('function hash(s)'));vm.runInContext(hashLine.slice(hashLine.indexOf('function hash(s)'),hashLine.indexOf('function mod(')),context);
+for(const name of ['tarotSpread','runeSpread'])vm.runInContext(appLines.find(x=>x.startsWith('function '+name+'(')),context);
+const oracleMetrics=[],oracleSamples=[];
+for(const methodId of ['tarot','runes']){
+ const bodies=new Set(),titles=new Set(),draws=new Set();
+ for(let day=1;day<=30;day++){
+  const date=new Date(Date.UTC(2026,3,day)).toISOString().slice(0,10),symbols=methodId==='tarot'?context.tarotSpread('検証用|'+date):context.runeSpread('検証用|'+date),input={...base,methodId,profileId:'oracle-story-'+methodId,date,symbols,evidence:[],generatedAction:true};
+  const parsed=interpret(input),out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);assert.equal(out.narrative.quality.pass,true,methodId+'/'+date+': '+out.narrative.quality.issues);
+  assert.match(out.text,/読みの根拠/);assert.doesNotMatch(out.text,/担当・期限・完了条件|相談では|必ず|絶対/);assert.ok(out.text.includes(parsed.story.invitation));
+  const used=methodId==='tarot'?symbols.filter(x=>['自分の立場','障害','最終結果'].includes(x.pos)):symbols;for(const x of used){assert.ok(out.text.includes(x.name));assert.ok(out.text.includes(x.meaning))}draws.add(JSON.stringify(used));
+  bodies.add(parsed.story.body);titles.add(parsed.story.title);if(day<=2)oracleSamples.push({methodId,date,text:out.text});
+ }
+ assert.equal(bodies.size,draws.size,methodId+': distinct used symbol sets must stay distinct in the reading');oracleMetrics.push({methodId,days:30,distinctUsedDraws:draws.size,distinctBodies:bodies.size,distinctTitles:titles.size});
+}
+if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples,oracleMetrics,oracleSamples},null,2));
+console.log('Existing spread story verification: '+JSON.stringify(oracleMetrics));
