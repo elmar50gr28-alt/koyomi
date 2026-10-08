@@ -41,10 +41,41 @@ for(let day=1;day<=30;day++){
  const input={...mixed,profileId:'reflection-review',generatedAction:true,date:`2026-01-${String(day).padStart(2,'0')}`,action:'担当と期限を確認する'};
  const result=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);
  assert.equal(result.narrative.quality.pass,true);assert.match(result.text,/長期の方針は準備/);assert.match(result.text,/今年の取り組みは負担/);assert.doesNotMatch(result.text,/あなたは.*(?:疲れ|我慢|頑張)|昨日.*(?:実行した|完了した)/);
- const conclusion=result.text.split('【結論】\n')[1]?.split('\n\n')[0]||'';openings.add(conclusion.split('\n').find(x=>x.startsWith('もし')));closings.add(result.text.split('【最後に】\n')[1]?.split('\n\n')[0]);
+ const conclusion=result.text.split('【結論】\n')[1]?.split('\n\n')[0]||'',opening=conclusion.split('\n').find(x=>x.startsWith('もし')),closing=result.text.split('【最後に】\n')[1]?.split('\n\n')[0];if(opening)openings.add(opening);if(closing)closings.add(closing);
  if(day<=4)samples.push(result.text);
 }
 assert.ok(openings.size>=3);assert.ok(closings.size>=3);
 const prepared=engine.compose({surface:'method',domain:'work',confidence:80,actions:['作業に必要な物を揃える'],interpretation:a,evidence:mixed.evidence});assert.match(prepared.blocks.find(x=>x.role==='conclusion').text,/足りない物や情報/);assert.doesNotMatch(prepared.blocks.find(x=>x.role==='close').text,/返事/);
 if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,distinctOpenings:openings.size,distinctClosings:closings.size,samples},null,2));
 console.log(`Reflective continuity passed: 30 days / ${openings.size} action-linked openings / ${closings.size} endings`);
+
+for(const [domain,action,expected,unrelated] of [
+ ['work','作業を妨げている通知を止める','集中が途切れる','返事を急ぎ'],
+ ['money','振込前に支払先と請求の内容を確認する','支払いの内容','続けて払って'],
+ ['money','購入費用と使う場面を比較する','買った後','続けて払って'],
+ ['relationship','判断する前に約束を確認する','具体的な希望','休める距離'],
+ ['relationship','会う日時を相手と相談する','落ち着いて話せる','返事のない時間'],
+ ['health','食事と水分を取れる時間を確保する','食事や水分','予定で減らせる'],
+ ['growth','学習の結果を振り返る','前と比べて','使うのが不安']
+]){
+ const result=engine.compose({surface:'method',domain,confidence:80,actions:[action],interpretation:interpret({...mixed,domain}),evidence:mixed.evidence});
+ assert.match(result.text,new RegExp(expected));assert.doesNotMatch(result.text,new RegExp(unrelated));assert.equal(result.meta.quality.pass,true);
+}
+const domainMetrics=[];
+for(const domain of ['overall','work','money','relationship','health','growth','timing']){
+ const scenes=new Set(),ends=new Set(),actions=new Set();let adjacent=0,previous='',omitted=0;
+ for(let day=1;day<=30;day++){
+  const input={...mixed,domain,profileId:'all-domain-'+domain,generatedAction:true,date:`2026-02-${String(day<=28?day:day-28).padStart(2,'0')}`,action:'現実の条件を確かめる'};
+  // Use a real continuous interval, including the month boundary.
+  input.date=new Date(Date.UTC(2026,1,day)).toISOString().slice(0,10);
+  const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input),plan=context.KOYOMI_METHOD_CONTINUITY.plan(input);
+  assert.equal(out.narrative.quality.pass,true,domain+'/'+day+': '+out.narrative.quality.issues);
+  const scene=out.text.split('\n').find(x=>x.startsWith('もし')),end=out.text.split('【最後に】\n')[1]?.split('\n\n')[0];
+  if(day>1&&scene&&scene===previous)adjacent++;previous=scene;if(scene)scenes.add(scene);else omitted++;if(end)ends.add(end);actions.add(plan.action);
+  assert.match(out.text,/長期の方針は準備/);assert.match(out.text,/今年の取り組みは負担/);
+ }
+ assert.equal(adjacent,0,domain+': the same reflective sentence must not appear on consecutive days');
+ domainMetrics.push({domain,days:30,distinctActions:actions.size,distinctScenes:scenes.size,distinctEndings:ends.size,adjacentSameScene:adjacent,daysWithoutReflection:omitted});
+}
+if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({domainMetrics,samples},null,2));
+console.log('All-domain reflective continuity passed: '+JSON.stringify(domainMetrics));
