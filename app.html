@@ -2375,7 +2375,7 @@ async function koyomiRenderBaziReading(){
     if(shichu){
       koyomiEnsureBaziReadingStyle();
       shichu.innerHTML=koyomiBaziLuckStartHtml(result.luckCycles,locale)+koyomiBaziReadingHtml(reading);
-      window.KOYOMI_READING_KEEPSAKE?.appendSelected(shichu,typeof lastPersonal!=='undefined'?lastPersonal?.luckyItem:null,'shichu');
+      window.KOYOMI_READING_KEEPSAKE?.appendSelected(shichu,window.KOYOMI_READING_KEEPSAKE.currentSelection(typeof lastPersonal!=='undefined'?lastPersonal:null,koyomiLuckyItemContext()),'shichu');
     }
     const meta=document.getElementById('shichuMeta');
     if(meta){
@@ -2392,7 +2392,7 @@ async function koyomiRenderBaziReading(){
       personalResult.baziReading=reading;
       personalResult.baziStructuredResult=result;
       personalResult.luckCycles=result.luckCycles;
-      if(personalResult.divinations)personalResult.divinations.shichu=window.KOYOMI_READING_KEEPSAKE?.selectedText(reading.beginnerText,personalResult.luckyItem,'shichu')||reading.beginnerText;
+      if(personalResult.divinations)personalResult.divinations.shichu=window.KOYOMI_READING_KEEPSAKE?.selectedText(reading.beginnerText,window.KOYOMI_READING_KEEPSAKE.currentSelection(personalResult,koyomiLuckyItemContext()),'shichu')||reading.beginnerText;
     }
   }catch(error){
     console.error('[KOYOMI_BAZI_READING] render failed',error);

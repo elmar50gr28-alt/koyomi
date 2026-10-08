@@ -41,11 +41,12 @@
  }
  function selectedText(text,selected,methodId){return selected?.methodId===methodId&&selected.keepsake?.name?`${text}\n\n【今日のお守り】\n${selected.keepsake.name}\n${selected.keepsake.line}${selected.alternative?.name?'\n手元になければ、'+selected.alternative.name+'でも。':''}`:text;}
  function isCurrent(reading,current){return Boolean(reading?.luckyContext&&current&&reading.luckyContext.date===current.date&&reading.luckyContext.profileId===current.profileId);}
+ function currentSelection(reading,current){return isCurrent(reading,current)?reading?.luckyItem||null:null;}
  function syncView(target,reading,current,methodTarget){
-  const selected=isCurrent(reading,current)?reading?.luckyItem:null;
+  const selected=currentSelection(reading,current);
   renderSummary(target,selected?[{...selected,date:reading.luckyContext.date}]:[]);
   if(methodTarget)appendSelected(methodTarget,selected,'shichu');
   return Boolean(selected);
  }
- root.KOYOMI_READING_KEEPSAKE=Object.freeze({BANK,decorate,renderSummary,appendSelected,selectedText,isCurrent,syncView});
+ root.KOYOMI_READING_KEEPSAKE=Object.freeze({BANK,decorate,renderSummary,appendSelected,selectedText,isCurrent,currentSelection,syncView});
 })(typeof globalThis!=='undefined'?globalThis:this);
