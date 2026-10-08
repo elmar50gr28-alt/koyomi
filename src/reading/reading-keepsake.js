@@ -23,7 +23,7 @@
   const groups={shichu:['shichu','timing'],astrology:['astrology'],sukuyo:['sukuyo','kyusei','timing'],oracle:['tarot','runes'],name:['name','numerology','kabbalah'],timing:['timing','shichu','astrology']};
   const valid=entries.filter(x=>x?.keepsake?.name&&x.keepsake.line),selected=(groups[priority]||[]).map(id=>valid.find(x=>x.methodId===id)).find(Boolean)||valid[0]||null;
   if(target){
-   const values={name:selected?.keepsake.name||'',line:selected?.keepsake.line||'',alternative:selected?.alternative?.name?`手元になければ、${selected.alternative.name}でも。`:'',source:selected?`${selected.label||selected.methodId}の鑑定から`:''};
+   const values={name:selected?.keepsake.name||'',line:selected?.keepsake.line||'',alternative:selected?.alternative?.name?`手元になければ、${selected.alternative.name}でも。`:'',source:selected?`${selected.label||selected.methodId}の鑑定から`:'',date:selected?.date?`鑑定日：${selected.date}`:''};
    for(const [key,value] of Object.entries(values)){const element=target.querySelector(`[data-lucky-${key}]`);if(element)element.textContent=value;}
    target.hidden=!selected;
   }
@@ -40,5 +40,12 @@
   renderSummary(card,[selected]);target.appendChild(card);
  }
  function selectedText(text,selected,methodId){return selected?.methodId===methodId&&selected.keepsake?.name?`${text}\n\n【今日のお守り】\n${selected.keepsake.name}\n${selected.keepsake.line}${selected.alternative?.name?'\n手元になければ、'+selected.alternative.name+'でも。':''}`:text;}
- root.KOYOMI_READING_KEEPSAKE=Object.freeze({BANK,decorate,renderSummary,appendSelected,selectedText});
+ function isCurrent(reading,current){return Boolean(reading?.luckyContext&&current&&reading.luckyContext.date===current.date&&reading.luckyContext.profileId===current.profileId);}
+ function syncView(target,reading,current,methodTarget){
+  const selected=isCurrent(reading,current)?reading?.luckyItem:null;
+  renderSummary(target,selected?[{...selected,date:reading.luckyContext.date}]:[]);
+  if(methodTarget)appendSelected(methodTarget,selected,'shichu');
+  return Boolean(selected);
+ }
+ root.KOYOMI_READING_KEEPSAKE=Object.freeze({BANK,decorate,renderSummary,appendSelected,selectedText,isCurrent,syncView});
 })(typeof globalThis!=='undefined'?globalThis:this);

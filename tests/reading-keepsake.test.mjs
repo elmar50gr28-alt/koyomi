@@ -50,5 +50,14 @@ for(const prefix of ['function koyomiProfileCoreChanged(','async function koyomi
 context.window={KOYOMI_READING_KEEPSAKE:engine};
 assert.equal(await context.koyomiInvalidateProfileReadings('profile',{displayName:'同じ'},{displayName:'同じ'}),false);assert.equal(target.hidden,false);
 await context.koyomiInvalidateProfileReadings('profile',{displayName:'前'},{displayName:'後'});assert.equal(context.lastPersonal,null);assert.equal(target.hidden,true);assert.equal(fields.name.textContent,'');assert.equal(readingTarget.children.length,0);assert.match(overall.textContent,/再計算/);
+fields.date={textContent:''};context.selectedDate='2026-07-01';context.fmtIso=value=>value;context.LedgerState.selectedPrimary='person-a';context.v191zOracleMode='sister';
+context.lastPersonal={reading:'鑑定本文',divinations:{shichu:'四柱推命の文章'},luckyItem:selected,luckyContext:{date:'2026-07-01',profileId:'person-a'}};
+const saved=[],notices=[];context.ledgerSaveReadingRecord=async(...args)=>saved.push(args);context.ledgerNotify=text=>notices.push(text);
+for(const prefix of ['function koyomiLuckyItemContext(','function koyomiSyncLuckyItemView(','function ledgerPersonalInputSnapshot(','async function ledgerCapturePersonal('])vm.runInContext(app.split(/\r?\n/).find(line=>line.startsWith(prefix)),context);
+context.koyomiSyncLuckyItemView();assert.equal(target.hidden,false);assert.equal(fields.date.textContent,'鑑定日：2026-07-01');assert.equal(readingTarget.children.length,1);
+context.selectedDate='2026-07-02';context.koyomiSyncLuckyItemView();assert.equal(target.hidden,true);assert.equal(fields.name.textContent,'');assert.equal(readingTarget.children.length,0);await context.ledgerCapturePersonal();assert.equal(saved.length,0);
+context.selectedDate='2026-07-01';context.LedgerState.selectedPrimary='person-b';context.koyomiSyncLuckyItemView();assert.equal(target.hidden,true);await context.ledgerCapturePersonal();assert.equal(saved.length,0);assert.equal(notices.length,2);
+context.LedgerState.selectedPrimary='person-a';context.koyomiSyncLuckyItemView();assert.equal(target.hidden,false);assert.equal(fields.name.textContent,out.keepsake.name);await context.ledgerCapturePersonal();assert.equal(saved.length,1);assert.equal(saved[0][1][0],'person-a');assert.match(saved[0][2],/【鑑定日】\n2026-07-01/);assert.equal(saved[0][3].readingDate,'2026-07-01');assert.equal(saved[0][3].luckyItem.keepsake.id,out.keepsake.id);
+assert.ok(app.includes('renderCalendar(){koyomiSyncLuckyItemView()'));assert.ok(app.includes('v197LedgerApplyPersonalBase(p);koyomiSyncLuckyItemView(p.id)'));
 if(process.env.KOYOMI_KEEPSAKE_REPORT)await writeFile(process.env.KOYOMI_KEEPSAKE_REPORT,JSON.stringify({cases,metrics,samples},null,2));
 console.log(`Reading voice/keepsake passed: ${cases} cases / six axes / 30 days / both voices`);

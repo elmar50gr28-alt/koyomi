@@ -55,6 +55,7 @@ const calls=[],ui={value:'standard'},integration={selectedDate:new Date('2026-01
 integration.window={KOYOMI_PERSONA_ADAPTER:{DOMAINS:{},applyDivination:(text,input)=>{calls.push(input);return{text:'rendered'}}}};
 for(const name of ['Sukuyo','Kyusei','Astrology','Tarot','Runes','Name','Numerology','Kabbalah','Rokusei','Timing'])integration['v196Render'+name+'Summary']=()=>{};
 vm.createContext(integration);const start=app.indexOf('renderPersonal=function(r){v196RenderPersonalBase(r)'),end=app.indexOf('\n',start);assert.ok(start>=0);
+integration.lastPersonal=null;for(const name of ['koyomiLuckyItemContext','koyomiSyncLuckyItemView'])vm.runInContext(app.split(/\r?\n/).find(x=>x.startsWith('function '+name+'(')),integration);
 vm.runInContext(app.slice(start,end),integration);
 integration.renderPersonal({i:{name:'検証用',birthDate:'1990-01-01',theme:'work'},score:55,divinations:Object.fromEntries(methods.map(k=>[k,'元の資料']))});
 assert.equal(calls.length,11);for(const call of calls){assert.equal(call.evidence[0],call.methodId+'の実際の根拠');assert.equal(call.generatedAction,true);assert.ok(call.profileId);assert.equal(call.date,'2026-01-02');}
