@@ -33,6 +33,7 @@ for(const special of [{confidence:20},{psychRisk:95},{evidence:['判定保留']}
  assert.notEqual(out.narrative.structure,'symbolic-story');assert.doesNotMatch(out.text,/【今日の読み】/);
 }
 const care=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...mixed,domain:'health',action:'必要な受診を優先する'});assert.notEqual(care.narrative.structure,'symbolic-story');assert.match(care.text,/受診/);
+for(const domain of ['healthrhythm','overall']){const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...mixed,domain,generatedAction:true,action:'必要な受診を優先する'});assert.notEqual(out.narrative.structure,'symbolic-story');assert.match(out.text,/受診/)}
 const spreadInput={...base,methodId:'tarot',evidence:[],symbols:[{pos:'自分の立場',name:'月',meaning:'不安を素直に使う',reversed:false},{pos:'障害',name:'皇帝',meaning:'統率を素直に使う',reversed:false},{pos:'最終結果',name:'世界',meaning:'完成を素直に使う',reversed:false}]};
 const story=interpret(spreadInput).story;assert.match(story.title,/輪郭が見えない/);assert.match(story.body,/葛藤/);for(const x of spreadInput.symbols)assert.ok(story.body.includes(x.meaning));
 assert.doesNotMatch(interpret({...spreadInput,symbols:spreadInput.symbols.map(x=>({...x,reversed:true}))}).story.title,/輪郭が見えない/,'reversed cards must not reuse an upright pair reading');
