@@ -22,7 +22,7 @@ const spread=interpret({...base,methodId:'tarot',symbols:origin});for(const x of
 assert.match(interpret({...base,methodId:'timing',evidence:['大運甲子'],interpretationAssets:[{basis:'大運85'},{basis:'流年30'}]}).text,/長期の方針/);
 let count=0;for(const methodId of ['shichu','astrology','tarot','runes','numerology','sukuyo','kyusei','name','kabbalah','rokusei','timing'])for(const domain of ['overall','work','money','relationship','health','growth','timing'])for(let day=1;day<=30;day++){
  const input={...base,methodId,domain,date:`2026-01-${String(day).padStart(2,'0')}`,evidence:['shichu','timing'].includes(methodId)?mixed.evidence:methodId==='astrology'?['調和トランジット強度1.0','緊張トランジット強度6.0']:methodId==='numerology'?['個人年4','秩序を作り、積み上げる数']:methodId==='sukuyo'?['栄親：支え合いやすい距離']:methodId==='kabbalah'?['生年月日核4','名前核7','橋数3']:[],interpretationAssets:[{basis:'検証用の算出分類',meaning:'既存辞書の解釈'}],symbols:methodId==='tarot'?[card]:[{pos:'次の一手',name:'イサ',meaning:'停止・集中'}]};
- const result=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);assert.match(result.text,/そう読む理由/);assert.match(result.text,/相談では/);assert.equal(result.narrative.quality.pass,true,result.narrative.quality.issues.join(','));assert.equal(result.text,context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input).text);count++;
+ const result=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);assert.match(result.text,/そう読む理由/);assert.match(result.text,/相談では/);assert.equal(result.narrative.quality.pass,true,result.narrative.quality.issues.join(','));assert.equal(result.text,context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input).text);assert.ok(result.text.startsWith('【結論】\n'));assert.equal(result.narrative.structure,'conclusion-reason-action-stop-review');assert.doesNotMatch(result.text,/【判断の分け方】|【現実で確かめること】/);count++;
 }
 console.log(`Grounded interpretation passed: ${count} method/domain/date cases`);
 
@@ -46,6 +46,10 @@ for(let day=1;day<=30;day++){
 }
 assert.ok(openings.size>=3);assert.ok(closings.size>=3);
 const prepared=engine.compose({surface:'method',domain:'work',confidence:80,actions:['作業に必要な物を揃える'],interpretation:a,evidence:mixed.evidence});assert.match(prepared.blocks.find(x=>x.role==='conclusion').text,/足りない物や情報/);assert.doesNotMatch(prepared.blocks.find(x=>x.role==='close').text,/返事/);
+assert.deepEqual(Array.from(prepared.blocks.slice(0,5),x=>x.role),['conclusion','reason','action','stop','review']);
+for(const block of prepared.blocks)assert.equal(block.text,block.text.trim(),'section text must not add blank paragraphs');
+const limited=engine.compose({surface:'method',domain:'work',confidence:20,actions:['担当と期限を確認する'],interpretation:interpret({...mixed,confidence:20}),evidence:mixed.evidence});assert.match(limited.text,/確度が低い/);
+const externalConflict=engine.compose({surface:'method',domain:'work',contradiction:true,confidence:80,actions:['担当を確認する'],interpretation:interpret({...mixed,evidence:['大運85']}),evidence:['大運85']});assert.ok(externalConflict.blocks.some(x=>x.role==='contrast'),'conflict supplied by caller must remain visible even when selected interpretation is not mixed');
 if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,distinctOpenings:openings.size,distinctClosings:closings.size,samples},null,2));
 console.log(`Reflective continuity passed: 30 days / ${openings.size} action-linked openings / ${closings.size} endings`);
 
