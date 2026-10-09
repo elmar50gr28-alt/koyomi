@@ -94,6 +94,44 @@ for(const methodId of ['tarot','runes']){
  assert.equal(readingBodies.size,draws.size,methodId+': distinct used symbol sets must stay distinct in the factual reading');oracleMetrics.push({methodId,days:30,distinctUsedDraws:draws.size,distinctReadingBodies:readingBodies.size,distinctBodies:bodies.size,distinctTitles:titles.size});
 }
 const lifeMetrics=[],lifeSamples=[];
+const symbolicSamples=[];
+let symbolicCases=0;
+for(const [name,meaning,intent,direction]of [
+ ['イサ','停止・集中','rest','protect'],['ハガラズ','崩壊・刷新','release','protect'],
+ ['アルギズ','守護・境界','boundary','test'],['ライド','転機・旅','start','forward'],
+ ['アンスズ','言葉・伝達','grow','test'],['ケン','思考・決断','choice','test']
+])for(const domain of ['work','relationship','money','health','overall'])for(let day=1;day<=30;day++) {
+ const input={...base,methodId:'runes',domain,date:`2026-06-${String(day).padStart(2,'0')}`,symbols:[{pos:'次の一手',name,meaning}],generatedAction:true};
+ const original=JSON.stringify(input),parsed=interpret(input);
+ assert.equal(parsed.story.symbolicFocus.intent,intent);assert.equal(parsed.story.livingContext.direction,direction);
+ if(intent==='release'&&domain!=='health'){
+  assert.match(parsed.story.invitation,/なら、/,'ending a commitment is conditional on the reader’s own choice');
+  const resting=interpret({...input,symbols:[{pos:'次の一手',name:'イサ',meaning:'停止・集中'}]});
+  assert.notEqual(parsed.story.invitation,resting.story.invitation,'resting and releasing must not collapse into one generic stop instruction');
+ }
+ assert.ok(parsed.story.symbolicFocus.bridge.includes(name));assert.ok(parsed.story.readingBody.includes(meaning));
+ assert.equal(JSON.stringify(input),original);
+ for(const mode of ['sister','zubat']) {
+  const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...input,mode});
+  assert.equal(out.narrative.quality.pass,true,name+'/'+domain+'/'+day+': '+out.narrative.quality.issues);
+  if(out.narrative.structure==='symbolic-story')assert.ok(out.text.includes(parsed.story.symbolicFocus.bridge));
+  assert.ok(out.text.includes(parsed.story.invitation));symbolicCases++;
+ }
+ if(day===1&&domain==='relationship'&&['rest','release','start'].includes(intent))symbolicSamples.push({intent,text:context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input).text});
+}
+const starting={pos:'自分の立場',name:'愚者',meaning:'始まり・冒険を素直に使う'};
+assert.equal(interpret({...base,methodId:'tarot',symbols:[starting]}).story.livingContext.direction,'forward');
+for(const pos of ['障害','最終結果']) {
+ const reading=interpret({...base,methodId:'tarot',symbols:[starting,{pos,name:'塔',meaning:'崩壊・刷新'}]});
+ assert.equal(reading.story.symbolicFocus.caution,true);assert.equal(reading.story.livingContext.direction,'test');
+ assert.match(reading.story.symbolicFocus.bridge,/注意.*確かめる/,'a beginning symbol does not override a warning elsewhere in the spread');
+}
+const reversed=interpret({...base,methodId:'tarot',symbols:[{...starting,reversed:true,meaning:'始まり・冒険の停滞・内省'}]});
+assert.equal(reversed.story.livingContext.direction,'protect');
+assert.doesNotMatch(reversed.story.symbolicFocus.bridge,/実際に始める/);
+const noSelf=interpret({...base,methodId:'tarot',symbols:[{pos:'障害',name:'塔',meaning:'崩壊・刷新'}]});
+assert.equal(noSelf.story.symbolicFocus,null,'a missing self position cannot be filled with an obstacle');
+assert.equal(noSelf.story.livingContext.direction,'test');
 for(const domain of ['constructor','toString','__proto__','unknown']) {
  const parsed=interpret({...mixed,domain});
  assert.equal(parsed.story.livingContext.domain,'overall','unrecognized domains use daily-life copy without accessing inherited object properties');
@@ -134,6 +172,7 @@ for(const input of [{confidence:20},{psychRisk:95},{action:'医療機関へ相�
  assert.notEqual(out.narrative.structure,'symbolic-story','low confidence, serious risk, and explicit medical action retain guarded rendering');
  assert.doesNotMatch(out.text,/たとえば、/);
 }
-if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples,oracleMetrics,oracleSamples,lifeMetrics,lifeSamples},null,2));
+if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples,oracleMetrics,oracleSamples,lifeMetrics,lifeSamples,symbolicCases,symbolicSamples},null,2));
+console.log('Symbol-linked application: '+symbolicCases+' rendered cases, reversed/mixed/missing-position checks passed');
 console.log('Living language: '+lifeCases+' rendered cases, 30 distinct application bodies per fixed fortune, unchanged evidence');
 console.log('Existing spread story verification: '+JSON.stringify(oracleMetrics));

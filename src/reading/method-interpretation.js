@@ -37,18 +37,56 @@
  CARE.forward.push('自分が望んだことを、選ぶ理由として口にしていいのです。','手伝ってもらいながら進めても、その取り組みはあなたのものです。','人に見せる前の不安があっても、準備した事実まで消えはしません。','うまくできた部分は、次のためだけでなく、今の自分のためにも認めてあげて。','始めた後で調整できる余地も、自分のために残してください。');
  CARE.test.push('確かめている間も、自分の暮らしを後回しにしなくて大丈夫。','納得できない点を置き去りにせず、選べる形を探してみてください。','一度決めたことも、新しく分かった事実に合わせて見直せます。','判断を誰かに相談しても、最後に自分の希望を添えていいのです。','すぐ答えが出ない時は、何を大切にしたいかへ戻ってみてください。');
  CARE.protect.push('断ることにためらいがあっても、無理な負担まで引き受けなくていいのです。','助けを借りることを、自分の力が足りない証拠にしないでください。','これから続けたいことのためにも、今の余力を残しておいて。','過去の選択を責め続けるより、今の条件に合う道を選び直せます。','今日は結果を出すことより、自分を消耗させないことに意味があります。');
- function livingLanguage(input,items){
+ const SYMBOLIC_CARE={
+  rest:['立ち止まる時間を、遅れと数えなくていいのです。次にどう動くかを選ぶ時間にもできます。','答えを探し続けて疲れた時は、問いをいったん置いても大丈夫。今日のうちに決める必要があるか、確かめてみて。','休む理由を、人に納得してもらえる形に仕上げなくてもいいのです。自分の負担を大切にしてください。','動けない時に自分を責めるより、今は何を止めておけるか考えてみましょう。','待つ間にも、自分のために過ごす時間は残していいのです。結論が出るまで、暮らしの楽しみを全部しまい込まなくて大丈夫。','力を出し続ける約束より、また戻ってこられる余地を残しておいて。','今の歩幅に合わない予定は、選び直せます。立ち止まることも、自分で選んだ動き方です。','気持ちが急いているなら、結論だけを先へ送らなくて大丈夫。分かっていることから見直しましょう。','今日は進んだ量で自分を測らず、無理を増やさずに済んだことにも目を向けて。','何もしない時間を取りたいと思ったら、その願いも予定を選ぶ理由にしていいのです。'],
+  release:['区切りを付けることは、そこまで大切にしてきた自分を否定することではありません。','続けた時間が長いほど、手放しにくいこともあります。今も続けたいのか、自分の気持ちを聞いてみて。','寂しさがあるからといって、同じ形を守り続ける必要はありません。残したいものと、変えたいものを分けてみて。','やめる時にも、引き継ぐことや守る約束は選べます。全部を壊すような決め方を急がなくて大丈夫。','前の選択が間違いだったと決めなくても、今の自分に合う形へ移れます。','もう担えない役割があるなら、できる範囲を伝えてね。役割を返しても、あなた自身が失われるわけではありません。','手放す理由を探す時は、過去への怒りだけでなく、これから守りたい暮らしも考えてみて。','終わらせたいことがあるなら、費用や約束を確かめてから区切りを選んで。気持ちも現実も置き去りにしなくていいのです。','離れる選択をしても、そこで学んだことは持っていけます。何を残したいか、自分で決めてください。','区切りの先を今日すべて決めなくても大丈夫。まず、今の負担をこれ以上増やさない道を選びましょう。']
+ };
+ const RELEASE_ACTION={
+  work:['仕事に区切りを付けたいなら、引き継ぐ内容と、残る約束を確かめて。','提案を見直すなら、残したい目的と、変えたい進め方を分けて。','働き方を変えたいなら、今担っている役割と、調整できる負担を確認して。'],
+  relationship:['関わり方を変えたいなら、残したい約束と、見直したい負担を分けて。','話し合いに区切りを付けたいなら、合意できたことと、まだ距離が必要なことを分けて。','約束を見直したいなら、これからも守れるものと、変更したいものを伝えて。'],
+  money:['支出を減らしたいなら、今の暮らしで必要なものと、買わずに済むものを分けて。','契約をやめたいなら、解約条件と、その後も必要な費用を確かめて。','付き合いの出費を減らしたいなら、次から無理なく払える額を伝えて。'],
+  overall:['区切りを付けたい用事があるなら、残る約束と、後で困らない段取りを確かめて。','取り組みを見直すなら、続けたい目的と、減らしたい負担を分けて。','役割を返したいなら、これから担える範囲と、引き継ぐ内容を確かめて。']
+ };
+ function symbolicFocus(input){
+  if(!['tarot','runes'].includes(input.methodId))return null;
+  const symbols=Array.isArray(input.symbols)?input.symbols:[];
+  const role=input.methodId==='tarot'?'自分の立場':'次の一手',symbol=symbols.find(x=>x?.pos===role&&x.name&&x.meaning);
+  if(!symbol)return null;
+  function intentOf(value){
+   if(/終結|手放|清算|刷新|崩壊/.test(value))return'release';
+   if(/境界|防御|守護|警戒|統率/.test(value))return'boundary';
+   if(/停止|休息|保留|内省|忍耐|停滞/.test(value))return'rest';
+   if(/選択|決断|正義|思考|不安/.test(value))return'choice';
+   if(/始まり|始動|再起|転機/.test(value))return'start';
+   return'grow';
+  }
+  const intent=intentOf(String(symbol.meaning));
+  const caution=input.methodId==='tarot'&&symbols.some(x=>['障害','最終結果'].includes(x?.pos)&&x.name&&x.meaning&&['release','rest','boundary'].includes(intentOf(String(x.meaning))));
+  const bridges={
+   rest:'急いで答えを出すより、いったん動きを止めて見直す場面へつなげて読めます。',
+   release:'終わる出来事の予言としてではなく、続けるものと区切るものを自分で選ぶ手がかりにします。',
+   boundary:'引き受ける役割や、自分が守りたい範囲を考える手がかりにします。',
+   choice:'答えを人に合わせる前に、何を大切にして選ぶかを考える手がかりにします。',
+   start:caution?'始めたい気持ちを大切にしつつ、障害や最終結果に出ている注意も合わせて、進め方を確かめる場面へつなげます。':'準備ができたことを、実際に始める場面へつなげて読めます。',
+   grow:'象徴の言葉を、今の暮らしのどこで使えるか考える入口にします。'
+  };
+  return {name:String(symbol.name),role,intent,caution,bridge:`${role}の「${symbol.name}」を生活に重ねると、${bridges[intent]}`};
+ }
+ function livingLanguage(input,items,focus){
   const aliases={love:'relationship',career:'work',healthrhythm:'health'},domain=Object.hasOwn(aliases,input.domain)?aliases[input.domain]:input.domain;
   const rows=Object.hasOwn(LIFE_SCENES,domain)?LIFE_SCENES[domain]:LIFE_SCENES.overall;
   const caution=items.some(x=>x.kind==='caution'),support=items.some(x=>x.kind==='support');
   const current=items.find(x=>x.id==='選択日');
-  const direction=current?.kind==='caution'||caution&&!support?'protect':caution?'test':support?'forward':'test';
+  const direction=focus?(['rest','release'].includes(focus.intent)?'protect':focus.intent==='start'&&!focus.caution?'forward':'test'):
+   current?.kind==='caution'||caution&&!support?'protect':caution?'test':support?'forward':'test';
   // ISO dates select an application angle. Evidence and the fortune do not change.
   const match=String(input.date||'').match(/^(\d{4})-(\d{2})-(\d{2})$/),ordinal=match?Math.floor(Date.UTC(+match[1],+match[2]-1,+match[3])/86400000):0;
-  const span=rows.length*CARE[direction].length;
+  const care=focus&&Object.hasOwn(SYMBOLIC_CARE,focus.intent)?SYMBOLIC_CARE[focus.intent]:CARE[direction];
+  const span=rows.length*care.length;
   let offset=0;for(const ch of String(input.methodId||''))offset=(offset+ch.charCodeAt(0))%span;
   const index=((ordinal+offset)%span+span)%span,row=rows[index%rows.length],voice=row[direction==='forward'?1:direction==='protect'?3:2];
-  return {kind:'application',domain:Object.hasOwn(LIFE_SCENES,domain)?domain:'overall',scene:row[0],direction,body:voice[0]+'\n\n'+CARE[direction][Math.floor(index/rows.length)],invitation:voice[1]};
+  const invitation=focus?.intent==='release'&&domain!=='health'?(Object.hasOwn(RELEASE_ACTION,domain)?RELEASE_ACTION[domain]:RELEASE_ACTION.overall)[index%rows.length]:voice[1];
+  return {kind:'application',domain:Object.hasOwn(LIFE_SCENES,domain)?domain:'overall',scene:row[0],direction,body:voice[0]+'\n\n'+care[Math.floor(index/rows.length)],invitation};
  }
  function storyOf(input,items){
   const kind=id=>items.find(x=>x.id===id)?.kind;
@@ -77,7 +115,8 @@
    const picked=roles.map(role=>symbols.find(x=>x?.pos===role&&x.name&&x.meaning)).filter(Boolean);
    if(!picked.length)return null;
    const lead=picked[0];title=`「${lead.name}」が照らす、今の立ち位置`;
-   body=picked.map(x=>`${x.pos}に出た「${x.name}」${x.reversed?'（反転）':''}は、「${x.meaning}」という象徴です。`).join('');
+   const rolesText={'自分の立場':'今の感じ方や動き方を見つめる象徴です。','障害':'向き合う課題として、この言葉を読んでいきます。','最終結果':'このまま進んだ先を考える手がかりで、結末が決まったわけではありません。','現在の核':'今のテーマを表す言葉として読めます。','越える課題':'取り組む時に、見過ごしたくない点を表しています。','次の一手':''};
+   body=picked.map(x=>`${x.pos}の「${x.name}」${x.reversed?'（反転）':''}には「${x.meaning}」が出ています。${rolesText[x.pos]}`).join('\n\n');
    const self=picked.find(x=>x.pos==='自分の立場'),obstacle=picked.find(x=>x.pos==='障害');
    if(self?.name==='月'&&!self.reversed&&/不安/.test(self.meaning)&&obstacle?.name==='皇帝'&&!obstacle.reversed&&/統率/.test(obstacle.meaning)){
     title='はっきり決めたいのに、輪郭が見えない';body+='月の揺れる感覚と、障害に出た皇帝の決める力を重ねると、「まだ見えないものまで、形を決めようとする」という葛藤として読めます。もし重なる思いがあるなら、答えを急ぐ前に、言葉になっていない違和感へ目を向けてみてください。';invitation='まだ決められない理由を、責めずに言葉にしてみて。';
@@ -85,7 +124,7 @@
     const theme=String(lead.meaning).split(/の停滞|を素直/)[0];
     const voices={'感情・関係':['気持ちに、先に答えを出さなくていい','気持ちをすぐに好き嫌いの答えへ変えず、どの言葉や出来事に心が動くのかを眺める読みです。','最近心が動いた場面を思い出し、何を大切にしたかったのか言葉にしてみて。'],'現実・お金':['思いを、暮らしの中の形に','望むものを思い描くだけでなく、暮らしの中でどう形にするかへ目を向ける読みです。夢と現実を対立させるより、両方が重なる場所を探してみてください。','望んでいることが暮らしの中で実現したら、何が変わるか思い描いてみて。'],'行動・情熱':['その熱を、どこへ向けたい？','動きたい思いを、何へ向けたいのかを眺める読みです。勢いの強さだけでなく、それを使った先に何を残したいかに目を向けてみてください。','動いた先に残したいものを、言葉にしてみて。'],'思考・決断':['正しい答えと、自分の答え','考える力を、結論を急ぐためでなく、自分にとって何が大切かを見つけるために使う読みです。人に説明できる理由と、自分が納得できる理由を見比べてみてください。','この選択で大切にしたいことを、誰かの正解ではなく自分の言葉にしてみて。']};
     if(voices[theme]){const voice=voices[theme];title=`${voice[0]} — ${lead.name}`;body+=voice[1];invitation=voice[2]}
-    else body+='もし心に残る言葉があるなら、今の相談のどこに重なるのか、そこから眺めてみてください。';
+    else if(!symbolicFocus(input))body+='もし心に残る言葉があるなら、今の相談のどこに重なるのか、そこから眺めてみてください。';
     if(self&&obstacle&&String(self.meaning).split(/の停滞|を素直/)[0]===String(obstacle.meaning).split(/の停滞|を素直/)[0])body+='同じテーマが自分の立場と障害の両方に出ています。その力を失くすより、どこまで使うかを考える並びです。';
    }
    invitation=invitation||'いちばん心に残った象徴を、自分の言葉で言い直してみて。';
@@ -97,8 +136,10 @@
    invitation={numerology:'今年のテーマに、今の自分が重なるところを探してみて。',sukuyo:'近さだけでなく、心地よく関われる距離を考えてみて。',kyusei:'力を出しやすい場所や段取りを、思い描いてみて。',name:'名前で期待される役割と、自分が望む役割を見比べてみて。',kabbalah:'人に見せる自分と、休ませたい自分を両方言葉にしてみて。',rokusei:'この周期の言葉を、今の暮らしのどこに使うか考えてみて。'}[input.methodId];
   }
   if(['shichu','timing'].includes(input.methodId)&&kind('day-fit')==='caution')body+='選択日の相性には慎重さが残るため、勢いだけで押し切る読みにはしません。';
-  const living=livingLanguage(input,items);
-  return {title,readingBody:body,body:body+'\n\n'+living.body,invitation:['tarot','runes'].includes(input.methodId)?invitation:living.invitation,livingContext:living,evidence:items.map(x=>root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis).join('／')};
+  const focus=symbolicFocus(input),living=livingLanguage(input,items,focus);
+  // Preserve specific spread interpretations; generic symbol paraphrasing may use a grounded life action.
+  const useLifeAction=focus&&['rest','release','start'].includes(focus.intent);
+  return {title,readingBody:body,body:body+'\n\n'+(focus?focus.bridge+'\n\n':'')+living.body,invitation:['tarot','runes'].includes(input.methodId)&&!useLifeAction?invitation:living.invitation,symbolicFocus:focus,livingContext:living,evidence:items.map(x=>root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis).join('／')};
  }
  function relationshipOf(items,methodId){
   const kind=id=>items.find(x=>x.id===id)?.kind;
