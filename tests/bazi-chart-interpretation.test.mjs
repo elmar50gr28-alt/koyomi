@@ -25,8 +25,9 @@ const text=context.KOYOMI_PERSONA_RENDERER.render({
   analysis:chart.items,evidence:chart.evidence,closing:chart.closing,
   order:['opening','result','analysis','evidence','closing']
 });
-assert.ok(text.includes('姐さんが読むわ'));
-assert.ok(text.includes('姐さんからの宿題'));
+assert.ok(text.includes('【四柱推命の命式の読み解き】'));
+assert.ok(text.includes('暮らしで確かめること：'));
+assert.doesNotMatch(text,/姐さん|姉さん|ミツノメ|みつのめ|アンタ/);
 assert.ok(text.includes('現実ではね'));
 assert.ok(text.includes('【年柱'));
 assert.ok(text.includes('【五行の配分】'));
