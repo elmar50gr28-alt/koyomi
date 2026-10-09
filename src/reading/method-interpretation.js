@@ -73,7 +73,7 @@
   return {name:String(symbol.name),role,intent,caution,bridge:`${role}の「${symbol.name}」を生活に重ねると、${bridges[intent]}`};
  }
  function livingLanguage(input,items,focus){
-  const aliases={love:'relationship',career:'work',healthrhythm:'health'},domain=Object.hasOwn(aliases,input.domain)?aliases[input.domain]:input.domain;
+  const aliases={career:'work',changejob:'work',income:'money',purchase:'money',love:'relationship',marriage:'relationship',reconcile:'relationship',family:'relationship',healthrhythm:'health',identity:'overall',study:'overall',life:'overall',choice:'overall'},key=String(input.domain||'overall').toLowerCase(),domain=Object.hasOwn(aliases,key)?aliases[key]:key;
   const rows=Object.hasOwn(LIFE_SCENES,domain)?LIFE_SCENES[domain]:LIFE_SCENES.overall;
   const caution=items.some(x=>x.kind==='caution'),support=items.some(x=>x.kind==='support');
   const current=items.find(x=>x.id==='選択日');
@@ -87,6 +87,42 @@
   const index=((ordinal+offset)%span+span)%span,row=rows[index%rows.length],voice=row[direction==='forward'?1:direction==='protect'?3:2];
   const invitation=focus?.intent==='release'&&domain!=='health'?(Object.hasOwn(RELEASE_ACTION,domain)?RELEASE_ACTION[domain]:RELEASE_ACTION.overall)[index%rows.length]:voice[1];
   return {kind:'application',domain:Object.hasOwn(LIFE_SCENES,domain)?domain:'overall',scene:row[0],direction,body:voice[0]+'\n\n'+care[Math.floor(index/rows.length)],invitation};
+ }
+ const YEAR_LENSES={
+  1:['自分で始め、道を切り開く数','自分の希望から、始め方を選ぶ年','自分で始めるというテーマは、選ぶ理由に自分の希望を入れるために使えます。人任せにしていた選択があるなら、自分がどうしたいかを先に持ってみてください。',['始めたいことがあるなら、自分が望む形と、必要な準備を確かめて。','人に相談する前に、自分が選びたい案と、その理由を考えてみて。','準備のできたことから、自分で決められる範囲を選んで動いてみて。']],
+  2:['結び、受け取り、調整する数','受け取ることも、関わる力になる年','調整のテーマでは、相手に合わせるだけが役割ではありません。頼ること、聞いてもらうこと、自分の希望を持ち寄ることも、関係を育てる側に置いていいのです。',['自分の希望と、相手が無理なくできることを聞き合ってみて。','助けてほしいことがあるなら、具体的な内容を添えて頼んでみて。','返事をする前に、自分にも無理のない条件か確かめて。']],
+  3:['表現し、喜びを広げる数','好きなことを、伝わる形へ育てる年','好きだったこと、面白いと思ったことを、どんな言葉や形で届けたいか。表現のテーマは、そこから育てられます。一人で作る時も、人に見せる時も、自分が感じた喜びを入口にしていいのです。',['伝えたいことを、相手が受け取りやすい言葉や形にしてみて。','好きだと思ったことを、理由も添えて話してみて。','作ったものや考えた案があるなら、感想を聞きたい点を添えて見せてみて。']],
+  4:['秩序を作り、積み上げる数','積み重ねを、自分の味方にする年','積み上げるテーマでは、同じことを頑張って繰り返すより、続けやすい仕組みを作ることが大切です。毎回迷う所や、無理が出る手順を見直すことも、土台を育てる取り組みです。',['繰り返す用事があるなら、順番と、途中で迷う点を確かめて。','続けていることの手順を見直し、無理なく繰り返せる形にして。','積み重ねたことを振り返り、次にも残したい工夫を選んで。']],
+  5:['変化し、経験から学ぶ数','違う景色から、選び方を学ぶ年','変化のテーマは、今ある暮らしを全部変えるためのものではありません。違う方法に触れた時に、何が自分に合うかを確かめる読みです。戻れる余地を残した経験も、選び方を豊かにします。',['違うやり方を試すなら、費用や負担と、元に戻せる条件を確かめて。','いつもの方法と別の方法を比べ、自分に合う点を探して。','新しい経験の後は、続けたいことと、合わなかったことを分けてみて。']],
+  6:['守り、育て、責任を引き受ける数','大切にする範囲に、自分も入れる年','育てるテーマには、引き受ける力が含まれます。でも、誰かを大切にするたびに自分を後回しにしなくていいのです。続けられる分担を考えることも、長く守るための選択です。',['頼まれたことを引き受ける前に、自分にできる範囲を伝えて。','大切にしたいことを続けるために、分担できる部分を相談して。','誰かのための予定と、自分のために残したい時間を並べてみて。']],
+  7:['深く考え、真実を探る数','自分が納得する答えを探す年','探るテーマでは、すぐ人に説明できる答えより、自分がまだ分からない所を大切にします。聞く、調べる、考えを置いておく。どれも、納得するための時間にできます。',['気になっていることを、分かった事実と、まだ確かめたい点に分けて。','人の結論を受け取る前に、その根拠を聞いてみて。','調べたことを振り返り、自分が納得できた点と、残る疑問を整理して。']],
+  8:['現実を動かし、成果を管理する数','成果を、続けられる形で受け取る年','成果のテーマでは、結果の大きさと、続けた時の負担を一緒に見ます。何が実際に変わったかを確かめることで、力を注ぐ先を選べます。人に見せる成果だけで自分を測らないでください。',['成果を求める取り組みでは、何が変われば達成かを先に確かめて。','取り組みの結果と、かかった費用や負担を一緒に見直して。','次に力を注ぐ前に、続ける価値がある部分と、変えたい部分を分けて。']],
+  9:['完了させ、広い視点で手放す数','続けたいものを選び直す年','完了のテーマは、終わりが決まっているという予言ではありません。続けるものと、役割を終えたものを選ぶための読みです。手放すとしても、そこで得たものまで捨てる必要はありません。',['区切りを付けたいことがあるなら、残る約束と、引き継ぐ内容を確かめて。','今も続けたい目的と、もう背負わなくてよい負担を分けてみて。','終える前に、次にも持っていきたい経験や工夫を選んで。']],
+  11:['直感と伝達をつなぐマスターナンバー','感じたことを、確かめて届ける年','心に引っかかったことを、確かめられる言葉にしてみる。直感のテーマは、感覚と事実を行き来する読みとして使えます。伝える前に自分で確かめる時間も、その思いを大切にする過程です。',['気になった感覚を、実際に確認できる問いにしてみて。','思いを伝える時は、自分の感覚と、確認できた事実を分けて話して。','ひらめいた案があるなら、根拠と、まだ試していない部分を確かめて。']],
+  22:['大きな構想を現実に建てるマスターナンバー','大きな願いを、暮らしに収まる形へ','構想を形にするテーマでは、願いの大きさだけで進め方を決めません。誰と、どんな負担で、続けられるか。形にする条件を考えることが、願いを大切にする方法になります。',['構想を進める前に、必要な人手と、続ける費用や時間を確かめて。','考えている案を、実際に担う人と相談できる形にして。','完成を急ぐ前に、今の暮らしで続けられる段取りを選んで。']],
+  33:['包容と奉仕を創造へ変えるマスターナンバー','力を貸す時も、自分の余力を残す年','包容のテーマは、いつでも受け止め続ける役割ではありません。自分ができる形で力を貸すこと、支えを借りること。その両方がある方が、温かさを長く保てます。',['力を貸す前に、できることと、今は難しいことを伝えて。','誰かを支える用事は、分担や助けを借りられるか相談して。','周りに渡す時間と、自分に残す時間を見直して。']]
+ };
+ const DISTANCE_LENSES={
+  '命：似た癖が強く出る距離':['いつものやり方を、少し離れて眺める','似た癖という言葉は、普段の反応を見直すヒントにできます。いつも同じ返事をしている場面があるなら、今回は何を変えたいか、自分の希望を聞いてみてください。',['いつもの返事をする前に、今回も同じ選び方でよいか考えて。','繰り返し気になることがあるなら、どの場面で起きるか確かめて。','慣れた役割を引き受ける時も、自分が望む範囲を伝えて。']],
+  '業胎：長い縁や課題を感じやすい距離':['続けてきたものを、今の自分で選び直す','長い縁や課題という言葉を、続けてきたことの見直しに使います。時間をかけたことほど、今も望んでいるかを聞き直していいのです。これから残したいものを、自分で選び直してかまいません。',['続けていることがあるなら、今も大切にしたい理由を確かめて。','前からの役割や約束を、今の負担に合う形へ見直して。','積み重ねた時間だけで判断せず、これから望む関わり方を考えて。']],
+  '栄親：支え合いやすい距離':['支える側にも、受け取る場所を','支え合うという言葉には、自分が助けを受け取る側になることも含めてみてください。一方だけが気を配る形にせず、できることと頼みたいことを持ち寄る読みとして使えます。',['助けてほしいことがあるなら、具体的な内容を添えて相談して。','力を貸す時は、自分ができる範囲と、相手に頼みたいことも伝えて。','お互いが無理なく続けられる分担を相談してみて。']],
+  '友衰：親しさと甘えが出やすい距離':['親しさの中にも、言葉を残して','親しさのテーマでは、分かっているはずと思う所を言葉にする読みです。頼みやすい相手にも、都合や希望を聞くことができます。気を使うことと、遠ざかることは同じではありません。',['頼み事をする前に、相手の都合を聞いてみて。','分かってもらえるはずと思う用件も、具体的な言葉で伝えて。','親しい関わりでも、自分の希望や難しいことを伝えて。']],
+  '危成：刺激と役割分担の距離':['違いを、役割の選び方に生かす','違う意見や得意なことが出てきた場面で、誰が何を担うかを考える読みです。違いをどちらかの欠点にせず、役割を持ち寄る場面に使えます。',['違う意見が出た時は、それぞれが大切にしている点を聞いてみて。','一緒に取り組む用事は、得意なことと、担える範囲を相談して。','役割を決める前に、お互いが無理なくできる内容を確かめて。']],
+  '安壊：惹かれるが揺れも出やすい距離':['心が動く時も、安心を置き去りにしない','気持ちが強く動く場面があったら、安心して選べる条件も一緒に見てみましょう。惹かれる気持ちを大切にしながら、自分が無理せずいられるかも確かめる読みです。',['気持ちが強く動く話では、約束と実際の条件を確かめてから返事をして。','すぐ決めてほしいと言われても、自分が確かめたい点を先に聞いて。','不安が残る約束は急いで増やさず、安心して選べる条件を確認して。']],
+  '中間距離：会話設計で変わる':['伝え方を変える余地を、残しておく','会話設計という言葉を、用件の伝え方や聞き方を選ぶヒントにします。同じ内容でも、話す時期や、相手が答えられる範囲を確かめることで、やり取りの進め方を考えられます。',['用件を伝える時は、何を相談したいかを先に添えて。','話す前に、相手が聞ける時間や方法を相談して。','返事が曖昧なら、何が決まっていて、何がまだ分からないかを聞いてみて。']]
+ };
+ function profileLens(input,items,living){
+  let row=null,basis='';
+  if(input.methodId==='numerology'){
+   const year=items.find(x=>x.id==='year'),number=year?.basis.slice(3);
+   if(Object.hasOwn(YEAR_LENSES,number)&&Array.isArray(input.evidence)&&input.evidence.includes(YEAR_LENSES[number][0])){row=YEAR_LENSES[number].slice(1);basis=year.basis;}
+  }else if(input.methodId==='sukuyo'){
+   const distance=items.find(x=>x.id==='distance');
+   if(distance&&Object.hasOwn(DISTANCE_LENSES,distance.basis)){row=DISTANCE_LENSES[distance.basis];basis=distance.basis;}
+  }
+  if(!row)return null;
+  const index=LIFE_SCENES[living.domain].findIndex(x=>x[0]===living.scene);
+  return {basis,title:row[0],reading:row[1],invitation:living.domain==='health'?living.invitation:row[2][Math.max(0,index)]};
  }
  function storyOf(input,items){
   const kind=id=>items.find(x=>x.id===id)?.kind;
@@ -137,9 +173,16 @@
   }
   if(['shichu','timing'].includes(input.methodId)&&kind('day-fit')==='caution')body+='選択日の相性には慎重さが残るため、勢いだけで押し切る読みにはしません。';
   const focus=symbolicFocus(input),living=livingLanguage(input,items,focus);
+  const profile=profileLens(input,items,living);
+  if(profile){
+   title=profile.title;body=items.map(x=>x.reading.replace('既存の解釈では','この占術では')).join('\n\n');
+   const care=living.body.split('\n\n').pop(),period=input.methodId==='numerology'?'今年のテーマ':'選択日の距離の読み';
+   living.body=`「${living.scene}」のような場面に、${period}を重ねてみましょう。${profile.reading}\n\n${care}`;
+   living.invitation=profile.invitation;
+  }
   // Preserve specific spread interpretations; generic symbol paraphrasing may use a grounded life action.
   const useLifeAction=focus&&['rest','release','start'].includes(focus.intent);
-  return {title,readingBody:body,body:body+'\n\n'+(focus?focus.bridge+'\n\n':'')+living.body,invitation:['tarot','runes'].includes(input.methodId)&&!useLifeAction?invitation:living.invitation,symbolicFocus:focus,livingContext:living,evidence:items.map(x=>root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis).join('／')};
+  return {title,readingBody:body,body:body+'\n\n'+(focus?focus.bridge+'\n\n':'')+living.body,invitation:['tarot','runes'].includes(input.methodId)&&!useLifeAction?invitation:living.invitation,symbolicFocus:focus,profileFocus:profile,livingContext:living,evidence:items.map(x=>root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis).join('／')};
  }
  function relationshipOf(items,methodId){
   const kind=id=>items.find(x=>x.id===id)?.kind;
