@@ -22,6 +22,12 @@ vm.runInContext('qmdjSaveCurrent()',context);
 assert.equal(history.length,3,'same-version repeat replaces only its own snapshot');
 assert.deepEqual(history.slice(1),originals);
 const core=context.KoyomiQimenHistory;
+for(const [mode,label] of [['sister','やさしく伝える'],['zubat','はっきり伝える']]) {
+  const saved={inputConditions:{mode}};
+  const before=JSON.stringify(saved);
+  assert.ok(core.conditionsLabel(saved).includes(label),'legacy mode values display their current caption');
+  assert.equal(JSON.stringify(saved),before,'displaying a mode caption cannot rewrite a saved record');
+}
 const mixed=Array.from({length:100},(_,i)=>({id:i,key:String(i)}));
 assert.equal(core.save(mixed,{key:'new',calculationVersion:core.VERSION}).length,100);
 assert.equal(core.save([{key:'same'}],{key:'same'}).length,2,'unversioned records must never erase another legacy record');

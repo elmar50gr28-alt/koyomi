@@ -6,12 +6,23 @@ import { setCommonReadingThemes } from '../src/reading/index.js';
 import { describeMonthlyIndex } from '../src/mundane/western/monthly-trend-core.js';
 
 const app = await readFile('app.html', 'utf8');
+for (const path of ['app.html','today.html','src/persona/sister-renderer.js','src/persona/sister-lexicon.js','src/persona/reading-structure-planner.js','src/persona/persona-policy.js','src/persona/conversation-adapter.js','src/bazi/reading/chart-interpretation.js','src/shared/qimen-history-core.js']) {
+  const decoded=(await readFile(path,'utf8')).replace(/\\u([0-9a-f]{4})/gi,(_,hex)=>String.fromCharCode(parseInt(hex,16)));
+  assert.doesNotMatch(decoded,/ミツノメ|みつのめ|姐さん|姉さん|アンタ|アタシ|三つ目|あなたね、|ハイヒール/, 'character-free templates, including escaped labels: '+path);
+}
+for (const id of ['oracleModeSetting','qmMode']) {
+  const options=app.match(new RegExp('<select id="'+id+'">([\\s\\S]*?)</select>'))[1];
+  assert.ok(options.includes('<option value="sister">やさしく伝える</option>'));
+  assert.ok(options.includes('<option value="zubat">はっきり伝える</option>'));
+}
+for (const key of ['mitsunome_v191_complete','mitsunome_qimen_history_v193','mitsunome_v194_destiny_ledger','MITSUNOME_ENCRYPTED_BACKUP','MITSUNOME_v300 Foundation_LEDGER']) assert.ok(app.includes(key),'existing data contract: '+key);
 assert.ok(!app.includes('${v196Feel(g.context.score)}／今日の宿題：${g.life.homework}'), 'result note must not reattach a separate fixed homework');
 const themes = JSON.parse(await readFile('data/reading/common_reading_themes.json', 'utf8'));
 setCommonReadingThemes(themes);
 const micro = /小さく(?:試|始|動|進|実行)|小さな(?:一歩|試行|実行)|最小の一手|一件だけ|一つだけ|\d+分(?:だけ|試|実行)|十五分で終わる/;
 function check(text, name) {
   assert.doesNotMatch(String(text), micro, name);
+  assert.doesNotMatch(String(text), /ミツノメ|みつのめ|姐さん|姉さん|アンタ|アタシ|三つ目|あなたね、|ハイヒール/, 'character-free generated reading: '+name);
   assert.doesNotMatch(String(text), /PLACEHOLDER|undefined|ことこと|するのが正解/);
 }
 function part(start, end) {

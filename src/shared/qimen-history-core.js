@@ -31,7 +31,7 @@
     labels.push(Object.hasOwn(schools,s.school)?'基準方式 '+schools[s.school]:'基準方式は記録なし・未対応');
     if(Number.isFinite(s.tz)) labels.push('UTC'+(s.tz>=0?'+':'')+s.tz);
     if(s.boundary===23 || s.boundary===0) labels.push('子刻の開始 '+s.boundary+'時');
-    const modes={sister:'みつのめ姉さん本鑑定',zubat:'ズバッとモード'};
+    const modes={sister:'やさしく伝える',zubat:'はっきり伝える'};
     const stages={planning:'まだ計画中',ready:'準備は整っている',negotiating:'相手と調整中',stalled:'停滞している',urgent:'今日中に判断が必要',withdraw:'撤退も考えている'};
     if(Object.hasOwn(modes,s.mode)) labels.push(modes[s.mode]);
     if(Object.hasOwn(stages,s.situation)) labels.push(stages[s.situation]);

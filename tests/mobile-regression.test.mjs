@@ -25,7 +25,7 @@ assert.ok(!app.includes('迷ったら本鑑定へ。'),'app home must not repeat
 assert.ok(!app.includes('四柱推命を主軸に、宿曜・九星'),'pre-reading screen must not list every divination method');
 assert.ok(!/<button[^>]+data-oracle-mode=/.test(app),'reading pages must not expose voice selection controls');
 assert.ok(app.includes('<label for="oracleModeSetting">鑑定口調</label>'),'voice selection must live in settings');
-assert.ok(app.includes('<option value="sister">ミツノメ姐さん本鑑定</option>'),'sister reading must be the standard setting');
+assert.ok(app.includes('<option value="sister">やさしく伝える</option>'),'sister reading must be the standard setting');
 assert.ok(today.includes('<h1>今日の暦</h1>'), 'today page must remain present');
 assert.ok(app.includes('id="koyomiChoosePerson"'), 'home must provide a person-based reading entry');
 assert.ok(app.includes('id="koyomiChooseTheme"'), 'home must provide a theme-based reading entry');
