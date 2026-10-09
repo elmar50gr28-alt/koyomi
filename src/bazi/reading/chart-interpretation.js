@@ -18,7 +18,7 @@ function readPillar(role,pillar){
  const hidden=(pillar.branch?.hiddenStems||[]).map(stem=>god(stem.tenGod)).filter(Boolean);
  const hiddenNames=unique(hidden.map(entry=>entry[0]));
  const stage=STAGES[pillar.branch?.twelveStage?.stageId];
- const surface=visible?`${name}は${pillar.label}で、表に${visible[0]}が出てるわ。人からは「${visible[1]}を持つ人」と見られやすいの。`:`${name}は${pillar.label}。ここはアンタ自身の判断と、近い相手に見せる反応の中心よ。`;
+ const surface=visible?`${name}は${pillar.label}で、表に${visible[0]}が出てるわ。人からは「${visible[1]}を持つ人」と見られやすいの。`:`${name}は${pillar.label}。ここはあなた自身の判断と、近い相手に見せる反応の中心よ。`;
  const inside=hiddenNames.length?`でも内側には${hiddenNames.join('・')}もあるから、外から見える顔だけで決めつけちゃ駄目。`:'内側は他の柱と重ねて見る場所よ。';
  const example=role==='year'?'初対面や親族の集まりで、場を和ませる役と自分の意見を通す役が同時に出やすい':role==='month'?'職場では「自分でやった方が早い」と引き受け、後から負担が増えやすい':role==='day'?'親しい相手ほど説明を省き、自分の中では決まっていることを相手も分かっていると思いやすい':'将来のために貯める・整える意識が強く、予定やお金を管理できない状態に不安を感じやすい';
  return{id:`pillar-${role}`,title:`${name}（${pillar.label}）`,reading:`${surface}${inside}${stage?`十二運は${stage[0]}。今は「${stage[1]}」力として使うのがコツよ。`:''}`,meaning,evidence:unique([role==='day'?'日主':pillar.stem?.tenGod?.kanji,...hiddenNames,stage?.[0]]),example,action:visible?.[2]||hidden[0]?.[2]||'この柱だけで決めつけず、実際に繰り返している場面を一つ確認する',confidence:.72};
@@ -41,5 +41,5 @@ export function buildBaziChartInterpretation(result={}){
  const pillars=result.chart?.pillars||{},items=['year','month','day','hour'].map(role=>readPillar(role,pillars[role])),balance=readBalance(result);
  if(balance)items.push(balance);
  items.push(readRelations(result));
- return{schemaId:'koyomi-bazi-chart-interpretation',version:'1.0.0',title:'姐さんが命式を一段ずつ読むわ',introduction:'命式表は記号の一覧じゃないの。どの場所に、どんな力が、表と内側のどちらへ出ているかを重ねて読むのよ。',conclusion:'日柱を中心に、月柱の社会的な役割、年柱の背景、時柱の未来像を順番に確認します。',items,evidence:unique(items.flatMap(x=>x.evidence||[])),closing:'一つの星だけでアンタを決めつけないこと。重なっている特徴を現実の経験と照らして使いなさい。',sourcePolicy:{usesCalculatedChartOnly:true,noNewDivinationCalculation:true,noSingleSymbolVerdict:true}};
+ return{schemaId:'koyomi-bazi-chart-interpretation',version:'1.0.0',title:'命式を一段ずつ読み解く',introduction:'命式表は記号の一覧じゃないの。どの場所に、どんな力が、表と内側のどちらへ出ているかを重ねて読むのよ。',conclusion:'日柱を中心に、月柱の社会的な役割、年柱の背景、時柱の未来像を順番に確認します。',items,evidence:unique(items.flatMap(x=>x.evidence||[])),closing:'一つの星だけであなたを決めつけないこと。重なっている特徴を現実の経験と照らして使いなさい。',sourcePolicy:{usesCalculatedChartOnly:true,noNewDivinationCalculation:true,noSingleSymbolVerdict:true}};
 }

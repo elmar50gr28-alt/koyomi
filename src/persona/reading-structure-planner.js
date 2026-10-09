@@ -6,10 +6,10 @@
  };
  const HEADINGS={
   scenario:['現実で確かめること','状況を確かめる目安','今回の確認点','判断に使う現実の情報'],
-  action:['今日、動かすなら','姐さんならこうするわ','今のあなたに効く一手','ここから始めて'],
+  action:['今日、動かすなら','今日の一歩','今のあなたに効く一手','ここから始めて'],
   stop:['無理をしない境目','この兆しが出たら待って','今日は越えない線','引き返す目印'],
   review:['答え合わせの時','変化を見る頃','次に見直すところ','あとで見るのはここ'],
-  evidence:['こう読んだ理由','占いに出ている印','姐さんが見た手がかり','結論を支えるもの']
+  evidence:['こう読んだ理由','占いに出ている印','読み解きの手がかり','結論を支えるもの']
  };
  function hash(text){let value=2166136261;for(const ch of String(text||''))value=Math.imul(value^ch.charCodeAt(0),16777619);return value>>>0}
  function pick(list,seed,offset=0){return list[((hash(seed)+offset*2654435761)>>>0)%list.length]}
