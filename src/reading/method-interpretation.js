@@ -38,8 +38,8 @@
  CARE.test.push('確かめている間も、自分の暮らしを後回しにしなくて大丈夫。','納得できない点を置き去りにせず、選べる形を探してみてください。','一度決めたことも、新しく分かった事実に合わせて見直せます。','判断を誰かに相談しても、最後に自分の希望を添えていいのです。','すぐ答えが出ない時は、何を大切にしたいかへ戻ってみてください。');
  CARE.protect.push('断ることにためらいがあっても、無理な負担まで引き受けなくていいのです。','助けを借りることを、自分の力が足りない証拠にしないでください。','これから続けたいことのためにも、今の余力を残しておいて。','過去の選択を責め続けるより、今の条件に合う道を選び直せます。','今日は結果を出すことより、自分を消耗させないことに意味があります。');
  function livingLanguage(input,items){
-  const aliases={love:'relationship',career:'work',healthrhythm:'health'},domain=aliases[input.domain]||input.domain;
-  const rows=LIFE_SCENES[domain]||LIFE_SCENES.overall;
+  const aliases={love:'relationship',career:'work',healthrhythm:'health'},domain=Object.hasOwn(aliases,input.domain)?aliases[input.domain]:input.domain;
+  const rows=Object.hasOwn(LIFE_SCENES,domain)?LIFE_SCENES[domain]:LIFE_SCENES.overall;
   const caution=items.some(x=>x.kind==='caution'),support=items.some(x=>x.kind==='support');
   const current=items.find(x=>x.id==='選択日');
   const direction=current?.kind==='caution'||caution&&!support?'protect':caution?'test':support?'forward':'test';

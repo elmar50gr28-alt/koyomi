@@ -94,6 +94,10 @@ for(const methodId of ['tarot','runes']){
  assert.equal(readingBodies.size,draws.size,methodId+': distinct used symbol sets must stay distinct in the factual reading');oracleMetrics.push({methodId,days:30,distinctUsedDraws:draws.size,distinctReadingBodies:readingBodies.size,distinctBodies:bodies.size,distinctTitles:titles.size});
 }
 const lifeMetrics=[],lifeSamples=[];
+for(const domain of ['constructor','toString','__proto__','unknown']) {
+ const parsed=interpret({...mixed,domain});
+ assert.equal(parsed.story.livingContext.domain,'overall','unrecognized domains use daily-life copy without accessing inherited object properties');
+}
 let lifeCases=0;
 for(const domain of ['work','relationship','money','health','overall'])for(const [direction,evidence]of [
  ['forward',['大運85','流年85','選択日85']],['test',['大運85','流年30','選択日85']],['protect',['大運85','流年85','選択日30']]
