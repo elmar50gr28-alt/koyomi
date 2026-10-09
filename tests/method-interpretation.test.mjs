@@ -83,15 +83,53 @@ const hashLine=appLines.find(x=>x.includes('function hash(s)'));vm.runInContext(
 for(const name of ['tarotSpread','runeSpread'])vm.runInContext(appLines.find(x=>x.startsWith('function '+name+'(')),context);
 const oracleMetrics=[],oracleSamples=[];
 for(const methodId of ['tarot','runes']){
- const bodies=new Set(),titles=new Set(),draws=new Set();
+ const bodies=new Set(),readingBodies=new Set(),titles=new Set(),draws=new Set();
  for(let day=1;day<=30;day++){
   const date=new Date(Date.UTC(2026,3,day)).toISOString().slice(0,10),symbols=methodId==='tarot'?context.tarotSpread('検証用|'+date):context.runeSpread('検証用|'+date),input={...base,methodId,profileId:'oracle-story-'+methodId,date,symbols,evidence:[],generatedAction:true};
   const parsed=interpret(input),out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);assert.equal(out.narrative.quality.pass,true,methodId+'/'+date+': '+out.narrative.quality.issues);
   assert.match(out.text,/読みの根拠/);assert.doesNotMatch(out.text,/担当・期限・完了条件|相談では|必ず|絶対/);assert.ok(out.text.includes(parsed.story.invitation));
   const used=methodId==='tarot'?symbols.filter(x=>['自分の立場','障害','最終結果'].includes(x.pos)):symbols;for(const x of used){assert.ok(out.text.includes(x.name));assert.ok(out.text.includes(x.meaning))}draws.add(JSON.stringify(used));
-  bodies.add(parsed.story.body);titles.add(parsed.story.title);if(day<=2)oracleSamples.push({methodId,date,text:out.text});
+  bodies.add(parsed.story.body);readingBodies.add(parsed.story.readingBody);titles.add(parsed.story.title);if(day<=2)oracleSamples.push({methodId,date,text:out.text});
  }
- assert.equal(bodies.size,draws.size,methodId+': distinct used symbol sets must stay distinct in the reading');oracleMetrics.push({methodId,days:30,distinctUsedDraws:draws.size,distinctBodies:bodies.size,distinctTitles:titles.size});
+ assert.equal(readingBodies.size,draws.size,methodId+': distinct used symbol sets must stay distinct in the factual reading');oracleMetrics.push({methodId,days:30,distinctUsedDraws:draws.size,distinctReadingBodies:readingBodies.size,distinctBodies:bodies.size,distinctTitles:titles.size});
 }
-if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples,oracleMetrics,oracleSamples},null,2));
+const lifeMetrics=[],lifeSamples=[];
+let lifeCases=0;
+for(const domain of ['work','relationship','money','health','overall'])for(const [direction,evidence]of [
+ ['forward',['大運85','流年85','選択日85']],['test',['大運85','流年30','選択日85']],['protect',['大運85','流年85','選択日30']]
+]) {
+ const bodies=new Set(),scenes=new Set();let previous='';
+ const input={...base,methodId:'shichu',profileId:'life-'+domain+direction,domain,evidence,generatedAction:true,action:'従来の自動助言'};
+ const invariant=interpret(input);const before=JSON.stringify(input);
+ for(let day=1;day<=30;day++) {
+  const current={...input,date:new Date(Date.UTC(2026,5,day)).toISOString().slice(0,10)};
+  const parsed=interpret(current),story=parsed.story;
+  assert.equal(story.readingBody,invariant.story.readingBody,'daily application never changes the calculated reading');
+  assert.equal(story.evidence,invariant.story.evidence);assert.equal(parsed.key,invariant.key);
+  assert.equal(story.livingContext.direction,direction);assert.equal(story.livingContext.kind,'application');
+  assert.match(story.livingContext.body.split('。')[0],/なら、/,'a life scene is conditional, not an invented fact about the reader');
+  assert.doesNotMatch(story.body,/見抜|必ず|絶対|誰より|ずっと一人で|頑張った分|あなたは.*に違いない/);
+  assert.notEqual(story.body,previous,'adjacent application paragraphs must differ');previous=story.body;
+  bodies.add(story.body);scenes.add(story.livingContext.scene);
+  for(const mode of ['sister','zubat']) {
+   const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...current,mode});
+   assert.equal(out.narrative.quality.pass,true,domain+'/'+direction+'/'+day+': '+out.narrative.quality.issues);
+   if(out.narrative.structure==='symbolic-story')assert.ok(out.text.includes(story.readingBody+'\n\n'+story.livingContext.body),'paragraph breaks survive rendering');
+   else {assert.equal(domain,'health');assert.match(story.invitation,/医療機関|専門家|受診/);assert.doesNotMatch(out.text,/たとえば、/);}
+   assert.ok(out.text.includes(story.invitation));
+   assert.equal(out.text,context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...current,mode}).text);
+   lifeCases++;
+  }
+  if(day===1&&domain==='relationship')lifeSamples.push({direction,date:current.date,text:context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',current).text});
+ }
+ assert.equal(JSON.stringify(input),before);assert.equal(bodies.size,30);assert.equal(scenes.size,3);
+ lifeMetrics.push({domain,direction,days:30,distinctBodies:bodies.size,scenes:scenes.size});
+}
+for(const input of [{confidence:20},{psychRisk:95},{action:'医療機関へ相談する'}]) {
+ const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...base,methodId:'shichu',evidence:['大運85','流年85','選択日85'],...input});
+ assert.notEqual(out.narrative.structure,'symbolic-story','low confidence, serious risk, and explicit medical action retain guarded rendering');
+ assert.doesNotMatch(out.text,/たとえば、/);
+}
+if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples,oracleMetrics,oracleSamples,lifeMetrics,lifeSamples},null,2));
+console.log('Living language: '+lifeCases+' rendered cases, 30 distinct application bodies per fixed fortune, unchanged evidence');
 console.log('Existing spread story verification: '+JSON.stringify(oracleMetrics));
