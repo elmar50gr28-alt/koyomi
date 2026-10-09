@@ -314,25 +314,26 @@
   ]
 });
   const READING_LENSES = Object.freeze([
-    '終わったあとに何が変わればよいか、先に考えてみて。',
-    '考えていた条件と、実際の条件を照らし合わせましょう。',
-    'やり方が決まれば、あとは実際の手応えを見ていきましょう。',
-    '気をつけたい点を先に知っておくと、無理を避けやすくなるわ。',
-    '始める前、取り組む間、終えたあとで、必要なことを分けてみて。',
-    '急いで済ませたいことと、大事にしたいことを比べてみましょう。',
-    '結論が出ないときは、分かっていることを整理するところから。',
-    '思いどおりにいかなかったら、どこを変えるか考えておいて。',
-    'できなかった点だけでなく、役立った工夫も振り返ってみて。',
-    'すでに揃っている材料を使えるか、見渡してみましょう。',
-    '条件が分かっているなら実行へ。不明な点があるなら確認へ。',
-    '今日は何を優先したいか、自分の言葉にしてみて。'
+    '終えた時に「これでよかった」と思える理由も、大切にしてね。',
+    '誰かに合わせる前に、自分にも無理のない条件か確かめて。',
+    '迷った時は、今の自分が納得して選べる所まで戻って大丈夫。',
+    '気になる点を確かめるのは、自分を守りながら関わるためよ。',
+    '始める時だけでなく、途中で休める余地も残しておいてね。',
+    '急いで済ませたい気持ちの中にも、譲りたくないものがあるなら大切にして。',
+    'まだ答えが出なくても、分かったことは次の選択に持っていけます。',
+    '思いどおりにいかない時は、やり方を選び直していいの。自分まで否定しなくて大丈夫。',
+    '役立った工夫があったら、そこは自分でも認めてあげてね。',
+    '足りないものを探す前に、すでにある支えを使えるか見てみましょう。',
+    '分からないことを聞く時間も、自分で選ぶための大切な時間です。',
+    '今日守りたいものを、自分の予定にも入れてあげてね。'
   ]);
   function narrativeFor(style, focus, scene, intensity) {
     const index = STRUCTURES.findIndex(item => item.id === style);
     const strength = STRENGTH_READINGS[focus.id][{ protect: 0, test: 1, forward: 2 }[intensity]];
     // Scene and focus prose are independent complete sentences, never spliced noun clauses.
     const notes = FOCUS_READINGS[focus.id].match(/[^。]+。/g);
-    return '今日は「' + focus.label + '」に目を向けて。' + notes[index % notes.length] + strength + '\n\n' + scene + READING_LENSES[index];
+    const openings=['今日の読みで大切にしたいのは「{focus}」。','今日は「{focus}」を手がかりに、過ごし方を考えてみましょう。','今回、暮らしにつなげたいテーマは「{focus}」です。','「{focus}」が、今日の選び方のヒントになります。','今日のテーマは「{focus}」。自分に合う使い方を見つけてね。','今日の流れを読む入口は「{focus}」です。'];
+    return openings[index % openings.length].replace('{focus}',focus.label) + notes[index % notes.length] + strength + '\n\n' + scene + '\n\n' + READING_LENSES[index];
   }
 
   function safetyFor(input, focus) {

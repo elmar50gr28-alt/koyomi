@@ -1,6 +1,6 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;root.KOYOMI_APP_NARRATIVE=api})(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
-const VERSION='2.6.0';
+const VERSION='2.7.0';
 const SURFACES={personal:{length:'long',review:'7日後'},compatibility:{length:'long',review:'14日後'},timeline:{length:'medium',review:'3か月後'},oracle:{length:'medium',review:'7日後'},qimen:{length:'medium',review:'行動後'},mundane:{length:'medium',review:'翌月'},today:{length:'short',review:'今夜'},method:{length:'medium',review:'7日後'}};
 const CONCEPTS=['advance','test','protect','complete','organize','contact','negotiate','rest','learn','create','budget','boundary','repair','prepare','release','review','decide','focus','cooperate','observe','recover','communicate','compare','pause','delegate','simplify','verify','schedule','maintain','reframe','prioritize','withdraw'];
 const DOMAINS={
@@ -129,7 +129,7 @@ function buildParts(f,attempt){const d=DOMAINS[f.domain],flow=DIRECTIONS[f.direc
 function structure(f,attempt){if(f.surface==='method'&&f.interpretation&&!f.serious&&!incomplete(f))return f.contradiction&&!f.interpretation.mixed?['conclusion','reason','contrast','action','stop','review']:['conclusion','reason','action','stop','review'];let pool=STRUCTURES[SURFACES[f.surface].length];if(f.surface==='method')pool=pool.map(order=>{if(order.includes('reason'))return order;const copy=order.slice();copy.splice(copy.indexOf('conclusion')+1,0,'reason');return copy});if(f.contradiction)pool=pool.filter(order=>order.includes('contrast'));const recent=(f.history||[]).map(x=>x?.structure).filter(Boolean).slice(0,2),ordered=pool.map((x,i)=>pool[(i+hash(`${f.seed}|${attempt}`))%pool.length]),fresh=ordered.find(x=>!recent.includes(x.join('-')));return fresh||ordered[0]}
 function render(f,parts,order){const blocks=order.map(role=>({role,label:HEADINGS[role],text:parts[role].trim()}));if(f.surface==='method'&&f.continuity)blocks.push({role:'continuity',label:'昨日との違い',text:f.continuity});if(SURFACES[f.surface].length!=='short'&&!parts.omitClose)blocks.push({role:'close',label:'最後に',text:parts.close});return{blocks,text:blocks.map(b=>`【${b.label}】\n${b.text}`).join('\n\n')}}
 function composeStory(f){
- const blocks=[{role:'conclusion',label:'今日の読み',text:clean(f.story.title)+'\n\n'+clean(f.story.body)},
+ const blocks=[{role:'conclusion',label:'今日の読み',text:clean(f.story.title)+'\n\n'+String(f.story.body||'').split(/\n\s*\n/).map(clean).filter(Boolean).join('\n\n')},
   {role:'action',label:'今日の一歩',text:f.actions[0]||clean(f.story.invitation)},
   {role:'reason',label:'読みの根拠',text:clean(f.story.evidence)},
   {role:'stop',label:'気をつけたいこと',text:f.caution||boundary(f)}];
