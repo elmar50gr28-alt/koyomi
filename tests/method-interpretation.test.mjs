@@ -172,7 +172,46 @@ for(const input of [{confidence:20},{psychRisk:95},{action:'医療機関へ相�
  assert.notEqual(out.narrative.structure,'symbolic-story','low confidence, serious risk, and explicit medical action retain guarded rendering');
  assert.doesNotMatch(out.text,/たとえば、/);
 }
-if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples,oracleMetrics,oracleSamples,lifeMetrics,lifeSamples,symbolicCases,symbolicSamples},null,2));
+vm.runInContext(appLines.find(x=>x.startsWith('const NUM_FULL=')),context);
+const numberMeanings=vm.runInContext('NUM_FULL',context);
+const distanceLine=appLines.find(x=>x.startsWith('function sukuyo(d)'));
+const distances=[...distanceLine.matchAll(/return '([^']+)'/g)].map(x=>x[1]);
+assert.equal(Object.keys(numberMeanings).length,12);assert.equal(distances.length,7);
+const profileFixtures=[...Object.entries(numberMeanings).map(([number,meaning])=>({methodId:'numerology',evidence:['個人年'+number,meaning],meaning})),...distances.map(basis=>({methodId:'sukuyo',evidence:[basis],meaning:basis.split('：')[1]}))];
+let profileCases=0;const profileSamples=[],profileMetrics=[];
+for(const fixture of profileFixtures)for(const domain of ['work','relationship','money','health','overall']) {
+ const input={...base,...fixture,domain,generatedAction:true},invariant=interpret(input),bodies=new Set(),actions=new Set();
+ assert.ok(invariant.story.profileFocus,'each shipped interpretation has a source-linked lens');
+ for(let day=1;day<=30;day++) {
+  const current={...input,date:`2026-07-${String(day).padStart(2,'0')}`},before=JSON.stringify(current),parsed=interpret(current);
+  assert.equal(parsed.key,invariant.key);assert.equal(parsed.story.readingBody,invariant.story.readingBody);
+  assert.equal(parsed.story.title,invariant.story.title,'a date change cannot replace an unchanged annual theme or supplied distance');
+  assert.ok(parsed.story.readingBody.includes(fixture.meaning));assert.equal(JSON.stringify(current),before);
+  bodies.add(parsed.story.body);actions.add(parsed.story.invitation);
+  for(const mode of ['sister','zubat']) {
+   const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...current,mode});
+   assert.equal(out.narrative.quality.pass,true,fixture.evidence[0]+'/'+domain+'/'+day+': '+out.narrative.quality.issues);
+   assert.ok(out.text.includes(parsed.story.invitation));
+   if(out.narrative.structure==='symbolic-story'){
+    assert.ok(out.text.includes(fixture.meaning));assert.ok(out.text.includes(parsed.story.profileFocus.reading));
+    if(fixture.methodId==='numerology')assert.match(out.text,/一年の取り組み方.*今日だけの吉凶ではありません/);
+    else assert.match(out.text,/相手との相性や相手の意思を判定した結果ではありません/);
+   }
+   assert.equal(out.text,context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...current,mode}).text);profileCases++;
+  }
+  if(day===1&&domain==='relationship'&&['個人年4','個人年9','栄親：支え合いやすい距離','安壊：惹かれるが揺れも出やすい距離'].includes(fixture.evidence[0]))profileSamples.push({basis:fixture.evidence[0],text:context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',current).text});
+ }
+ assert.equal(bodies.size,30);assert.equal(actions.size,3,'three application angles must not collapse into one repeated instruction');
+ profileMetrics.push({basis:fixture.evidence[0],domain,days:30,distinctBodies:bodies.size,distinctActions:actions.size});
+}
+for(const evidence of [['個人年777','秩序を作り、積み上げる数'],['個人年4','未知の解釈を持つ数'],['個人年4',numberMeanings[7]]])assert.equal(interpret({...base,methodId:'numerology',evidence}).story.profileFocus,null,'unknown or mismatched supplied meanings keep the generic reading');
+assert.equal(interpret({...base,methodId:'sukuyo',evidence:['栄親：未検証の解釈']}).story.profileFocus,null);
+for(const [domain,canonical]of [['career','work'],['changejob','work'],['income','money'],['purchase','money'],['love','relationship'],['marriage','relationship'],['reconcile','relationship'],['family','relationship'],['healthrhythm','health']]) {
+ const input={...base,methodId:'numerology',domain,evidence:['個人年4',numberMeanings[4]],date:'2026-07-01'};
+ assert.deepEqual(interpret(input).story,interpret({...input,domain:canonical}).story,'actual consultation choices use the same life scenes as their canonical domain: '+domain);
+}
+if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples,oracleMetrics,oracleSamples,lifeMetrics,lifeSamples,symbolicCases,symbolicSamples,profileCases,profileSamples,profileMetrics},null,2));
+console.log('Source-linked number/distance language: '+profileCases+' rendered cases, 19 shipped meanings, annual/daily/person scope preserved');
 console.log('Symbol-linked application: '+symbolicCases+' rendered cases, reversed/mixed/missing-position checks passed');
 console.log('Living language: '+lifeCases+' rendered cases, 30 distinct application bodies per fixed fortune, unchanged evidence');
 console.log('Existing spread story verification: '+JSON.stringify(oracleMetrics));
