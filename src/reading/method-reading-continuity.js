@@ -1,6 +1,6 @@
 (function(root,factory){const api=factory(root);if(typeof module==='object'&&module.exports)module.exports=api;root.KOYOMI_METHOD_CONTINUITY=api})(typeof globalThis!=='undefined'?globalThis:this,function(root){
 'use strict';
-const VERSION='1.2.0',KEY='koyomi.method-continuity.v1';
+const VERSION='1.3.0',KEY='koyomi.method-continuity.v1';
 const ANGLES={
  overall:[['優先順位','急ぐ理由と、後日に回せる条件を分けて考えます。'],['事実と推測','確認できたことと、まだ想像していることを分けて読みます。'],['続ける負担','続けたい理由と、続けるために必要な余力を見ます。'],['見直す条件','何が変われば判断を変えるかを先に考えます。'],['使える支援','自分で動かせることと、人の助けが必要なことを分けます。']],
  work:[['担当と合意','引き受ける範囲と、相手が期待している範囲を照らし合わせます。'],['期限と区切り','作業量より、どこで完了とできるかを扱います。'],['準備と障害','進める前に足りない物や手順を見つける論点です。'],['任せる範囲','自分で担う部分と、人に頼める部分を分けて考えます。'],['優先する仕事','忙しさと重要性を分け、今の余力をどこに使うかを見ます。']],

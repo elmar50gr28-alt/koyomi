@@ -6,8 +6,9 @@ for(const path of ['src/reading/daily/daily-reading-core.js','src/reading/method
 const engine=context.KOYOMI_READING_KEEPSAKE,interpret=context.KOYOMI_METHOD_INTERPRETATION.interpret,adapter=context.KOYOMI_PERSONA_ADAPTER,planner=context.KOYOMI_METHOD_CONTINUITY;
 const base={profileId:'keepsake',domain:'work',methodId:'shichu',confidence:80,score:55,evidence:['大運85','流年30','選択日70'],generatedAction:true,action:'元の行動'};
 const fixtures=[['start',{...base,evidence:['大運85','流年85','選択日85']}],['boundary',base],['rest',{...base,evidence:['大運30','流年30','選択日30']}],['choice',{...base,methodId:'tarot',evidence:[],symbols:[{pos:'自分の立場',name:'正義',meaning:'思考・決断を素直に使う'}]}],['release',{...base,methodId:'runes',evidence:[],symbols:[{pos:'次の一手',name:'ハガラズ',meaning:'崩壊・刷新'}]}],['grow',{...base,methodId:'numerology',evidence:['個人年4','秩序を作り、積み上げる数']}]];
-const allIds=new Set(Object.values(engine.BANK).flat().map(row=>row[0]));assert.ok(allIds.size>=32,'expand real item categories, not just repeat the same objects across axes');
-for(const pool of Object.values(engine.BANK)){assert.equal(pool.length,12);assert.equal(new Set(pool.map(row=>row[0])).size,12);for(const row of pool)assert.ok(row.length===3&&row.every(x=>typeof x==='string'&&x.length>0));}
+const allIds=new Set(Object.values(engine.BANK).flat().map(row=>row[0]));assert.ok(allIds.size>=80,'expand real item categories, not just repeat the same objects across axes');
+for(const pool of Object.values(engine.BANK)){assert.equal(pool.length,30);assert.equal(new Set(pool.map(row=>row[0])).size,30);for(const row of pool)assert.ok(row.length===3&&row.every(x=>typeof x==='string'&&x.length>0));}
+const canonicalNames=new Map();for(const row of Object.values(engine.BANK).flat()){if(canonicalNames.has(row[0]))assert.equal(row[1],canonicalNames.get(row[0]),'one physical category must not acquire different names across themes');else canonicalNames.set(row[0],row[1]);}
 let cases=0;const metrics=[],samples=[];
 for(const [axis,input] of fixtures){storage.clear();const ids=new Set(),alternatives=new Set();let last='',repeated=0,lastAlternative='',repeatedAlternative=0;
  for(let day=1;day<=30;day++){
@@ -20,13 +21,21 @@ for(const [axis,input] of fixtures){storage.clear();const ids=new Set(),alternat
   assert.equal(sharpStory.axis,axis);assert.equal(sharpStory.body,story.body);assert.equal(sharpStory.evidence,story.evidence);assert.notEqual(sharpStory.title,story.title);assert.equal(sharpOut.narrative.quality.pass,true,sharpOut.narrative.quality.issues.join(','));assert.ok(sharpOut.text.includes(plan.keepsake.name),'changing voice must not reroll the keepsake');
   if(day<=2&&axis==='boundary')samples.push({date,sister:out.text,zubat:sharpOut.text});cases+=2;
  }
- assert.equal(ids.size,12);assert.equal(repeated,0);assert.equal(alternatives.size,12);assert.equal(repeatedAlternative,0);metrics.push({axis,days:30,distinctKeepsakes:ids.size,adjacentRepeated:repeated,distinctAlternatives:alternatives.size,adjacentRepeatedAlternative:repeatedAlternative});
+ assert.equal(ids.size,30);assert.equal(repeated,0);assert.equal(alternatives.size,30);assert.equal(repeatedAlternative,0);metrics.push({axis,days:30,distinctKeepsakes:ids.size,adjacentRepeated:repeated,distinctAlternatives:alternatives.size,adjacentRepeatedAlternative:repeatedAlternative});
 }
 for(const special of [{confidence:20},{psychRisk:95},{risk:95},{evidence:['判定保留']},{domain:'healthrhythm',action:'必要な受診を優先する'}]){
  const out=adapter.applyDivination('元資料',{...base,date:'2026-06-01',...special});assert.doesNotMatch(out.text,/今日のお守り/);assert.notEqual(out.narrative.structure,'symbolic-story');
 }
 const explicit=adapter.applyDivination('元資料',{...base,date:'2026-06-02',generatedAction:false,action:'依頼者の指定行動'});assert.match(explicit.text,/依頼者の指定行動/);
 assert.equal(engine.decorate({},null),null);
+// Existing histories from the smaller pool must retain their meaning and use
+// the newly available items, rather than freezing the cached old suggestion.
+for(const [axis,input] of fixtures){
+ storage.clear();const story=engine.decorate(input,interpret(input)),previous=story.keepsakeCandidates.slice(0,12),id='upgrade-'+axis;
+ for(let day=1;day<=30;day++)planner.plan({...input,profileId:id,date:new Date(Date.UTC(2026,0,day)).toISOString().slice(0,10),action:story.invitation,generatedAction:false,keepsakeCandidates:previous});
+ const seen=new Set();for(let day=1;day<=30;day++){const plan=planner.plan({...input,profileId:id,date:new Date(Date.UTC(2026,0,30+day)).toISOString().slice(0,10),action:story.invitation,generatedAction:false,keepsakeCandidates:story.keepsakeCandidates});assert.equal(plan.keepsake.axis,axis);seen.add(plan.keepsake.id)}
+ assert.equal(seen.size,30,axis+': old 12-item histories must still allow thirty distinct next-month primary items');
+}
 const starInput={...base,methodId:'tarot',evidence:[],symbols:[{pos:'自分の立場',name:'星',meaning:'希望を素直に使う'}]};assert.equal(engine.decorate(starInput,interpret(starInput)).keepsakeCandidates[0].name,'手元の青い小物');
 const otherInput={...starInput,symbols:[{pos:'自分の立場',name:'月',meaning:'不安を素直に使う'}]};assert.ok(!engine.decorate(otherInput,interpret(otherInput)).keepsakeCandidates.some(x=>x.id==='blue'),'a Star-specific keepsake must not leak into another symbol');
 assert.doesNotThrow(()=>planner.plan({...base,date:'2026-06-03',keepsakeCandidates:[]},{storage:{getItem(){throw Error('blocked')},setItem(){throw Error('blocked')}}}));
