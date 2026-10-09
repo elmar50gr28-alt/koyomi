@@ -5,6 +5,20 @@ const storage=new Map(),context={localStorage:{getItem:k=>storage.get(k)||null,s
 for(const path of ['src/reading/daily/daily-reading-core.js','src/reading/method-reading-continuity.js','src/reading/app-narrative-engine.js','src/reading/method-interpretation.js','src/reading/reading-keepsake.js','src/persona/conversation-adapter.js'])vm.runInContext(await readFile(path,'utf8'),context);
 const engine=context.KOYOMI_READING_KEEPSAKE,interpret=context.KOYOMI_METHOD_INTERPRETATION.interpret,adapter=context.KOYOMI_PERSONA_ADAPTER,planner=context.KOYOMI_METHOD_CONTINUITY;
 const base={profileId:'keepsake',domain:'work',methodId:'shichu',confidence:80,score:55,evidence:['大運85','流年30','選択日70'],generatedAction:true,action:'元の行動'};
+for(const [axis,methodId,symbols]of [
+ ['rest','runes',[{pos:'次の一手',name:'イサ',meaning:'停止・集中'}]],
+ ['release','runes',[{pos:'次の一手',name:'ハガラズ',meaning:'崩壊・刷新'}]],
+ ['rest','tarot',[{pos:'自分の立場',name:'愚者',reversed:true,meaning:'始まり・冒険の停滞・内省'}]],
+ ['choice','tarot',[{pos:'自分の立場',name:'愚者',meaning:'始まり・冒険'}, {pos:'障害',name:'塔',meaning:'崩壊・刷新'}]]
+]) {
+ const input={...base,methodId,symbols,evidence:[],date:'2026-06-01',score:90},parsed=interpret(input);
+ for(const mode of ['sister','zubat']) {
+  const story=engine.decorate({...input,mode},parsed);assert.equal(story.axis,axis,'keepsake selection and symbolic application must agree');
+  assert.ok(story.keepsakeCandidates.every(x=>x.axis===axis));assert.equal(story.body,parsed.story.body);
+  if(axis==='rest'||axis==='release')assert.equal(story.livingContext.direction,'protect');
+  else assert.equal(story.livingContext.direction,'test');
+ }
+}
 const fixtures=[['start',{...base,evidence:['大運85','流年85','選択日85']}],['boundary',base],['rest',{...base,evidence:['大運30','流年30','選択日30']}],['choice',{...base,methodId:'tarot',evidence:[],symbols:[{pos:'自分の立場',name:'正義',meaning:'思考・決断を素直に使う'}]}],['release',{...base,methodId:'runes',evidence:[],symbols:[{pos:'次の一手',name:'ハガラズ',meaning:'崩壊・刷新'}]}],['grow',{...base,methodId:'numerology',evidence:['個人年4','秩序を作り、積み上げる数']}]];
 const allIds=new Set(Object.values(engine.BANK).flat().map(row=>row[0]));assert.ok(allIds.size>=80,'expand real item categories, not just repeat the same objects across axes');
 for(const pool of Object.values(engine.BANK)){assert.equal(pool.length,30);assert.equal(new Set(pool.map(row=>row[0])).size,30);for(const row of pool)assert.ok(row.length===3&&row.every(x=>typeof x==='string'&&x.length>0));}
