@@ -111,6 +111,33 @@
   '安壊：惹かれるが揺れも出やすい距離':['心が動く時も、安心を置き去りにしない','気持ちが強く動く場面があったら、安心して選べる条件も一緒に見てみましょう。惹かれる気持ちを大切にしながら、自分が無理せずいられるかも確かめる読みです。',['気持ちが強く動く話では、約束と実際の条件を確かめてから返事をして。','すぐ決めてほしいと言われても、自分が確かめたい点を先に聞いて。','不安が残る約束は急いで増やさず、安心して選べる条件を確認して。']],
   '中間距離：会話設計で変わる':['伝え方を変える余地を、残しておく','会話設計という言葉を、用件の伝え方や聞き方を選ぶヒントにします。同じ内容でも、話す時期や、相手が答えられる範囲を確かめることで、やり取りの進め方を考えられます。',['用件を伝える時は、何を相談したいかを先に添えて。','話す前に、相手が聞ける時間や方法を相談して。','返事が曖昧なら、何が決まっていて、何がまだ分からないかを聞いてみて。']]
  };
+ const STAR_NAMES=['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+ function nineStarName(label){const match=String(label||'').match(/^(?:本命)?([1-9])紫白$/);return match?STAR_NAMES[Number(match[1])-1]:STAR_NAMES.includes(label)?label:'';}
+ function nineStarMeaning(label,bank){const name=nineStarName(label),row=name&&bank&&Object.hasOwn(bank,name)?bank[name]:null;return Array.isArray(row)&&row.length===3&&row.every(x=>typeof x==='string'&&x.trim())?row.join('／'):'';}
+ const STAR_LENSES={
+  一白水星:['静かな水／観察と交渉／孤立と迷い','静かに見る力を、伝える言葉へ','観察の力は、何も言わずに抱えるためだけのものではありません。気づいたことを確かめ、自分の希望も添えて話す場面に使えます。迷いが残る時は、確認できる人に相談してかまいません。',['気づいた点を、事実と自分の受け取り方に分けて話して。','返事をする前に、自分が確かめたい条件を聞いて。','一人で決めにくい話は、判断に必要な点を添えて相談して。']],
+  二黒土星:['耕す大地／支援と継続／自己犠牲','支える力に、自分の居場所も','支援と継続の言葉を、続けられる分担を考える場面に使います。人の役に立つことを選ぶ時も、自分に残す時間や助けを一緒に考えていいのです。',['引き受ける前に、自分にできる範囲を伝えて。','続ける用事は、分担できる部分を相談して。','人を支える予定と、自分が休める時間を並べてみて。']],
+  三碧木星:['雷の始動／発言と着手／早合点','声を出す力に、聞く余地を','発言と着手のテーマでは、思いついたことを伝える入口が作れます。相手の返事を聞く余地も残すと、始めたい思いを無理のない段取りへつなげられます。',['提案する時は、相手が答えられる時間や条件も聞いて。','始めたいことを伝え、まだ確認していない点を相談して。','着手する前に、必要な準備と、相手の合意を確かめて。']],
+  四緑木星:['風の浸透／縁と調整／優柔不断','つなぐ時にも、自分の希望を','調整の力を使う場面では、皆の希望を聞くだけでなく、自分が望む条件も持ち寄ってみてください。迷いが残るなら、何が分かれば決められるかを伝える方法があります。',['相手の希望を聞いた後に、自分の希望も添えて。','予定を合わせる時は、自分に無理のない条件も伝えて。','決めにくいことは、あと何を確認すれば返事できるかを相談して。']],
+  五黄土星:['中心の力／統率と再編／抱え込みと極端','まとめる力を、分け合える形へ','中心や統率という言葉は、全部を一人で背負う役割ではありません。全体を見渡せる場面なら、誰に何を任せるかを考えることにも、その力を使えます。',['用事をまとめる時は、役割と担当を分けて相談して。','抱えている内容を見渡し、人に任せられる部分を選んで。','大きく変える前に、残すものと、見直すものを分けて。']],
+  六白金星:['天の規律／責任と決断／厳格さ','責任を果たす時にも、相談の余地を','責任と決断のテーマでは、何を守るために決めるかを考えます。基準を持つことと、状況に合わせて相談することは両立できます。自分にも相手にも、守れる条件かを確かめてみてください。',['判断する前に、守りたい基準と、調整できる部分を分けて。','役割を引き受ける時は、責任の範囲と、相談できる相手を確かめて。','決めた手順が今も無理なく守れるか、見直して。']],
+  七赤金星:['喜びと交流／会話と金銭感覚／散漫と浪費','楽しむ時間を、暮らしの中に残す','喜びと交流のテーマは、楽しみにも時間を渡すヒントになります。会話や誘いを選ぶ場面では、予定や予算も確かめると、無理なく楽しめる形を探せます。',['誘いに返事をする前に、楽しみたいことと、予定や予算を確かめて。','伝えたい用件を先に添えてから、会話を楽しんで。','楽しみの支出も、暮らしで必要なお金を残せる範囲で選んで。']],
+  八白土星:['山の転換／蓄積と継承／頑固さ','積み重ねを残しながら、形を変える','蓄積と継承のテーマでは、これまでの工夫を次にも持っていく読み方ができます。変える所があっても、全部を捨てる必要はありません。今の条件に合う形を選び直してみてください。',['続けてきた方法の中で、残したい工夫と、変えたい部分を分けて。','引き継ぐ用事は、理由や手順も添えて伝えて。','慣れたやり方を変えるなら、今の条件に合うかを確かめて。']],
+  九紫火星:['光と知性／評価と洞察／神経過敏','気づく力を、自分を急かさない形で','評価と洞察のテーマを、何がよくなったかを見つける場面に使います。気になる点が見えた時にも、直す必要があることと、今は気にしなくてよいことを分けてみてください。',['気づいた点を、今対応したいことと、後で確かめることに分けて。','成果を伝える時は、何を工夫し、何が変わったかを添えて。','評価が気になるなら、実際に期待されている役割を聞いて。']]
+ };
+ const NAME_LENSES={
+  '独立と開始':['自分で選ぶ理由を、大切に','独立という言葉を、望むことを選ぶ場面に使います。助けを借りながら始めても、自分の希望を選ぶ理由に加えていいのです。',['自分が望む案と、その理由を考えてみて。','始めたいことを、必要な準備も添えて相談して。','人に任せていた選択があるなら、自分が決められる範囲を確かめて。']],
+  '協調と受容':['合わせる時にも、自分の声を','協調のテーマでは、相手の希望と自分の希望を持ち寄る読み方ができます。受け止めることと、全部を引き受けることを分けてみてください。',['相手の希望を聞き、自分の希望も伝えて。','引き受ける前に、できる範囲を確かめて。','助けてほしいことがあるなら、具体的な内容を添えて頼んで。']],
+  '表現と成長':['伝えることで、育つものもある','表現のテーマは、今の考えを人に届ける入口にできます。完成を待つだけでなく、どんな感想を聞きたいかを選んで見せる方法もあります。',['伝えたいことを、受け取りやすい言葉や形にして。','考えた案があるなら、感想を聞きたい点を添えて見せて。','話した後に、伝わった点と、言い直したい点を振り返って。']],
+  '基礎と試練':['難しさを、自分の価値にしない','試練という言葉を、つらい出来事の予言にしなくて大丈夫。手順や支えを見直し、続けやすい土台を作るためのヒントとして扱います。',['繰り返す用事で迷う点があるなら、手順を確かめて。','無理が出る作業は、分担や段取りを相談して。','続けるために必要な支えと、減らせる負担を見直して。']],
+  '中心と変化':['役割を見渡し、変える所を選ぶ','中心という言葉を、今担っている役割を見渡すヒントにします。全体を変える前に、残すことと、調整したいことを分ける方法があります。',['担っている役割と、今の負担を並べてみて。','用事をまとめる時は、任せられる部分を相談して。','変えたい方法があるなら、残したい目的も確かめて。']],
+  '責任と調和':['大切にする範囲に、自分も入れて','責任のテーマでは、長く守れる形かを考えます。誰かを大切にする時も、自分にできることと、助けを借りたいことを持ち寄っていいのです。',['引き受ける役割の範囲と、相談できる相手を確かめて。','続ける用事は、分担できる部分を相談して。','人のための予定と、自分のために残したい時間を並べて。']],
+  '探究と専門':['自分が納得する所まで、確かめる','探究のテーマを、疑問を大切にする読み方に使います。まだ分からない点を聞き、調べたことを自分で確かめる時間も、選ぶための準備です。',['分かった事実と、まだ確かめたい点を分けて。','人の結論を受け取る前に、その根拠を聞いて。','調べたことを振り返り、納得できた点と、残る疑問を整理して。']],
+  '成果と管理':['成果と負担を、一緒に見て','成果のテーマでは、何が変われば達成かを確かめます。結果の大きさだけでなく、続けた時の負担も見て、自分に合う力の注ぎ方を選べます。',['何が変われば達成かを、取り組む前に確かめて。','結果と、かかった費用や負担を一緒に振り返って。','続ける価値がある部分と、変えたい部分を分けて。']],
+  '完成と手放し':['区切っても、経験は持っていける','手放しという言葉は、何かが終わる運命を決めるものではありません。役割を終えたものと、次にも残したいものを分ける読み方に使います。',['区切りたいことがあるなら、残る約束と、引き継ぐ内容を確かめて。','今も続けたい目的と、もう背負わなくてよい負担を分けて。','終える前に、次にも持っていきたい工夫や経験を選んで。']],
+  '転換':['今の自分に合う形へ、選び直す','転換のテーマは、今あるものを全部変えるための号令ではありません。違う方法を比べながら、今の暮らしに合う形を選ぶ入口にできます。',['別の方法を考えるなら、負担と、元に戻せる条件を確かめて。','慣れた方法と別の方法を比べ、自分に合う点を探して。','変えたいことがあるなら、今も残したい理由も考えて。']]
+ };
+ const STAR_WORK_ACTIONS={七赤金星:['仕事で声をかけられた時は、担う内容と、今の予定を確かめて。','提案したいことを、相手が答えやすい用件にして伝えて。','成果を話す時は、何が変わったかを添え、相手の受け取り方も聞いて。']};
  function profileLens(input,items,living){
   let row=null,basis='';
   if(input.methodId==='numerology'){
@@ -119,10 +146,17 @@
   }else if(input.methodId==='sukuyo'){
    const distance=items.find(x=>x.id==='distance');
    if(distance&&Object.hasOwn(DISTANCE_LENSES,distance.basis)){row=DISTANCE_LENSES[distance.basis];basis=distance.basis;}
+  }else if(input.methodId==='kyusei'){
+   for(const asset of input.interpretationAssets||[]){const name=nineStarName(asset?.basis);if(Object.hasOwn(STAR_LENSES,name)&&asset.meaning===STAR_LENSES[name][0]){row=STAR_LENSES[name].slice(1);basis=asset.basis;break;}}
+  }else if(input.methodId==='name'){
+   const meanings=['転換','独立と開始','協調と受容','表現と成長','基礎と試練','中心と変化','責任と調和','探究と専門','成果と管理','完成と手放し'];
+   const roles={人格:'仕事や対人で使う力',地格:'内側の反応',外格:'人との接点',総格:'長い目で見る取り組み方'};
+   for(const role of Object.keys(roles)){const asset=(input.interpretationAssets||[]).find(x=>new RegExp('^'+role+'[0-9]+$').test(String(x?.basis||''))),number=Number(asset?.basis.slice(role.length));if(asset&&Number.isSafeInteger(number)&&number>0&&asset.meaning===meanings[number%10]){const found=NAME_LENSES[asset.meaning];row=[found[0],`「${role}」は、${roles[role]}を見る位置です。`+found[1],found[2]];basis=asset.basis;break;}}
   }
   if(!row)return null;
   const index=LIFE_SCENES[living.domain].findIndex(x=>x[0]===living.scene);
-  return {basis,title:row[0],reading:row[1],invitation:living.domain==='health'?living.invitation:row[2][Math.max(0,index)]};
+  const star=nineStarName(basis),actions=input.methodId==='kyusei'&&living.domain==='work'&&Object.hasOwn(STAR_WORK_ACTIONS,star)?STAR_WORK_ACTIONS[star]:row[2];
+  return {basis,title:row[0],reading:row[1],invitation:living.domain==='health'?living.invitation:actions[Math.max(0,index)]};
  }
  function storyOf(input,items){
   const kind=id=>items.find(x=>x.id===id)?.kind;
@@ -176,7 +210,15 @@
   const profile=profileLens(input,items,living);
   if(profile){
    title=profile.title;body=items.map(x=>x.reading.replace('既存の解釈では','この占術では')).join('\n\n');
-   const care=living.body.split('\n\n').pop(),period=input.methodId==='numerology'?'今年のテーマ':'選択日の距離の読み';
+   if(input.methodId==='kyusei'){
+    const asset=(input.interpretationAssets||[]).find(x=>x?.basis===profile.basis),parts=String(asset?.meaning||'').split('／');
+    body=`「${parts[0]}」というイメージには、${parts[1]}の持ち味と、${parts[2]}への注意が重ねられています。\n\n生まれた年から得たテーマで、今日の出来事や性格を決めつけるものではありません。`;
+   }
+   if(input.methodId==='name'){
+    const grouped=new Map();for(const asset of input.interpretationAssets||[])if(asset?.basis&&asset.meaning){const meaning=String(asset.meaning),bases=grouped.get(meaning)||[];if(!bases.includes(String(asset.basis)))bases.push(String(asset.basis));grouped.set(meaning,bases);}
+    body=[...grouped].map(([meaning,bases])=>`${bases.join('・')}の解釈は「${meaning}」です。`).join('\n\n')+'\n\n名前の材料は日付だけでは変わりません。日々の出来事の予測とは分けます。';
+   }
+   const care=living.body.split('\n\n').pop(),period={numerology:'今年のテーマ',sukuyo:'選択日の距離の読み',kyusei:'本命星のテーマ',name:'名前から得たテーマ'}[input.methodId];
    living.body=`「${living.scene}」のような場面に、${period}を重ねてみましょう。${profile.reading}\n\n${care}`;
    living.invitation=profile.invitation;
   }
@@ -236,5 +278,5 @@
   const story=storyOf(input,items);
   return {items,mixed,connection,story,check:`相談では、${condition}を現実の情報と照らし合わせます。`,key:JSON.stringify(items.map(x=>[x.id,x.basis,x.reading])),text:(connection?connection+'\n':'')+items.map(x=>`「${root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis}」から、${x.reading}`).join('\n')+ (mixed&&!connection?'\n後押しと注意の両方があります。進められる部分と、調整が必要な部分を分けます。':'')+(limit?'\n'+limit:''),application:`相談では、${condition}を現実の情報と照らし合わせます。${mixed?'準備済みの部分は進め、未合意や負担の大きい部分は確認してから判断してください。':'条件が揃う部分から判断し、未確認の部分は保留してください。'}`};
  }
- root.KOYOMI_METHOD_INTERPRETATION=Object.freeze({interpret});
+ root.KOYOMI_METHOD_INTERPRETATION=Object.freeze({interpret,nineStarMeaning});
 })(typeof globalThis!=='undefined'?globalThis:this);

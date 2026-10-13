@@ -210,7 +210,55 @@ for(const [domain,canonical]of [['career','work'],['changejob','work'],['income'
  const input={...base,methodId:'numerology',domain,evidence:['個人年4',numberMeanings[4]],date:'2026-07-01'};
  assert.deepEqual(interpret(input).story,interpret({...input,domain:canonical}).story,'actual consultation choices use the same life scenes as their canonical domain: '+domain);
 }
-if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples,oracleMetrics,oracleSamples,lifeMetrics,lifeSamples,symbolicCases,symbolicSamples,profileCases,profileSamples,profileMetrics},null,2));
+vm.runInContext(appLines.find(x=>x.startsWith('const NINE_STAR_FULL=')),context);
+const starDictionary=vm.runInContext('NINE_STAR_FULL',context),starNames=Object.keys(starDictionary);
+assert.equal(starNames.length,9);
+context.window=context;
+const assetExpression=appSource.match(/key==='kyusei'\?\[([\s\S]*?)\]:key==='name'/)[1];
+const starFixtures=starNames.map((name,index)=>{
+ const basis='本命'+(index+1)+'紫白';context.method={factors:[basis]};
+ const asset=vm.runInContext('['+assetExpression+']',context)[0];
+ assert.equal(asset.meaning,starDictionary[name].join('／'),'real rendering integration uses the shipped dictionary for '+basis);
+ assert.equal(context.KOYOMI_METHOD_INTERPRETATION.nineStarMeaning((index+1)+'紫白',starDictionary),asset.meaning);
+ assert.equal(context.KOYOMI_METHOD_INTERPRETATION.nineStarMeaning(name,starDictionary),asset.meaning);
+ return {methodId:'kyusei',evidence:[basis],interpretationAssets:[{basis,meaning:asset.meaning}],meaning:asset.meaning};
+});
+context.mod=(value,divisor)=>((value%divisor)+divisor)%divisor;
+vm.runInContext(appLines.find(x=>x.startsWith('function gridMeaning(')),context);
+const nameFixtures=Array.from({length:10},(_,index)=>{const number=10+index,meaning=context.gridMeaning(number),basis='人格'+number;return{methodId:'name',evidence:[basis],interpretationAssets:[{basis,meaning}],meaning};});
+let assetCases=0;const assetSamples=[];
+for(const fixture of [...starFixtures,...nameFixtures])for(const domain of ['work','relationship','money']) {
+ const input={...base,...fixture,domain,generatedAction:true},invariant=interpret(input),bodies=new Set(),actions=new Set();
+ assert.ok(invariant.story.profileFocus,'the shipped asset has a source-linked lens: '+fixture.evidence[0]);
+ for(let day=1;day<=30;day++) {
+  const current={...input,date:`2026-08-${String(day).padStart(2,'0')}`},before=JSON.stringify(current),parsed=interpret(current);
+  assert.equal(parsed.key,invariant.key);assert.equal(parsed.story.readingBody,invariant.story.readingBody);assert.equal(parsed.story.title,invariant.story.title);
+  for(const part of fixture.meaning.split('／'))assert.ok(parsed.story.readingBody.includes(part));assert.equal(JSON.stringify(current),before);bodies.add(parsed.story.body);actions.add(parsed.story.invitation);
+  for(const mode of ['sister','zubat']) {
+   const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...current,mode});
+   assert.equal(out.narrative.quality.pass,true,fixture.evidence[0]+'/'+domain+'/'+day+': '+out.narrative.quality.issues);
+   for(const part of fixture.meaning.split('／'))assert.ok(out.text.includes(part));assert.ok(out.text.includes(parsed.story.profileFocus.reading));assert.ok(out.text.includes(parsed.story.invitation));
+   if(fixture.methodId==='kyusei')assert.match(out.text,/生まれた年から得たテーマ.*今日の出来事や性格を決めつけるものではありません/);
+   if(fixture.evidence[0]==='本命7紫白'&&domain==='work')assert.doesNotMatch(parsed.story.invitation,/支出|お金|予算/,'a work scene cannot silently turn into a shopping recommendation');assetCases++;
+  }
+  if(day===1&&domain==='work'&&['本命2紫白','本命7紫白','人格14','人格19'].includes(fixture.evidence[0]))assetSamples.push({basis:fixture.evidence[0],text:context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',current).text});
+ }
+ assert.equal(bodies.size,30);assert.equal(actions.size,3);
+}
+for(const role of ['人格','地格','外格','総格']) {
+ const input={...base,methodId:'name',evidence:[role+'11'],interpretationAssets:[{basis:role+'11',meaning:context.gridMeaning(11)}]};
+ assert.equal(interpret(input).story.profileFocus.basis,role+'11');assert.ok(interpret(input).story.profileFocus.reading.includes('「'+role+'」'));
+}
+const repeatedName={...base,methodId:'name',generatedAction:true,evidence:['人格11','地格21','外格31','総格41'],interpretationAssets:['人格11','地格21','外格31','総格41'].map(basis=>({basis,meaning:context.gridMeaning(11)}))};
+const grouped=interpret(repeatedName);for(const basis of repeatedName.evidence)assert.ok(grouped.story.readingBody.includes(basis));
+assert.equal(grouped.story.readingBody.split('独立と開始').length-1,1,'identical meanings share one explanation while keeping every calculated basis');
+assert.equal(context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',repeatedName).narrative.quality.pass,true);
+for(const label of ['0紫白','10紫白','本命0紫白','1紫白余分','constructor','__proto__'])assert.equal(context.KOYOMI_METHOD_INTERPRETATION.nineStarMeaning(label,starDictionary),'');
+assert.equal(context.KOYOMI_METHOD_INTERPRETATION.nineStarMeaning('1紫白',{一白水星:['説明不足']}),'');
+assert.equal(interpret({...base,methodId:'name',interpretationAssets:[{basis:'人格11',meaning:'探究と専門'}]}).story.profileFocus,null);
+assert.equal(interpret({...base,methodId:'kyusei',interpretationAssets:[{basis:'本命1紫白',meaning:'未知の解釈'}]}).story.profileFocus,null);
+if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples,oracleMetrics,oracleSamples,lifeMetrics,lifeSamples,symbolicCases,symbolicSamples,profileCases,profileSamples,profileMetrics,assetCases,assetSamples},null,2));
+console.log('Source-linked name/star language: '+assetCases+' rendered cases, real nine-star dictionary integration and grouped name readings');
 console.log('Source-linked number/distance language: '+profileCases+' rendered cases, 19 shipped meanings, annual/daily/person scope preserved');
 console.log('Symbol-linked application: '+symbolicCases+' rendered cases, reversed/mixed/missing-position checks passed');
 console.log('Living language: '+lifeCases+' rendered cases, 30 distinct application bodies per fixed fortune, unchanged evidence');
