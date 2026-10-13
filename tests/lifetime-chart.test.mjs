@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
+import vm from 'node:vm';
+import {writeCache} from '../src/bazi/lifetime/cache.js';
 import {createCalculator,buildSeries,parseCivil,civil,ageAt,anniversary,aggregate,cacheKey,describePoint,DAY} from '../src/bazi/lifetime/core.js';
 import {nearestIndex,validSeries,plotGeometry} from '../src/ui/lifetime-chart.js';
 const profile={displayName:'fixture',gender:'male',birthData:{date:'2000-02-29',time:'12:00',timeUnknown:false,place:{longitude:135,latitude:35,utcOffset:9,timezone:'Asia/Tokyo'}}};
@@ -28,5 +30,13 @@ assert.match(describePoint(series.rows[0]).body,/見守り/);assert.equal(descri
 const unknown=createCalculator({...profile,gender:'',birthData:{...profile.birthData,time:'',timeUnknown:true}});assert.ok(unknown.meta.birthTimeUnknown);assert.ok(unknown.meta.directionDefault);assert.ok(unknown.point('2026-01-01'));
 await assert.rejects(buildSeries(profile,{}, {cancelled:()=>true}),/中止/);
 const app=await readFile('app.html','utf8'),sw=await readFile('service-worker.js','utf8');assert.match(app,/mountLifetimeChart/);
+const mount=app.split(/\r?\n/).find(line=>line.startsWith('window.KOYOMI_LIFETIME_CHART=mountLifetimeChart('));let captured;
+const freshProfile={...profile,displayName:'latest',birthData:{...profile.birthData,date:'1995-11-23'}};
+const sandbox={document:{getElementById:id=>id==='gender'?{value:'male'}:{}},window:{},LedgerState:{currentProfileId:'primary',selectedPrimary:'primary',locked:false},ledgerCollectProfile:()=>freshProfile,koyomiBaziReadingProfile:()=>profile,mountLifetimeChart:options=>{captured=options;}};vm.runInNewContext(mount,sandbox);
+assert.equal(captured.getProfile(),freshProfile,'editing the primary profile must not reuse stale main-form values');sandbox.LedgerState.currentProfileId='other';assert.equal(captured.getProfile().birthData.date,profile.birthData.date);sandbox.LedgerState.locked=true;assert.equal(captured.getProfile(),null);
+assert.equal(captured.canPersist(),true);sandbox.LedgerState.lockConfig={enabled:true};assert.equal(captured.canPersist(),false,'encrypted profile mode must not create a separate plaintext cache');
+let hidden=false;sandbox.window.KOYOMI_LIFETIME_CHART={hide:()=>{hidden=true;}};sandbox.$=()=>({classList:{add(){}},value:'',focus(){}});sandbox.setTimeout=()=>{};sandbox.ledgerUpdateStatus=()=>{};vm.runInNewContext(app.split(/\r?\n/).find(line=>line.startsWith('function ledgerShowLock()')),sandbox);sandbox.ledgerShowLock();assert.ok(hidden,'locking the existing ledger must hide the lifetime chart');
+let request,allowed=true,closed=false;globalThis.indexedDB={open(){request={result:{close(){closed=true;},transaction(){throw new Error('a protected cache cannot begin a write');}}};return request;}};
+const saving=writeCache(series,()=>allowed);allowed=false;request.onsuccess();await saving;assert.ok(closed,'a changed privacy condition must be checked after the asynchronous DB open');delete globalThis.indexedDB;
 for(const file of ['src/ui/lifetime-chart.js','src/ui/lifetime-chart.css','src/bazi/lifetime/core.js','src/bazi/lifetime/cache.js','src/bazi/lifetime/worker.js','src/bazi/luck/index.js','src/bazi/calendar/index.js','src/bazi/index.js'])assert.ok(sw.includes("'./"+file+"'"),'offline preload: '+file);
 console.log(`Lifetime daily chart passed: ${series.rows.length} daily points, leap/age/period boundaries, 100-year cycles, aggregation extrema, selection, partial birth and offline dependencies.`);
