@@ -167,6 +167,41 @@
   const connection=year&&month?(direction==='protect'?`年のテーマは「${year.stage}」、月は「${month.stage}」。今月に負担への注意があるため、年の流れだけで強く進める読みにはしません。`:direction==='test'&&year.row[1]==='protect'?`年のテーマは「${year.stage}」、月は「${month.stage}」。${month.row[1]==='forward'?'今月に動ける材料があっても、年の負担への注意は残るため、範囲を確かめて使います。':'今月は準備や見直しに使い、年の負担への注意を踏まえて、新しい負担は増やさない読みです。'}`:`年のテーマは「${year.stage}」、月は「${month.stage}」。月の取り組み方を、年のテーマと重ねて考える読みです。`):'';
   return {basis:selected.basis,year:year?.stage||'',month:month?.stage||'',direction,axis,row:[...selected.row.slice(0,5),[...selected.row[5]]],connection};
  }
+ const ROLE_NUMBERS={
+  1:['自分で始め、道を切り開く数','自分の意思で始める','誰かの許可を待つより、自分は何を始めたいのかを言葉にする'],
+  2:['結び、受け取り、調整する数','相手と歩調を合わせる','相手の希望を聞く時、自分の希望も同じ席に置く'],
+  3:['表現し、喜びを広げる数','思いを表現する','うまい言葉を探す前に、伝えたい思いを自分の言葉で話す'],
+  4:['秩序を作り、積み上げる数','続けられる土台を作る','大切なことを続けるために、無理なく守れる約束を選ぶ'],
+  5:['変化し、経験から学ぶ数','経験しながら選び直す','今までと違う方法に惹かれるなら、試したい理由を確かめる'],
+  6:['守り、育て、責任を引き受ける数','大切なものを育てる','守りたい相手や物事と、自分が担える範囲を一緒に考える'],
+  7:['深く考え、真実を探る数','自分で納得するまで考える','周囲の答えを借りる前に、自分がまだ知りたいことを確かめる'],
+  8:['現実を動かし、成果を管理する数','望む成果を形にする','何を得たいのかと、そのために使える力を具体的にする'],
+  9:['完了させ、広い視点で手放す数','経験を受け取り、区切りを選ぶ','続けたいものと、もう役目を終えたものを見分ける']
+ };
+ const ROLE_ACTIONS={
+  1:['自分が始めたいことを、任せてもらいたい理由と一緒に伝えてみて。','誰かの答えを待つ前に、自分が選びたい方向を言葉にして。','人の期待とは別に、自分で決めたいことを選んでみて。'],
+  2:['相手の希望を聞いたら、自分の希望も伝えてみて。','互いに続けられる約束を、話し合って選んでみて。','合わせていることの中に、我慢だけで続けているものがないか見てみて。'],
+  3:['上手に説明するより、伝えたい思いを自分の言葉で話してみて。','楽しみにしていることを、誰かと分かち合ってみて。','言えずにいることがあるなら、伝えたい言葉をまず自分のために書いてみて。'],
+  4:['大切なことを続けるために、無理なく守れる約束を選んで。','頼まれたことと、今使える時間を並べてみて。','すでに役立っているやり方を、これからも続けたいか考えてみて。'],
+  5:['違う方法に惹かれるなら、試したい理由を言葉にして。','変えてみたいことと、残したいものを選んでみて。','試した経験から、もう一度やってみたいことを探して。'],
+  6:['守りたいもののために、自分が担える範囲を伝えて。','誰かのために続けていることは、分担できないか話してみて。','大切な人を思う時、自分も同じように大切にされているか振り返って。'],
+  7:['自分がまだ納得できていない点を、確かめてみて。','周囲の答えとは別に、自分が知りたいことを聞いてみて。','考える時間が必要なら、そのことを相手に伝えて。'],
+  8:['何を実現したいのか、具体的な形で伝えてみて。','成果を目指す時、自分が使える時間や力も確かめて。','やってきたことの中で、役立った部分を自分でも認めてあげて。'],
+  9:['続けたいものと、役目を終えたものを見分けてみて。','区切りたいことがあるなら、残したい約束も一緒に考えて。','過去の経験から、これからも持っていきたいものを選んで。']
+ };
+ function roleFocus(input){
+  if(input.methodId!=='kabbalah')return null;
+  const evidence=Array.isArray(input.evidence)?input.evidence:[],find=prefix=>{
+   const matches=evidence.filter(x=>new RegExp('^'+prefix+'[0-9]+$').test(String(x)));
+   return matches.length===1?Number(matches[0].slice(prefix.length)):NaN;
+  },birth=find('生年月日核'),name=find('名前核'),bridge=find('橋数');
+  if(!Object.hasOwn(ROLE_NUMBERS,birth)||!Object.hasOwn(ROLE_NUMBERS,name)||bridge!==Math.abs(birth-name))return null;
+  for(const [basis,n]of [[`生年月日核${birth}`,birth],[`名前核${name}`,name]]){
+   const assets=(input.interpretationAssets||[]).filter(x=>x?.basis===basis);
+   if(assets.length!==1||assets[0].meaning!==ROLE_NUMBERS[n][0])return null;
+  }
+  return {birth,name,bridge,inner:ROLE_NUMBERS[birth],role:ROLE_NUMBERS[name]};
+ }
  function profileLens(input,items,living,period){
   let row=null,basis='';
   if(input.methodId==='numerology'){
@@ -181,6 +216,13 @@
    const meanings=['転換','独立と開始','協調と受容','表現と成長','基礎と試練','中心と変化','責任と調和','探究と専門','成果と管理','完成と手放し'];
    const roles={人格:'仕事や対人で使う力',地格:'内側の反応',外格:'人との接点',総格:'長い目で見る取り組み方'};
    for(const role of Object.keys(roles)){const asset=(input.interpretationAssets||[]).find(x=>new RegExp('^'+role+'[0-9]+$').test(String(x?.basis||''))),number=Number(asset?.basis.slice(role.length));if(asset&&Number.isSafeInteger(number)&&number>0&&asset.meaning===meanings[number%10]){const found=NAME_LENSES[asset.meaning];row=[found[0],`「${role}」は、${roles[role]}を見る位置です。`+found[1],found[2]];basis=asset.basis;break;}}
+  }else if(input.methodId==='kabbalah'){
+   const focus=roleFocus(input);
+   if(focus){
+    const scenes={work:['任されている仕事','引き受けたい役割','働き方'],relationship:['相手との関わり','二人の約束','自分の気持ち'],money:['お金の使い道','続けている支出','欲しいもの'],health:['日々の負担','休める時間','助けを求める相手'],overall:['今の選択','続けていること','これからの暮らし']}[living.domain];
+    const reading=focus.birth===focus.name?`二つの位置に共通するのは「${focus.inner[1]}」というテーマ。役割にも自分の願いにも同じ言葉を使えますが、いつでもその役割を果たす義務はありません。`:`内側の長期課題には「${focus.inner[1]}」、人前の役割には「${focus.role[1]}」を重ねます。違うテーマがあることを、心の矛盾と決めつけなくて大丈夫。役割を使って、自分が大切にしたいことへどう近づくかを見る読みです。`;
+    row=['役割の向こうに、あなたの願いを',reading+`\n\nたとえば、${focus.inner[2]}こと。期待に応えるだけで、自分の願いまで後回しにしなくていいのです。`,scenes.map((scene,index)=>`今日は「${scene}」に目を向けてみましょう。${ROLE_ACTIONS[focus.birth][index]}`)];basis=`生年月日核${focus.birth}／名前核${focus.name}`;
+   }
   }else if(period){row=[period.row[3],(period.connection?period.connection+'\n\n':'')+period.row[4],period.row[5]];basis=period.basis;}
   if(!row)return null;
   const index=LIFE_SCENES[living.domain].findIndex(x=>x[0]===living.scene);
@@ -244,11 +286,15 @@
     const asset=(input.interpretationAssets||[]).find(x=>x?.basis===profile.basis),parts=String(asset?.meaning||'').split('／');
     body=`「${parts[0]}」というイメージには、${parts[1]}の持ち味と、${parts[2]}への注意が重ねられています。\n\n生まれた年から得たテーマで、今日の出来事や性格を決めつけるものではありません。`;
    }
+   if(input.methodId==='kabbalah'){
+    const focus=roleFocus(input);
+    if(focus.birth===focus.name)body=`生年月日核${focus.birth}・名前核${focus.name}に共通するテーマは「${focus.inner[0]}」です。生年月日の位置は内側の長期課題、名前の位置は人前で担う役割を考える象徴として読みます。\n\n`+items.find(x=>x.id==='bridge').reading;
+   }
    if(['name','rokusei'].includes(input.methodId)){
     const grouped=new Map();for(const asset of input.interpretationAssets||[])if(asset?.basis&&asset.meaning){const meaning=String(asset.meaning),bases=grouped.get(meaning)||[];if(!bases.includes(String(asset.basis)))bases.push(String(asset.basis));grouped.set(meaning,bases);}
     body=[...grouped].map(([meaning,bases])=>`${bases.join('・')}の解釈は「${meaning}」です。`).join('\n\n')+'\n\n'+(input.methodId==='name'?'名前の材料は日付だけでは変わりません。日々の出来事の予測とは分けます。':'本アプリ独自の近似周期による参考読みです。');
    }
-   const care=living.body.split('\n\n').pop(),periodLabel={numerology:'今年のテーマ',sukuyo:'選択日の距離の読み',kyusei:'本命星のテーマ',name:'名前から得たテーマ',rokusei:'独自周期のテーマ'}[input.methodId];
+   const care=living.body.split('\n\n').pop(),periodLabel={numerology:'今年のテーマ',sukuyo:'選択日の距離の読み',kyusei:'本命星のテーマ',name:'名前から得たテーマ',kabbalah:'二つの数のテーマ',rokusei:'独自周期のテーマ'}[input.methodId];
    living.body=`「${living.scene}」のような場面に、${periodLabel}を重ねてみましょう。${profile.reading}\n\n${care}`;
    living.invitation=profile.invitation;
   }
@@ -298,7 +344,8 @@
    if(input.methodId==='rokusei'&&items.length)items[items.length-1].reading+='本アプリ独自の近似周期による参考読みです。';
   }else if(input.methodId==='kabbalah'){
    const birth=number('生年月日核'),name=number('名前核'),bridge=number('橋数');
-   if(birth&&name&&bridge){add('inner',birth.basis,'内側の長期課題を見る象徴値です。');add('role',name.basis,'社会で呼ばれ、役割を担う時の表現を見る象徴値です。');add('bridge',bridge.basis,'内側の課題と人前の役割を比べる補助線です。差の大小だけで性格や日々の吉凶を断定しません。')}
+   const focus=roleFocus(input);
+   if(birth&&name&&bridge){add('inner',birth.basis,focus?`生年月日核${focus.birth}のテーマは「${focus.inner[0]}」。内側の長期課題を考える象徴として読みます。`:'内側の長期課題を見る象徴値です。');add('role',name.basis,focus?`名前核${focus.name}のテーマは「${focus.role[0]}」。人前で担う役割を考える象徴として読みます。`:'社会で呼ばれ、役割を担う時の表現を見る象徴値です。');add('bridge',bridge.basis,'内側の課題と人前の役割を比べる補助線です。差の大小だけで性格や日々の吉凶を断定しません。')}
   }
   if(!items.length)return null;
   const mixed=items.some(x=>x.kind==='support')&&items.some(x=>x.kind==='caution');
