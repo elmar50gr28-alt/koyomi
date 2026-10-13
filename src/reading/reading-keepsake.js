@@ -46,6 +46,7 @@
   let axis=support&&caution?'boundary':caution?'rest':support?'start':'grow';
   if(!support&&!caution){if(interpretation.story.symbolicFocus?.intent)axis=interpretation.story.symbolicFocus.intent;else if(/終結|手放|清算|刷新/.test(meaning))axis='release';else if(/境界|防御|守護|警戒|統率/.test(meaning))axis='boundary';else if(/停止|休息|保留|内省|忍耐/.test(meaning))axis='rest';else if(/選択|決断|正義|思考|不安/.test(meaning))axis='choice';else if(/始まり|始動|再起|転機/.test(meaning))axis='start';}
   if(!support&&!caution&&interpretation.story.symbolicFocus?.intent==='start'&&interpretation.story.symbolicFocus.caution)axis='choice';
+  if(Object.hasOwn(BANK,interpretation.story.periodFocus?.axis))axis=interpretation.story.periodFocus.axis;
   const mode=input.mode==='zubat'?'zubat':'sister',candidates=BANK[axis].map(([id,name,line])=>({id,name,line,axis}));
   if(self?.name==='星'&&/希望/.test(self.meaning))candidates.splice(0,1,{id:'blue',name:'手元の青い小物',line:'希望を、目に見えるところへ。',axis});
   return {...interpretation.story,axis,mode,title:mode==='zubat'?VOICE[axis][1]:interpretation.story.title,keepsakeCandidates:candidates};

@@ -72,12 +72,12 @@
   };
   return {name:String(symbol.name),role,intent,caution,bridge:`${role}の「${symbol.name}」を生活に重ねると、${bridges[intent]}`};
  }
- function livingLanguage(input,items,focus){
+ function livingLanguage(input,items,focus,period){
   const aliases={career:'work',changejob:'work',income:'money',purchase:'money',love:'relationship',marriage:'relationship',reconcile:'relationship',family:'relationship',healthrhythm:'health',identity:'overall',study:'overall',life:'overall',choice:'overall'},key=String(input.domain||'overall').toLowerCase(),domain=Object.hasOwn(aliases,key)?aliases[key]:key;
   const rows=Object.hasOwn(LIFE_SCENES,domain)?LIFE_SCENES[domain]:LIFE_SCENES.overall;
   const caution=items.some(x=>x.kind==='caution'),support=items.some(x=>x.kind==='support');
   const current=items.find(x=>x.id==='選択日');
-  const direction=focus?(['rest','release'].includes(focus.intent)?'protect':focus.intent==='start'&&!focus.caution?'forward':'test'):
+  const direction=period?period.direction:focus?(['rest','release'].includes(focus.intent)?'protect':focus.intent==='start'&&!focus.caution?'forward':'test'):
    current?.kind==='caution'||caution&&!support?'protect':caution?'test':support?'forward':'test';
   // ISO dates select an application angle. Evidence and the fortune do not change.
   const match=String(input.date||'').match(/^(\d{4})-(\d{2})-(\d{2})$/),ordinal=match?Math.floor(Date.UTC(+match[1],+match[2]-1,+match[3])/86400000):0;
@@ -86,7 +86,7 @@
   let offset=0;for(const ch of String(input.methodId||''))offset=(offset+ch.charCodeAt(0))%span;
   const index=((ordinal+offset)%span+span)%span,row=rows[index%rows.length],voice=row[direction==='forward'?1:direction==='protect'?3:2];
   const invitation=focus?.intent==='release'&&domain!=='health'?(Object.hasOwn(RELEASE_ACTION,domain)?RELEASE_ACTION[domain]:RELEASE_ACTION.overall)[index%rows.length]:voice[1];
-  return {kind:'application',domain:Object.hasOwn(LIFE_SCENES,domain)?domain:'overall',scene:row[0],direction,body:voice[0]+'\n\n'+care[Math.floor(index/rows.length)],invitation};
+  return {kind:'application',domain:Object.hasOwn(LIFE_SCENES,domain)?domain:'overall',scene:row[0],direction,careIndex:Math.floor(index/rows.length),body:voice[0]+'\n\n'+care[Math.floor(index/rows.length)],invitation};
  }
  const YEAR_LENSES={
   1:['自分で始め、道を切り開く数','自分の希望から、始め方を選ぶ年','自分で始めるというテーマは、選ぶ理由に自分の希望を入れるために使えます。人任せにしていた選択があるなら、自分がどうしたいかを先に持ってみてください。',['始めたいことがあるなら、自分が望む形と、必要な準備を確かめて。','人に相談する前に、自分が選びたい案と、その理由を考えてみて。','準備のできたことから、自分で決められる範囲を選んで動いてみて。']],
@@ -138,7 +138,36 @@
   '転換':['今の自分に合う形へ、選び直す','転換のテーマは、今あるものを全部変えるための号令ではありません。違う方法を比べながら、今の暮らしに合う形を選ぶ入口にできます。',['別の方法を考えるなら、負担と、元に戻せる条件を確かめて。','慣れた方法と別の方法を比べ、自分に合う点を探して。','変えたいことがあるなら、今も残したい理由も考えて。']]
  };
  const STAR_WORK_ACTIONS={七赤金星:['仕事で声をかけられた時は、担う内容と、今の予定を確かめて。','提案したいことを、相手が答えやすい用件にして伝えて。','成果を話す時は、何が変わったかを添え、相手の受け取り方も聞いて。']};
- function profileLens(input,items,living){
+ const CYCLE_LENSES={
+  種子:['始まり。新しく取り組むことの準備をする','test','choice','始めたい気持ちに、足場を作る','始まりのテーマは、すぐ結果を出すための号令ではありません。必要な条件を確かめる時間も、取り組みの一部にできます。',['始めたいことがあるなら、必要な物と条件を確かめて。','取り組む目的と、今使える時間を並べてみて。','申し込む前に、費用と続け方を確認して。']],
+  緑生:['育成。習慣と関係を育てる','forward','grow','続けやすい形で、育てていく','育成のテーマは、頑張る量を増やすより、続けられる形を選ぶ読みです。役立った工夫や、助けになった関わりも、次へ残してみてください。',['続けたいことの手順を、無理のない形にして。','役立った工夫を振り返り、次にも使えるように残して。','続ける用事は、負担の少ない分担を相談して。']],
+  立花:['形が見える。評価と方向を定める','forward','grow','見えてきた形から、次を選ぶ','形が見えるという言葉を、実際の手応えを確かめる場面に使います。人の評価と、自分が続けたい方向を比べながら、次に力を注ぐ所を選べます。',['今ある形を見せるなら、意見を聞きたい点を添えて。','受け取った評価と、自分が大切にしたい目的を見比べて。','うまく働いた部分と、直したい部分を分けてみて。']],
+  健弱:['体調と基礎を点検する','protect','rest','体の都合も、予定に入れる','体調の点検という言葉は、病気になる予言ではありません。予定や生活に無理が出ているなら、休める余地を考える読みです。強い症状や続く不調は、医療機関への相談を優先してください。',['負担の大きい予定を減らし、休める時間を残して。','続ける用事を、睡眠や食事を削らない段取りへ見直して。','今の余力を確かめ、引き受ける範囲を相談して。']],
+  達成:['成果を受け取り前へ出る','forward','start','できたことを、次につなげる','成果のテーマは、何もかもうまくいく保証ではありません。準備したことを届け、実際に何が変わったかを見る場面に使えます。得られた手応えを、自分でも認めてあげてください。',['準備できたものを、目的を添えて提出や提案へ進めて。','取り組みで何が変わったかを、具体的に伝えて。','成果と負担を振り返り、次にも続けたい部分を選んで。']],
+  乱気:['感情と予定が乱れやすい。即断を避ける','protect','choice','急いで決めず、選べる余地を残す','乱れという言葉を、自分の心が弱いという評価にしなくて大丈夫。予定や気持ちが揺れる場面では、返事を急がず、確かめられた条件から選ぶ読みとして使います。',['急ぐ必要のない返事は保留し、分かっている条件を確かめて。','予定を増やす前に、今の負担と変更できる用事を見直して。','気持ちが強く動く話は、即断せず、確認したい点を聞いて。']],
+  再会:['過去の縁・技能・計画を再接続する','test','grow','前に大切にしたものを、今の自分で見る','再接続のテーマは、誰かが戻ってくるという予言ではありません。前に学んだことや考えた案を、今の暮らしで使えるか見直す入口にできます。',['以前の案を使いたいなら、今も合う条件か確かめて。','前に学んだことを、今使える場面と結びつけてみて。','誰かに連絡したいなら、話したい理由を添え、返事を選べる形にして。']],
+  財成:['収支・資源・成果を現実化する','forward','grow','成果もお金も、続けられる形へ','現実化のテーマでは、期待だけでなく、実際の収支や使える資源を確かめます。得たいものと、無理なく続ける条件を一緒に考える読みです。利益を保証するものではありません。',['取り組みの成果と、使った費用や時間を一緒に振り返って。','新しい支出を決める前に、総額と継続費を確かめて。','続けたいことに使える時間や予算を確認して。']],
+  安定:['守り定着させる','forward','grow','今ある良さを、長く続く形に','定着のテーマでは、すでに役立っている手順や関わり方を残す読み方ができます。もっと増やす前に、今の良さを無理なく続けられるか見てみましょう。',['役立っている手順を、次にも使える形で残して。','続ける用事の負担と分担を、今の条件に合わせて見直して。','新しいことを増やす前に、今続けたいものを選んで。']],
+  陰影:['視界が曇りやすい。新規拡大より確認','protect','choice','見えていない条件を、置き去りにしない','曇りという言葉は、不幸が起こるという断定ではありません。分からない点がある話では、期待で埋めずに確認する読みとして使います。納得できるまで返事を待ってかまいません。',['新しい約束は増やさず、まだ分からない条件を確かめて。','期待していることと、確認できた事実を分けてみて。','説明が足りない話は、納得できる情報が揃うまで保留して。']],
+  停止:['大きく動かず安全と回復を優先','protect','rest','立ち止まる自分にも、居場所を','停止のテーマは、自分の価値まで止まるという意味ではありません。新しい負担を背負う前に、休める時間や、助けを借りる道を残す読み方に使います。',['新しい負担は増やさず、変更できる予定を見直して。','引き受ける返事は急がず、今の余力を確かめて。','無理な用事は減らし、手伝ってもらえることを相談して。']],
+  減退:['手放しと清算。次周期の余白を作る','protect','release','区切っても、経験は持っていける','手放しのテーマは、関係や仕事を終える命令ではありません。変えたいことがあるなら、残す約束と、返したい役割を分ける読み方に使えます。過去の自分まで否定しなくていいのです。',['区切りたいことがあるなら、残る約束と、引き継ぐ内容を確かめて。','やめたい契約は、費用や解約条件を確認してから判断して。','役割を返したいなら、これから担える範囲を伝えて。']]
+ };
+ function cycleAsset(asset){
+  const match=String(asset?.basis||'').match(/^(年運|月運)(.+)$/),row=match&&Object.hasOwn(CYCLE_LENSES,match[2])?CYCLE_LENSES[match[2]]:null;
+  return row&&asset.meaning===row[0]?{basis:asset.basis,period:match[1],stage:match[2],row}:null;
+ }
+ function cycleFocus(input){
+  if(input.methodId!=='rokusei')return null;
+  const assets=(input.interpretationAssets||[]).filter(x=>/^(年運|月運)/.test(String(x?.basis||''))),parsed=assets.map(cycleAsset);
+  if(!parsed.length||parsed.some(x=>!x))return null;
+  for(const period of ['年運','月運'])if(new Set(parsed.filter(x=>x.period===period).map(x=>x.stage)).size>1)return null;
+  const year=parsed.find(x=>x.period==='年運'),month=parsed.find(x=>x.period==='月運'),selected=month||year;
+  const direction=month?.row[1]==='protect'?'protect':year&&month&&year.row[1]==='protect'&&month.row[1]==='forward'?'test':selected.row[1];
+  const axis=direction==='test'&&year?.row[1]==='protect'?'choice':selected.row[2];
+  const connection=year&&month?(direction==='protect'?`年のテーマは「${year.stage}」、月は「${month.stage}」。今月に負担への注意があるため、年の流れだけで強く進める読みにはしません。`:direction==='test'&&year.row[1]==='protect'?`年のテーマは「${year.stage}」、月は「${month.stage}」。${month.row[1]==='forward'?'今月に動ける材料があっても、年の負担への注意は残るため、範囲を確かめて使います。':'今月は準備や見直しに使い、年の負担への注意を踏まえて、新しい負担は増やさない読みです。'}`:`年のテーマは「${year.stage}」、月は「${month.stage}」。月の取り組み方を、年のテーマと重ねて考える読みです。`):'';
+  return {basis:selected.basis,year:year?.stage||'',month:month?.stage||'',direction,axis,row:[...selected.row.slice(0,5),[...selected.row[5]]],connection};
+ }
+ function profileLens(input,items,living,period){
   let row=null,basis='';
   if(input.methodId==='numerology'){
    const year=items.find(x=>x.id==='year'),number=year?.basis.slice(3);
@@ -152,10 +181,11 @@
    const meanings=['転換','独立と開始','協調と受容','表現と成長','基礎と試練','中心と変化','責任と調和','探究と専門','成果と管理','完成と手放し'];
    const roles={人格:'仕事や対人で使う力',地格:'内側の反応',外格:'人との接点',総格:'長い目で見る取り組み方'};
    for(const role of Object.keys(roles)){const asset=(input.interpretationAssets||[]).find(x=>new RegExp('^'+role+'[0-9]+$').test(String(x?.basis||''))),number=Number(asset?.basis.slice(role.length));if(asset&&Number.isSafeInteger(number)&&number>0&&asset.meaning===meanings[number%10]){const found=NAME_LENSES[asset.meaning];row=[found[0],`「${role}」は、${roles[role]}を見る位置です。`+found[1],found[2]];basis=asset.basis;break;}}
-  }
+  }else if(period){row=[period.row[3],(period.connection?period.connection+'\n\n':'')+period.row[4],period.row[5]];basis=period.basis;}
   if(!row)return null;
   const index=LIFE_SCENES[living.domain].findIndex(x=>x[0]===living.scene);
-  const star=nineStarName(basis),actions=input.methodId==='kyusei'&&living.domain==='work'&&Object.hasOwn(STAR_WORK_ACTIONS,star)?STAR_WORK_ACTIONS[star]:row[2];
+  const bounded=['進めたい部分と、まだ負担が残る部分を分けて。','今月の機会を使うなら、取り消せる条件を確かめて。','続ける範囲と、見直す時期を決めてから返事をして。'];
+  const star=nineStarName(basis),actions=period?.direction==='test'&&period.row[1]==='forward'?bounded:input.methodId==='kyusei'&&living.domain==='work'&&Object.hasOwn(STAR_WORK_ACTIONS,star)?STAR_WORK_ACTIONS[star]:row[2];
   return {basis,title:row[0],reading:row[1],invitation:living.domain==='health'?living.invitation:actions[Math.max(0,index)]};
  }
  function storyOf(input,items){
@@ -206,25 +236,25 @@
    invitation={numerology:'今年のテーマに、今の自分が重なるところを探してみて。',sukuyo:'近さだけでなく、心地よく関われる距離を考えてみて。',kyusei:'力を出しやすい場所や段取りを、思い描いてみて。',name:'名前で期待される役割と、自分が望む役割を見比べてみて。',kabbalah:'人に見せる自分と、休ませたい自分を両方言葉にしてみて。',rokusei:'この周期の言葉を、今の暮らしのどこに使うか考えてみて。'}[input.methodId];
   }
   if(['shichu','timing'].includes(input.methodId)&&kind('day-fit')==='caution')body+='選択日の相性には慎重さが残るため、勢いだけで押し切る読みにはしません。';
-  const focus=symbolicFocus(input),living=livingLanguage(input,items,focus);
-  const profile=profileLens(input,items,living);
+  const focus=symbolicFocus(input),period=cycleFocus(input),living=livingLanguage(input,items,focus,period);
+  const profile=profileLens(input,items,living,period);
   if(profile){
    title=profile.title;body=items.map(x=>x.reading.replace('既存の解釈では','この占術では')).join('\n\n');
    if(input.methodId==='kyusei'){
     const asset=(input.interpretationAssets||[]).find(x=>x?.basis===profile.basis),parts=String(asset?.meaning||'').split('／');
     body=`「${parts[0]}」というイメージには、${parts[1]}の持ち味と、${parts[2]}への注意が重ねられています。\n\n生まれた年から得たテーマで、今日の出来事や性格を決めつけるものではありません。`;
    }
-   if(input.methodId==='name'){
+   if(['name','rokusei'].includes(input.methodId)){
     const grouped=new Map();for(const asset of input.interpretationAssets||[])if(asset?.basis&&asset.meaning){const meaning=String(asset.meaning),bases=grouped.get(meaning)||[];if(!bases.includes(String(asset.basis)))bases.push(String(asset.basis));grouped.set(meaning,bases);}
-    body=[...grouped].map(([meaning,bases])=>`${bases.join('・')}の解釈は「${meaning}」です。`).join('\n\n')+'\n\n名前の材料は日付だけでは変わりません。日々の出来事の予測とは分けます。';
+    body=[...grouped].map(([meaning,bases])=>`${bases.join('・')}の解釈は「${meaning}」です。`).join('\n\n')+'\n\n'+(input.methodId==='name'?'名前の材料は日付だけでは変わりません。日々の出来事の予測とは分けます。':'本アプリ独自の近似周期による参考読みです。');
    }
-   const care=living.body.split('\n\n').pop(),period={numerology:'今年のテーマ',sukuyo:'選択日の距離の読み',kyusei:'本命星のテーマ',name:'名前から得たテーマ'}[input.methodId];
-   living.body=`「${living.scene}」のような場面に、${period}を重ねてみましょう。${profile.reading}\n\n${care}`;
+   const care=living.body.split('\n\n').pop(),periodLabel={numerology:'今年のテーマ',sukuyo:'選択日の距離の読み',kyusei:'本命星のテーマ',name:'名前から得たテーマ',rokusei:'独自周期のテーマ'}[input.methodId];
+   living.body=`「${living.scene}」のような場面に、${periodLabel}を重ねてみましょう。${profile.reading}\n\n${care}`;
    living.invitation=profile.invitation;
   }
   // Preserve specific spread interpretations; generic symbol paraphrasing may use a grounded life action.
   const useLifeAction=focus&&['rest','release','start'].includes(focus.intent);
-  return {title,readingBody:body,body:body+'\n\n'+(focus?focus.bridge+'\n\n':'')+living.body,invitation:['tarot','runes'].includes(input.methodId)&&!useLifeAction?invitation:living.invitation,symbolicFocus:focus,profileFocus:profile,livingContext:living,evidence:items.map(x=>root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis).join('／')};
+  return {title,readingBody:body,body:body+'\n\n'+(focus?focus.bridge+'\n\n':'')+living.body,invitation:['tarot','runes'].includes(input.methodId)&&!useLifeAction?invitation:living.invitation,symbolicFocus:focus,periodFocus:period,profileFocus:profile,livingContext:living,evidence:items.map(x=>root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis).join('／')};
  }
  function relationshipOf(items,methodId){
   const kind=id=>items.find(x=>x.id===id)?.kind;
@@ -263,7 +293,7 @@
   }else if(input.methodId==='sukuyo'){
    const rel=facts.find(x=>/^(命|業胎|栄親|友衰|危成|安壊|中間距離)：/.test(x));if(rel)add('distance',rel,`選択日との距離は「${rel.split('：')[1]}」という既存の解釈です。相手との相性や相手の意思を判定した結果ではありません。`);
   }else if(['kyusei','name','rokusei'].includes(input.methodId)){
-   for(const x of input.interpretationAssets||[]){if(x?.basis&&x?.meaning)add(String(x.basis),String(x.basis),`既存の解釈では「${x.meaning}」を扱います。`,x.kind||'neutral')}
+   for(const x of input.interpretationAssets||[]){if(x?.basis&&x?.meaning){const cycle=input.methodId==='rokusei'?cycleAsset(x):null;add(String(x.basis),String(x.basis),`既存の解釈では「${x.meaning}」を扱います。`,cycle?({forward:'support',test:'neutral',protect:'caution'})[cycle.row[1]]:x.kind||'neutral')}}
    if(input.methodId==='name'&&items.length)items[items.length-1].reading+='名前の材料は日付だけでは変わりません。日々の出来事の予測とは分けます。';
    if(input.methodId==='rokusei'&&items.length)items[items.length-1].reading+='本アプリ独自の近似周期による参考読みです。';
   }else if(input.methodId==='kabbalah'){
@@ -273,10 +303,20 @@
   if(!items.length)return null;
   const mixed=items.some(x=>x.kind==='support')&&items.some(x=>x.kind==='caution');
   const condition=CONDITIONS[input.domain]||CONDITIONS.overall;
-  const limit=Number(input.confidence)<50?'入力の確度が低いため、この解釈は確認の手掛かりに留めます。':'';
+  const confidence=Number(typeof input.confidence==='object'?input.confidence?.score:input.confidence);
+  const limit=confidence<50?'入力の確度が低いため、この解釈は確認の手掛かりに留めます。':'';
   const connection=relationshipOf(items,input.methodId);
   const story=storyOf(input,items);
-  return {items,mixed,connection,story,check:`相談では、${condition}を現実の情報と照らし合わせます。`,key:JSON.stringify(items.map(x=>[x.id,x.basis,x.reading])),text:(connection?connection+'\n':'')+items.map(x=>`「${root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis}」から、${x.reading}`).join('\n')+ (mixed&&!connection?'\n後押しと注意の両方があります。進められる部分と、調整が必要な部分を分けます。':'')+(limit?'\n'+limit:''),application:`相談では、${condition}を現実の情報と照らし合わせます。${mixed?'準備済みの部分は進め、未合意や負担の大きい部分は確認してから判断してください。':'条件が揃う部分から判断し、未確認の部分は保留してください。'}`};
+  const period=story?.periodFocus,uncertain=confidence<50;
+  let cycleGuidance=null;
+  if(period){
+   const direction=uncertain&&period.direction==='forward'?'test':period.direction,index=LIFE_SCENES[story.livingContext.domain].findIndex(x=>x[0]===story.livingContext.scene);
+   const checks=['取り組む前に、現実の条件と今の負担を確かめて。','参考の結果だけで決めず、必要な情報を確認して。','返事をする前に、費用や時間、続けられる範囲を確かめて。'];
+   cycleGuidance={direction,action:uncertain&&period.direction!=='protect'&&story.livingContext.domain!=='health'?checks[index]:story.invitation};
+  }
+  const application=period?`${story.title}。${uncertain?'確定した見通しではなく、現実の条件を確かめる参考として読みます。':''}${period.connection||`「${period.month||period.year}」のテーマを、現実の負担や条件と照らして使います。`}${uncertain?'\n\n'+CARE[cycleGuidance.direction][story.livingContext.careIndex]:''}`:`相談では、${condition}を現実の情報と照らし合わせます。${mixed?'準備済みの部分は進め、未合意や負担の大きい部分は確認してから判断してください。':'条件が揃う部分から判断し、未確認の部分は保留してください。'}`;
+  const evidenceText=period?story.readingBody:items.map(x=>`「${root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis}」から、${x.reading}`).join('\n');
+  return {items,mixed,connection,story,cycleGuidance,check:`相談では、${condition}を現実の情報と照らし合わせます。`,key:JSON.stringify(items.map(x=>[x.id,x.basis,x.reading])),text:(connection?connection+'\n':'')+evidenceText+ (mixed&&!connection&&!period?'\n後押しと注意の両方があります。進められる部分と、調整が必要な部分を分けます。':'')+(limit&&!period?'\n'+limit:''),application};
  }
  root.KOYOMI_METHOD_INTERPRETATION=Object.freeze({interpret,nineStarMeaning});
 })(typeof globalThis!=='undefined'?globalThis:this);
