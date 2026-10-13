@@ -202,9 +202,43 @@
   }
   return {birth,name,bridge,inner:ROLE_NUMBERS[birth],role:ROLE_NUMBERS[name]};
  }
+ const TRANSIT_PLANETS={太陽:'意志',月:'安心',水星:'思考',金星:'愛情',火星:'行動',木星:'拡大',土星:'責任',天王星:'刷新',海王星:'共感',冥王星:'極端さ'};
+ const TRANSIT_HOUSES=['自己像・身体・始動','所有・収入・価値観','学習・伝達・近距離','家庭・居場所・基盤','創造・恋愛・遊び','仕事習慣・健康管理・奉仕','対人・契約・結婚','共有財・深い結合・変容','探究・思想・遠方','社会的役割・到達点','仲間・未来像・共同体','休息・無意識・手放し'];
+ const TRANSIT_INFLUENCE={太陽:'意志のテーマは、自分が選ぶ理由を見つめるために使います。',月:'安心のテーマは、今の気持ちや負担に気づくために使います。',水星:'思考のテーマは、考えを伝え、分からない点を聞き直すために使います。',金星:'愛情のテーマは、好きなものや大切にしたい関わりを選ぶために使います。',火星:'行動のテーマは、勢いで押し通すより、力の向け先を選ぶために使います。',木星:'拡大のテーマは、可能性を探しながら、続けられる範囲を見つけるために使います。',土星:'責任のテーマは、義務を増やすより、守れる約束を選ぶために使います。',天王星:'刷新のテーマは、変えたい部分と残したいものを見分けるために使います。',海王星:'共感のテーマは、人を思う気持ちと自分の負担を一緒に見るために使います。',冥王星:'極端さのテーマは、全部か何もなしかで答えを出す前に、別の選び方を探すために使います。'};
+ const TRANSIT_VOICES={
+  太陽:['目指したい自分を、見失わないで','自分が大切にしたい方向',['目指したいことを、今の役割にどう取り入れたいか考えてみて。','期待されていることと、自分が望むことを分けてみて。','誰かの評価とは別に、続けたい理由を言葉にして。']],
+  月:['安心できる形を、選んでいい','自分が安心して過ごせる条件',['落ち着いて過ごせた場面から、残したいものを選んでみて。','無理な約束をしているなら、担える範囲を伝えて。','助けが必要なら、今困っていることを話してみて。']],
+  水星:['伝える言葉に、あなたの本音を','考えをどう伝えるか',['伝えたいことを、相手に聞きたいことと分けて話してみて。','返事を決める前に、意味が曖昧な言葉を聞き直して。','うまい説明より、自分が気にかかっている点を伝えて。']],
+  金星:['大切にしたいものを、選び直す','何に喜びや価値を感じるか',['人の好みに合わせる前に、自分が好きなものを思い出して。','大切にされていると感じる関わり方を、言葉にしてみて。','欲しいものがあるなら、使う場面と負担を一緒に考えて。']],
+  火星:['動きたい気持ちに、行き先を','行動に向ける力',['動きたい理由と、今できる範囲を確かめて。','強く言いたくなったら、相手に求めたいことを先に考えて。','押し通す前に、同意が必要な部分を話し合って。']],
+  木星:['広げたい未来に、今の手応えを','可能性を広げること',['興味のあることを、経験できる機会と結びつけてみて。','期待している成果と、すでに確かめたことを分けて。','続けたいことに使える時間や費用を確かめて。']],
+  土星:['責任の中に、自分の居場所も','引き受ける責任と長く続ける条件',['引き受けていることは、今も続けられる範囲か考えて。','一人で担っていることは、分担できないか相談して。','できない約束は増やさず、守れる範囲を伝えて。']],
+  天王星:['変えたい気持ちを、置き去りにしない','今までのやり方を見直すこと',['変えたいことと、残したいものを選んでみて。','違う方法を使いたいなら、関わる人と相談して。','今のやり方が合わない理由を、具体的にしてみて。']],
+  海王星:['人を思う時、自分の気持ちも','共感と理想',['相手への思いやりと、自分が担えることを分けてみて。','想像で答えを埋めず、相手が話したことを確かめて。','憧れていることを、実際に経験できる形で考えてみて。']],
+  冥王星:['全部を変える前に、残したいものを','極端にならず、変えたいことを見る視点',['変えたいことがあるなら、残したい約束も確かめて。','全部か何もなしかで選ばず、変更できる部分を探して。','強くこだわっていることを、信頼できる人と話してみて。']]
+ };
+ function transitFocus(input,domain){
+  if(input.methodId!=='astrology')return null;
+  const assets=input.transitAssets,transits=assets?.transits;
+  if(!Array.isArray(transits)||!transits.length||transits.length>12)return null;
+  if(new Set(transits.map(x=>x&&x.tp+'／'+x.np)).size!==transits.length)return null;
+  const bounds={合:3,セクスタイル:2.5,スクエア:3,トライン:3,オポジション:3};
+  if(transits.some(x=>!x||!Object.hasOwn(TRANSIT_PLANETS,x.tp)||!Object.hasOwn(TRANSIT_PLANETS,x.np)||!Object.hasOwn(bounds,x.name)||typeof x.orb!=='number'||!Number.isFinite(x.orb)||x.orb<0||x.orb>bounds[x.name]||!Number.isInteger(x.house)||x.house<1||x.house>12||assets.planetMeanings?.[x.tp]?.[0]!==TRANSIT_PLANETS[x.tp]||assets.planetMeanings?.[x.np]?.[0]!==TRANSIT_PLANETS[x.np]||assets.houseMeanings?.[x.house-1]!==TRANSIT_HOUSES[x.house-1]))return null;
+  let soft=0,hard=0;
+  for(const x of transits)if(['スクエア','オポジション'].includes(x.name))hard+=4-Math.min(3,x.orb);else if(x.name==='合')soft+=1.5;else soft+=4-Math.min(3,x.orb);
+  if(!Array.isArray(input.evidence)||![`調和トランジット強度${soft.toFixed(1)}`,`緊張トランジット強度${hard.toFixed(1)}`,`主要トランジット${transits.length}件`].every(x=>input.evidence.includes(x)))return null;
+  const houses={work:[6,10],relationship:[4,5,7,11],money:[2,8],health:[1,6,12],overall:[]}[domain];
+  const ranked=transits.map((x,index)=>({x,index})).sort((a,b)=>Number(houses.includes(b.x.house))-Number(houses.includes(a.x.house))||a.x.orb-b.x.orb||a.index-b.index),x=ranked[0].x;
+  return {tp:x.tp,np:x.np,name:x.name,orb:x.orb,house:x.house,meaning:TRANSIT_HOUSES[x.house-1],caution:['スクエア','オポジション'].includes(x.name),conjunction:x.name==='合',mixed:soft>0&&hard>0};
+ }
  function profileLens(input,items,living,period){
   let row=null,basis='';
-  if(input.methodId==='numerology'){
+  if(input.methodId==='astrology'){
+   const focus=transitFocus(input,living.domain);
+   if(focus){const voice=TRANSIT_VOICES[focus.np],index=Math.max(0,LIFE_SCENES[living.domain].findIndex(x=>x[0]===living.scene));
+    return {basis:`${focus.tp}→出生${focus.np} ${focus.name}（第${focus.house}室）`,title:voice[0],reading:`出生${focus.np}の「${TRANSIT_PLANETS[focus.np]}」に重ねるのは、${voice[1]}。暮らしの中では「${focus.meaning}」に目を向ける読みです。`+(focus.conjunction?'合は二つのテーマが重なる配置です。良い結果の保証とは分けて読みます。':focus.caution?'緊張角は、何かが失敗するという宣告ではありません。進める前に、無理や食い違いがないかを見る読みです。':'調和角は、準備やつながりを使う読みです。まだ確かめていない条件まで順調だと決めなくて大丈夫。')+(focus.mixed?'ほかの配置には調和と緊張の両方があるため、この一組だけで全体の答えは決めません。':''),invitation:living.domain==='health'||living.direction==='protect'?living.invitation:voice[2][index],transitFocus:focus};
+   }
+  }else if(input.methodId==='numerology'){
    const year=items.find(x=>x.id==='year'),number=year?.basis.slice(3);
    if(Object.hasOwn(YEAR_LENSES,number)&&Array.isArray(input.evidence)&&input.evidence.includes(YEAR_LENSES[number][0])){row=YEAR_LENSES[number].slice(1);basis=year.basis;}
   }else if(input.methodId==='sukuyo'){
@@ -294,7 +328,8 @@
     const grouped=new Map();for(const asset of input.interpretationAssets||[])if(asset?.basis&&asset.meaning){const meaning=String(asset.meaning),bases=grouped.get(meaning)||[];if(!bases.includes(String(asset.basis)))bases.push(String(asset.basis));grouped.set(meaning,bases);}
     body=[...grouped].map(([meaning,bases])=>`${bases.join('・')}の解釈は「${meaning}」です。`).join('\n\n')+'\n\n'+(input.methodId==='name'?'名前の材料は日付だけでは変わりません。日々の出来事の予測とは分けます。':'本アプリ独自の近似周期による参考読みです。');
    }
-   const care=living.body.split('\n\n').pop(),periodLabel={numerology:'今年のテーマ',sukuyo:'選択日の距離の読み',kyusei:'本命星のテーマ',name:'名前から得たテーマ',kabbalah:'二つの数のテーマ',rokusei:'独自周期のテーマ'}[input.methodId];
+   if(input.methodId==='astrology')body=`今回の焦点は${profile.transitFocus.tp}→出生${profile.transitFocus.np} ${profile.transitFocus.name}です。選択日の${profile.transitFocus.tp}が示す${TRANSIT_INFLUENCE[profile.transitFocus.tp]}\n\n選択日の配置を、出生図のテーマと重ねて読む象徴的な手掛かりで、性格や将来の出来事を決めるものではありません。`;
+   const care=living.body.split('\n\n').pop(),periodLabel={astrology:'選択日の天体の組合せ',numerology:'今年のテーマ',sukuyo:'選択日の距離の読み',kyusei:'本命星のテーマ',name:'名前から得たテーマ',kabbalah:'二つの数のテーマ',rokusei:'独自周期のテーマ'}[input.methodId];
    living.body=`「${living.scene}」のような場面に、${periodLabel}を重ねてみましょう。${profile.reading}\n\n${care}`;
    living.invitation=profile.invitation;
   }
@@ -329,6 +364,8 @@
    const soft=number('調和トランジット強度'),hard=number('緊張トランジット強度');
    if(soft&&soft.value>0)add('harmony',soft.basis,'調和の配置は、すでに整っている条件を使って進める材料として読みます。','support');
    if(hard&&hard.value>0)add('tension',hard.basis,'緊張の配置は、負担や食い違いのある条件を調整する材料として読みます。','caution');
+   const focus=transitFocus(input,livingLanguage(input,items,null,null).domain);
+   if(focus)add('transit-focus',`${focus.tp}→出生${focus.np} ${focus.name}／${focus.meaning}`,`${focus.tp}の「${TRANSIT_PLANETS[focus.tp]}」と出生${focus.np}の「${TRANSIT_PLANETS[focus.np]}」を、「${focus.meaning}」の領域に重ねて読む配置です。`);
   }else if(['tarot','runes'].includes(input.methodId)){
    const symbols=Array.isArray(input.symbols)?input.symbols:[];
    const relevant=input.methodId==='tarot'?symbols.filter(x=>['障害','自分の立場','最終結果'].includes(x?.pos)):symbols;
