@@ -236,7 +236,7 @@
   if(input.methodId==='astrology'){
    const focus=transitFocus(input,living.domain);
    if(focus){const voice=TRANSIT_VOICES[focus.np],index=Math.max(0,LIFE_SCENES[living.domain].findIndex(x=>x[0]===living.scene));
-    return {basis:`${focus.tp}→出生${focus.np} ${focus.name}（第${focus.house}室）`,title:voice[0],reading:`出生${focus.np}の「${TRANSIT_PLANETS[focus.np]}」に重ねるのは、${voice[1]}。暮らしの中では「${focus.meaning}」に目を向ける読みです。`+(focus.conjunction?'合は二つのテーマが重なる配置です。良い結果の保証とは分けて読みます。':focus.caution?'緊張角は、何かが失敗するという宣告ではありません。進める前に、無理や食い違いがないかを見る読みです。':'調和角は、準備やつながりを使う読みです。まだ確かめていない条件まで順調だと決めなくて大丈夫。')+(focus.mixed?'ほかの配置には調和と緊張の両方があるため、この一組だけで全体の答えは決めません。':''),invitation:living.domain==='health'||living.direction==='protect'?living.invitation:voice[2][index],transitFocus:focus};
+    return {basis:`${focus.tp}→出生${focus.np} ${focus.name}（第${focus.house}室）`,title:voice[0],reading:`生まれた時の${focus.np}が象徴する「${TRANSIT_PLANETS[focus.np]}」を、${voice[1]}に重ねます。暮らしの中では「${focus.meaning}」に目を向ける読みです。`+(focus.conjunction?'二つのテーマが重なる配置を、良い結果の保証とは分けて読みます。':focus.caution?'緊張のある配置は、何かが失敗するという宣告ではありません。進める前に、無理や食い違いがないかを見る読みです。':'調和のある配置は、準備やつながりを使う読みです。まだ確かめていない条件まで順調だと決めなくて大丈夫。')+(focus.mixed?'ほかの配置には調和と緊張の両方があるため、この一組だけで全体の答えは決めません。':''),invitation:living.domain==='health'||living.direction==='protect'?living.invitation:voice[2][index],transitFocus:focus};
    }
   }else if(input.methodId==='numerology'){
    const year=items.find(x=>x.id==='year'),number=year?.basis.slice(3);
@@ -328,7 +328,7 @@
     const grouped=new Map();for(const asset of input.interpretationAssets||[])if(asset?.basis&&asset.meaning){const meaning=String(asset.meaning),bases=grouped.get(meaning)||[];if(!bases.includes(String(asset.basis)))bases.push(String(asset.basis));grouped.set(meaning,bases);}
     body=[...grouped].map(([meaning,bases])=>`${bases.join('・')}の解釈は「${meaning}」です。`).join('\n\n')+'\n\n'+(input.methodId==='name'?'名前の材料は日付だけでは変わりません。日々の出来事の予測とは分けます。':'本アプリ独自の近似周期による参考読みです。');
    }
-   if(input.methodId==='astrology')body=`今回の焦点は${profile.transitFocus.tp}→出生${profile.transitFocus.np} ${profile.transitFocus.name}です。選択日の${profile.transitFocus.tp}が示す${TRANSIT_INFLUENCE[profile.transitFocus.tp]}\n\n選択日の配置を、出生図のテーマと重ねて読む象徴的な手掛かりで、性格や将来の出来事を決めるものではありません。`;
+   if(input.methodId==='astrology')body=`今回の焦点は、選択日の${profile.transitFocus.tp}と、生まれた時の${profile.transitFocus.np}です。二つの天体には「${profile.transitFocus.name}」という${profile.transitFocus.conjunction?'重なり':profile.transitFocus.caution?'緊張':'調和'}を示す配置が出ています。\n\n選択日の${profile.transitFocus.tp}が示す${TRANSIT_INFLUENCE[profile.transitFocus.tp]}性格や将来の出来事を決めるものではなく、今の暮らしを眺める象徴的な手掛かりです。`;
    const care=living.body.split('\n\n').pop(),periodLabel={astrology:'選択日の天体の組合せ',numerology:'今年のテーマ',sukuyo:'選択日の距離の読み',kyusei:'本命星のテーマ',name:'名前から得たテーマ',kabbalah:'二つの数のテーマ',rokusei:'独自周期のテーマ'}[input.methodId];
    living.body=`「${living.scene}」のような場面に、${periodLabel}を重ねてみましょう。${profile.reading}\n\n${care}`;
    living.invitation=profile.invitation;
@@ -365,7 +365,7 @@
    if(soft&&soft.value>0)add('harmony',soft.basis,'調和の配置は、すでに整っている条件を使って進める材料として読みます。','support');
    if(hard&&hard.value>0)add('tension',hard.basis,'緊張の配置は、負担や食い違いのある条件を調整する材料として読みます。','caution');
    const focus=transitFocus(input,livingLanguage(input,items,null,null).domain);
-   if(focus)add('transit-focus',`${focus.tp}→出生${focus.np} ${focus.name}／${focus.meaning}`,`${focus.tp}の「${TRANSIT_PLANETS[focus.tp]}」と出生${focus.np}の「${TRANSIT_PLANETS[focus.np]}」を、「${focus.meaning}」の領域に重ねて読む配置です。`);
+   if(focus)add('transit-focus',`選択日の${focus.tp}・生まれた時の${focus.np} ${focus.name}／${focus.meaning}`,`${focus.tp}の「${TRANSIT_PLANETS[focus.tp]}」と生まれた時の${focus.np}の「${TRANSIT_PLANETS[focus.np]}」を、「${focus.meaning}」の領域に重ねて読む配置です。`);
   }else if(['tarot','runes'].includes(input.methodId)){
    const symbols=Array.isArray(input.symbols)?input.symbols:[];
    const relevant=input.methodId==='tarot'?symbols.filter(x=>['障害','自分の立場','最終結果'].includes(x?.pos)):symbols;

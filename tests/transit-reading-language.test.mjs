@@ -25,12 +25,12 @@ for(const np of Object.keys(planets))for(const name of ['合','トライン','�
   assert.equal(parsed.key,initial.key);assert.equal(parsed.story.readingBody,initial.story.readingBody);
   assert.equal(parsed.story.profileFocus.transitFocus.np,np);assert.equal(parsed.story.profileFocus.transitFocus.name,name);
   assert.ok(parsed.story.body.includes(planets[np][0]));assert.ok(parsed.story.body.includes(houses[9]));
-  assert.match(parsed.story.evidence,/土星→出生/);
+  assert.match(parsed.story.evidence,/選択日の土星・生まれた時の/);
   assert.notEqual(parsed.story.body,previous);previous=parsed.story.body;bodies.add(parsed.story.body);actions.add(parsed.story.invitation);
   for(const mode of ['sister','zubat']){
    const out=adapter.applyDivination('計算済み資料',{...current,mode});assert.equal(out.narrative.quality.pass,true,`${np}/${name}/${domain}/${day}: ${out.narrative.quality.issues}`);
    if(!/受診|医療機関|専門家/.test(parsed.story.invitation))assert.equal(out.narrative.structure,'symbolic-story');
-   assert.ok(out.text.includes(parsed.story.invitation));if(out.narrative.structure==='symbolic-story')assert.ok(out.text.includes(`土星→出生${np} ${name}`));
+   assert.ok(out.text.includes(parsed.story.invitation));if(out.narrative.structure==='symbolic-story'){assert.ok(out.text.includes(`選択日の土星と、生まれた時の${np}`));assert.ok(out.text.includes(`「${name}」`));assert.doesNotMatch(out.text,/出生月/);}
    assert.doesNotMatch(out.text,/undefined|必ず成功|病気になる|相手は.*思っています/);cases++;
   }
   assert.equal(JSON.stringify(current),before);
