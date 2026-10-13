@@ -11,13 +11,21 @@ for(const methodId of ['shichu','timing'])for(const long of [30,55,85])for(const
  const initial=interpret(inputFor(long,year,today,methodId,domain)),bodies=new Set(),actions=new Set();let previous='';
  const direction=today<45?'protect':today<68||long<45||year<45?'test':'forward';
  for(let day=1;day<=30;day++){
-  const input={...inputFor(long,year,today,methodId,domain),date:`2026-09-${String(day).padStart(2,'0')}`},before=JSON.stringify(input),parsed=interpret(input);
+  const input={...inputFor(long,year,today,methodId,domain),score:day%2?90:15,date:`2026-09-${String(day).padStart(2,'0')}`},before=JSON.stringify(input),parsed=interpret(input);
   assert.equal(parsed.story.timeFocus.direction,direction);assert.equal(parsed.story.livingContext.direction,direction);
   assert.equal(parsed.story.readingBody,initial.story.readingBody);assert.equal(parsed.key,initial.key);
   assert.ok(parsed.story.readingBody.includes(parsed.story.timeFocus.body));assert.notEqual(parsed.story.body,previous);previous=parsed.story.body;
   assert.ok(parsed.story.readingBody.startsWith(parsed.story.timeFocus.body));assert.equal(parsed.story.title,parsed.story.timeFocus.title);
   bodies.add(parsed.story.body);actions.add(parsed.story.invitation);
-  for(const mode of ['sister','zubat']){const out=adapter.applyDivination('資料',{...input,mode});assert.equal(out.narrative.quality.pass,true,`${methodId}/${long}/${year}/${today}/${domain}: ${out.narrative.quality.issues}`);assert.ok(out.text.includes(parsed.story.invitation));cases++;}
+  for(const mode of ['sister','zubat']){
+   const out=adapter.applyDivination('資料',{...input,mode}),decorated=context.KOYOMI_READING_KEEPSAKE.decorate({...input,mode},parsed);
+   assert.equal(out.narrative.quality.pass,true,`${methodId}/${long}/${year}/${today}/${domain}: ${out.narrative.quality.issues}`);assert.ok(out.text.includes(parsed.story.invitation));
+   const axis=direction==='protect'?'rest':direction==='forward'?'start':long<45||year<45?'boundary':'choice';
+   assert.equal(decorated.axis,axis);assert.ok(decorated.keepsakeCandidates.every(x=>x.axis===axis));
+   assert.equal(out.narrative.vocabulary.direction,/受診|医療機関|専門家/.test(parsed.story.invitation)?'protect':direction);
+   if(out.keepsake)assert.equal(out.keepsake.axis,axis);if(mode==='zubat'&&out.narrative.structure==='symbolic-story')assert.ok(out.text.includes(decorated.title));
+   cases++;
+  }
   assert.equal(JSON.stringify(input),before);
  }
  assert.equal(bodies.size,30);assert.equal(actions.size,3);metrics.push({methodId,long,year,today,domain,distinctBodies:30,distinctActions:3});
@@ -37,6 +45,9 @@ for(const today of [30,55,85]){
  assert.ok(production.story.timeFocus);assert.equal(production.story.timeFocus.basis,'選択日'+today);assert.equal(production.story.timeFocus.direction,today===30?'protect':'test');
 }
 for(const patch of [{confidence:20},{psychRisk:80},{action:'必要な受診を相談して。'}])assert.notEqual(adapter.applyDivination('資料',{...inputFor(85,30,55),...patch}).narrative.structure,'symbolic-story');
+for(const confidence of [20,{score:20}]){const out=adapter.applyDivination('資料',{...inputFor(85,85,85),confidence,score:90});assert.equal(out.narrative.vocabulary.direction,'test');assert.equal(out.keepsake,null);}
+assert.equal(adapter.applyDivination('資料',{...inputFor(85,85,85),psychRisk:80,score:90}).narrative.vocabulary.direction,'protect');
+assert.equal(adapter.applyDivination('資料',{...inputFor(85,85,85),action:'必要な受診を相談して。',score:90}).narrative.vocabulary.direction,'protect');
 assert.ok(adapter.applyDivination('資料',{...inputFor(85,30,55),generatedAction:false,action:'指定した行動を保持する'}).text.includes('指定した行動を保持する'));
 const dayReadings=[30,55,85].map(today=>interpret(inputFor(85,30,today)).story.readingBody);assert.equal(new Set(dayReadings).size,3,'the same long/year contrast must not hide a changed day');
 if(process.env.KOYOMI_PERIOD_REPORT)await writeFile(process.env.KOYOMI_PERIOD_REPORT,JSON.stringify({cases,metrics,samples},null,2));
