@@ -15,7 +15,8 @@ export function calculateLuckCycles(chartResult, profileOrSchoolConfig = {}, may
   const yearYang = chartResult.chart?.pillars?.year?.stem?.yinYang === 'yang';
   const directionInfo = decideDirection(gender, yearYang, schoolConfig);
   const start = calculateLuckStart(chartResult, directionInfo.direction);
-  const cycles = month ? Array.from({ length: 8 }, (_, index) => {
+  const cycleCount = Number.isInteger(schoolConfig.cycleCount) ? Math.max(1, Math.min(12, schoolConfig.cycleCount)) : 8;
+  const cycles = month ? Array.from({ length: cycleCount }, (_, index) => {
     const delta = directionInfo.direction === 'forward' ? index + 1 : -(index + 1);
     const pillar = cycleFromOrders(month.stem.order + delta, month.branch.order + delta);
     const startDate = start.startDate ? addYears(start.startDate, index * 10) : null;
@@ -408,7 +409,7 @@ function publicBoundary(boundary) {
 
 function addYears(date, years) {
   const result = new Date(date.getTime());
-  result.setFullYear(result.getFullYear() + years);
+  result.setUTCFullYear(result.getUTCFullYear() + years);
   return result;
 }
 
