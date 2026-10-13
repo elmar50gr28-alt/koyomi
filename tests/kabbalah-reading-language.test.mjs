@@ -13,6 +13,7 @@ const actualConfidence=context.v191zConfidence({i:{romaji:'KOYOMI'}},'kabbalah')
 assert.equal(actualConfidence,55);
 const expression=app.match(/key==='kabbalah'\?(method\.factors\.slice\(0,2\)\.map\(.+?\)):key==='rokusei'/)[1];
 const assets=evidence=>vm.runInNewContext(expression,{method:{factors:evidence},NUM_FULL:meanings});
+assert.ok(vm.runInNewContext(expression,{method:{factors:['生年月日核1','名前核6']}}).every(x=>x.meaning===''),'an unavailable dictionary must not break rendering');
 const interpret=context.KOYOMI_METHOD_INTERPRETATION.interpret,adapter=context.KOYOMI_PERSONA_ADAPTER;
 assert.ok(adapter);
 const inputFor=(birth,name,domain,date='2026-09-01')=>{
