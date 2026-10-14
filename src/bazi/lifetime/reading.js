@@ -34,14 +34,29 @@ export function continuousFlow(point,nearby=[]){
  const startDate=rows[start].date,endDate=rows[end].date,days=end-start+1;
  return [{kind:warning?'caution-streak':'opportunity-streak',date:point.date,startDate,endDate,days,text:`${startDate}〜${endDate}の${days}日間、${warning?'警戒度の高い状態が続きます。一日だけ我慢して全部引き受けるより、数日分の負担を見渡してください。':'好機として読む材料が続きます。今日だけで全部を動かさず、相手の返事を聞きながら進め方を選んで。'}確認した前後の日程の範囲での読みです。`}];
 }
+export function periodContrast(point){
+ const d=point.parts.daily,dayScore=Math.round(50+(d.support-d.caution)/2),background=point.longTermScore;
+ if(!Number.isFinite(background))return null;
+ if(dayScore>=70&&background<=35)return {kind:'day-open-background-caution',dayScore,background,text:`日運だけの指標は${dayScore}点、背景は${background}点。その日は後押し、長期の背景は慎重さを示す組合せです。`};
+ if(dayScore<=30&&background>=65)return {kind:'day-caution-background-open',dayScore,background,text:`日運だけの指標は${dayScore}点、背景は${background}点。その日は慎重さ、長期の背景は後押しを示す組合せです。`};
+ return null;
+}
+export function turningPoint(point,previous,next){
+ if(!adjacent(previous,point)||!adjacent(point,next))return null;
+ if(point.score-previous.score>=8&&point.score-next.score>=8)return {kind:'local-peak',date:point.date,text:'前日と翌日を比べると、今日は点数の山に当たります。'+(point.risk>=70?'点数が高くても警戒度は強く残るため、大きな約束は急がないで。':point.tone==='opportunity'?'準備のある話は今日持ちかけ、相手の返事を聞いてから次を決めて。':'点数の高さだけで決めず、相手の意思と実際の条件も確かめて。')};
+ if(previous.score-point.score>=8&&next.score-point.score>=8)return {kind:'local-trough',date:point.date,text:'前日と翌日を比べると、今日は点数の谷に当たります。'+(next.risk>=70?'翌日に点数が戻っても、警戒の材料は強く残ります。数日分の負担を見渡して。':next.risk>point.risk?'翌日に点数が戻っても、警戒度も上がる組合せです。待つだけで条件が良くなると決めず、実際の負担も確かめて。':next.tone==='opportunity'?'翌日は好機として読む材料があります。今日の低い点数だけで先を決めつけず、待てる用事は翌日の条件も比べて。':'今日の低い点数だけで、先の見通しまで決めつけなくて大丈夫。待てる用事は、翌日の条件も比べてみて。')};
+ return null;
+}
 export function flowFacts(point,context={}){
  const previous=adjacent(context.previous,point)?context.previous:null,next=adjacent(point,context.next)?context.next:null;
- const facts=[];
- if(previous&&point.score-previous.score>=8){facts.push({kind:'recovering',date:previous.date,text:point.risk>=70?'昨日より点数は上向いていますが、今日はまだ警戒の材料が強い日です。':'昨日より点数は上向いています。'+(point.risk>previous.risk?'ただし警戒度も上がっているため、条件の確認は省かないで。':'今日は、昨日と同じ結論に縛られず条件を見直してみて。')});}
- if(previous&&previous.score-point.score>=8)facts.push({kind:'falling',date:previous.date,text:'昨日より点数が下がっています。昨日の読みをそのまま当てはめず、今日の条件を改めて確かめてください。'});
- if(next&&next.tone==='opportunity'&&point.tone!=='opportunity')facts.push({kind:'opening',date:next.date,text:`翌日（${next.date}）は好機として読む組合せです。急がない用事は、今日条件を確認し、明日の流れも比べてみて。`});
- else if(next&&point.risk-next.risk>=8&&next.score-point.score>=8)facts.push({kind:'easing',date:next.date,text:`翌日（${next.date}）は点数が上向き、警戒度も下がります。${next.risk>=70?'ただし翌日も警戒の材料は強く残ります。':'待てる用事なら、明日の条件も見てから決めて。'}`});
- else if(next&&next.risk-point.risk>=15)facts.push({kind:'tightening',date:next.date,text:`翌日（${next.date}）は警戒度が上がります。今日の手応えだけで、明日の予定まで詰め込まないで。`});
+ const turn=turningPoint(point,previous,next),facts=turn?[turn]:[];
+ if(!turn&&previous&&point.score-previous.score>=8){facts.push({kind:'recovering',date:previous.date,text:point.risk>=70?'昨日より点数は上向いていますが、今日はまだ警戒の材料が強い日です。':'昨日より点数は上向いています。'+(point.risk>previous.risk?'ただし警戒度も上がっているため、条件の確認は省かないで。':'今日は、昨日と同じ結論に縛られず条件を見直してみて。')});}
+ if(!turn&&previous&&previous.score-point.score>=8)facts.push({kind:'falling',date:previous.date,text:'昨日より点数が下がっています。昨日の読みをそのまま当てはめず、今日の条件を改めて確かめてください。'});
+ if(turn?.kind!=='local-trough'){
+  if(next&&next.tone==='opportunity'&&point.tone!=='opportunity')facts.push({kind:'opening',date:next.date,text:`翌日（${next.date}）は好機として読む組合せです。急がない用事は、今日条件を確認し、明日の流れも比べてみて。`});
+  else if(next&&point.risk-next.risk>=8&&next.score-point.score>=8)facts.push({kind:'easing',date:next.date,text:`翌日（${next.date}）は点数が上向き、警戒度も下がります。${next.risk>=70?'ただし翌日も警戒の材料は強く残ります。':'待てる用事なら、明日の条件も見てから決めて。'}`});
+  else if(next&&next.risk-point.risk>=15)facts.push({kind:'tightening',date:next.date,text:`翌日（${next.date}）は警戒度が上がります。今日の手応えだけで、明日の予定まで詰め込まないで。`});
+ }
  return [...facts,...continuousFlow(point,context.nearby)];
 }
 export function findMilestones(rows){
@@ -77,5 +92,7 @@ export function describePoint(point,context={}){
  let title=titles[tone];
  if(uncertain){const reference={caution:'慎重に確認したい日',careful:'条件を確かめたい日',opportunity:'後押しを参考にしたい日',rising:'取り組む余地を考えたい日',mixed:'進める条件を見極めたい日',steady:'いつもの状況を見渡したい日'};title=`${scene.name}について、${reference[tone]}（参考）`;}
  if(point.age<13){title='この日の環境と見守りの目安';action='本人への行動指示ではなく、周囲の見守りや生活環境を考える参考にしてください。安心して過ごせる余裕を、周囲の大人が用意してあげて。';}
- return {title,body:action,theme:scene.id,cause,uncertain,flow:point.age<13?[]:flow,evidence:Object.entries(point.parts).filter(([,p])=>p).map(([key,p])=>({scope:names[key],...p})),note:notes.join(' ')};
+ const contrast=point.age<13?null:periodContrast(point);
+ if(contrast)action+=' '+(contrast.kind==='day-open-background-caution'?'今日の後押しがあっても、長く続く約束は条件を確かめて。':'今日は慎重な読みでも、長期の方針まで諦める必要はありません。');
+ return {title,body:action,theme:scene.id,cause,uncertain,contrast,flow:point.age<13?[]:flow,evidence:Object.entries(point.parts).filter(([,p])=>p).map(([key,p])=>({scope:names[key],...p})),note:notes.join(' ')};
 }

@@ -2,7 +2,7 @@ import {calculateBazi} from '../index.js';
 import {calculateYearPillar,calculateMonthPillar,calculateDayPillar} from '../calendar/index.js';
 import {calculateLuckCycles,calculateAnnualLuck,calculateMonthlyLuck,buildLuckPeriod} from '../luck/index.js';
 import {toLegacySchoolConfig} from '../settings/index.js';
-export const VERSION='2.2.0',DAY=86400000;
+export const VERSION='2.3.0',DAY=86400000;
 export const WEIGHTS=Object.freeze({decade:.10,annual:.0875,monthly:.0625,daily:.75});
 const clamp=n=>Math.max(0,Math.min(100,n));
 export function parseCivil(value){
