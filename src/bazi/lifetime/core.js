@@ -2,7 +2,7 @@ import {calculateBazi} from '../index.js';
 import {calculateYearPillar,calculateMonthPillar,calculateDayPillar} from '../calendar/index.js';
 import {calculateLuckCycles,calculateAnnualLuck,calculateMonthlyLuck,buildLuckPeriod} from '../luck/index.js';
 import {toLegacySchoolConfig} from '../settings/index.js';
-export const VERSION='2.3.0',DAY=86400000;
+export const VERSION='2.4.0',DAY=86400000;
 export const WEIGHTS=Object.freeze({decade:.10,annual:.0875,monthly:.0625,daily:.75});
 const clamp=n=>Math.max(0,Math.min(100,n));
 export function parseCivil(value){
@@ -21,7 +21,8 @@ export function ratePeriod(period,favorable,unfavorable=[]){
  const rejected=100*period.elementContribution.filter(x=>unfavorable.includes(x.element)).reduce((n,x)=>n+x.value,0)/total;
  const r=period.relationToChart,clashes=(r.stems.clashes?.length||0)+(r.branches.clashes?.length||0),other=(r.branches.harms?.length||0)+(r.branches.punishments?.length||0)+(r.branches.selfPunishments?.length||0)+(r.branches.destructions?.length||0);
  const caution=clamp(rejected+clashes*18+other*10);
- return {label:period.label,support:Math.round(support),caution:Math.round(caution),score:Math.round(clamp(50+(support-caution)/2)),attentionBreakdown:{element:rejected,clash:clashes*18,friction:other*10},clashes,other,tenGod:period.tenGod?.kanji||'',warnings:period.warnings||[]};
+ const supportElements=period.elementContribution.filter(x=>x.value>0&&favorable.includes(x.element)).map(x=>({element:x.element,share:100*x.value/total}));
+ return {label:period.label,support:Math.round(support),caution:Math.round(caution),score:Math.round(clamp(50+(support-caution)/2)),supportElements,attentionBreakdown:{element:rejected,clash:clashes*18,friction:other*10},clashes,other,tenGod:period.tenGod?.kanji||'',warnings:period.warnings||[]};
 }
 // Background is normalized separately so a missing decade never changes the daily share.
 export function combinePeriods(parts){

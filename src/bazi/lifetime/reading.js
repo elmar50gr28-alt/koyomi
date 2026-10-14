@@ -13,6 +13,19 @@ const SCENES={
 };
 SCENES.七殺=SCENES.偏官;SCENES.正印=SCENES.印綬;
 const FALLBACK={id:'conditions',name:'今日の条件',good:'準備できていることから、相手の意思を確かめて話を進めて。',care:'返事をする前に、期限と自分の余力を確認してください。',quiet:'今ある用事を見渡し、無理なく取り組める範囲を選んでください。'};
+// Associations follow src/bazi/reading/chart-interpretation.js; they are symbolic, not observed circumstances.
+const SUPPORT_ELEMENTS={wood:{name:'木',meaning:'成長・計画・発展',action:'これから育てていきたいものを思い描いて。必要な段取りを考えるところから進めてみて。'},fire:{name:'火',meaning:'表現・情熱・発信',action:'思いを言葉にして伝えてみて。相手が受け取りやすい形を選んで。'},earth:{name:'土',meaning:'安定・生活基盤・調整',action:'続けやすい段取りを大切に。今ある時間や役割を確かめて進めてみて。'},metal:{name:'金',meaning:'整理・判断・境界線',action:'決めたい条件と譲れる条件を書き分けてみて。判断の基準が見えれば、話を進めやすくなります。'},water:{name:'水',meaning:'学習・回復・情報',action:'気になっていることを調べたり、誰かに聞いたりしてみて。考え続けて疲れたら、休む時間も取って。'}};
+const SUPPORT_PAIRS={'wood/fire':'育てたい話を、相手に届く言葉で提案してみて。','wood/earth':'先の計画と、今の生活の段取りを行き来しながら考えてみて。','wood/metal':'進めたい方向と、決めておきたい条件を照らし合わせてみて。','wood/water':'これから取り組みたいことに必要な情報を集めてみて。','fire/earth':'伝えたい思いを、続けられる時間や役割と結びつけて話してみて。','fire/metal':'思いを伝えるときは、お願いしたい範囲もはっきりさせて。','fire/water':'調べて分かったことを、自分の言葉で誰かに話してみて。','earth/metal':'今の段取りを見直し、担当と期限を確かめてみて。','earth/water':'必要な情報を確かめたら、無理なく続けるための休息も大切に。','metal/water':'判断に迷う条件を調べて、分かったことから選んでみて。'};
+export function supportReading(d,sceneName){
+ if(d.support<55)return null;
+ const order=Object.keys(SUPPORT_ELEMENTS),totals=new Map();
+ for(const p of d.supportElements||[])if(SUPPORT_ELEMENTS[p.element]&&Number.isFinite(p.share)&&p.share>0)totals.set(p.element,(totals.get(p.element)||0)+p.share);
+ const ranked=[...totals].sort((a,b)=>b[1]-a[1]||order.indexOf(a[0])-order.indexOf(b[0]));if(!ranked.length)return null;
+ const ids=[ranked[0][0]];if(ranked[1]&&ranked[1][1]>=ranked[0][1]*.75)ids.push(ranked[1][0]);
+ const canonical=ids.slice().sort((a,b)=>order.indexOf(a)-order.indexOf(b)),materials=canonical.map(id=>SUPPORT_ELEMENTS[id]);
+ const label=materials.map(x=>x.name).join('と'),meaning=materials.map(x=>x.meaning).join('／');
+ return {elements:canonical,label,meaning,action:`${sceneName}では、${ids.length===2?SUPPORT_PAIRS[canonical.join('/')]:materials[0].action}`,note:`後押し側の寄与が大きい${label}を、${meaning}の象徴として読みます。`};
+}
 const DAY=86400000;
 const adjacent=(a,b)=>a&&b&&Date.parse(b.date)-Date.parse(a.date)===DAY;
 export function readingContext(rows,index,meta={}){return {previous:rows[index-1],next:rows[index+1],nearby:rows.slice(Math.max(0,index-3),index+4),meta};}
@@ -75,6 +88,8 @@ export function describePoint(point,context={}){
  const titles={caution:`${scene.name}ほど、結論を急がない日。`,careful:`${scene.name}は、条件を確かめてから。`,opportunity:`今日は、${scene.name}に自分から働きかけて。`,rising:`${scene.name}へ、手を伸ばしてみたい日。`,mixed:`${scene.name}は進めても、約束は慎重に。`,steady:`今日は、${scene.name}を見渡して。`};
  const causes={neutral:'その日の五行には、今回の判定で強い後押し・注意のどちらにも置かない材料があります。',clash:'その日の干支と命式に冲があり、予定や意見をすり合わせる場面を読む材料があります。',friction:'その日の干支と命式に害・刑・破などがあり、負担や行き違いを点検する材料があります。',element:'その日の五行に、今回の判定で注意側に置いた要素が含まれ、その寄与が注意の主な材料です。',support:'その日の五行と今回の用神候補との適合を、後押しの材料として読んでいます。'};
  let action=tone==='mixed'?scene.good+' '+scene.care:caution?scene.care:positive?scene.good:scene.quiet;
+ const supported=point.age>=13?supportReading(d,scene.name):null;
+ if(positive&&supported)action=supported.action;
  const protection={neutral:'周囲の勢いだけで判断せず、自分の余力も確かめてください。',clash:'相手の返事が違っても、すぐに押し返さなくて大丈夫。聞く時間を置いてください。',friction:'頼まれたことを全部抱える必要はありません。担える範囲を先に伝えて。',element:'期待より、続けるための余力を先に見てください。保留する判断も自分を守ります。',support:'まだ確認できていない条件まで、見切りで決めなくて大丈夫です。'};
  if(caution||tone==='mixed')action+=' '+protection[cause];
  else if(positive&&['clash','friction'].includes(cause))action+=' 後押しがあっても、'+(cause==='clash'?'予定と相手の意見はすり合わせてから。':'無理な負担がないかは確かめて。');
@@ -82,10 +97,13 @@ export function describePoint(point,context={}){
  if(cause!=='clash'&&d.clashes>0)action+=' 意見が食い違う用事には、すり合わせる時間を置いて。';
  const closings={caution:'返事を待ってもらうことを、遠慮しないで。',careful:'気になる条件を尋ねるだけでも、進め方は変えられます。',opportunity:'遠慮だけを理由に、温めてきた思いをしまい込まなくて大丈夫。',rising:'まず話を聞くところからでも、一歩になります。',mixed:'返事の良さだけで、条件まで決めないで。'};
  const cautionClosings={self:'自分の希望まで後回しにしなくて大丈夫です。',sharing:'協力する気持ちと、背負える量は分けて考えて。',expression:'楽しみを負担に変えないために、自分の余力も大切に。',words:'相手に届く形を選ぶことも、自分の意見を大切にする方法です。',exchange:'気持ちよく付き合うためにも、時間と支出の境目を大切に。',daily:'続けるために、今日は守る範囲を決めて。',pressure:'頼られることと、全部を担うことは別です。',promise:'守れない約束を増やすより、守れる範囲を誠実に伝えて。',view:'今すぐ答えを出せなくても、確かめる時間は持っていて大丈夫。',learning:'頼れる人の言葉も、自分の事情と照らして選んでください。'};
- if(closings[tone])action+=' '+(tone==='caution'&&cautionClosings[scene.id]||closings[tone]);
+ const supportClosings={opportunity:{wood:'温めてきた方向を、遠慮だけでしまい込まなくて大丈夫。',fire:'伝える機会を待つだけでなく、自分から声をかけてみて。',earth:'いま積み重ねていることも、前へ進む力になります。',metal:'大切にしたいことを伝えるのに、遠慮しすぎなくて大丈夫。',water:'知りたいことを尋ねるのに、完璧な準備はいりません。'},rising:{wood:'考えている計画を、今の暮らしに合う形へつなげて。',fire:'うまく言おうとするより、伝えたいことを大切に。',earth:'続けるための余裕も、段取りに含めてください。',metal:'譲れるところが分かれば、大切な条件も守りやすくなります。',water:'分からないところが見えれば、次に確かめることも選べます。'}};
+ const supportClosing=positive&&supported?(supported.elements.length===1?supportClosings[tone][supported.elements[0]]:tone==='opportunity'?'選んだ進め方を、相手の意思や生活の条件と照らして。':'今の用事に合う形で、使える準備を生かして。'):null;
+ if(closings[tone])action+=' '+(supportClosing||tone==='caution'&&cautionClosings[scene.id]||closings[tone]);
  const flow=flowFacts(point,context);
  const names={decade:'長期',annual:'その年',monthly:'その月',daily:'その日'};
  const notes=[`その日（${d.label}）の${d.tenGod||'干支'}を「${scene.name}」の象徴として読みます。`,causes[cause],`後押し${d.support}・注意${d.caution}を主役に、年・月${point.preLuck?'':'・長期'}の背景を合わせています。`];
+ if(supported)notes.push(supported.note);
  if(d.attentionBreakdown){const a=d.attentionBreakdown;notes.push(`注意の内訳（上限処理前）：五行${Math.round(a.element)}・冲${a.clash}・害刑破${a.friction}。主な材料は${{element:'注意側の五行',clash:'冲',friction:'害・刑・破',support:'後押し',neutral:'通常の材料'}[cause]}です。`);if(cause!=='clash'&&d.clashes>0)notes.push('冲もありますが、より大きい注意材料を中心に読みます。');}
  if(point.agreement?.support)notes.push('後押しが背景にも重なっています。');if(point.agreement?.caution)notes.push('注意の材料が背景にも重なっています。');
  if(point.preLuck)notes.push('大運が始まる前のため、背景は年・月で計算しています。');
@@ -93,6 +111,7 @@ export function describePoint(point,context={}){
  if(uncertain){const reference={caution:'慎重に確認したい日',careful:'条件を確かめたい日',opportunity:'後押しを参考にしたい日',rising:'取り組む余地を考えたい日',mixed:'進める条件を見極めたい日',steady:'いつもの状況を見渡したい日'};title=`${scene.name}について、${reference[tone]}（参考）`;}
  if(point.age<13){title='この日の環境と見守りの目安';action='本人への行動指示ではなく、周囲の見守りや生活環境を考える参考にしてください。安心して過ごせる余裕を、周囲の大人が用意してあげて。';}
  const contrast=point.age<13?null:periodContrast(point);
- if(contrast)action+=' '+(contrast.kind==='day-open-background-caution'?'今日の後押しがあっても、長く続く約束は条件を確かめて。':'今日は慎重な読みでも、長期の方針まで諦める必要はありません。');
- return {title,body:action,theme:scene.id,cause,uncertain,contrast,flow:point.age<13?[]:flow,evidence:Object.entries(point.parts).filter(([,p])=>p).map(([key,p])=>({scope:names[key],...p})),note:notes.join(' ')};
+ if(contrast)action+=' '+(contrast.kind==='day-open-background-caution'?'今日の後押しがあっても、長く続く約束は内容と負担を確かめて。':'今日は慎重な読みでも、長期の方針まで諦める必要はありません。');
+ const sentences=action.match(/[^。]+。?/gu)||[action],paragraphs=[];for(let i=0;i<sentences.length;i+=2)paragraphs.push(sentences.slice(i,i+2).join('').trim());
+ return {title,body:action,paragraphs,theme:scene.id,cause,uncertain,contrast,supportReading:supported,flow:point.age<13?[]:flow,evidence:Object.entries(point.parts).filter(([,p])=>p).map(([key,p])=>({scope:names[key],...p})),note:notes.join(' ')};
 }
