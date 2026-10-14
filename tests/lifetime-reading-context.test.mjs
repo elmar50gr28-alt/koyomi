@@ -63,7 +63,7 @@ assert.equal(supportReading(period({support:100}),'役割と約束'),null,'missi
 const materials=[{element:'water',share:10},{element:'fire',share:90}],originalMaterials=JSON.stringify(materials);
 assert.deepEqual(supportReading(period({support:100,supportElements:materials}),'意見の伝え方').elements,['fire']);assert.equal(JSON.stringify(materials),originalMaterials);
 const supportive=point(a.date,{tone:'opportunity',risk:0,parts:{daily:period({support:100,caution:0,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0},supportElements:[{element:'metal',share:100}]})}});
-assert.match(describePoint(supportive).body,/決めたい条件/);
+assert.match(describePoint(supportive).body,/伝えたい結論/);
 assert.equal(describePoint({...supportive,age:4}).supportReading,null);
 assert.match(describePoint({...supportive,tone:'caution',risk:80}).body,/言いたいこと/,'overall warning still takes priority over a supported element');
 // Root and symbolic scene, not date or random choice, determine the concrete guidance.
@@ -80,6 +80,24 @@ for(const cause of ['clash','friction','element']){
  }
  assert.equal(bodies.size,10,'all ten symbolic scenes need concrete guidance');
 }
+const sceneSupportBodies=new Set();
+for(const tenGod of sceneGods){
+ for(const element of elementIds){
+  const daily=period({tenGod,support:100,caution:0,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0},supportElements:[{element,share:100}]});
+  const reading=describePoint(point(a.date,{tone:'opportunity',parts:{daily}}));
+  assert.deepEqual(reading.supportReading.elements,[element]);assert.ok(reading.note.includes(reading.supportReading.meaning));
+  sceneSupportBodies.add(reading.supportReading.action);
+  assert.equal(describePoint(point('2026-07-01',{tone:'opportunity',parts:{daily}})).body,reading.body,'symbolic scene guidance does not change solely with the date');
+  const warning=describePoint(point(a.date,{tone:'caution',parts:{daily:{...daily,caution:100,attentionBreakdown:{element:100,clash:0,friction:0}}}}));
+  assert.ok(!warning.body.includes(reading.supportReading.action),'support advice must not displace the overall warning');
+ }
+ const quiet=describePoint(point(a.date,{tone:'steady',parts:{daily:period({tenGod,support:0,caution:0,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0}})}}));
+ assert.equal(quiet.cause,'neutral');assert.doesNotMatch(quiet.body,/急ぐ必要がなければ、いつもの段取り/);
+}
+for(const tenGod of ['食神','偏印','印綬']){const focused=describePoint(point(a.date,{tone:'rising',parts:{daily:period({tenGod,support:100,supportElements:[{element:'metal',share:100}]})}}));assert.doesNotMatch(focused.body,/譲れるところ/,'editing and learning must not assume a negotiation');}
+assert.equal(sceneSupportBodies.size,50,'five symbolic meanings need distinct guidance in all ten scenes');
+assert.match(supportReading(period({support:100,supportElements:[{element:'metal',share:100}]}),'不明な場面').action,/不明な場面では、決めたい条件/,'unknown scenes retain the element-based fallback');
+assert.equal(describePoint(point(a.date,{tone:'steady',age:4})).body.includes('いつもの段取り'),false);
 const contrastBodies=new Set();
 for(const tenGod of sceneGods){
  const daily=period({tenGod,support:100,caution:0,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0}});
@@ -99,7 +117,7 @@ assert.equal(contrastBodies.size,10);
 assert.doesNotMatch(describePoint({...dayOpen,age:3}).body,/日運に後押しがあっても/);
 assert.match(describePoint(point(a.date,{longTermScore:20,parts:{daily:period({tenGod:'不明',support:100,caution:0})}})).body,/長く続く約束/,'unknown scenes retain grounded fallback');
 const report=[];
-for(const [date,gender,duplicates,sentenceLimits]of [['2000-02-29','male',[3,3,1,3],[5,3,4,3]],['1995-11-23','female',[5,3,5,4],[6,7,6,6]],['1982-07-15','male',[0,1,0,0],[5,5,5,5]],['1970-01-01','female',[4,3,3,2],[5,4,5,4]]]){
+for(const [date,gender,duplicates,sentenceLimits]of [['2000-02-29','male',[3,3,1,3],[3,3,3,3]],['1995-11-23','female',[5,3,5,4],[3,3,3,3]],['1982-07-15','male',[0,1,0,0],[4,3,4,3]],['1970-01-01','female',[4,3,3,2],[4,3,3,3]]]){
  const series=await buildSeries({gender,birthData:{date,time:'12:00',timeUnknown:false,place:{longitude:135,latitude:35,utcOffset:9,timezone:'Asia/Tokyo'}}});
  const allEvents=findMilestones(series.rows);
  for(const event of allEvents){assert.ok(event.start<=event.end);assert.equal(event.date,series.rows[event.start].date);if(event.kind==='opportunity')for(let i=event.start;i<=event.end;i++)assert.equal(series.rows[i].tone,'opportunity');if(event.kind==='caution')for(let i=event.start;i<=event.end;i++)assert.ok(series.rows[i].risk>=70);}
