@@ -29,7 +29,7 @@ assert.deepEqual(readingContext(boundaryRows,0).previous,undefined);
 assert.equal(dominantCause(period({attentionBreakdown:{element:80,clash:18,friction:10}})),'element','a small clash must not displace the larger attention source');
 assert.equal(dominantCause(period({attentionBreakdown:{element:0,clash:18,friction:30}})),'friction');
 assert.equal(dominantCause(period({support:100,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0}})),'support');
-const weighted=describePoint(point(a.date,{parts:{daily:period({attentionBreakdown:{element:80,clash:18,friction:0}})}}));assert.equal(weighted.cause,'element');assert.match(weighted.body,/食い違う/);assert.match(weighted.note,/五行80・冲18/);
+const weighted=describePoint(point(a.date,{parts:{daily:period({attentionBreakdown:{element:80,clash:18,friction:0}})}}));assert.equal(weighted.cause,'element');assert.match(weighted.body,/賛成できない点/);assert.match(weighted.note,/五行80・冲18/);
 const sustained=[point('2026-01-01'),point('2026-01-02'),point('2026-01-03')];
 const streak=continuousFlow(sustained[1],sustained)[0];assert.equal(streak.days,3);assert.equal(streak.startDate,'2026-01-01');assert.equal(streak.endDate,'2026-01-03');
 assert.deepEqual(continuousFlow(sustained[0],[sustained[0],sustained[2]]),[],'do not span a missing civil day');
@@ -80,18 +80,39 @@ for(const cause of ['clash','friction','element']){
  }
  assert.equal(bodies.size,10,'all ten symbolic scenes need concrete guidance');
 }
+const contrastBodies=new Set();
+for(const tenGod of sceneGods){
+ const daily=period({tenGod,support:100,caution:0,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0}});
+ const reading=describePoint(point(a.date,{tone:'rising',longTermScore:20,parts:{daily}}));
+ assert.equal(reading.contrast.kind,'day-open-background-caution');assert.match(reading.body,/日運に後押しがあっても/);
+ const without=describePoint(point(a.date,{tone:'rising',longTermScore:50,parts:{daily}}));
+ assert.equal(without.contrast,null);assert.doesNotMatch(without.body,/日運に後押しがあっても/);
+ assert.ok(reading.body.endsWith(without.body.match(/[^。]+。$/u)[0]),'background caution must preserve the encouraging closing');
+ contrastBodies.add(reading.body.match(/日運に後押しがあっても、[^。]+。/u)[0]);
+ const secondary=describePoint(point(a.date,{parts:{daily:{...daily,caution:90,clashes:1,attentionBreakdown:{element:90,clash:18,friction:0}}}}));
+ assert.equal(secondary.cause,'element');assert.match(secondary.note,/冲もあります/);
+ assert.doesNotMatch(secondary.body,/意見が食い違う用事には/,'known scenes must describe the relevant disagreement');
+ const primary=describePoint(point(a.date,{parts:{daily:{...daily,clashes:1,attentionBreakdown:{element:0,clash:18,friction:0}}}}));
+ assert.equal(primary.cause,'clash');assert.equal(primary.body.split('。').filter(x=>x).length,new Set(primary.body.split('。').filter(x=>x)).size,'primary and secondary clash must not duplicate a sentence');
+}
+assert.equal(contrastBodies.size,10);
+assert.doesNotMatch(describePoint({...dayOpen,age:3}).body,/日運に後押しがあっても/);
+assert.match(describePoint(point(a.date,{longTermScore:20,parts:{daily:period({tenGod:'不明',support:100,caution:0})}})).body,/長く続く約束/,'unknown scenes retain grounded fallback');
 const report=[];
-for(const [date,gender,baseline]of [['2000-02-29','male',.10],['1995-11-23','female',4/30],['1982-07-15','male',0],['1970-01-01','female',2/30]]){
+for(const [date,gender,duplicates,sentenceLimits]of [['2000-02-29','male',[3,3,1,3],[5,3,4,3]],['1995-11-23','female',[5,3,5,4],[6,7,6,6]],['1982-07-15','male',[0,1,0,0],[5,5,5,5]],['1970-01-01','female',[4,3,3,2],[5,4,5,4]]]){
  const series=await buildSeries({gender,birthData:{date,time:'12:00',timeUnknown:false,place:{longitude:135,latitude:35,utcOffset:9,timezone:'Asia/Tokyo'}}});
  const allEvents=findMilestones(series.rows);
  for(const event of allEvents){assert.ok(event.start<=event.end);assert.equal(event.date,series.rows[event.start].date);if(event.kind==='opportunity')for(let i=event.start;i<=event.end;i++)assert.equal(series.rows[i].tone,'opportunity');if(event.kind==='caution')for(let i=event.start;i<=event.end;i++)assert.ok(series.rows[i].risk>=70);}
- const bodies=new Set(),readings=new Set(),titles=new Set(),supportKinds=new Set();let flowCount=0,contrastCount=0,turnCount=0,maxBodyLength=0;const sentenceFrequency=new Map();
+ for(const [season,month]of ['01','04','07','10'].entries()){
+ const baseline=duplicates[season]/30;
+ const bodies=new Set(),readings=new Set(),titles=new Set(),supportKinds=new Set();let sampleDays=0,flowCount=0,contrastCount=0,turnCount=0,maxBodyLength=0;const sentenceFrequency=new Map();
  for(let i=0;i<series.rows.length;i++){
-  const r=series.rows[i];if(r.date<'2026-10-01'||r.date>'2026-10-30')continue;
-  const result=describePoint(r,readingContext(series.rows,i,series.meta));const full=result.body+result.flow.map(f=>f.text).join(' ');
+  const r=series.rows[i];if(r.date<`2026-${month}-01`||r.date>`2026-${month}-30`)continue;
+  sampleDays++;const result=describePoint(r,readingContext(series.rows,i,series.meta));const full=result.body+result.flow.map(f=>f.text).join(' ');
   for(const sentence of new Set((result.body.match(/[^。]+。?/gu)||[]).map(x=>x.trim())))sentenceFrequency.set(sentence,(sentenceFrequency.get(sentence)||0)+1);
   bodies.add(result.body);readings.add(full);titles.add(result.title);flowCount+=result.flow.length;
   assert.equal(result.paragraphs.join('').replace(/\s/g,''),result.body.replace(/\s/g,''),'paragraph formatting must not change or omit words');
+  assert.ok((result.body.match(/後押しがあっても/gu)||[]).length<=1,'do not repeat the same caution transition');
   assert.ok(result.body.length<=380,'guidance must remain readable');maxBodyLength=Math.max(maxBodyLength,result.body.length);
   const supportSum=r.parts.daily.supportElements.reduce((n,p)=>n+p.share,0);assert.ok(Math.abs(supportSum-r.parts.daily.support)<=.500001,'support shares must come from the existing score materials');
   if(result.supportReading){supportKinds.add(result.supportReading.elements.join('/'));for(const id of result.supportReading.elements)assert.ok(r.parts.daily.supportElements.some(p=>p.element===id&&p.share>0));}
@@ -103,9 +124,12 @@ for(const [date,gender,baseline]of [['2000-02-29','male',.10],['1995-11-23','fem
   for(const fact of result.flow){const next=series.rows[i+1];if(fact.kind==='opening')assert.equal(next.tone,'opportunity');if(fact.kind==='easing'){assert.ok(next.score-r.score>=8);assert.ok(r.risk-next.risk>=8);}if(fact.kind.endsWith('-streak')){assert.ok(fact.days>=2&&fact.days<=7);const interval=series.rows.filter(x=>x.date>=fact.startDate&&x.date<=fact.endDate);assert.equal(interval.length,fact.days);for(const day of interval)assert.ok(fact.kind==='caution-streak'?day.risk>=70:day.tone==='opportunity');}}
   assert.doesNotMatch(full,/必ず|災難が起きる|不幸になる|15分|整える日/);
  }
+ assert.equal(sampleDays,30,'each seasonal window contains 30 consecutive daily readings');
  const duplicate=1-bodies.size/30;
  assert.ok(duplicate<=baseline+1e-9,`body duplication regression for ${date}: ${duplicate} > ${baseline}`);
- const maxSentenceDays=Math.max(...sentenceFrequency.values());assert.ok(maxSentenceDays<=9,`a single sentence occurs too often for ${date}: ${maxSentenceDays}`);
- report.push({maxSentenceDays,birth:date,days:series.rows.length,previousBodyDuplicateRate:+baseline.toFixed(3),bodyDuplicateRate:+duplicate.toFixed(3),bodyWithFlowDuplicateRate:+(1-readings.size/30).toFixed(3),titles:titles.size,flowCount,contrastCount,turnCount,supportKinds:[...supportKinds],maxBodyLength,milestones:allEvents.length});
+ const maxSentenceDays=Math.max(...sentenceFrequency.values());assert.ok(maxSentenceDays<=sentenceLimits[season],`a single sentence occurs too often for ${date}: ${maxSentenceDays}`);
+ report.push({month,maxSentenceDays,birth:date,days:series.rows.length,previousBodyDuplicateRate:+baseline.toFixed(3),bodyDuplicateRate:+duplicate.toFixed(3),bodyWithFlowDuplicateRate:+(1-readings.size/30).toFixed(3),titles:titles.size,flowCount,contrastCount,turnCount,supportKinds:[...supportKinds],maxBodyLength,milestones:allEvents.length});
+ }
 }
+assert.equal(report.length,16,'four 30-day windows for each of four profiles');
 console.log(JSON.stringify(report,null,2));
