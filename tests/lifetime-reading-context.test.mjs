@@ -66,15 +66,30 @@ const supportive=point(a.date,{tone:'opportunity',risk:0,parts:{daily:period({su
 assert.match(describePoint(supportive).body,/決めたい条件/);
 assert.equal(describePoint({...supportive,age:4}).supportReading,null);
 assert.match(describePoint({...supportive,tone:'caution',risk:80}).body,/言いたいこと/,'overall warning still takes priority over a supported element');
+// Root and symbolic scene, not date or random choice, determine the concrete guidance.
+const sceneGods=['比肩','劫財','食神','傷官','偏財','正財','偏官','正官','偏印','印綬'];
+for(const cause of ['clash','friction','element']){
+ const bodies=new Set();
+ for(const tenGod of sceneGods){
+  const daily=period({tenGod,clashes:cause==='clash'?1:0,other:cause==='friction'?1:0,attentionBreakdown:{clash:cause==='clash'?60:0,friction:cause==='friction'?60:0,element:cause==='element'?80:0}});
+  const original=JSON.stringify(daily),reading=describePoint(point(a.date,{tone:'careful',parts:{daily}}));
+  assert.equal(reading.cause,cause);assert.equal(JSON.stringify(daily),original);
+  assert.equal(describePoint(point('2026-02-02',{tone:'careful',parts:{daily}})).body,reading.body,'same materials retain the same guidance regardless of date');
+  assert.doesNotMatch(reading.body,/気になる条件を尋ねるだけでも|期待より、続けるための余力/);
+  bodies.add(reading.body);
+ }
+ assert.equal(bodies.size,10,'all ten symbolic scenes need concrete guidance');
+}
 const report=[];
-for(const [date,gender,baseline]of [['2000-02-29','male',.10],['1995-11-23','female',4/30],['1982-07-15','male',.10],['1970-01-01','female',2/30]]){
+for(const [date,gender,baseline]of [['2000-02-29','male',.10],['1995-11-23','female',4/30],['1982-07-15','male',0],['1970-01-01','female',2/30]]){
  const series=await buildSeries({gender,birthData:{date,time:'12:00',timeUnknown:false,place:{longitude:135,latitude:35,utcOffset:9,timezone:'Asia/Tokyo'}}});
  const allEvents=findMilestones(series.rows);
  for(const event of allEvents){assert.ok(event.start<=event.end);assert.equal(event.date,series.rows[event.start].date);if(event.kind==='opportunity')for(let i=event.start;i<=event.end;i++)assert.equal(series.rows[i].tone,'opportunity');if(event.kind==='caution')for(let i=event.start;i<=event.end;i++)assert.ok(series.rows[i].risk>=70);}
- const bodies=new Set(),readings=new Set(),titles=new Set(),supportKinds=new Set();let flowCount=0,contrastCount=0,turnCount=0,maxBodyLength=0;
+ const bodies=new Set(),readings=new Set(),titles=new Set(),supportKinds=new Set();let flowCount=0,contrastCount=0,turnCount=0,maxBodyLength=0;const sentenceFrequency=new Map();
  for(let i=0;i<series.rows.length;i++){
   const r=series.rows[i];if(r.date<'2026-10-01'||r.date>'2026-10-30')continue;
   const result=describePoint(r,readingContext(series.rows,i,series.meta));const full=result.body+result.flow.map(f=>f.text).join(' ');
+  for(const sentence of new Set((result.body.match(/[^。]+。?/gu)||[]).map(x=>x.trim())))sentenceFrequency.set(sentence,(sentenceFrequency.get(sentence)||0)+1);
   bodies.add(result.body);readings.add(full);titles.add(result.title);flowCount+=result.flow.length;
   assert.equal(result.paragraphs.join('').replace(/\s/g,''),result.body.replace(/\s/g,''),'paragraph formatting must not change or omit words');
   assert.ok(result.body.length<=380,'guidance must remain readable');maxBodyLength=Math.max(maxBodyLength,result.body.length);
@@ -90,6 +105,7 @@ for(const [date,gender,baseline]of [['2000-02-29','male',.10],['1995-11-23','fem
  }
  const duplicate=1-bodies.size/30;
  assert.ok(duplicate<=baseline+1e-9,`body duplication regression for ${date}: ${duplicate} > ${baseline}`);
- report.push({birth:date,days:series.rows.length,previousBodyDuplicateRate:+baseline.toFixed(3),bodyDuplicateRate:+duplicate.toFixed(3),bodyWithFlowDuplicateRate:+(1-readings.size/30).toFixed(3),titles:titles.size,flowCount,contrastCount,turnCount,supportKinds:[...supportKinds],maxBodyLength,milestones:allEvents.length});
+ const maxSentenceDays=Math.max(...sentenceFrequency.values());assert.ok(maxSentenceDays<=9,`a single sentence occurs too often for ${date}: ${maxSentenceDays}`);
+ report.push({maxSentenceDays,birth:date,days:series.rows.length,previousBodyDuplicateRate:+baseline.toFixed(3),bodyDuplicateRate:+duplicate.toFixed(3),bodyWithFlowDuplicateRate:+(1-readings.size/30).toFixed(3),titles:titles.size,flowCount,contrastCount,turnCount,supportKinds:[...supportKinds],maxBodyLength,milestones:allEvents.length});
 }
 console.log(JSON.stringify(report,null,2));

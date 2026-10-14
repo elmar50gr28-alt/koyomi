@@ -26,6 +26,20 @@ export function supportReading(d,sceneName){
  const label=materials.map(x=>x.name).join('と'),meaning=materials.map(x=>x.meaning).join('／');
  return {elements:canonical,label,meaning,action:`${sceneName}では、${ids.length===2?SUPPORT_PAIRS[canonical.join('/')]:materials[0].action}`,note:`後押し側の寄与が大きい${label}を、${meaning}の象徴として読みます。`};
 }
+// Specific situations are ten-god symbols, not claims about events that actually happened.
+const SCENE_PROTECTION={
+ self:{clash:'役割の希望が違うなら、どこを自分で決め、どこを相談するか分けて話して。',friction:'任せられた範囲を越えてまで、一人で責任を背負わないで。',element:'人に認めてもらうために、担えない役割まで引き受けなくて大丈夫。'},
+ sharing:{clash:'分担の考えが違うなら、誰が何を受け持つかを一緒に確かめて。',friction:'手伝いのつもりが、自分だけの仕事になっていないか見直して。',element:'協力を続けるには、お互いに無理のない配分が必要です。'},
+ expression:{clash:'作品や好みへの反応が違っても、相手の評価だけで楽しみを手放さないで。',friction:'誰かを喜ばせるための準備で、自分の楽しむ時間まで失わないで。',element:'もっと良くしようと手をかける前に、今の出来を味わう時間も持って。'},
+ words:{clash:'意見がぶつかるときは、賛成できない点を一つに絞って話して。',friction:'言葉の行き違いが気になるなら、相手がどう受け取ったか尋ねてみて。',element:'言い切る前に、分かっている事実と自分の推測を分けて。'},
+ exchange:{clash:'誘いの希望が合わないなら、会える日時や予算を具体的に伝えて。',friction:'付き合いのために増えた用事には、断れるものがないか目を向けて。',element:'会いたい気持ちがあっても、予定を埋め尽くす必要はありません。'},
+ daily:{clash:'仕事の進め方が違うなら、仕上がりと期限の認識を合わせて。',friction:'いつもの手順に隠れた手間や出費を、当然のものとして抱え込まないで。',element:'買い足す前に、今あるものと今月使える金額を確かめて。'},
+ pressure:{clash:'急な依頼で優先順位がぶつかるなら、何を後に回すか依頼した人と相談して。',friction:'頼まれていない後始末まで、自分の責任にしなくて大丈夫。',element:'急いで成果を出そうとして、休む時間まで削らないで。'},
+ promise:{clash:'約束の認識が違うなら、期限と担当を言葉にして確かめ直して。',friction:'責任の所在が曖昧な用事は、引き受ける前に確認して。',element:'期待に応えるためでも、守る見通しのない約束は増やさないで。'},
+ view:{clash:'違う見方を示されたら、結論より先に、その考えの前提を聞いてみて。',friction:'情報を追うほど迷うなら、今の疑問に関係するものへ絞って。',element:'新しい方法を選ぶなら、魅力だけでなく自分の状況で使えるかも見て。'},
+ learning:{clash:'助言が自分の事情と合わないなら、何が難しいのかを具体的に伝えて。',friction:'人に教わる場でも、分からないまま合わせる必要はありません。',element:'学ぶ量を増やす前に、すでに教わったことを使う時間を持って。'}
+};
+const CAREFUL_CLOSINGS={self:'希望を伝えることと、何でも引き受けることを分けて。',sharing:'気持ちよく助け合える分担を、言葉にしておきましょう。',expression:'誰かのための工夫にも、自分の好きな気持ちを残して。',words:'率直さは、強く言うことだけで伝わるものではありません。',exchange:'一つの誘いを断っても、大切なつながりまで諦めなくて大丈夫。',daily:'仕事も支出も、続けられる形を選ぶことが支えになります。',pressure:'断る理由を長く並べなくても、今できる範囲は伝えていいのです。',promise:'誠実さは、無理な約束をすることより、守れる条件を示すことに宿ります。',view:'新しさだけで答えを選ばず、自分に必要なものを見極めて。',learning:'納得できないところを質問することも、学びの一部です。'};
 const DAY=86400000;
 const adjacent=(a,b)=>a&&b&&Date.parse(b.date)-Date.parse(a.date)===DAY;
 export function readingContext(rows,index,meta={}){return {previous:rows[index-1],next:rows[index+1],nearby:rows.slice(Math.max(0,index-3),index+4),meta};}
@@ -91,15 +105,15 @@ export function describePoint(point,context={}){
  const supported=point.age>=13?supportReading(d,scene.name):null;
  if(positive&&supported)action=supported.action;
  const protection={neutral:'周囲の勢いだけで判断せず、自分の余力も確かめてください。',clash:'相手の返事が違っても、すぐに押し返さなくて大丈夫。聞く時間を置いてください。',friction:'頼まれたことを全部抱える必要はありません。担える範囲を先に伝えて。',element:'期待より、続けるための余力を先に見てください。保留する判断も自分を守ります。',support:'まだ確認できていない条件まで、見切りで決めなくて大丈夫です。'};
- if(caution||tone==='mixed')action+=' '+protection[cause];
- else if(positive&&['clash','friction'].includes(cause))action+=' 後押しがあっても、'+(cause==='clash'?'予定と相手の意見はすり合わせてから。':'無理な負担がないかは確かめて。');
- if(tone==='steady')action+=' '+({clash:'意見が違う用事は、先に相手の事情を聞いて。',friction:'続けている用事に、知らずに背負った負担がないか確かめて。',element:'今日は、増やすより今ある負担を見渡して。',support:'使える準備がある用事は、条件を確かめながら続けて。',neutral:'急ぐ必要がなければ、いつもの段取りを大切にして。'}[cause]);
+ if(caution||tone==='mixed')action+=' '+(SCENE_PROTECTION[scene.id]?.[cause]||protection[cause]);
+ else if(positive&&['clash','friction'].includes(cause))action+=' 後押しがあっても、'+(SCENE_PROTECTION[scene.id]?.[cause]||(cause==='clash'?'予定と相手の意見はすり合わせてから。':'無理な負担がないかは確かめて。'));
+ if(tone==='steady')action+=' '+(SCENE_PROTECTION[scene.id]?.[cause]||{clash:'意見が違う用事は、先に相手の事情を聞いて。',friction:'続けている用事に、知らずに背負った負担がないか確かめて。',element:'今日は、増やすより今ある負担を見渡して。',support:'使える準備がある用事は、条件を確かめながら続けて。',neutral:'急ぐ必要がなければ、いつもの段取りを大切にして。'}[cause]);
  if(cause!=='clash'&&d.clashes>0)action+=' 意見が食い違う用事には、すり合わせる時間を置いて。';
  const closings={caution:'返事を待ってもらうことを、遠慮しないで。',careful:'気になる条件を尋ねるだけでも、進め方は変えられます。',opportunity:'遠慮だけを理由に、温めてきた思いをしまい込まなくて大丈夫。',rising:'まず話を聞くところからでも、一歩になります。',mixed:'返事の良さだけで、条件まで決めないで。'};
- const cautionClosings={self:'自分の希望まで後回しにしなくて大丈夫です。',sharing:'協力する気持ちと、背負える量は分けて考えて。',expression:'楽しみを負担に変えないために、自分の余力も大切に。',words:'相手に届く形を選ぶことも、自分の意見を大切にする方法です。',exchange:'気持ちよく付き合うためにも、時間と支出の境目を大切に。',daily:'続けるために、今日は守る範囲を決めて。',pressure:'頼られることと、全部を担うことは別です。',promise:'守れない約束を増やすより、守れる範囲を誠実に伝えて。',view:'今すぐ答えを出せなくても、確かめる時間は持っていて大丈夫。',learning:'頼れる人の言葉も、自分の事情と照らして選んでください。'};
+ const cautionClosings={self:'誰かの期待と同じくらい、自分の希望にも耳を傾けて。',sharing:'協力する気持ちと、背負える量は分けて考えて。',expression:'楽しみを負担に変えないために、自分の余力も大切に。',words:'相手に届く形を選ぶことも、自分の意見を大切にする方法です。',exchange:'気持ちよく付き合うためにも、時間と支出の境目を大切に。',daily:'続けるために、今日は守る範囲を決めて。',pressure:'頼られることと、全部を担うことは別です。',promise:'守れない約束を増やすより、守れる範囲を誠実に伝えて。',view:'今すぐ答えを出せなくても、確かめる時間は持っていて大丈夫。',learning:'頼れる人の言葉も、自分の事情と照らして選んでください。'};
  const supportClosings={opportunity:{wood:'温めてきた方向を、遠慮だけでしまい込まなくて大丈夫。',fire:'伝える機会を待つだけでなく、自分から声をかけてみて。',earth:'いま積み重ねていることも、前へ進む力になります。',metal:'大切にしたいことを伝えるのに、遠慮しすぎなくて大丈夫。',water:'知りたいことを尋ねるのに、完璧な準備はいりません。'},rising:{wood:'考えている計画を、今の暮らしに合う形へつなげて。',fire:'うまく言おうとするより、伝えたいことを大切に。',earth:'続けるための余裕も、段取りに含めてください。',metal:'譲れるところが分かれば、大切な条件も守りやすくなります。',water:'分からないところが見えれば、次に確かめることも選べます。'}};
  const supportClosing=positive&&supported?(supported.elements.length===1?supportClosings[tone][supported.elements[0]]:tone==='opportunity'?'選んだ進め方を、相手の意思や生活の条件と照らして。':'今の用事に合う形で、使える準備を生かして。'):null;
- if(closings[tone])action+=' '+(supportClosing||tone==='caution'&&cautionClosings[scene.id]||closings[tone]);
+ if(closings[tone])action+=' '+(supportClosing||tone==='caution'&&cautionClosings[scene.id]||tone==='careful'&&CAREFUL_CLOSINGS[scene.id]||closings[tone]);
  const flow=flowFacts(point,context);
  const names={decade:'長期',annual:'その年',monthly:'その月',daily:'その日'};
  const notes=[`その日（${d.label}）の${d.tenGod||'干支'}を「${scene.name}」の象徴として読みます。`,causes[cause],`後押し${d.support}・注意${d.caution}を主役に、年・月${point.preLuck?'':'・長期'}の背景を合わせています。`];
