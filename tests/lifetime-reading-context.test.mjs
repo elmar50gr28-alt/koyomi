@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {buildSeries,describePoint,readingContext,flowFacts,findMilestones} from '../src/bazi/lifetime/core.js';
+import {dominantCause,continuousFlow} from '../src/bazi/lifetime/reading.js';
 const period=(extras={})=>({label:'甲子',tenGod:'傷官',support:0,caution:90,clashes:1,other:0,...extras});
 const point=(date,extras={})=>({date,age:30,score:20,risk:80,opportunity:20,tone:'caution',parts:{daily:period(),annual:period(),monthly:period(),decade:period()},...extras});
 const a=point('2026-01-01'),b=point('2026-01-02',{score:40,risk:60}),c=point('2026-01-03',{score:80,risk:20,tone:'opportunity'});
@@ -25,8 +26,19 @@ assert.ok(events.some(e=>e.kind==='opportunity'&&e.start===2&&e.end===3));
 assert.ok(events.some(e=>e.kind==='decade'&&e.date==='2026-01-04'));
 assert.ok(!events.some(e=>e.kind==='caution'),'isolated warning day is not described as a sustained period');
 assert.deepEqual(readingContext(boundaryRows,0).previous,undefined);
+assert.equal(dominantCause(period({attentionBreakdown:{element:80,clash:18,friction:10}})),'element','a small clash must not displace the larger attention source');
+assert.equal(dominantCause(period({attentionBreakdown:{element:0,clash:18,friction:30}})),'friction');
+assert.equal(dominantCause(period({support:100,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0}})),'support');
+const weighted=describePoint(point(a.date,{parts:{daily:period({attentionBreakdown:{element:80,clash:18,friction:0}})}}));assert.equal(weighted.cause,'element');assert.match(weighted.body,/食い違う/);assert.match(weighted.note,/五行80・冲18/);
+const sustained=[point('2026-01-01'),point('2026-01-02'),point('2026-01-03')];
+const streak=continuousFlow(sustained[1],sustained)[0];assert.equal(streak.days,3);assert.equal(streak.startDate,'2026-01-01');assert.equal(streak.endDate,'2026-01-03');
+assert.deepEqual(continuousFlow(sustained[0],[sustained[0],sustained[2]]),[],'do not span a missing civil day');
+assert.deepEqual(continuousFlow(sustained[0],[sustained[0],sustained[0],sustained[1]]),[],'duplicate date context cannot prove a streak');
+assert.ok(flowFacts(sustained[1],readingContext(sustained,1)).some(f=>f.kind==='caution-streak'));
+assert.ok(continuousFlow(c,[c,point('2026-01-04',{risk:20,tone:'opportunity'})]).some(f=>f.kind==='opportunity-streak'));
+assert.deepEqual(continuousFlow(a,[{...a,score:99},b]),[],'stale center values must not be used');
 const report=[];
-for(const [date,gender,baseline]of [['2000-02-29','male',.30],['1995-11-23','female',13/30],['1982-07-15','male',4/30],['1970-01-01','female',.20]]){
+for(const [date,gender,baseline]of [['2000-02-29','male',.20],['1995-11-23','female',4/30],['1982-07-15','male',.10],['1970-01-01','female',.10]]){
  const series=await buildSeries({gender,birthData:{date,time:'12:00',timeUnknown:false,place:{longitude:135,latitude:35,utcOffset:9,timezone:'Asia/Tokyo'}}});
  const allEvents=findMilestones(series.rows);
  for(const event of allEvents){assert.ok(event.start<=event.end);assert.equal(event.date,series.rows[event.start].date);if(event.kind==='opportunity')for(let i=event.start;i<=event.end;i++)assert.equal(series.rows[i].tone,'opportunity');if(event.kind==='caution')for(let i=event.start;i<=event.end;i++)assert.ok(series.rows[i].risk>=70);}
@@ -38,7 +50,7 @@ for(const [date,gender,baseline]of [['2000-02-29','male',.30],['1995-11-23','fem
   assert.ok(result.note.includes(r.parts.daily.label));
   if(result.cause==='clash')assert.ok(r.parts.daily.clashes>0);
   if(result.cause==='friction')assert.ok(r.parts.daily.other>0);
-  for(const fact of result.flow){const next=series.rows[i+1];if(fact.kind==='opening')assert.equal(next.tone,'opportunity');if(fact.kind==='easing'){assert.ok(next.score-r.score>=8);assert.ok(r.risk-next.risk>=8);}}
+  for(const fact of result.flow){const next=series.rows[i+1];if(fact.kind==='opening')assert.equal(next.tone,'opportunity');if(fact.kind==='easing'){assert.ok(next.score-r.score>=8);assert.ok(r.risk-next.risk>=8);}if(fact.kind.endsWith('-streak')){assert.ok(fact.days>=2&&fact.days<=7);const interval=series.rows.filter(x=>x.date>=fact.startDate&&x.date<=fact.endDate);assert.equal(interval.length,fact.days);for(const day of interval)assert.ok(fact.kind==='caution-streak'?day.risk>=70:day.tone==='opportunity');}}
   assert.doesNotMatch(full,/必ず|災難が起きる|不幸になる|15分|整える日/);
  }
  const duplicate=1-bodies.size/30;

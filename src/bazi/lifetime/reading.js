@@ -16,15 +16,33 @@ const FALLBACK={id:'conditions',name:'今日の条件',good:'準備できてい�
 const DAY=86400000;
 const adjacent=(a,b)=>a&&b&&Date.parse(b.date)-Date.parse(a.date)===DAY;
 export function readingContext(rows,index,meta={}){return {previous:rows[index-1],next:rows[index+1],nearby:rows.slice(Math.max(0,index-3),index+4),meta};}
+export function dominantCause(d){
+ if(d.attentionBreakdown){const causes=['clash','friction','element'].map(kind=>[kind,d.attentionBreakdown[kind]||0]).sort((a,b)=>b[1]-a[1]);if(causes[0][1]>0)return causes[0][0];}
+ else{if(d.clashes>0)return 'clash';if(d.other>0)return 'friction';if(d.caution>=45)return 'element';}
+ return d.support>=55?'support':'neutral';
+}
+export function continuousFlow(point,nearby=[]){
+ const rows=nearby.filter(r=>Math.abs(Date.parse(r.date)-Date.parse(point.date))<=3*DAY).slice().sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
+ const index=rows.findIndex(r=>r.date===point.date&&r.score===point.score&&r.risk===point.risk);
+ if(index<0||new Set(rows.map(r=>r.date)).size!==rows.length)return [];
+ const warning=point.risk>=70,predicate=warning?r=>r.risk>=70:r=>r.tone==='opportunity';
+ if(!predicate(point))return [];
+ let start=index,end=index;
+ while(start>0&&adjacent(rows[start-1],rows[start])&&predicate(rows[start-1]))start--;
+ while(end<rows.length-1&&adjacent(rows[end],rows[end+1])&&predicate(rows[end+1]))end++;
+ if(end===start)return [];
+ const startDate=rows[start].date,endDate=rows[end].date,days=end-start+1;
+ return [{kind:warning?'caution-streak':'opportunity-streak',date:point.date,startDate,endDate,days,text:`${startDate}〜${endDate}の${days}日間、${warning?'警戒度の高い状態が続きます。一日だけ我慢して全部引き受けるより、数日分の負担を見渡してください。':'好機として読む材料が続きます。今日だけで全部を動かさず、相手の返事を聞きながら進め方を選んで。'}確認した前後の日程の範囲での読みです。`}];
+}
 export function flowFacts(point,context={}){
  const previous=adjacent(context.previous,point)?context.previous:null,next=adjacent(point,context.next)?context.next:null;
  const facts=[];
  if(previous&&point.score-previous.score>=8){facts.push({kind:'recovering',date:previous.date,text:point.risk>=70?'昨日より点数は上向いていますが、今日はまだ警戒の材料が強い日です。':'昨日より点数は上向いています。'+(point.risk>previous.risk?'ただし警戒度も上がっているため、条件の確認は省かないで。':'今日は、昨日と同じ結論に縛られず条件を見直してみて。')});}
- if(previous&&previous.score-point.score>=8)facts.push({kind:'falling',date:previous.date,text:'昨日より点数が下がっています。昨日うまくいった進め方でも、今日の条件は改めて確かめてください。'});
+ if(previous&&previous.score-point.score>=8)facts.push({kind:'falling',date:previous.date,text:'昨日より点数が下がっています。昨日の読みをそのまま当てはめず、今日の条件を改めて確かめてください。'});
  if(next&&next.tone==='opportunity'&&point.tone!=='opportunity')facts.push({kind:'opening',date:next.date,text:`翌日（${next.date}）は好機として読む組合せです。急がない用事は、今日条件を確認し、明日の流れも比べてみて。`});
  else if(next&&point.risk-next.risk>=8&&next.score-point.score>=8)facts.push({kind:'easing',date:next.date,text:`翌日（${next.date}）は点数が上向き、警戒度も下がります。${next.risk>=70?'ただし翌日も警戒の材料は強く残ります。':'待てる用事なら、明日の条件も見てから決めて。'}`});
  else if(next&&next.risk-point.risk>=15)facts.push({kind:'tightening',date:next.date,text:`翌日（${next.date}）は警戒度が上がります。今日の手応えだけで、明日の予定まで詰め込まないで。`});
- return facts;
+ return [...facts,...continuousFlow(point,context.nearby)];
 }
 export function findMilestones(rows){
  const events=[];
@@ -38,19 +56,22 @@ export function describePoint(point,context={}){
  const d=point.parts.daily,tone=point.tone||'steady',scene=SCENES[d.tenGod]||FALLBACK;
  const uncertain=!!(context.meta?.birthTimeUnknown||context.meta?.directionDefault||context.meta?.elementProvisional||context.meta?.elementConflicts?.length||context.meta?.elementConfidence!=null&&context.meta.elementConfidence<.5);
  const caution=tone==='caution'||tone==='careful',positive=tone==='opportunity'||tone==='rising';
- const cause=d.clashes>0?'clash':d.other>0?'friction':d.caution>=45?'element':d.support>=55?'support':'neutral';
+ const cause=dominantCause(d);
  const titles={caution:`${scene.name}ほど、結論を急がない日。`,careful:`${scene.name}は、条件を確かめてから。`,opportunity:`今日は、${scene.name}に自分から働きかけて。`,rising:`${scene.name}へ、手を伸ばしてみたい日。`,mixed:`${scene.name}は進めても、約束は慎重に。`,steady:`今日は、${scene.name}を見渡して。`};
- const causes={neutral:'その日の五行には、今回の判定で強い後押し・注意のどちらにも置かない材料があります。',clash:'その日の干支と命式に冲があり、予定や意見をすり合わせる場面を読む材料があります。',friction:'その日の干支と命式に害・刑・破などがあり、負担や行き違いを点検する材料があります。',element:'その日の五行に、今回の判定で注意側に置いた要素が多く含まれます。',support:'その日の五行と今回の用神候補との適合を、後押しの材料として読んでいます。'};
+ const causes={neutral:'その日の五行には、今回の判定で強い後押し・注意のどちらにも置かない材料があります。',clash:'その日の干支と命式に冲があり、予定や意見をすり合わせる場面を読む材料があります。',friction:'その日の干支と命式に害・刑・破などがあり、負担や行き違いを点検する材料があります。',element:'その日の五行に、今回の判定で注意側に置いた要素が含まれ、その寄与が注意の主な材料です。',support:'その日の五行と今回の用神候補との適合を、後押しの材料として読んでいます。'};
  let action=tone==='mixed'?scene.good+' '+scene.care:caution?scene.care:positive?scene.good:scene.quiet;
  const protection={neutral:'周囲の勢いだけで判断せず、自分の余力も確かめてください。',clash:'相手の返事が違っても、すぐに押し返さなくて大丈夫。聞く時間を置いてください。',friction:'頼まれたことを全部抱える必要はありません。担える範囲を先に伝えて。',element:'期待より、続けるための余力を先に見てください。保留する判断も自分を守ります。',support:'まだ確認できていない条件まで、見切りで決めなくて大丈夫です。'};
  if(caution||tone==='mixed')action+=' '+protection[cause];
  else if(positive&&['clash','friction'].includes(cause))action+=' 後押しがあっても、'+(cause==='clash'?'予定と相手の意見はすり合わせてから。':'無理な負担がないかは確かめて。');
  if(tone==='steady')action+=' '+({clash:'意見が違う用事は、先に相手の事情を聞いて。',friction:'続けている用事に、知らずに背負った負担がないか確かめて。',element:'今日は、増やすより今ある負担を見渡して。',support:'使える準備がある用事は、条件を確かめながら続けて。',neutral:'急ぐ必要がなければ、いつもの段取りを大切にして。'}[cause]);
+ if(cause!=='clash'&&d.clashes>0)action+=' 意見が食い違う用事には、すり合わせる時間を置いて。';
  const closings={caution:'返事を待ってもらうことを、遠慮しないで。',careful:'気になる条件を尋ねるだけでも、進め方は変えられます。',opportunity:'遠慮だけを理由に、温めてきた思いをしまい込まなくて大丈夫。',rising:'まず話を聞くところからでも、一歩になります。',mixed:'返事の良さだけで、条件まで決めないで。'};
- if(closings[tone])action+=' '+closings[tone];
+ const cautionClosings={self:'自分の希望まで後回しにしなくて大丈夫です。',sharing:'協力する気持ちと、背負える量は分けて考えて。',expression:'楽しみを負担に変えないために、自分の余力も大切に。',words:'相手に届く形を選ぶことも、自分の意見を大切にする方法です。',exchange:'気持ちよく付き合うためにも、時間と支出の境目を大切に。',daily:'続けるために、今日は守る範囲を決めて。',pressure:'頼られることと、全部を担うことは別です。',promise:'守れない約束を増やすより、守れる範囲を誠実に伝えて。',view:'今すぐ答えを出せなくても、確かめる時間は持っていて大丈夫。',learning:'頼れる人の言葉も、自分の事情と照らして選んでください。'};
+ if(closings[tone])action+=' '+(tone==='caution'&&cautionClosings[scene.id]||closings[tone]);
  const flow=flowFacts(point,context);
  const names={decade:'長期',annual:'その年',monthly:'その月',daily:'その日'};
  const notes=[`その日（${d.label}）の${d.tenGod||'干支'}を「${scene.name}」の象徴として読みます。`,causes[cause],`後押し${d.support}・注意${d.caution}を主役に、年・月${point.preLuck?'':'・長期'}の背景を合わせています。`];
+ if(d.attentionBreakdown){const a=d.attentionBreakdown;notes.push(`注意の内訳（上限処理前）：五行${Math.round(a.element)}・冲${a.clash}・害刑破${a.friction}。主な材料は${{element:'注意側の五行',clash:'冲',friction:'害・刑・破',support:'後押し',neutral:'通常の材料'}[cause]}です。`);if(cause!=='clash'&&d.clashes>0)notes.push('冲もありますが、より大きい注意材料を中心に読みます。');}
  if(point.agreement?.support)notes.push('後押しが背景にも重なっています。');if(point.agreement?.caution)notes.push('注意の材料が背景にも重なっています。');
  if(point.preLuck)notes.push('大運が始まる前のため、背景は年・月で計算しています。');
  let title=titles[tone];
