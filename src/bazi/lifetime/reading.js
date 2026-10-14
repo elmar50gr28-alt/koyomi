@@ -40,6 +40,19 @@ const SCENE_PROTECTION={
  learning:{clash:'助言が自分の事情と合わないなら、何が難しいのかを具体的に伝えて。',friction:'人に教わる場でも、分からないまま合わせる必要はありません。',element:'学ぶ量を増やす前に、すでに教わったことを使う時間を持って。'}
 };
 const CAREFUL_CLOSINGS={self:'希望を伝えることと、何でも引き受けることを分けて。',sharing:'気持ちよく助け合える分担を、言葉にしておきましょう。',expression:'誰かのための工夫にも、自分の好きな気持ちを残して。',words:'率直さは、強く言うことだけで伝わるものではありません。',exchange:'一つの誘いを断っても、大切なつながりまで諦めなくて大丈夫。',daily:'仕事も支出も、続けられる形を選ぶことが支えになります。',pressure:'断る理由を長く並べなくても、今できる範囲は伝えていいのです。',promise:'誠実さは、無理な約束をすることより、守れる条件を示すことに宿ります。',view:'新しさだけで答えを選ばず、自分に必要なものを見極めて。',learning:'納得できないところを質問することも、学びの一部です。'};
+// The same daily/background contrast has different practical implications in each scene.
+const BACKGROUND_CAUTION={
+ self:'続けて担う役割は、途中で見直せる条件まで話しておきましょう。',
+ sharing:'協力を続けるための費用と担当は、お互いが見直せる形で決めて。',
+ expression:'これからも作り続けたいものは、材料や時間を無理なく用意できるか見て。',
+ words:'提案を続けるなら、返事の良さだけでなく実行する人の意向も聞いて。',
+ exchange:'先々の付き合いまで決めるなら、会う頻度や予算に余裕を残して。',
+ daily:'仕事や購入の話は、継続する費用と手間まで見てから選んで。',
+ pressure:'続けて頼まれる仕事は、助けが必要になったときの相談先も確かめて。',
+ promise:'長く守る約束には、事情が変わったときに相談し直せる余地を残して。',
+ view:'新しい方法を続けて使うなら、合わなかったときに戻せるかも確かめて。',
+ learning:'学びを続ける予定は、通う時間や費用を生活に無理なく組み込めるか見て。'
+};
 const DAY=86400000;
 const adjacent=(a,b)=>a&&b&&Date.parse(b.date)-Date.parse(a.date)===DAY;
 export function readingContext(rows,index,meta={}){return {previous:rows[index-1],next:rows[index+1],nearby:rows.slice(Math.max(0,index-3),index+4),meta};}
@@ -106,9 +119,11 @@ export function describePoint(point,context={}){
  if(positive&&supported)action=supported.action;
  const protection={neutral:'周囲の勢いだけで判断せず、自分の余力も確かめてください。',clash:'相手の返事が違っても、すぐに押し返さなくて大丈夫。聞く時間を置いてください。',friction:'頼まれたことを全部抱える必要はありません。担える範囲を先に伝えて。',element:'期待より、続けるための余力を先に見てください。保留する判断も自分を守ります。',support:'まだ確認できていない条件まで、見切りで決めなくて大丈夫です。'};
  if(caution||tone==='mixed')action+=' '+(SCENE_PROTECTION[scene.id]?.[cause]||protection[cause]);
- else if(positive&&['clash','friction'].includes(cause))action+=' 後押しがあっても、'+(SCENE_PROTECTION[scene.id]?.[cause]||(cause==='clash'?'予定と相手の意見はすり合わせてから。':'無理な負担がないかは確かめて。'));
+ else if(positive&&['clash','friction'].includes(cause))action+=' '+(SCENE_PROTECTION[scene.id]?.[cause]||(cause==='clash'?'予定と相手の意見はすり合わせてから。':'無理な負担がないかは確かめて。'));
  if(tone==='steady')action+=' '+(SCENE_PROTECTION[scene.id]?.[cause]||{clash:'意見が違う用事は、先に相手の事情を聞いて。',friction:'続けている用事に、知らずに背負った負担がないか確かめて。',element:'今日は、増やすより今ある負担を見渡して。',support:'使える準備がある用事は、条件を確かめながら続けて。',neutral:'急ぐ必要がなければ、いつもの段取りを大切にして。'}[cause]);
- if(cause!=='clash'&&d.clashes>0)action+=' 意見が食い違う用事には、すり合わせる時間を置いて。';
+ if(cause!=='clash'&&d.clashes>0)action+=' '+(SCENE_PROTECTION[scene.id]?.clash||'意見が食い違う用事には、すり合わせる時間を置いて。');
+ const contrast=point.age<13?null:periodContrast(point);
+ if(contrast)action+=' '+(contrast.kind==='day-open-background-caution'?'日運に後押しがあっても、'+(BACKGROUND_CAUTION[scene.id]||'長く続く約束は内容と負担を確かめて。'):'今日は慎重な読みでも、長期の方針まで諦める必要はありません。');
  const closings={caution:'返事を待ってもらうことを、遠慮しないで。',careful:'気になる条件を尋ねるだけでも、進め方は変えられます。',opportunity:'遠慮だけを理由に、温めてきた思いをしまい込まなくて大丈夫。',rising:'まず話を聞くところからでも、一歩になります。',mixed:'返事の良さだけで、条件まで決めないで。'};
  const cautionClosings={self:'誰かの期待と同じくらい、自分の希望にも耳を傾けて。',sharing:'協力する気持ちと、背負える量は分けて考えて。',expression:'楽しみを負担に変えないために、自分の余力も大切に。',words:'相手に届く形を選ぶことも、自分の意見を大切にする方法です。',exchange:'気持ちよく付き合うためにも、時間と支出の境目を大切に。',daily:'続けるために、今日は守る範囲を決めて。',pressure:'頼られることと、全部を担うことは別です。',promise:'守れない約束を増やすより、守れる範囲を誠実に伝えて。',view:'今すぐ答えを出せなくても、確かめる時間は持っていて大丈夫。',learning:'頼れる人の言葉も、自分の事情と照らして選んでください。'};
  const supportClosings={opportunity:{wood:'温めてきた方向を、遠慮だけでしまい込まなくて大丈夫。',fire:'伝える機会を待つだけでなく、自分から声をかけてみて。',earth:'いま積み重ねていることも、前へ進む力になります。',metal:'大切にしたいことを伝えるのに、遠慮しすぎなくて大丈夫。',water:'知りたいことを尋ねるのに、完璧な準備はいりません。'},rising:{wood:'考えている計画を、今の暮らしに合う形へつなげて。',fire:'うまく言おうとするより、伝えたいことを大切に。',earth:'続けるための余裕も、段取りに含めてください。',metal:'譲れるところが分かれば、大切な条件も守りやすくなります。',water:'分からないところが見えれば、次に確かめることも選べます。'}};
@@ -124,8 +139,6 @@ export function describePoint(point,context={}){
  let title=titles[tone];
  if(uncertain){const reference={caution:'慎重に確認したい日',careful:'条件を確かめたい日',opportunity:'後押しを参考にしたい日',rising:'取り組む余地を考えたい日',mixed:'進める条件を見極めたい日',steady:'いつもの状況を見渡したい日'};title=`${scene.name}について、${reference[tone]}（参考）`;}
  if(point.age<13){title='この日の環境と見守りの目安';action='本人への行動指示ではなく、周囲の見守りや生活環境を考える参考にしてください。安心して過ごせる余裕を、周囲の大人が用意してあげて。';}
- const contrast=point.age<13?null:periodContrast(point);
- if(contrast)action+=' '+(contrast.kind==='day-open-background-caution'?'今日の後押しがあっても、長く続く約束は内容と負担を確かめて。':'今日は慎重な読みでも、長期の方針まで諦める必要はありません。');
  const sentences=action.match(/[^。]+。?/gu)||[action],paragraphs=[];for(let i=0;i<sentences.length;i+=2)paragraphs.push(sentences.slice(i,i+2).join('').trim());
  return {title,body:action,paragraphs,theme:scene.id,cause,uncertain,contrast,supportReading:supported,flow:point.age<13?[]:flow,evidence:Object.entries(point.parts).filter(([,p])=>p).map(([key,p])=>({scope:names[key],...p})),note:notes.join(' ')};
 }
