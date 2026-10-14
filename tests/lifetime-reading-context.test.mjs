@@ -98,6 +98,31 @@ for(const tenGod of ['食神','偏印','印綬']){const focused=describePoint(po
 assert.equal(sceneSupportBodies.size,50,'five symbolic meanings need distinct guidance in all ten scenes');
 assert.match(supportReading(period({support:100,supportElements:[{element:'metal',share:100}]}),'不明な場面').action,/不明な場面では、決めたい条件/,'unknown scenes retain the element-based fallback');
 assert.equal(describePoint(point(a.date,{tone:'steady',age:4})).body.includes('いつもの段取り'),false);
+const pairedActions=new Set();
+for(const tenGod of sceneGods)for(let i=0;i<5;i++)for(let j=i+1;j<5;j++){
+ const shares=[{element:elementIds[i],share:50},{element:elementIds[j],share:50}];
+ const daily=period({tenGod,support:100,caution:0,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0},supportElements:shares});
+ const snapshot=JSON.stringify(daily),r=describePoint(point(a.date,{tone:'opportunity',parts:{daily}}));
+ pairedActions.add(r.supportReading.action);assert.deepEqual(r.supportReading.elements,[elementIds[i],elementIds[j]]);
+ assert.equal(r.supportReading.action.split('。').filter(x=>x.trim()).length,2,'paired advice must retain two complete, concise sentences');
+ assert.equal(describePoint(point('2026-07-01',{tone:'opportunity',parts:{daily}})).body,r.body);
+ assert.equal(describePoint(point(a.date,{tone:'opportunity',parts:{daily:{...daily,supportElements:[...shares].reverse()}}})).body,r.body,'input order must not change the reading');
+ assert.equal(JSON.stringify(daily),snapshot);
+ const cautious=describePoint(point(a.date,{parts:{daily:{...daily,caution:100,attentionBreakdown:{element:100,clash:0,friction:0}}}}));
+ assert.ok(!cautious.body.includes(r.supportReading.action),'overall caution still takes priority over paired support');
+ assert.equal(describePoint(point(a.date,{age:4,tone:'opportunity',parts:{daily}})).supportReading,null);
+}
+assert.equal(pairedActions.size,100,'ten element pairs are interpreted in all ten scenes');
+const researched=describePoint(point(a.date,{tone:'opportunity',parts:{daily:period({tenGod:'傷官',support:100,supportElements:[{element:'fire',share:50},{element:'water',share:50}]})}}));
+assert.ok(researched.body.indexOf('意見の根拠')<researched.body.indexOf('伝えたかった意見'),'research precedes communicating the opinion');
+const chosen=describePoint(point(a.date,{tone:'opportunity',parts:{daily:period({tenGod:'正財',support:100,supportElements:[{element:'metal',share:50},{element:'water',share:50}]})}}));
+assert.ok(chosen.body.indexOf('迷う点を調べ')<chosen.body.indexOf('必要な条件'),'information precedes selection');
+assert.equal((chosen.supportReading.action.match(/仕事や買い物/gu)||[]).length,1,'do not restate the same scene in both instructions');
+assert.doesNotMatch([...pairedActions].join('\n'),/まず、取りかかる前に/,'avoid a repeated timing instruction');
+assert.match(supportReading(period({support:100,supportElements:[{element:'wood',share:50},{element:'water',share:50}]}),'不明な場面').action,/不明な場面では、これから取り組みたい/,'unknown scenes retain the existing paired interpretation');
+assert.equal(supportReading(period({support:100,supportElements:[{element:'wood',share:40},{element:'water',share:30}]}),'学びと支え').elements.length,2,'75 percent boundary retains both supports');
+assert.deepEqual(supportReading(period({support:100,supportElements:[{element:'wood',share:40},{element:'water',share:29.99}]}),'学びと支え').elements,['wood'],'below 75 percent uses the stronger support alone');
+assert.equal(supportReading(period({support:54,supportElements:[{element:'wood',share:27},{element:'water',share:27}]}),'学びと支え'),null,'two materials must not invent strong daily support');
 const contrastBodies=new Set();
 for(const tenGod of sceneGods){
  const daily=period({tenGod,support:100,caution:0,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0}});
