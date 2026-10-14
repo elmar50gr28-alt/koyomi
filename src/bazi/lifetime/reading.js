@@ -32,6 +32,19 @@ const SCENE_SUPPORT={
 // These scenes use metal as selection or editing, rather than negotiated concessions.
 const METAL_RISING_CLOSINGS={expression:'大切にしたい味わいを、作るときの目印にして。',view:'選ぶ基準が見えたら、今の課題に合う方法を比べて。',learning:'知りたいことが見えたら、そこから質問してみて。'};
 const QUIET_CLOSINGS={self:'引き受けなくてもよい役割まで、自分のものにしなくて大丈夫。',sharing:'手伝ってほしいことも、分担を考える席に置いてください。',expression:'人に見せるためだけでなく、自分が楽しむ時間も持って。',words:'まだ言葉にならない思いは、書き留めてから考えても大丈夫。',exchange:'連絡を返す時間にも、自分の暮らしに合うペースがあっていいのです。',daily:'いつもの手順で助かっているところも、見落とさずにいて。',pressure:'急ぐ理由がはっきりしない用事は、期限を尋ねてから順番を決めて。',promise:'約束を増やす前に、すでに大切にしているものに時間を残して。',view:'すぐに答えを選ばず、問いを持ったまま考える時間も大切に。',learning:'知っていることを使ってみる時間も、学びのうちです。'};
+// Practical reading order: gather information before choosing or communicating;
+// establish scope/routine before presenting a proposal. This does not alter astrological weights.
+const PAIR_ORDER={'wood/fire':['wood','fire'],'wood/earth':['wood','earth'],'wood/metal':['wood','metal'],'wood/water':['water','wood'],'fire/earth':['earth','fire'],'fire/metal':['metal','fire'],'fire/water':['water','fire'],'earth/metal':['metal','earth'],'earth/water':['water','earth'],'metal/water':['water','metal']};
+function pairedSceneAction(elements,scene){
+ const sequence=PAIR_ORDER[elements.join('/')],parts=SCENE_SUPPORT[scene?.id];
+ if(!sequence||!parts)return null;
+ // Complete sentences avoid cutting a conditional or its requested action in half.
+ const first=parts[sequence[0]].match(/^[^。]+。/u)?.[0];
+ let second=parts[sequence[1]].match(/^[^。]+。/u)?.[0];
+ // The first sentence already establishes this scene; retain the condition and action.
+ if(scene.id==='daily'&&/仕事|買い物/u.test(first||''))second=second?.replace(/^仕事や買い物では、/u,'');
+ return first&&second?`${first} そのうえで、${second}`:null;
+}
 export function supportReading(d,sceneName){
  if(d.support<55)return null;
  const order=Object.keys(SUPPORT_ELEMENTS),totals=new Map();
@@ -41,7 +54,7 @@ export function supportReading(d,sceneName){
  const canonical=ids.slice().sort((a,b)=>order.indexOf(a)-order.indexOf(b)),materials=canonical.map(id=>SUPPORT_ELEMENTS[id]);
  const label=materials.map(x=>x.name).join('と'),meaning=materials.map(x=>x.meaning).join('／');
  const scene=Object.values(SCENES).find(x=>x.name===sceneName);
- const action=ids.length===1&&SCENE_SUPPORT[scene?.id]?.[ids[0]]||`${sceneName}では、${ids.length===2?SUPPORT_PAIRS[canonical.join('/')]:materials[0].action}`;
+ const action=(ids.length===2?pairedSceneAction(canonical,scene):SCENE_SUPPORT[scene?.id]?.[ids[0]])||`${sceneName}では、${ids.length===2?SUPPORT_PAIRS[canonical.join('/')]:materials[0].action}`;
  return {elements:canonical,label,meaning,action,note:`後押し側の寄与が大きい${label}を、${meaning}の象徴として読みます。`};
 }
 // Specific situations are ten-god symbols, not claims about events that actually happened.
