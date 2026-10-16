@@ -1,8 +1,8 @@
 {
   "schemaId": "koyomi-earthquake-thermal-public-v1",
   "status": "available",
-  "generatedAt": "2026-10-15T08:23:48.325Z",
-  "retrievedAt": "2026-10-15T08:23:48.325Z",
+  "generatedAt": "2026-10-16T08:16:31.600Z",
+  "retrievedAt": "2026-10-16T08:16:31.600Z",
   "coverageStartUtc": "2024-01-01T00:00:00.000Z",
   "coverageEndUtc": "2026-10-13T00:00:00.000Z",
   "spatialResolution": 2,
@@ -12,7 +12,7 @@
     "status": "complete-cell-requests",
     "requestedCellCount": 115,
     "availableCellCount": 115,
-    "completeObservationFraction": 0.9,
+    "completeObservationFraction": 0.8,
     "missingValuePolicy": "drop-incomplete-day"
   },
   "provider": {
@@ -39,9 +39,9 @@
     "sourceUrl": "https://registry.opendata.aws/noaa-himawari/",
     "bucketUrl": "https://noaa-himawari9.s3.amazonaws.com",
     "status": "available",
-    "checkedAt": "2026-10-15T08:23:48.325Z",
-    "latestPrefix": "AHI-L1b-Japan/2026/10/15/0810/",
-    "latestObjectModifiedUtc": "2026-10-15T08:23:56.000Z",
+    "checkedAt": "2026-10-16T08:16:31.600Z",
+    "latestPrefix": "AHI-L1b-Japan/2026/10/16/0800/",
+    "latestObjectModifiedUtc": "2026-10-16T08:13:40.000Z",
     "availableBands": [
       "01",
       "02",
@@ -64,8 +64,8 @@
     "reason": "ひまわり9号HSD公開データの到達確認のみ。バイナリ値は本モデルの数値計算に未使用です"
   },
   "request": {
-    "start": "2026-10-05T00:00:00.000Z",
-    "end": "2026-10-14T08:23:48.325Z",
+    "start": "2026-10-06T00:00:00.000Z",
+    "end": "2026-10-15T08:16:31.600Z",
     "region": "Japan 20N-48N, 122E-154E",
     "timeStandard": "UTC"
   },
