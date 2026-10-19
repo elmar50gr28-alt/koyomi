@@ -291,6 +291,44 @@
   const star=nineStarName(basis),actions=period?.direction==='test'&&period.row[1]==='forward'?bounded:input.methodId==='kyusei'&&living.domain==='work'&&Object.hasOwn(STAR_WORK_ACTIONS,star)?STAR_WORK_ACTIONS[star]:row[2];
   return {basis,title:row[0],reading:row[1],invitation:living.domain==='health'?living.invitation:actions[Math.max(0,index)]};
  }
+ // Interpret the computed time layers before offering a life example. Calendar rotation
+ // may choose a scene, but must never choose the strength or the time-layer relationship.
+ const TIME_LIFE_READINGS={
+  work:{
+   forward:'仕事なら、案を胸の内で磨く段階から、人に見せて話を始める段階として読めます。「もっと実績ができてから」と待っていることがあるなら、今の成果と、次に任せてほしい役割を一緒に伝える機会に。評価されるために何でも引き受けるより、力を注ぎたい仕事を自分から示してみてください。',
+   test:'仕事で返事を迷うなら、期待されていることと、実際に任されることを分けて聞く読みです。たとえば「中心になってほしい」という言葉には、決定権があるのか、作業だけが増えるのかという違いがあります。頼られた喜びは大切にしながら、役割の中身まで確かめてよいのです。',
+   protect:'仕事が進まない時に、今日のつまずきを能力の判定にしないでください。締切が重なったのか、決める人が不在なのか、自分だけでは動かせない事情も見たい読みです。もし遅れを取り戻そうと新しい仕事まで抱えそうなら、先に優先順位を相談して。頑張りを足す前に、負担の置き場所を変えられます。',
+   mixed:'仕事でうれしい話が来たなら、まず話を聞くことと、長く引き受けることを分けたい読みです。たとえば企画への参加と、毎月の運営責任では、必要な余力が違います。機会を断るか丸ごと受けるかの二択にせず、担当する部分と終わる時期を話し合ってください。'
+  },
+  relationship:{
+   forward:'人との関わりでは、相手の反応を想像し続けるより、自分の気持ちを言葉にして渡す読みです。「また会いたい」なら、楽しかった場面と、次にしたいことを添えてみて。誘いは相手が選べる形で差し出せます。答えを思い通りにすることより、あなたの願いを曖昧に隠さないことを大切に。',
+   test:'人との関わりでは、言葉と受け取り方の間を確かめたい読みです。「また今度ね」を具体的な約束として待っているなら、日程の相談なのか、まだ予定が分からないのかを聞いてみてください。期待を持つことは悪くありません。ただ、分からない部分まで自分だけで埋めると、待つ時間が苦しくなります。',
+   protect:'人との関わりでは、今日うまく話せないことから、関係全体の結論を急がない読みです。返事が短い、予定が合わない。その理由や相手の気持ちは、この判定では決められません。もし何度も確かめたくなるなら、連絡を重ねる前に、返事を待つ間の自分の時間を取り戻してください。',
+   mixed:'人との関わりでは、今日楽しく話せたことと、これからの約束を別に考える読みです。心が近づいたと感じても、会う頻度や連絡の仕方まで一度に決めなくて大丈夫。「また話したい」という気持ちを届けながら、お互いが無理なく続けられる距離は、これから相談していけます。'
+  },
+  money:{
+   forward:'お金では、欲しい物を我慢するか買うかだけでなく、暮らしの何をよくしたいかを選ぶ読みです。たとえば毎日使う道具なら、使いにくさがどこで減るのかを想像してみて。後押しのある日でも、値上がりや得を保証するものではありません。生活費を残せる予算の中で、使う理由に納得できる選択を。',
+   test:'お金では、入口の金額より、使い終わるまでの支払いを読む時です。初月の割引が魅力なら、通常料金に戻った後も使うのか、やめる時に費用がかかるのかを見てください。「今なら安い」への答えと、「自分に必要か」への答えは別です。欲しい気持ちを責めずに、その二つを比べましょう。',
+   protect:'お金では、今日の気分を支払いで立て直そうとしていないか見たい読みです。もし嫌なことがあって買い物に向かうなら、欲しい物の名前は残し、決済は別の時間に選び直してもかまいません。損失が起こる予告ではなく、生活に必要なお金を残すための注意として受け取ってください。',
+   mixed:'お金では、今日払える額と、来月以降も払える額を分ける読みです。まとまった買い物が予算内でも、分割払いや会費が加わると、後の自由に使えるお金は変わります。今日の後押しを値上がりや利益の予告にせず、支払いが続く期間まで見渡して選んでください。'
+  },
+  overall:{
+   forward:'暮らしでは、気になっていたことを、自分の予定に迎え入れる読みです。行ってみたい展示、再開したい趣味、会いたい人。もし後回しにしている願いがあるなら、何を楽しみにしているのかまで言葉にしてみてください。予定を埋めることより、自分で選んだ楽しみを持つことへ力を使えそうです。',
+   test:'暮らしでは、「できそう」と「本当にしたい」の違いを確かめたい読みです。誘いに迷うなら、楽しみなのか、断った後の気まずさが心配なのかを聞いてみて。まだ選べない気持ちにも理由があります。相手の都合を聞くのと同じくらい、自分がその時間をどう過ごしたいかも材料にしてください。',
+   protect:'暮らしでは、今日進まなかったことを、自分への失望に結びつけない読みです。もし用事ばかりで一日が終わりそうなら、残りを全部取り戻そうとする前に、明日へ回せるものを選んでください。予定を減らすことで、食事や休む時間を取り戻せる場合もあります。生活を支える時間にも、席を残して。',
+   mixed:'暮らしでは、今日心が動いたことを、ずっと続ける義務に変えない読みです。新しい趣味なら体験と長期の申し込み、集まりなら今回の参加と次からの世話役を分けてみて。楽しみに近づくことと、役割まで背負うことは別々に選べます。続け方は、実際に過ごした後で考えてもよいのです。'
+  }
+ };
+ function timeLifeReading(input,items,timeFocus,living){
+  const rows=TIME_LIFE_READINGS[input.domain];
+  if(!timeFocus||!rows||!living)return null;
+  const today=items.find(x=>x.id==='選択日');
+  if(!today)return null;
+  const mixed=today.kind==='support'&&timeFocus.backgroundCautions.length>0;
+  const mode=mixed?'mixed':timeFocus.direction;
+  const cause=today.kind==='caution'?'今日の読みには慎重さが出ています。':today.kind==='neutral'?'今日の読みは、条件を確かめながら選ぶ位置にあります。':mixed?`今日には後押しがありますが、${timeFocus.backgroundCautions.map(x=>x==='大運'?'長期':'今年').join('と')}には負担への注意が残ります。`:timeFocus.direction==='test'?'今日には後押しがありますが、選択日の相性には慎重さが残ります。':'今日の読みには、準備を行動へ移す後押しがあります。';
+  return {mode,basis:timeFocus.basis,text:cause+rows[mode]};
+ }
  function storyOf(input,items){
   const kind=id=>items.find(x=>x.id===id)?.kind;
   const symbols=Array.isArray(input.symbols)?input.symbols:[];
@@ -367,7 +405,8 @@
   const useLifeAction=focus&&['rest','release','start'].includes(focus.intent);
   const opening=SCENE_OPENINGS[living.domain]?.[living.scene]?.[({forward:0,test:1,protect:2})[living.direction]];
   const background=body+(focus?'\n\n'+focus.bridge:'');
-  const presentation=typeof opening==='string'?{title:opening,body:living.body,background,example:living.example}:null;
+  const timeLife=timeLifeReading(input,items,timeFocus,living);
+  const presentation=typeof opening==='string'?{title:opening,body:living.body,background:timeLife?background+'\n\n'+timeLife.text:background,example:living.example,timeLife}:null;
   return {title,readingBody:body,body:body+'\n\n'+(focus?focus.bridge+'\n\n':'')+living.body,presentation,invitation:['tarot','runes'].includes(input.methodId)&&!useLifeAction?invitation:living.invitation,symbolicFocus:focus,periodFocus:period,profileFocus:profile,timeFocus,livingContext:living,evidence:items.map(x=>root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis).join('／')};
  }
  function relationshipOf(items,methodId){
