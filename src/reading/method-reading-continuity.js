@@ -1,6 +1,6 @@
 (function(root,factory){const api=factory(root);if(typeof module==='object'&&module.exports)module.exports=api;root.KOYOMI_METHOD_CONTINUITY=api})(typeof globalThis!=='undefined'?globalThis:this,function(root){
 'use strict';
-const VERSION='1.4.0',KEY='koyomi.method-continuity.v1';
+const VERSION='1.5.0',KEY='koyomi.method-continuity.v1';
 const ANGLES={
  overall:[["優先順位","今いちばん気になることは、急ぐ必要のあることですか。それとも、大切だから気になっていることですか。"],["事実と推測","まだ起きていないことまで、今日の悩みに加えていませんか。分かっている事実へ、いったん戻ってみて。"],["続ける負担","続けたいのは、その取り組みでしょうか。それとも、途中でやめたくないという気持ちでしょうか。"],["見直す条件","何が分かれば、今の答えを変えられそうですか。迷いの中にも、譲れない条件があるかもしれません。"],["使える支援","自分で抱えたいことと、誰かに頼みたいこと。今はどちらが多いでしょうか。"]],
  work:[["担当と合意","期待に応えたい気持ちと、引き受けられる範囲は同じでしょうか。任せてほしい部分も、難しい部分も伝えていいのです。"],["期限と区切り","どこまでできたら、今日は終えたと言えそうですか。「まだ足りない」の基準を、自分だけで厳しくしていないか見て。"],["準備と障害","必要な物だけでなく、相手の希望も含めて、始める前に知っておきたいことは何でしょうか。分からない点から聞いてみて。"],["任せる範囲","自分が担うことと、人に頼めること。今の分け方は無理なく続けられそうですか。任せることも、仕事を大切にする方法の一つです。"],["優先する仕事","忙しくしている時ほど、本当に進めたい仕事が後ろに回ることもあります。今日、力を使いたいのはどれでしょうか。"]],
@@ -11,6 +11,21 @@ const ANGLES={
  timing:[["準備の状態","日取りを決めたら、気持ちも準備もついてきそうですか。良い日を探すことと、無理なく動けることを重ねてみて。"],["待てる範囲","待つことで得られる情報は何でしょうか。急がない理由があるなら、待てる期限も一緒に考えて。"],["期限の意味","その期限は、実際の約束でしょうか。それとも、自分に課したものですか。焦りの出どころを見てみて。"],["見直す時点","何が分かれば、保留から先へ進めそうですか。決められない自分を責める前に、足りない材料を見つけて。"],["長期と目前","今日の都合と、長く大切にしたい方向。今はどちらを優先する必要がありそうですか。"]]
 };
 const PROTECT=['rest','organize','prepare','observe','health','money','boundary','review','negotiate','relationship','family','learn','release'];
+// These are application scenes already selected by the interpretation engine.
+// They narrow the question, without changing the computed fortune or action.
+const SCENE_ANGLES={
+ work:{'頼まれごと':[0,3],'提案':[2],'評価':[0]},
+ relationship:{'連絡':{forward:[1,4],test:[0,2],protect:[2]},'会話':{forward:[1],test:[0,1],protect:[2]},'約束':{forward:[3,4],test:[3,4],protect:[2,3]}},
+ money:{'買い物':{forward:[0,4],test:[0,4],protect:[3]},'継続費':[1,2]},
+ health:{'休息':[0],'生活のリズム':[2,3],'助けを借りる':[1]},
+ overall:{'予定':[0,2],'始めたいこと':[2,3],'人の期待':[2,4]}
+};
+function sceneAngles(context,d,angles){
+ if(!context||context.domain!==d||!['forward','test','protect'].includes(context.direction))return [];
+ if(d==='money'&&context.scene==='人付き合いの出費')return [{id:'money-social',label:'付き合いの予算',text:{forward:'その時間や贈り物に、どんな思いを込めたいですか。無理せず続けられる付き合い方も、選ぶ基準にしていいのです。',test:'参加した後の自分を思い浮かべると、楽しみと気がかりは何でしょうか。予算についても相談できる関係か、考えてみて。',protect:'断りづらいなら、相手の反応まで一人で引き受けようとしていないか、自分に聞いてみて。今の暮らしを守れる付き合い方を選んでいいのです。'}[context.direction]}];
+ const options=SCENE_ANGLES[d]?.[context.scene],indices=Array.isArray(options)?options:options?.[context.direction];
+ return indices?indices.map(i=>angles[i]):[];
+}
 const METHOD_FOCI={shichu:['prepare','negotiate','cooperate','focus','complete','rest','health'],sukuyo:['contact','relationship','boundary','family'],kyusei:['organize','move','prepare','focus'],astrology:['prepare','observe','review','decide','rest','health'],tarot:['observe','prepare','decide','review','release'],runes:['contact','prepare','decide','observe'],name:['negotiate','cooperate','relationship','boundary','learn'],numerology:['complete','prepare','review','focus','learn'],kabbalah:['boundary','relationship','rest','review','negotiate'],rokusei:['complete','prepare','rest','review','release','health'],timing:['prepare','decide','observe','review','rest']};
 const PATTERNS={overall:[/優先|予定|期限/,/事実|推測|観察|記録/,/続け|手放|負担|休/,/選択|比較|条件|見直/,/依頼|相談|支援/],work:[/担当|役割|合意|引き受|期待/,/期限|完了|提出|仕上|修正/,/準備|段取り|資料|揃|希望|困って/,/任せ|分担|人に頼|手伝/,/優先|集中|通知/],money:[/必要|使う|数量|割引|ポイント/,/維持|費用|手数料|サービス|解約/,/明細|領収|請求|注文|届いた|名義|支払先/,/支払日|残高|資金|年間|出費|支出予定/,/購入以外|借り|利用条件/],relationship:[/行動|言葉|記録/,/伝え|連絡|会話|返信/,/距離|断|都合|休/,/約束|役割|分担|合意/,/日時|期限|時期/],health:[/休む|休息|休憩|空き時間/,/予定|負担|用事/,/眠|睡眠|寝|画面/,/食事|水分/,/症状|記録|医療|受診|相談/],growth:[/分から|教材|課題|学び直/,/使う|学んだ/,/試作|案|作り|見せ/,/続け|負担|用事/,/結果|振り返|比べ/],timing:[/準備|実行/,/待|保留/,/期限/,/見直|判断/,/長期|方針/ ]};
 function hash(value){let h=2166136261;for(const c of String(value))h=Math.imul(h^c.charCodeAt(0),16777619);return(h>>>0).toString(16)}
@@ -21,7 +36,7 @@ function plan(input,options={}){
  if(!Object.hasOwn(METHOD_FOCI,input.methodId)||!/^\d{4}-\d{2}-\d{2}$/.test(input.date||'')||!Number.isFinite(Date.parse(input.date)))return null;
  const d=domain(input.domain),score=input.score!=null&&Number.isFinite(Number(input.score))?Number(input.score):50,serious=Number(input.psychRisk)>=70||Number(input.risk)>=70;
  const state=serious?'protect':['forward','test','protect'].includes(input.state)?input.state:score>=68?'forward':score<45?'protect':'test';
- const scope=hash(JSON.stringify([input.profileId||'anonymous',input.methodId,d,String(input.question||'').normalize('NFKC').trim()])),inputSignature=hash(JSON.stringify([VERSION,score,state,input.confidence,input.evidence,input.action,input.generatedAction,input.psychRisk,input.risk,input.keepsakeCandidates]));
+ const scope=hash(JSON.stringify([input.profileId||'anonymous',input.methodId,d,String(input.question||'').normalize('NFKC').trim()])),inputSignature=hash(JSON.stringify([VERSION,score,state,input.confidence,input.evidence,input.action,input.generatedAction,input.psychRisk,input.risk,input.keepsakeCandidates,input.readingScene]));
  let storage=options.storage;try{storage=storage||root.localStorage}catch{}let records=[];try{const data=JSON.parse(storage?.getItem(KEY)||'[]');if(Array.isArray(data))records=data.filter(r=>r&&typeof r.scope==='string'&&typeof r.date==='string')}catch{}
  const recent=records.filter(r=>r.scope===scope&&age(input.date,r.date)>0&&age(input.date,r.date)<=30).sort((a,b)=>b.date.localeCompare(a.date)),yesterday=recent.find(r=>age(input.date,r.date)===1);
  const signature=hash(JSON.stringify([inputSignature,recent.map(r=>[r.date,r.score,r.state,r.angleId,r.actionId,r.evidenceKey])]));
@@ -34,7 +49,8 @@ function plan(input,options={}){
   const core=root.KOYOMI_DAILY_READING_CORE,pool=(core?.FOCI||[]).filter(f=>((f.domain==='life'?'overall':f.domain)===d||(d==='work'&&['sukuyo','name','kabbalah'].includes(input.methodId)&&['contact','relationship','boundary'].includes(f.id)))&&(d==='money'||METHOD_FOCI[input.methodId].includes(f.id))&&(state!=='protect'||PROTECT.includes(f.id))).flatMap(f=>f.actions.map((text,i)=>({id:f.id+'-'+i,text}))).filter(a=>state!=='protect'||!/会う日時|会う予定|提出|試作/.test(a.text));
   const selected=choose(pool,recent,'actionId',input.date,scope+input.date+'action');if(selected){action=selected.text;actionId=selected.id}
  }
- const matching=angles.filter(a=>PATTERNS[d][a.index].test(action));if(matching.length)angle=choose(matching,recent,'angleId',input.date,scope+input.date);
+ const contextual=sceneAngles(input.readingScene,d,angles),eligible=contextual.length?contextual:angles;
+ const matching=eligible.filter(a=>PATTERNS[d][a.index]?.test(action));angle=choose(matching.length?matching:eligible,recent,'angleId',input.date,scope+input.date);
  if(missing&&!serious&&!care)angle={id:d+'-input',label:'不足している情報',text:'入力や算出結果が揃うまで、鑑定だけで実行を決めないようにします。'};
  if(care)angle={id:d+'-care',label:'必要な受診や相談',text:'鑑定の点数や日付を理由に、必要な対応を先延ばしにしない読み方です。'};
  if(serious)angle={id:d+'-safety',label:'安全と必要な支援',text:'安全確保と必要な支援を優先します。'};
