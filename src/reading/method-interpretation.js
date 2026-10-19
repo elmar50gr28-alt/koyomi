@@ -29,6 +29,13 @@
    ['人の期待',['周りから声をかけられたなら、期待に応えるだけでなく、あなたがやってみたいことも伝えてみましょう。自分の希望を持ち寄ることから、関わり方を選べます。','声をかけられた時は、自分がやってみたいことも伝えてみて。'],['人の期待が気になるなら、求められていることと、自分が引き受けたいことを分けてみましょう。返事を急がず、できる範囲を考える時間をもらってもかまいません。','期待されている役割を聞き、引き受けたい範囲を考えて返事をして。'],['人の期待に疲れているなら、今は、誰にでも応えようとしなくて大丈夫です。引き受けない選択にも、自分の暮らしを守るという理由があります。','無理な役割は増やさず、今は難しいと伝えて。']]
   ]
  };
+ const SCENE_OPENINGS={
+  work:{'頼まれごと':['引き受けるなら、得意なことから','返事の前に、自分の余力も','頼まれたからといって、背負わなくていい'],'提案':['伝えたいことを、形にするなら','通す前に、聞いてみたいこと','見送っても、思いまで消えない'],'評価':['あなたの工夫も、成果のうち','評価のものさしを、一人で決めないで','取り戻そうとして、抱え込まないで']},
+  relationship:{'連絡':['話したい理由を、言葉にするなら','返事を待つ間も、あなたの時間','返し続けなくても、守っていい距離がある'],'会話':['分かってほしいことから、話してみて','正しさを決める前に、受け止め方を','苦しい話し合いからは、離れていい'],'約束':['あなたの楽しみも、予定に入れて','会いたい気持ちと、空けられる時間','合わせ続ける前に、守れる約束かを']},
+  money:{'買い物':['使う楽しみまで、思い描いて選ぶ','欲しい理由は、比べた後にも残る？','欲しい気持ちと、守りたい生活費'],'継続費':['残したい楽しみに、お金を残す','始める値段と、続ける値段','減らせる支出から、暮らしに余裕を'],'人付き合いの出費':['気持ちは、金額だけでは決まらない','付き合いたい気持ちと、払える額','関係のために、暮らしを削らないで']},
+  health:{'休息':['動ける時にも、休む時間を','疲れ方に、目を向けるなら','取り返すより、休息と相談を'],'生活のリズム':['やりたいことを支える、毎日の暮らし','理想の時間割より、今の負担を','眠りや食事を、約束の犠牲にしないで'],'助けを借りる':['得意なことに、力を残すために','助けを頼む理由は、完璧でなくていい','頑張り方を増やすより、支えを増やして']},
+  overall:{'予定':['楽しみにしている時間も、今日の予定に','やりたいことと、今日できること','空いた時間まで、埋めなくていい'],'始めたいこと':['興味を、暮らしに迎えるなら','始めたい気持ちと、続ける暮らし','今始めないことも、自分で選べる'],'人の期待':['期待に応える時も、自分の希望を','求められる役割と、引き受けたい役割','誰にでも応える約束は、しなくていい']}
+ };
  const CARE={
   forward:['うまくいく姿を大きく見せなくても、あなたなりの手応えを大切にして。','遠慮していた希望も、選ぶ時の理由に加えていいのです。','誰かの速さに合わせず、続けたいと思える進め方を選んでください。','準備してきたことがあれば、実際に使う場面を選んでみてください。','成果を急ぐあまり、うれしかったことまで通り過ぎないでください。'],
   test:['迷いが残ることを、自分の弱さにしなくていいのです。','まだ分からないことには、まだ分からないと答えて大丈夫。','誰かに説明するためだけでなく、自分が納得するために確かめてください。','気になる点を聞くことは、相手を疑うことと同じではありません。','答えを変えても、ここまで考えた時間がなくなるわけではありません。'],
@@ -350,7 +357,10 @@
   }
   // Preserve specific spread interpretations; generic symbol paraphrasing may use a grounded life action.
   const useLifeAction=focus&&['rest','release','start'].includes(focus.intent);
-  return {title,readingBody:body,body:body+'\n\n'+(focus?focus.bridge+'\n\n':'')+living.body,invitation:['tarot','runes'].includes(input.methodId)&&!useLifeAction?invitation:living.invitation,symbolicFocus:focus,periodFocus:period,profileFocus:profile,timeFocus,livingContext:living,evidence:items.map(x=>root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis).join('／')};
+  const opening=SCENE_OPENINGS[living.domain]?.[living.scene]?.[({forward:0,test:1,protect:2})[living.direction]];
+  const background=body+(focus?'\n\n'+focus.bridge:'');
+  const presentation=typeof opening==='string'?{title:opening,body:living.body,background}:null;
+  return {title,readingBody:body,body:body+'\n\n'+(focus?focus.bridge+'\n\n':'')+living.body,presentation,invitation:['tarot','runes'].includes(input.methodId)&&!useLifeAction?invitation:living.invitation,symbolicFocus:focus,periodFocus:period,profileFocus:profile,timeFocus,livingContext:living,evidence:items.map(x=>root.KOYOMI_APP_NARRATIVE?.publicEvidence(x.basis)||x.basis).join('／')};
  }
  function relationshipOf(items,methodId){
   const kind=id=>items.find(x=>x.id===id)?.kind;
