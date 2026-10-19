@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const context={};
 for(const file of ['app-narrative-engine.js','universal-reading-engine.js','adaptive-narrative-engine.js'])vm.runInNewContext(await readFile(`src/reading/${file}`,'utf8'),context);
 const engine=context.KOYOMI_APP_NARRATIVE,universal=context.KOYOMI_UNIVERSAL_READING,adaptive=context.KOYOMI_ADAPTIVE_NARRATIVE;
-assert.equal(engine.VERSION,'2.10.0');
+assert.equal(engine.VERSION,'2.11.0');
 assert.ok(engine.CONCEPTS.length>=30);
 
 const surfaces=['personal','compatibility','timeline','oracle','qimen','mundane','today','method'];
@@ -61,6 +61,21 @@ assert.doesNotMatch(publicMethod.text,/日主|用神|空亡|専門資料/);
 const detailedMethod=methodContext.KOYOMI_PERSONA_ADAPTER.applyDivination('【専門資料】\n日主・用神・空亡',{system:'四柱推命',domain:'work',score:58,evidence:['担当を整理できる'],action:'期限を確認する',level:'detailed'});
 assert.match(detailedMethod.text,/【詳しい鑑定資料】/);
 assert.match(detailedMethod.text,/日主・用神・空亡/);
+
+// Concise prose is opt-in and must not swallow source limits or explicit actions.
+const spokenStory={title:'元の見出し',body:'元の本文',invitation:'元の助言',evidence:'選択日の判定は85点',presentation:{title:'今日の見出し',body:'従来の表示本文',background:'元の根拠本文',conversation:{body:'担当を勧められたら、今の仕事の引き継ぎも話してみて。',reason:'今日は話を進める流れですが、今年は引き受けすぎに注意。'}}};
+const spokenInput={surface:'method',domain:'work',confidence:80,showSceneExample:true,story:spokenStory,action:'指定した行動を保つ',readingAngle:{text:'同じ内容を問い直す文'},caution:'負担が増える時は相談して。'};
+const spokenOut=engine.compose(spokenInput);
+assert.ok(spokenOut.text.includes(spokenStory.presentation.conversation.body));
+assert.ok(spokenOut.text.includes(spokenStory.evidence));
+assert.ok(spokenOut.text.indexOf(spokenStory.presentation.conversation.reason)<spokenOut.text.indexOf('【今日の一歩】'));
+assert.ok(spokenOut.text.includes(spokenInput.action));
+assert.doesNotMatch(spokenOut.text,/従来の表示本文|元の根拠本文|同じ内容を問い直す文/);
+for(const conversation of [null,{}, {body:'本文だけ'}, {body:'本文',reason:'  '},{body:3,reason:'根拠'}]){
+ const fallback=engine.compose({...spokenInput,story:{...spokenStory,presentation:{...spokenStory.presentation,conversation}}});
+ assert.ok(fallback.text.includes('従来の表示本文'));assert.ok(fallback.text.includes('元の根拠本文'));
+}
+assert.ok(engine.compose({...spokenInput,showSceneExample:false}).text.includes('元の根拠本文'));
 
 const [app,today,worker]=await Promise.all([readFile('app.html','utf8'),readFile('today.html','utf8'),readFile('service-worker.js','utf8')]);
 for(const source of [app,today,worker])assert.ok(source.includes('src/reading/app-narrative-engine.js'));

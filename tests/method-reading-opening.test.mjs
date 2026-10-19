@@ -33,12 +33,20 @@ for(const methodId of methods)for(const domain of ['work','relationship','money'
    const firstBody=opening.split('\n\n').slice(1).join('\n\n');
    const ending=source.livingContext.body.split(/\n\s*\n/).at(-1);
    assert.notEqual(ending,previousEnding,'the closing voice cannot repeat on adjacent ordinary readings');previousEnding=ending;endings.add(ending);
-   assert.ok(firstBody.startsWith(source.livingContext.body),'the variable application scene must appear before the stable explanation');
-   if(parsed.mixed)assert.match(firstBody,/後押しと注意の両方/,'opposing signals must stay visible before the action');
-   assert.ok(out.text.includes(source.readingBody),methodId+'/'+domain+'/'+score+'/'+day+': calculated interpretation must remain readable');
+   const conversation=source.presentation?.conversation;
+   if(conversation){
+    assert.equal(firstBody,conversation.body,'spoken reading uses authored scene and concrete example');
+    assert.ok(out.text.includes(conversation.reason));
+    assert.ok(out.text.indexOf(conversation.reason)<out.text.indexOf('【今日の一歩】'),'source limits precede action');
+    assert.doesNotMatch(out.text,/【今日重ねたい問い】|【たとえば、こんな時】/);
+   }else{
+    assert.ok(firstBody.startsWith(source.livingContext.body),'the variable application scene must appear before the stable explanation');
+    if(parsed.mixed)assert.match(firstBody,/後押しと注意の両方/);
+    assert.ok(out.text.includes(source.readingBody));
+    assert.equal(out.text.split(source.livingContext.body).length-1,1);
+    assert.ok(out.text.indexOf(source.readingBody)>out.text.indexOf('【読みの根拠】'));
+   }
    assert.ok(out.text.includes(source.evidence));
-   assert.equal(out.text.split(source.livingContext.body).length-1,1,'application text must not be duplicated');
-   assert.ok(out.text.indexOf(source.readingBody)>out.text.indexOf('【読みの根拠】'));
    assert.equal(ctx.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input).text,out.text);
    if(methodId==='shichu'&&domain==='work'&&score===55)samples.push({date:input.date,text:out.text});
   }else assert.equal(domain,'health','medical guidance keeps the factual rendering');
