@@ -86,6 +86,7 @@ context.selectedDate='2026-07-01';context.LedgerState.selectedPrimary='person-b'
 context.LedgerState.selectedPrimary='person-a';context.koyomiSyncLuckyItemView();assert.equal(target.hidden,false);assert.equal(fields.name.textContent,out.keepsake.name);await context.ledgerCapturePersonal();assert.equal(saved.length,1);assert.equal(saved[0][1][0],'person-a');assert.match(saved[0][2],/【鑑定日】\n2026-07-01/);assert.equal(saved[0][3].readingDate,'2026-07-01');assert.equal(saved[0][3].luckyItem.keepsake.id,out.keepsake.id);
 assert.ok(app.includes('renderCalendar(){koyomiSyncLuckyItemView()'));assert.ok(app.includes('v197LedgerApplyPersonalBase(p);koyomiSyncLuckyItemView(p.id)'));
 const attachLine=app.split(/\r?\n/).find(line=>line.includes('appendSelected(shichu,')),recordLine=app.split(/\r?\n/).find(line=>line.includes('personalResult.divinations.shichu='));
+context.window.KOYOMI_DAILY_CONTEXT={luckyContext:()=>context.koyomiLuckyItemContext(),personalResult:()=>context.lastPersonal,requestKey:profile=>context.koyomiPersonalReadingKey(profile)};
 context.shichu=readingTarget;context.personalResult=context.lastPersonal;context.reading={beginnerText:'更新された精密鑑定'};
 for(const change of ['date','profile']){
  context.selectedDate=change==='date'?'2026-07-02':'2026-07-01';context.LedgerState.selectedPrimary=change==='profile'?'person-b':'person-a';context.koyomiSyncLuckyItemView();assert.equal(readingTarget.children.length,0);

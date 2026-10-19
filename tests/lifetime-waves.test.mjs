@@ -39,7 +39,7 @@ for(const [date,gender] of [['2000-02-29','male'],['1995-11-23','female'],['1982
  for(const day of days){
   const text=describePoint(day);titles.add(text.title);texts.add(text.body+' '+text.note);bodies.add(text.body);
   assert.ok(text.note.includes(day.parts.daily.label));
-  if(day.tone==='caution')assert.match(text.title,/急がない/);
+  if(day.tone==='caution')assert.equal(text.storyKind,'shelter','warning tone keeps protective rather than invitation storytelling');
   if(day.tone==='opportunity')assert.ok(day.opportunity>=75&&day.risk<40);
   if(day.tone==='mixed')assert.ok(day.opportunity>=60&&day.risk>=60);
   assert.doesNotMatch(text.body,/必ず|災難が起きる|不幸になる/);

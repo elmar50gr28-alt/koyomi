@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.KOYOMI_DAILY_READING_CORE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const VERSION = '3.7.0';
+  const VERSION = '3.10.0';
   const rawFoci = [
     ['complete', '完了', 'work', ['途中になっている仕事を、完了と伝えられる状態に仕上げる', '返答待ちの案件について、完了できるか相手に確認する', '仕上げの残っている成果物を、提出できる形にする'], ["新しい予定を増やす前に、残っている仕事を確認して。","仕上げが残っているうちに、別の仕事へ移らないで。","修正を続けるなら、どこで完了とするか決めておいて。"]],
     ['organize', '整理', 'life', ['机の上を、必要な物がすぐ取り出せる状態に整える', '作業を妨げている通知を止める', '今日使う資料を、探し回らずに済む場所へまとめる'], ["片づけだけで一日が終わらないよう、用事の時間も残して。","思い出の品まで、勢いで捨てないこと。","分類に迷ったら、まず取り出しやすい場所へまとめて。"]],
@@ -327,13 +327,55 @@
     '分からないことを聞く時間も、自分で選ぶための大切な時間です。',
     '今日守りたいものを、自分の予定にも入れてあげてね。'
   ]);
-  function narrativeFor(style, focus, scene, intensity) {
+  // The calculation chooses the strength; history still selects grounded focus and scene.
+  const READING_VOICES = Object.freeze({
+    work:{forward:'今日は、胸の中の工夫を外へ出す側に。遠慮だけで、やってみたい気持ちをしまわなくてもいいのです。',test:'きちんと応えようとして、自分の望む働き方を後回しにしていませんか。',protect:'誰かの期待を守るために、自分を使い切らなくても大丈夫。今日は、引き受ける前の本音を大切に。'},
+    relationship:{forward:'今日は、待つ側から声をかける側へ。話してみたい気持ちに、立派な理由が必要とは限りません。',test:'好かれるための返事と、本当に伝えたい返事。同じとは限らないからこそ、自分の声も聞いてみたい日です。',protect:'大切にしたい関係でも、あなたばかりが無理をする形には立ち止まって。優しさに、自分を置き去りにしないで。'},
+    growth:{forward:'知りたい、作ってみたい。その気持ちを、上手にできるかどうかより先に大切にしたい日。',test:'正解を探すあまり、自分が何に惹かれたかを忘れていませんか。今日は、その入口へ戻ってみてもいいのです。',protect:'思うように進まないときも、好きだった気持ちまで否定しなくて大丈夫。今日は、続ける自分を守る方へ。'},
+    money:{forward:'今日は、欲しいものの先にある暮らしを思い描いて。誰かに見せるためではなく、自分が大切に使いたいものへ。',test:'お得だから欲しいのか、本当に欲しいのか。少し立ち止まると、自分の望みが見えてくることもあります。',protect:'焦りを埋めるための買い物になっていないか、自分に聞いてみて。今日は、守っておきたい暮らしを大切に。'},
+    health:{forward:'今日は、頑張れるかだけでなく、心地よく過ごせるかにも目を向けたい日。自分のための時間にも、居場所を。',test:'まだできる、と思う気持ちの隣で、休みたい気持ちを後回しにしていませんか。',protect:'今日は、頑張った証拠より、安心して休める場所を大切に。休むことにまで、立派な理由はいりません。'},
+    life:{forward:'今日は、周りに合わせるだけでなく、自分の選びたい方へ目を向けて。暮らしの中にも、あなたの希望を置いていいのです。',test:'ずっとそうしてきたことと、これからも続けたいこと。同じかどうか、自分に問いかけてみたい日です。',protect:'全部をうまく回そうとして、あなたの時間まで消してしまわないで。今日は、残しておきたいものを大切に。'}
+  });
+  // Focus-specific openings keep a fixed domain from sounding identical every morning.
+  const FOCUS_VOICES = Object.freeze({
+    complete:['終わらない仕事があっても、あなた自身が足りないという意味にはしないで。','終わらせたいのは仕事でしょうか、それとも「まだ足りない」という気持ちでしょうか。','仕上げた先の景色を、今日は見にいきたい日。'],
+    organize:['片づける勢いで、大切に残したい気持ちまで捨てなくて大丈夫。','片づいた部屋で、どんな時間を過ごしたいか。今日は、その望みから考えてみて。','暮らしに、あなたの好きなものの居場所を作りたい日。'],
+    contact:['返事を待つ時間に、不安な想像だけを増やさないで。相手の内心まで決めなくて大丈夫。','連絡したいのは用事のためでしょうか、それとも、ただ話したいからでしょうか。','今日は、会話の扉をこちらから開く側へ。'],
+    negotiate:['納得していないのに、話を終わらせるためだけの返事をしなくてもいいのです。','譲れることと、望みまで引っ込めること。今日は、その違いを大切に。','望みを口にする前から、諦めなくていいのです。'],
+    rest:['休むことにまで、立派な理由を用意しなくて大丈夫。','まだできると思う気持ちの隣で、休みたい気持ちを後回しにしていませんか。','休む時間を、余った時間から選ばなくてもいい日。'],
+    learn:['分からないところがあっても、向いていないと決めつけなくて大丈夫。','正解が欲しいのか、理由を知りたいのか。今日は、自分の問いを大切に。','知りたい気持ちを、次の扉の入口にしたい日。'],
+    create:['誰かの評価を思うほど、最初の「好き」が遠くなるなら、いったん自分へ戻って。','上手に見せたい気持ちの奥で、いちばん表したいことは何でしょう。','頭の中だけに置いておくには、惜しい思いがあるなら、形にする側へ。'],
+    money:['焦りを埋めるための買い物になっていないか、自分へ聞いてみたい日。','お得だから欲しいのか、本当に欲しいのか。今日は、自分の望みも値札の隣へ。','買えるかどうかの先に、どんな暮らしを選びたいか。今日はそこから考えてみて。'],
+    boundary:['相手をがっかりさせたくない気持ちと、あなたの余力は別に考えていいのです。','優しい返事をする前に、その中に本音があるかも聞いてみたい日。','今日は、優しい返事だけでなく、正直な返事も選んでいいのです。'],
+    relationship:['関係を守るために、自分だけが我慢する形には立ち止まって。','分かってほしいことと、相手に望んでいること。同じかどうかを考えてみたい日。','分かってもらうのを待つだけでなく、分かり合うために話す側へ。'],
+    family:['家のことを大切にする気持ちに、あなた自身を置き去りにしないで。','近くにいるからこそ、言わずに分かってほしい気持ちが増えていませんか。','いつも一緒にいる人にも、改めて伝えたい思いがあるなら、今日は言葉にして。'],
+    health:['頑張った証拠より、安心して過ごせる時間を大切にしたい日。','調子を採点するだけでなく、どんなときに心地よく過ごせるかにも目を向けて。','今日は、頑張れるかだけでなく、心地よく過ごせるかも大切に。'],
+    move:['遅れを取り戻すために、安心まで置いていかなくて大丈夫。','目的地へ急ぐ前に、どんな余裕を持って向かいたいかも考えてみて。','目的地だけでなく、どんな気持ちで向かいたいかにも目を向けたい日。'],
+    prepare:['備えるほど不安が増えるなら、自分のための準備かどうかへ立ち戻って。','準備が足りないのか、始めるのが怖いのか。今日は、その違いを自分に聞いてみて。','始める前の時間にも、楽しみを置いていいのです。'],
+    release:['やめることを、失敗という名前だけで呼ばなくても大丈夫。','続けてきたから続けたいのか、今も大切にしたいからなのか。今日は、その違いを考えてみて。','手放した先に何を迎えたいか。終わりの先にも、自分の望みを置いていいのです。'],
+    review:['振り返る時間を、自分を責める時間に変えないで。','足りなかったところばかりでなく、残しておきたい工夫も思い出してみたい日。','振り返った先に、まだ選べる道を見つけたい日。'],
+    decide:['急いで答えを出すことだけが、前へ進む方法ではありません。','誰かを安心させるための答えと、自分で納得できる答え。同じとは限らないからこそ、今日は自分の声も。','今日は、周りの声に加えて、自分の望みも判断の席へ。'],
+    focus:['全部に応えようとして、自分が大切にしたい仕事まで見失わないで。','忙しく過ごすことと、大切なことに心を向けること。同じかどうか、今日は考えてみて。','誰かの急ぎだけでなく、自分が大切にしたい仕事へ心を向けたい日。'],
+    cooperate:['頼られるとうれしくても、ひとりで背負える量まで増えるわけではありません。','自分で済ませた方が早いと思って、頼りたい気持ちまでしまっていませんか。','「一緒に」を言葉にするとき、自分の得意も遠慮しすぎないで。'],
+    observe:['まだ分からないことを、不安な結末だけで埋めなくて大丈夫。','予想と実際の間に、何があるのか。答えを急ぐ前に、見えているものを大切に。','見慣れたことの中にも、知りたいと思える入口を探したい日。']
+  });
+  const READING_ENDINGS=Object.freeze({work:'今日の出来だけで、あなたの価値まで採点しないでください。',relationship:'大切な関係の中に、あなたの気持ちの居場所もありますように。',growth:'上手にできたかだけでなく、心が動いたところも覚えていて。',money:'誰かの豊かさより、あなたが大切にしたい暮らしを。',health:'休む自分にも、頑張る自分と同じだけ優しくいてください。',life:'自分で選べたと思えるものを、今日の中に残せますように。'});
+  const FOCUS_ENDINGS=Object.freeze({complete:'今日の出来だけで、あなたの価値まで採点しないでください。',organize:'あなたが心地よく過ごせる場所を、あなたのためにも。',contact:'返事の速さだけで、あなたの大切さは決まりません。',negotiate:'自分の望みも、話し合いの席に置いていいのです。',rest:'休む自分にも、頑張る自分と同じだけ優しくいてください。',learn:'分からない、と聞ける気持ちも、学びの入口です。',create:'好きだと思えたことは、評価がつく前からあなたのものです。',money:'誰かの豊かさより、あなたが大切にしたい暮らしを。',boundary:'断る言葉にも、関係と自分を大切にする気持ちを込められます。',relationship:'大切な関係の中に、あなたの気持ちの居場所もありますように。',family:'家族を思う気持ちに、あなた自身も含めてください。',health:'調子の良し悪しだけで、自分に向ける優しさまで変えないで。',move:'急ぐ道だけでなく、落ち着いて進める道もあなたの選択です。',prepare:'準備している自分の思いも、始まる前から大切にして。',release:'終えることがあっても、そこまで大切にしてきた時間まで消えません。',review:'見直すところがあっても、あなた全部が間違っていたわけではありません。',decide:'誰かの正解だけでなく、自分が納得できる理由も手元に。',focus:'忙しさのためだけでなく、大切にしたいことのために力を使えますように。',cooperate:'頼ることも、相手を信じて差し出すもののひとつです。',observe:'まだ答えにならない発見も、あなたの見方を育ててくれます。'});
+  const MONEY_ENDINGS=Object.freeze({release:'続けないと決めることも、これからの暮らしを大切にする選択です。',decide:'安さだけでなく、使う自分が納得できる理由も大切に。',organize:'数字の並びの奥にある、自分の暮らしも見失わずに。',create:'書き留めた数字を、あなたが望む暮らしの目印にも。',complete:'支払いの区切りと一緒に、心にも一区切りを置けますように。',communicate:'お金の相談にも、あなたが安心して話せる場を選んで。',delegate:'お互いの余力も含めて、分け合える形を選べますように。',maintain:'続けていく暮らしには、気持ちの余裕も残して。'});
+  const MONEY_VOICES=Object.freeze({
+    release:['続けてきた支払いでも、今の暮らしと合わないなら、見直していいのです。','惰性で払い続けているものに、いまもあなたの望みはあるでしょうか。','続けなくてもいいものの先に、使いたい場所を思い描く日。'],
+    decide:['急いで選ぶことで、不安を消そうとしなくて大丈夫。','安さと、使うときの喜び。今日は両方をあなたの基準に。','値札の向こうで、どんな時間を過ごしたいか。自分の望みも選ぶ側へ。'],
+    organize:['お金のことを一度に全部分かろうとしなくても大丈夫。','見えないから不安なのか、必要な支出なのか。今日はその違いへ目を向けて。','暮らしのお金に、自分が大切に使った理由も残したい日。']
+  });
+  function narrativeFor(style, focus, scene, intensity, action) {
     const index = STRUCTURES.findIndex(item => item.id === style);
     const strength = STRENGTH_READINGS[focus.id][{ protect: 0, test: 1, forward: 2 }[intensity]];
     // Scene and focus prose are independent complete sentences, never spliced noun clauses.
     const notes = FOCUS_READINGS[focus.id].match(/[^。]+。/g);
-    const openings=['今日の読みで大切にしたいのは「{focus}」。','今日は「{focus}」を手がかりに、過ごし方を考えてみましょう。','今回、暮らしにつなげたいテーマは「{focus}」です。','「{focus}」が、今日の選び方のヒントになります。','今日のテーマは「{focus}」。自分に合う使い方を見つけてね。','今日の流れを読む入口は「{focus}」です。'];
-    return openings[index % openings.length].replace('{focus}',focus.label) + notes[index % notes.length] + strength + '\n\n' + scene + '\n\n' + READING_LENSES[index];
+    const opening = (focus.id==='money'&&MONEY_VOICES[actionKind(action,focus.id)]||FOCUS_VOICES[focus.id])?.[{protect:0,test:1,forward:2}[intensity]]||READING_VOICES[focus.domain][intensity], meaning = notes[index % notes.length];
+    if (intensity === 'forward') return opening + '\n\n' + scene + ' ' + meaning + '\n\n' + strength + READING_LENSES[index];
+    if (intensity === 'protect') return opening + ' ' + strength + '\n\n' + scene + '\n\n' + meaning + READING_LENSES[index];
+    return opening + ' ' + scene + '\n\n' + meaning + strength + '\n\n' + READING_LENSES[index];
   }
 
   function safetyFor(input, focus) {
@@ -401,7 +443,8 @@
   ]);
   function toText(reading) {
     const selected = reading.blocks.filter(block => (block.role !== 'time' || reading.hasRecommendedTime) && (block.role !== 'difference' || reading.showDifference) && (block.role !== 'review' || !['short-pulse', 'warning-first', 'action-first'].includes(reading.structureId)));
-    return selected.map(block => `【${block.label}】\n${block.text}`).join('\n\n') + (reading.safetyNotice ? `\n\n${reading.safetyNotice}` : '');
+    const ending=(reading.focusId==='money'&&MONEY_ENDINGS[reading.actionKind])||FOCUS_ENDINGS[reading.focusId]||READING_ENDINGS[reading.domain];
+    return selected.map(block => `【${block.label}】\n${block.text}`).join('\n\n') + (ending ? `\n\n${ending}` : '') + (reading.safetyNotice ? `\n\n${reading.safetyNotice}` : '');
   }
 
   function groundingFor(input, focus, intensity) {
@@ -433,9 +476,9 @@
     const difference = yesterday?.intensity && yesterday.intensity !== intensity ? `昨日の強度は「${strengthNames[yesterday.intensity] || '前日の方針'}」、今日は「${strengthNames[intensity]}」。点数だけで予定を増減せず、今の余力と条件も確かめて。` : yesterday ? (yesterday.focusId === focus.id ? `昨日の「${focus.label}」を今日も扱うわ。${yesterday.actionId === `${focus.id}-${actionIndex}` ? '同じ一手が必要なら、今も条件が変わっていないか確かめて。' : '今日は扱う対象を切り替えながら、同じ主題を確かめていきましょう。'}` : `昨日の主題は「${yesterday.focusLabel || '前日の課題'}」。今日の主題は「${focus.label}」よ。前日の方針を否定せず、今日の作業を分けて考えて。`) : `今日の主題は「${focus.label}」。前日の記録がないため、日ごとの変化はまだ比べずに読んでいるわ。`;
     const recommendedTime = input.recommendedTime || '時刻の吉凶はこの信号からは決められないわ。必要な条件が揃い、落ち着いて取り組める時間を選んで。';
     const review = focus.id === 'money' ? MONEY_REVIEWS[actionIndex] || REVIEWS.money : REVIEWS[focus.id];
-    const labels = { conclusion: '今日の読み', difference: '流れの変化', action: '今日やること', caution: '気をつけること', time: '動く頃合い', review: '今夜の確認' };
+    const labels = { conclusion: '今日の読み', difference: '流れの変化', action: '今日のヒント', caution: '気をつけること', time: '動く頃合い', review: '夜に振り返るなら' };
     const rationale = groundingFor(input, focus, intensity);
-    const story = narrativeFor(structure.id, focus, scene, intensity) + '\n' + rationale.basis + rationale.qualification;
+    const story = narrativeFor(structure.id, focus, scene, intensity, action) + '\n' + rationale.basis + rationale.qualification;
     const texts = { conclusion: story, difference, action, caution, time: recommendedTime, review };
     const evidence = (input.evidence || []).filter(Boolean).slice(0, 3);
     const safetyNotice = safetyFor(input, focus);

@@ -31,7 +31,7 @@ const ordinary = core.generate({ profileId: 'bold', date: '2026-05-01', dayKey: 
 assert.equal(ordinary.safetyNotice, '', 'ordinary work advice must not be weakened by a generic disclaimer');
 assert.ok(ordinary.conclusion.length > 20 && !ordinary.conclusion.includes('かもしれません'));
 assert.ok(readings.every(item => item.blocks.find(block => block.role === 'caution')?.label === '気をつけること'));
-assert.ok(readings.every(item => item.blocks.find(block => block.role === 'action')?.label === '今日やること'));
+assert.ok(readings.every(item => item.blocks.find(block => block.role === 'action')?.label === '今日のヒント'));
 assert.ok(readings.every(item => !item.conclusion.includes('そこ、勢いで決めないの')));
 
 const sameA = core.generate({ profileId: 'stable', date: '2026-05-02', dayKey: 'same', dailyScore: 72, themeCategory: 'love' }, []);
@@ -61,3 +61,14 @@ const changedStrength = core.generate({ profileId: 'transition', date: '2026-04-
 assert.ok(core.toText(changedStrength).includes('昨日の強度は「負担を見直し、休息や確認を優先する」、今日は「準備が揃ったことを実行する」'));
 assert.ok(!core.toText(changedStrength).includes('できたから'), 'history never proves the user performed a suggested action');
 console.log('daily narrative depth: ok (180 fixed-signal readings, conditional scenes, variable visible depth, timing and strength transitions)');
+
+// Emotional voice and paragraph order follow actual strength, while evidence/action remain intact.
+for(const themeCategory of ['work','love','money','health','growth','decision']){
+ const voiced=[10,50,90].map(dailyScore=>core.generate({profileId:'voice-'+themeCategory,date:'2026-04-01',themeCategory,dailyScore,evidence:['固定の根拠']},[]));
+ assert.equal(new Set(voiced.map(r=>r.story.split('\n\n')[0])).size,3);
+ for(const r of voiced){assert.ok(r.story.includes(r.scene));assert.ok(r.story.includes(r.rationale.basis));assert.doesNotMatch(r.story,/今日の読みで大切にしたいのは|今回、暮らしにつなげたいテーマ|必ず成功|運命の相手が現れ/);assert.equal(r.evidence[0],'固定の根拠');}
+}
+
+for(const themeCategory of ['work','love','money','health','growth','decision']){const chain=[],firstLines=new Set();for(let day=1;day<=30;day++){const r=core.generate({profileId:'opening-'+themeCategory,date:`2026-04-${String(day).padStart(2,'0')}`,themeCategory,dailyScore:50},chain);firstLines.add(r.story.split('。')[0]);chain.unshift(r);}assert.ok(firstLines.size>=2,'a fixed domain must not repeat one emotional opening for thirty days');}
+
+for(const themeCategory of ['work','money']){const chain=[],endings=new Set();for(let day=1;day<=30;day++){const r=core.generate({profileId:'ending-'+themeCategory,date:`2026-04-${String(day).padStart(2,'0')}`,themeCategory,dailyScore:50},chain);endings.add(core.toText(r).replace(r.safetyNotice,'').trim().split('\n\n').at(-1));chain.unshift(r);}assert.ok(endings.size>=2,'fixed themes must not end with the same encouragement for thirty days');}

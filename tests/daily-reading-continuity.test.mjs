@@ -25,7 +25,8 @@ for (const themeCategory of ['overall', 'work', 'love', 'money', 'health', 'fami
     const row = controller.getOrCreate(input, { storage }).reading;
     assert.equal(JSON.stringify(controller.getOrCreate(input, { storage }).reading), JSON.stringify(row));
     assert.equal(JSON.stringify(core.generate(input, history)), JSON.stringify(row));
-    assert.ok(row.story.includes(row.focusLabel) && row.mainTheme === row.focusId);
+    assert.ok(row.story.includes(row.scene) && row.mainTheme === row.focusId, 'the conditional scene and selected theme remain grounded without a formulaic theme label');
+    assert.equal(row.blocks.find(block => block.role === 'conclusion').text,row.story);
     assert.ok(row.action === core.FOCI.find(focus => focus.id === row.focusId).actions[Number(row.actionId.split('-').at(-1))], 'reuse complete authored actions, never synonym substitution');
     assert.equal(core.toText(row).split(row.action).length - 1, 1, 'a daily reading must not echo the full action in its comparison and review');
     assert.ok(row.caution === core.FOCI.find(focus => focus.id === row.focusId).cautions[Number(row.cautionId.split('-').at(-1))], 'use the reviewed complete caution sentence without mechanical suffixes');
@@ -93,7 +94,7 @@ const ui = {
   selectedDate: new Date('2026-01-01'), fmtIso: value => value.toISOString().slice(0, 10),
   koyomiBaziReadingProfile: () => ({ personId: 'fixture', birthData: {} }), koyomiDailyProfileKey: () => 'ui-profile', koyomiBaziLocale: () => 'ja',
   KOYOMI_BAZI: { prepareCommonReadingThemes: async () => {}, calculateBazi: () => ({}), buildCommonReading: () => ({ items: [{ themeId: 'WORK_STEADY_PROGRESS' }] }), buildBaziReading: () => ({}) },
-  KOYOMI_DAILY_CONTEXT: { selectedDate: () => new Date('2026-01-01'), formatDate: () => '2026-01-01', dailySignal: () => ({ score: 90, title: 'fixture' }), dayPillar: () => ({ text: '甲子' }) },
+  KOYOMI_DAILY_CONTEXT: { requestKey: profile => ui.koyomiPersonalReadingKey(profile), personalResult: () => ui.lastPersonal, luckyContext: () => ({}), syncLuckyItem: () => {}, selectedDate: () => new Date('2026-01-01'), formatDate: () => '2026-01-01', dailySignal: () => ({ score: 90, title: 'fixture' }), dayPillar: () => ({ text: '甲子' }) },
   KOYOMI_DAILY_READING: { getOrCreate: input => ({ reading: core.generate(input) }) }, console
 };
 ui.window = ui; vm.createContext(ui);

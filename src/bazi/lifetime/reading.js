@@ -1,3 +1,4 @@
+import {composeStory} from './story.js';
 // These scenes retain the ten-god associations already used by the lifetime reading.
 const SCENES={
  比肩:{id:'self',name:'自分の役割',good:'自分が引き受けたい役割を、遠慮せず伝えてみて。',care:'相手に合わせる前に、自分が担える範囲を伝えてください。',quiet:'自分の役割を見渡して、続けたいことを選んでみて。'},
@@ -163,13 +164,25 @@ export function describePoint(point,context={}){
  const flow=flowFacts(point,context);
  const names={decade:'長期',annual:'その年',monthly:'その月',daily:'その日'};
  const notes=[`その日（${d.label}）の${d.tenGod||'干支'}を「${scene.name}」の象徴として読みます。`,causes[cause],`後押し${d.support}・注意${d.caution}を主役に、年・月${point.preLuck?'':'・長期'}の背景を合わせています。`];
- if(supported)notes.push(supported.note);
+ if(supported){notes.push(supported.note);if(positive)notes.push('行動に移すなら：'+supported.action);}
  if(d.attentionBreakdown){const a=d.attentionBreakdown;notes.push(`注意の内訳（上限処理前）：五行${Math.round(a.element)}・冲${a.clash}・害刑破${a.friction}。主な材料は${{element:'注意側の五行',clash:'冲',friction:'害・刑・破',support:'後押し',neutral:'通常の材料'}[cause]}です。`);if(cause!=='clash'&&d.clashes>0)notes.push('冲もありますが、より大きい注意材料を中心に読みます。');}
  if(point.agreement?.support)notes.push('後押しが背景にも重なっています。');if(point.agreement?.caution)notes.push('注意の材料が背景にも重なっています。');
  if(point.preLuck)notes.push('大運が始まる前のため、背景は年・月で計算しています。');
  let title=titles[tone];
  if(uncertain){const reference={caution:'慎重に確認したい日',careful:'条件を確かめたい日',opportunity:'後押しを参考にしたい日',rising:'取り組む余地を考えたい日',mixed:'進める条件を見極めたい日',steady:'いつもの状況を見渡したい日'};title=`${scene.name}について、${reference[tone]}（参考）`;}
+ let story=null;
+ if(point.age>=13){
+  const first=text=>text?.match(/^[^。]+。/u)?.[0]||text;
+  const advice=positive?(supported?(supported.elements.length===2?supported.action:first(supported.action)):scene.good):caution||tone==='mixed'?(SCENE_PROTECTION[scene.id]?.[cause]||scene.care):cause==='neutral'?'':(SCENE_PROTECTION[scene.id]?.[cause]||scene.quiet);
+  const guards=[];
+  if(tone==='mixed')guards.push(scene.good);
+  if(positive&&['clash','friction'].includes(cause))guards.push(SCENE_PROTECTION[scene.id]?.[cause]||protection[cause]);
+  if(cause!=='clash'&&d.clashes>0)guards.push(SCENE_PROTECTION[scene.id]?.clash||'意見が食い違う用事には、すり合わせる時間を置いて。');
+  const background=contrast?(contrast.kind==='day-open-background-caution'?'ただ、'+(BACKGROUND_CAUTION[scene.id]||'長く続く約束は内容と負担を確かめて。'):'今日は慎重な読みでも、長期の方針まで諦める必要はありません。'):'';
+  story=composeStory({theme:scene.id,tone,advice,guard:[...new Set(guards)].filter(x=>x!==advice).join(' '),background,uncertain,cause,elements:supported?.elements||[]});
+  if(story){action=story.body;title=story.title;}
+ }
  if(point.age<13){title='この日の環境と見守りの目安';action='本人への行動指示ではなく、周囲の見守りや生活環境を考える参考にしてください。安心して過ごせる余裕を、周囲の大人が用意してあげて。';}
  const sentences=action.match(/[^。]+。?/gu)||[action],paragraphs=[];for(let i=0;i<sentences.length;i+=2)paragraphs.push(sentences.slice(i,i+2).join('').trim());
- return {title,body:action,paragraphs,theme:scene.id,cause,uncertain,contrast,supportReading:supported,flow:point.age<13?[]:flow,evidence:Object.entries(point.parts).filter(([,p])=>p).map(([key,p])=>({scope:names[key],...p})),note:notes.join(' ')};
+ return {title,body:action,paragraphs:story?.paragraphs||paragraphs,storyKind:story?.kind||null,theme:scene.id,cause,uncertain,contrast,supportReading:supported,flow:point.age<13?[]:flow,evidence:Object.entries(point.parts).filter(([,p])=>p).map(([key,p])=>({scope:names[key],...p})),note:notes.join(' ')};
 }

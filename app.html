@@ -1973,7 +1973,7 @@ const v201MundaneGenerateBase=mundaneGenerate;
 mundaneGenerate=async function(){const result=await v201MundaneGenerateBase();const box=$('mundaneReading');if(box&&!box.hidden){const facts=[...box.querySelectorAll('p')].map(x=>x.textContent).filter(Boolean);v201Answer({type:'mundane',subject:`${$('mundaneYear')?.value||''}年の社会の流れ`,score:55,evidence:facts.slice(0,2),actions:['公的資料と一次情報で、関係する指標を月に一度確認する','予測ではなく、備えられる費用・期限・代替案を決める'],caution:'事件・景気・市場価格を占星術だけで断定しないこと',disclaimer:'社会占星術は傾向を整理する補助です。事実確認と専門情報を優先してください。'},box)}return result};
 function v201Init(){FEATURES.push('全鑑定共通回答','結論・根拠・具体策・注意・見直し統一','相性回答','人生年表回答','古代神託回答','運命航法盤回答','マンデン回答','今日の運勢回答');renderFeatures();window.V201={answer:v201Answer,engine:window.KOYOMI_UNIVERSAL_READING}}
 window.KOYOMI_CALENDAR_TIME_LEGACY=Object.freeze({formatLocalDate:fmtIso,parseLocalDate:safeDate,startOfLocalDay:startOfDay,formatCalendarDate:calendarFormat});
-window.KOYOMI_DAILY_CONTEXT=Object.freeze({selectedDate:()=>new Date(selectedDate),formatDate:fmtIso,dailySignal,dayPillar});
+window.KOYOMI_DAILY_CONTEXT=Object.freeze({selectedDate:()=>new Date(selectedDate),formatDate:fmtIso,dailySignal,dayPillar,requestKey:koyomiPersonalReadingKey,personalResult:()=>lastPersonal,luckyContext:koyomiLuckyItemContext,syncLuckyItem:koyomiSyncLuckyItemView});
 window.KOYOMI_PROFILE_SCHEMA_LEGACY=Object.freeze({normalizeProfile:ledgerNormalizeProfile,validateProfile:ledgerValidateProfile});
 window.KOYOMI_CRYPTO_LEGACY=Object.freeze({deriveKey:ledgerDeriveKey,encryptObject:ledgerEncryptObject,decryptObject:ledgerDecryptObject});
 window.KOYOMI_INDEXEDDB_LEGACY=Object.freeze({list:ledgerList,get:ledgerGet,put:ledgerPut,delete:ledgerRawDelete,clear:ledgerRawClear});
@@ -2325,13 +2325,14 @@ function koyomiBaziLuckStartHtml(luck,locale='ja'){
 function koyomiDailyProfileKey(profile){let value=JSON.stringify({personId:profile.personId||'',name:profile.displayName||'',birth:profile.birthData||{}}),hash=2166136261;for(const char of value)hash=Math.imul(hash^char.charCodeAt(0),16777619);return`profile-${(hash>>>0).toString(16)}`}
 async function koyomiRenderBaziReading(){
   try{
-    const dailyTarget=typeof lastPersonal!=='undefined'?lastPersonal:null;
+    const dailyTarget=window.KOYOMI_DAILY_CONTEXT?.personalResult?.()||null;
+    const lastPersonal=dailyTarget;
     const profile=koyomiBaziReadingProfile();
     if(!profile)return;
-    const requestKey=koyomiPersonalReadingKey(profile);
+    const requestKey=window.KOYOMI_DAILY_CONTEXT.requestKey(profile);
     await KOYOMI_BAZI.prepareCommonReadingThemes().catch(error=>console.warn('[KOYOMI_COMMON_READING] data unavailable; legacy reading remains active',error));
-    if(dailyTarget!==(typeof lastPersonal!=='undefined'?lastPersonal:null))return;
-    if(requestKey!==koyomiPersonalReadingKey(profile))return;
+    if(dailyTarget!==(window.KOYOMI_DAILY_CONTEXT.personalResult()||null))return;
+    if(requestKey!==window.KOYOMI_DAILY_CONTEXT.requestKey(profile))return;
     profile.baziSettings=window.KOYOMI_BAZI_SETTINGS?.()||{};
     const result=KOYOMI_BAZI.calculateBazi(profile);
     const locale=koyomiBaziLocale();
@@ -2378,7 +2379,7 @@ async function koyomiRenderBaziReading(){
     if(shichu){
       koyomiEnsureBaziReadingStyle();
       shichu.innerHTML=koyomiBaziLuckStartHtml(result.luckCycles,locale)+koyomiBaziReadingHtml(reading);
-      window.KOYOMI_READING_KEEPSAKE?.appendSelected(shichu,window.KOYOMI_READING_KEEPSAKE.currentSelection(typeof lastPersonal!=='undefined'?lastPersonal:null,koyomiLuckyItemContext()),'shichu');
+      window.KOYOMI_READING_KEEPSAKE?.appendSelected(shichu,window.KOYOMI_READING_KEEPSAKE.currentSelection(typeof lastPersonal!=='undefined'?lastPersonal:null,window.KOYOMI_DAILY_CONTEXT.luckyContext()),'shichu');
     }
     const meta=document.getElementById('shichuMeta');
     if(meta){
@@ -2395,13 +2396,13 @@ async function koyomiRenderBaziReading(){
       personalResult.baziReading=reading;
       personalResult.baziStructuredResult=result;
       personalResult.luckCycles=result.luckCycles;
-      if(personalResult.divinations)personalResult.divinations.shichu=window.KOYOMI_READING_KEEPSAKE?.selectedText(reading.beginnerText,window.KOYOMI_READING_KEEPSAKE.currentSelection(personalResult,koyomiLuckyItemContext()),'shichu')||reading.beginnerText;
+      if(personalResult.divinations)personalResult.divinations.shichu=window.KOYOMI_READING_KEEPSAKE?.selectedText(reading.beginnerText,window.KOYOMI_READING_KEEPSAKE.currentSelection(personalResult,window.KOYOMI_DAILY_CONTEXT.luckyContext()),'shichu')||reading.beginnerText;
     }
   }catch(error){
     console.error('[KOYOMI_BAZI_READING] render failed',error);
   }
 }
-window.KOYOMI_READING_KEEPSAKE?.watchSettings(document,()=>koyomiSyncLuckyItemView());
+window.KOYOMI_READING_KEEPSAKE?.watchSettings(document,()=>window.KOYOMI_DAILY_CONTEXT.syncLuckyItem());
 window.KOYOMI_BAZI_READING={render:koyomiRenderBaziReading,profile:koyomiBaziReadingProfile,locale:koyomiBaziLocale};
 window.KOYOMI_LIFETIME_CHART=mountLifetimeChart({target:document.getElementById('page-timeline'),getProfile:()=>{if(typeof LedgerState!=='undefined'&&LedgerState.locked)return null;if(typeof LedgerState!=='undefined'&&LedgerState.currentProfileId&&LedgerState.currentProfileId===LedgerState.selectedPrimary)return ledgerCollectProfile();const profile=koyomiBaziReadingProfile();return profile?{...profile,gender:document.getElementById('gender')?.value||''}:null;},getSettings:()=>window.KOYOMI_BAZI_SETTINGS?.()||{},canPersist:()=>typeof LedgerState==='undefined'||!LedgerState.lockConfig?.enabled});
 document.addEventListener('submit',event=>{
