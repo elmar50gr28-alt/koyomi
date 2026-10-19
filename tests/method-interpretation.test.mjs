@@ -157,9 +157,9 @@ for(const domain of ['work','relationship','money','health','overall'])for(const
    const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...current,mode});
    assert.equal(out.narrative.quality.pass,true,domain+'/'+direction+'/'+day+': '+out.narrative.quality.issues);
    if(out.narrative.structure==='symbolic-story'){
-    assert.ok(out.text.includes(story.livingContext.body),'application paragraph breaks survive rendering');
+    assert.ok(out.text.includes(story.presentation?.conversation?.body||story.livingContext.body),'application paragraph breaks survive rendering');
     assert.ok(out.text.includes(story.presentation?.conversation?.reason||story.readingBody),'the source interpretation remains readable in the evidence block');
-    assert.ok(out.text.indexOf(story.livingContext.body)<out.text.indexOf(story.readingBody),'daily scene precedes stable background');
+    assert.ok(out.text.indexOf(story.presentation?.conversation?.body||story.livingContext.body)<out.text.indexOf(story.presentation?.conversation?.reason||story.readingBody),'daily scene precedes source explanation');
    }
    else {assert.equal(domain,'health');assert.match(story.invitation,/医療機関|専門家|受診/);assert.doesNotMatch(out.text,/たとえば、/);}
    assert.ok(out.text.includes(story.invitation));
