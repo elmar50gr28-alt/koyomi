@@ -114,7 +114,7 @@ for(const [name,meaning,intent,direction]of [
  for(const mode of ['sister','zubat']) {
   const out=context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',{...input,mode});
   assert.equal(out.narrative.quality.pass,true,name+'/'+domain+'/'+day+': '+out.narrative.quality.issues);
-  if(out.narrative.structure==='symbolic-story')assert.ok(out.text.includes(parsed.story.symbolicFocus.bridge));
+  if(out.narrative.structure==='symbolic-story')assert.ok(out.text.includes(parsed.story.presentation?.conversation?.body||parsed.story.symbolicFocus.bridge));
   assert.ok(out.text.includes(parsed.story.invitation));symbolicCases++;
  }
  if(day===1&&domain==='relationship'&&['rest','release','start'].includes(intent))symbolicSamples.push({intent,text:context.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input).text});
