@@ -25,7 +25,7 @@ for(const fixture of fixtures)for(const domain of ['work','relationship','money'
   const input={...fixture,domain,score:85,confidence:80,generatedAction:true,profileId:fixture.methodId+domain,date:`2026-01-${String(day).padStart(2,'0')}`},before=JSON.stringify(input);
   const parsed=ctx.KOYOMI_METHOD_INTERPRETATION.interpret(input),story=parsed.story,conversation=story.presentation.conversation;
   assert.ok(conversation,fixture.methodId+' needs an authored concrete reading');
-  if(baseline){const prior=baseline.KOYOMI_METHOD_INTERPRETATION.interpret(input);for(const key of ['key','mixed','connection','text','application'])assert.equal(parsed[key],prior[key]);for(const key of ['readingBody','evidence','invitation'])assert.equal(story[key],prior.story[key]);for(const key of ['domain','scene','direction'])assert.equal(story.livingContext[key],prior.story.livingContext[key]);}
+  if(baseline){const prior=baseline.KOYOMI_METHOD_INTERPRETATION.interpret(input);for(const key of ['mixed','connection'])assert.equal(parsed[key],prior[key]);assert.deepEqual(JSON.parse(JSON.stringify(parsed.items.map(({id,basis,kind})=>({id,basis,kind})))),JSON.parse(JSON.stringify(prior.items.map(({id,basis,kind})=>({id,basis,kind})))));assert.equal(story.evidence,prior.story.evidence);if(!story.periodFocus)assert.equal(story.invitation,prior.story.invitation);for(const key of ['domain','scene','direction'])assert.equal(story.livingContext[key],prior.story.livingContext[key]);}
 
   const out=ctx.KOYOMI_PERSONA_ADAPTER.applyDivination('保存された元資料',input);
   assert.equal(JSON.stringify(input),before);assert.equal(out.narrative.quality.pass,true,fixture.methodId+': '+out.narrative.quality.issues);
@@ -35,7 +35,10 @@ for(const fixture of fixtures)for(const domain of ['work','relationship','money'
   assert.ok(out.text.indexOf(conversation.reason)<out.text.indexOf('【今日の一歩】'));
   if(story.symbolicFocus)for(const symbol of fixture.symbols){assert.ok(out.text.includes(symbol.name));assert.ok(out.text.includes(symbol.meaning));assert.ok(out.text.includes(symbol.pos));}
   if(story.profileFocus)assert.ok(out.text.includes(story.readingBody),'full source meanings retained for profile methods');
-  if(fixture.methodId==='rokusei')assert.match(out.text,/年の負担への注意は残る/);
+  if(fixture.methodId==='rokusei'){assert.match(out.text,/年の負担への注意は残る/);assert.match(out.text,/おおよその周期/);}
+  if(fixture.methodId==='sukuyo')assert.match(out.text,/生まれた日と選んだ日の宿/);
+  if(fixture.methodId==='kabbalah'){assert.doesNotMatch(out.text,/自分のためには、.*なら/);assert.match(out.text,/「橋数」は.*数の差/);}
+  assert.doesNotMatch(out.text,/通す前に|返事の前に、自分の余力も|評価のものさしを、一人で|期待を受け取ること/);
   assert.equal(ctx.KOYOMI_PERSONA_ADAPTER.applyDivination('保存された元資料',input).text,out.text);
   bodies.add(conversation.body);texts.add(out.text);maxLength=Math.max(maxLength,out.text.length);count++;
   if(domain==='work'&&day===1)samples.push({methodId:fixture.methodId,text:out.text});
@@ -52,6 +55,12 @@ for(const fixture of themes)for(const domain of ['work','relationship','money','
  const input={...fixture,domain,score:55,confidence:80,generatedAction:true,date:`2026-01-${String(day).padStart(2,'0')}`};
  const out=ctx.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);
  assert.equal(out.narrative.quality.pass,true,JSON.stringify(fixture)+'/'+domain+'/'+day+': '+out.narrative.quality.issues);themeCases++;
+}
+const houseExplanations=['自分をどう見せ','お金の使い方','学ぶこと','家での過ごし方','作品作り','毎日の仕事の手順','人との約束','共有するお金','新しく学びたい分野','仕事上の役割','仲間との活動','人から離れて休む時間'];
+for(let house=1;house<=12;house++){
+ const fixture=fixtures.find(x=>x.methodId==='astrology'),input={...fixture,domain:'overall',confidence:80,score:55,generatedAction:true,date:'2026-01-01',transitAssets:{...fixture.transitAssets,transits:fixture.transitAssets.transits.map(x=>({...x,house}))}};
+ const parsed=ctx.KOYOMI_METHOD_INTERPRETATION.interpret(input),out=ctx.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);
+ assert.equal(parsed.story.profileFocus.transitFocus.house,house);assert.ok(out.text.includes(bank.houses[house-1]));assert.ok(out.text.includes(houseExplanations[house-1]));assert.equal(out.narrative.quality.pass,true);
 }
 for(const fixture of fixtures)for(const patch of [{confidence:20},{risk:95},{domain:'health',action:'必要な受診を優先する'},{generatedAction:false,action:'本人が指定した相談を保持する'}]){
  const input={...fixture,domain:'work',confidence:80,score:85,generatedAction:true,date:'2026-02-01',...patch};
