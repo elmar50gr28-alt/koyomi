@@ -1,6 +1,6 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;root.KOYOMI_APP_NARRATIVE=api})(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
-const VERSION='2.8.0';
+const VERSION='2.8.1';
 const SURFACES={personal:{length:'long',review:'7日後'},compatibility:{length:'long',review:'14日後'},timeline:{length:'medium',review:'3か月後'},oracle:{length:'medium',review:'7日後'},qimen:{length:'medium',review:'行動後'},mundane:{length:'medium',review:'翌月'},today:{length:'short',review:'今夜'},method:{length:'medium',review:'7日後'}};
 const CONCEPTS=['advance','test','protect','complete','organize','contact','negotiate','rest','learn','create','budget','boundary','repair','prepare','release','review','decide','focus','cooperate','observe','recover','communicate','compare','pause','delegate','simplify','verify','schedule','maintain','reframe','prioritize','withdraw'];
 const DOMAINS={
@@ -134,7 +134,8 @@ function composeStory(f){
   {role:'reason',label:'読みの根拠',text:clean(f.story.evidence)},
   {role:'stop',label:'気をつけたいこと',text:f.caution||boundary(f)}];
  if(f.story.keepsake)blocks.splice(2,0,{role:'keepsake',label:'今日のお守り',text:f.story.keepsake.name+'\n'+f.story.keepsake.line+(f.story.alternative?'\n手元になければ、'+f.story.alternative.name+'でも。':'')});
- if(f.continuity)blocks.push({role:'continuity',label:'昨日との違い',text:/^点数は昨日と同じですが|^同じ論点を続けます/.test(f.continuity)?'昨日と同じ傾向が続いています。今日も、この読みを今の状況と重ねてみてください。':f.continuity});
+ if(f.readingAngle)blocks.splice(1,0,{role:'angle',label:'今日重ねたい問い',text:f.readingAngle.text});
+ if(f.continuity)blocks.push({role:'continuity',label:'昨日との違い',text:f.continuity});
  const text=blocks.map(b=>`【${b.label}】\n${b.text}`).join('\n\n'),quality=audit(text,f);
  return{text,blocks,frame:f,meta:{version:VERSION,structure:'symbolic-story',attempt:0,quality,vocabulary:{concepts:CONCEPTS.length,domain:f.domain,direction:f.direction}}};
 }
