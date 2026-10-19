@@ -158,7 +158,7 @@ for(const domain of ['work','relationship','money','health','overall'])for(const
    assert.equal(out.narrative.quality.pass,true,domain+'/'+direction+'/'+day+': '+out.narrative.quality.issues);
    if(out.narrative.structure==='symbolic-story'){
     assert.ok(out.text.includes(story.livingContext.body),'application paragraph breaks survive rendering');
-    assert.ok(out.text.includes(story.readingBody),'the source interpretation remains readable in the evidence block');
+    assert.ok(out.text.includes(story.presentation?.conversation?.reason||story.readingBody),'the source interpretation remains readable in the evidence block');
     assert.ok(out.text.indexOf(story.livingContext.body)<out.text.indexOf(story.readingBody),'daily scene precedes stable background');
    }
    else {assert.equal(domain,'health');assert.match(story.invitation,/医療機関|専門家|受診/);assert.doesNotMatch(out.text,/たとえば、/);}

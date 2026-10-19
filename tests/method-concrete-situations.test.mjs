@@ -23,7 +23,7 @@ for(const methodId of methods)for(const domain of ['work','relationship','money'
   assert.equal(out.narrative.quality.pass,true,methodId+'/'+domain+'/'+score+'/'+day+': '+out.narrative.quality.issues);
   assert.ok(out.text.includes(example.text));
   assert.equal(out.text.split(example.text).length-1,1);
-  assert.ok(out.text.includes(source.readingBody));
+  assert.ok(out.text.includes(source.presentation?.conversation?.reason||source.readingBody));
   assert.ok(out.text.includes(source.invitation));
   assert.equal(ctx.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input).text,out.text);
   const seen=situations.get(example.scene)||new Set();seen.add(example.id);situations.set(example.scene,seen);

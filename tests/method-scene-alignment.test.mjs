@@ -29,8 +29,9 @@ for(const methodId of methods)for(const domain of Object.keys(subjects))for(cons
   assert.equal(JSON.stringify(input),before);
   if(!subjects[domain][scene].includes(label))mismatches.push({methodId,domain,score,day,scene,label,action:observed.plan.action});
   if(out.narrative.structure==='symbolic-story'){
-   assert.ok(out.text.includes(interpretation.story.readingBody),'source interpretation stays intact');
-   assert.ok(out.text.includes(observed.plan.angle.text));
+   assert.ok(out.text.includes(interpretation.story.presentation?.conversation?.reason||interpretation.story.readingBody),'source interpretation stays intact');
+   if(!interpretation.story.presentation?.conversation)assert.ok(out.text.includes(observed.plan.angle.text));
+   else assert.doesNotMatch(out.text,/【今日重ねたい問い】/);
   }
   assert.equal(out.narrative.quality.pass,true,domain+'/'+score+'/'+day+': '+out.narrative.quality.issues);
   questions.add(observed.plan.angle.text);texts.add(out.text);

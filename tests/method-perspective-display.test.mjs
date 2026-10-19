@@ -23,9 +23,9 @@ for(const methodId of methods)for(const domain of ['overall','work','money','rel
   }
   assert.equal(out.narrative.quality.pass,true,`${methodId}/${domain}/${day}: ${out.narrative.quality.issues}`);
   const source=context.KOYOMI_METHOD_INTERPRETATION.interpret(input).story;
-  assert.ok(out.text.includes(source.title));
-  assert.ok(out.text.includes(source.readingBody),'the daily lens cannot replace the source interpretation');
-  const question=out.text.match(/【今日重ねたい問い】\n([\s\S]*?)(?=\n\n【)/)?.[1];
+  if(!source.presentation?.conversation)assert.ok(out.text.includes(source.title));
+  assert.ok(out.text.includes(source.presentation?.conversation?.reason||source.readingBody),'the daily lens cannot replace the source interpretation');
+  const question=source.presentation?.conversation?.body||out.text.match(/【今日重ねたい問い】\n([\s\S]*?)(?=\n\n【)/)?.[1];
   assert.ok(question,`${methodId}/${domain}/${day} lost its daily lens`);
   questions.add(question);
   if(day>1){

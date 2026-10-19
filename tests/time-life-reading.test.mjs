@@ -5,11 +5,14 @@ const store=new Map(),ctx={localStorage:{getItem:k=>store.get(k)||null,setItem:(
 for(const f of ['reading/daily/daily-reading-core.js','reading/app-narrative-engine.js','reading/method-interpretation.js','reading/reading-keepsake.js','reading/method-reading-continuity.js','persona/conversation-adapter.js'])vm.runInNewContext(await readFile('src/'+f,'utf8'),ctx);
 let count=0,maxLength=0;const samples=[],variants=new Map();
 for(const methodId of ['shichu','timing'])for(const domain of ['work','relationship','money','overall'])for(const long of [30,55,85])for(const year of [30,55,85])for(const day of [30,55,85]){
- store.clear();const texts=new Set(),details=new Set();
+ store.clear();const texts=new Set(),details=new Set(),spokenBodies=new Set();
  for(let d=1;d<=30;d++){
   const input={methodId,domain,score:85,confidence:80,generatedAction:true,profileId:`${methodId}-${domain}-${long}-${year}-${day}`,date:`2026-01-${String(d).padStart(2,'0')}`,evidence:[`大運${long}`,`流年${year}`,`選択日${day}`]};
   const source=ctx.KOYOMI_METHOD_INTERPRETATION.interpret(input).story;
   const detail=source.presentation.timeLife;
+  spokenBodies.add(source.presentation.conversation.body);
+  assert.doesNotMatch(source.presentation.conversation.body,/読みです|進める材料|条件確認の材料|時期の違いを重ね/);
+  assert.ok(source.presentation.conversation.body.length<400,'the main reading should be readable without stacked commentary');
   if(long===85&&year===85&&day===30)assert.match(detail.text,/長期と今年には進める材料/);
   if(day===85&&(long===30||year===30))assert.match(detail.text,/長く続ける約束を分ける/);
   if(day===55&&(long===30||year===30))assert.match(detail.text,/長く背負う負担は増やさず/);
@@ -21,13 +24,16 @@ for(const methodId of ['shichu','timing'])for(const domain of ['work','relations
   assert.ok(source.presentation.background.startsWith(source.readingBody));
   const out=ctx.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);
   assert.equal(out.narrative.quality.pass,true,out.narrative.quality.issues.join(','));
-  assert.ok(out.text.indexOf(detail.text)>out.text.indexOf('【読みの根拠】'));
-  assert.equal(out.text.split(detail.text).length-1,1);
+  assert.ok(out.text.length<900,'standard readings must not accumulate the full source commentary');
+  assert.ok(out.text.includes(detail.spoken));assert.ok(out.text.includes(detail.explanation));
+  assert.equal(out.text.split(detail.spoken).length-1,1);
+  assert.ok(out.text.indexOf(detail.explanation)<out.text.indexOf('【今日の一歩】'));
   assert.equal(ctx.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input).text,out.text);
   texts.add(out.text);count++;maxLength=Math.max(maxLength,out.text.length);
   if(methodId==='shichu'&&long===85&&year===30&&day===85&&d===1)samples.push({domain,text:out.text});
  }
  assert.equal(texts.size,30,'30 complete daily readings must remain distinct');
+ assert.equal(spokenBodies.size,9,'all nine concrete situations must vary the spoken reading');
  assert.equal(details.size,3,'the explanation must follow all three daily application scenes');
 }
 for(const evidence of [['選択日85','選択日30'],['流年85'],['判定保留']])assert.ok(!ctx.KOYOMI_METHOD_INTERPRETATION.interpret({methodId:'shichu',domain:'work',evidence})?.story?.presentation?.timeLife);
@@ -69,7 +75,7 @@ for(const start of ['2024-02-15','2026-09-15','2026-12-15'])for(let day=0;day<30
    assert.equal(detail.mode,daily.score<45?'protect':daily.score<68?'test':'mixed');
    assert.equal(detail.scene,parsed.story.presentation.example.scene);
    const out=ctx.KOYOMI_PERSONA_ADAPTER.applyDivination('元資料',input);
-   assert.equal(out.narrative.quality.pass,true,out.narrative.quality.issues.join(','));assert.ok(out.text.includes(detail.text));
+   assert.equal(out.narrative.quality.pass,true,out.narrative.quality.issues.join(','));assert.ok(out.text.includes(detail.spoken));assert.ok(out.text.includes(detail.explanation));
    assert.equal(JSON.stringify(input),original);actualModes.add(detail.mode);actualDailyCases++;
   }
  }
