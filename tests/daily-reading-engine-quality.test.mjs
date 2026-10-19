@@ -70,3 +70,5 @@ for(const themeCategory of ['work','love','money','health','growth','decision'])
 }
 
 for(const themeCategory of ['work','love','money','health','growth','decision']){const chain=[],firstLines=new Set();for(let day=1;day<=30;day++){const r=core.generate({profileId:'opening-'+themeCategory,date:`2026-04-${String(day).padStart(2,'0')}`,themeCategory,dailyScore:50},chain);firstLines.add(r.story.split('。')[0]);chain.unshift(r);}assert.ok(firstLines.size>=2,'a fixed domain must not repeat one emotional opening for thirty days');}
+
+for(const themeCategory of ['work','money']){const chain=[],endings=new Set();for(let day=1;day<=30;day++){const r=core.generate({profileId:'ending-'+themeCategory,date:`2026-04-${String(day).padStart(2,'0')}`,themeCategory,dailyScore:50},chain);endings.add(core.toText(r).replace(r.safetyNotice,'').trim().split('\n\n').at(-1));chain.unshift(r);}assert.ok(endings.size>=2,'fixed themes must not end with the same encouragement for thirty days');}

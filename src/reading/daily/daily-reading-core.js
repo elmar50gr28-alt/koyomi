@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.KOYOMI_DAILY_READING_CORE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const VERSION = '3.9.0';
+  const VERSION = '3.10.0';
   const rawFoci = [
     ['complete', '完了', 'work', ['途中になっている仕事を、完了と伝えられる状態に仕上げる', '返答待ちの案件について、完了できるか相手に確認する', '仕上げの残っている成果物を、提出できる形にする'], ["新しい予定を増やす前に、残っている仕事を確認して。","仕上げが残っているうちに、別の仕事へ移らないで。","修正を続けるなら、どこで完了とするか決めておいて。"]],
     ['organize', '整理', 'life', ['机の上を、必要な物がすぐ取り出せる状態に整える', '作業を妨げている通知を止める', '今日使う資料を、探し回らずに済む場所へまとめる'], ["片づけだけで一日が終わらないよう、用事の時間も残して。","思い出の品まで、勢いで捨てないこと。","分類に迷ったら、まず取り出しやすい場所へまとめて。"]],
@@ -360,6 +360,8 @@
     observe:['まだ分からないことを、不安な結末だけで埋めなくて大丈夫。','予想と実際の間に、何があるのか。答えを急ぐ前に、見えているものを大切に。','見慣れたことの中にも、知りたいと思える入口を探したい日。']
   });
   const READING_ENDINGS=Object.freeze({work:'今日の出来だけで、あなたの価値まで採点しないでください。',relationship:'大切な関係の中に、あなたの気持ちの居場所もありますように。',growth:'上手にできたかだけでなく、心が動いたところも覚えていて。',money:'誰かの豊かさより、あなたが大切にしたい暮らしを。',health:'休む自分にも、頑張る自分と同じだけ優しくいてください。',life:'自分で選べたと思えるものを、今日の中に残せますように。'});
+  const FOCUS_ENDINGS=Object.freeze({complete:'今日の出来だけで、あなたの価値まで採点しないでください。',organize:'あなたが心地よく過ごせる場所を、あなたのためにも。',contact:'返事の速さだけで、あなたの大切さは決まりません。',negotiate:'自分の望みも、話し合いの席に置いていいのです。',rest:'休む自分にも、頑張る自分と同じだけ優しくいてください。',learn:'分からない、と聞ける気持ちも、学びの入口です。',create:'好きだと思えたことは、評価がつく前からあなたのものです。',money:'誰かの豊かさより、あなたが大切にしたい暮らしを。',boundary:'断る言葉にも、関係と自分を大切にする気持ちを込められます。',relationship:'大切な関係の中に、あなたの気持ちの居場所もありますように。',family:'家族を思う気持ちに、あなた自身も含めてください。',health:'調子の良し悪しだけで、自分に向ける優しさまで変えないで。',move:'急ぐ道だけでなく、落ち着いて進める道もあなたの選択です。',prepare:'準備している自分の思いも、始まる前から大切にして。',release:'終えることがあっても、そこまで大切にしてきた時間まで消えません。',review:'見直すところがあっても、あなた全部が間違っていたわけではありません。',decide:'誰かの正解だけでなく、自分が納得できる理由も手元に。',focus:'忙しさのためだけでなく、大切にしたいことのために力を使えますように。',cooperate:'頼ることも、相手を信じて差し出すもののひとつです。',observe:'まだ答えにならない発見も、あなたの見方を育ててくれます。'});
+  const MONEY_ENDINGS=Object.freeze({release:'続けないと決めることも、これからの暮らしを大切にする選択です。',decide:'安さだけでなく、使う自分が納得できる理由も大切に。',organize:'数字の並びの奥にある、自分の暮らしも見失わずに。',create:'書き留めた数字を、あなたが望む暮らしの目印にも。',complete:'支払いの区切りと一緒に、心にも一区切りを置けますように。',communicate:'お金の相談にも、あなたが安心して話せる場を選んで。',delegate:'お互いの余力も含めて、分け合える形を選べますように。',maintain:'続けていく暮らしには、気持ちの余裕も残して。'});
   const MONEY_VOICES=Object.freeze({
     release:['続けてきた支払いでも、今の暮らしと合わないなら、見直していいのです。','惰性で払い続けているものに、いまもあなたの望みはあるでしょうか。','続けなくてもいいものの先に、使いたい場所を思い描く日。'],
     decide:['急いで選ぶことで、不安を消そうとしなくて大丈夫。','安さと、使うときの喜び。今日は両方をあなたの基準に。','値札の向こうで、どんな時間を過ごしたいか。自分の望みも選ぶ側へ。'],
@@ -441,7 +443,8 @@
   ]);
   function toText(reading) {
     const selected = reading.blocks.filter(block => (block.role !== 'time' || reading.hasRecommendedTime) && (block.role !== 'difference' || reading.showDifference) && (block.role !== 'review' || !['short-pulse', 'warning-first', 'action-first'].includes(reading.structureId)));
-    return selected.map(block => `【${block.label}】\n${block.text}`).join('\n\n') + (READING_ENDINGS[reading.domain] ? `\n\n${READING_ENDINGS[reading.domain]}` : '') + (reading.safetyNotice ? `\n\n${reading.safetyNotice}` : '');
+    const ending=(reading.focusId==='money'&&MONEY_ENDINGS[reading.actionKind])||FOCUS_ENDINGS[reading.focusId]||READING_ENDINGS[reading.domain];
+    return selected.map(block => `【${block.label}】\n${block.text}`).join('\n\n') + (ending ? `\n\n${ending}` : '') + (reading.safetyNotice ? `\n\n${reading.safetyNotice}` : '');
   }
 
   function groundingFor(input, focus, intensity) {
