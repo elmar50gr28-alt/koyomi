@@ -4,7 +4,7 @@ import {dominantCause,continuousFlow,periodContrast,turningPoint,supportReading}
 const period=(extras={})=>({label:'甲子',tenGod:'傷官',support:0,caution:90,clashes:1,other:0,...extras});
 const point=(date,extras={})=>({date,age:30,score:20,risk:80,opportunity:20,tone:'caution',parts:{daily:period(),annual:period(),monthly:period(),decade:period()},...extras});
 const a=point('2026-01-01'),b=point('2026-01-02',{score:40,risk:60}),c=point('2026-01-03',{score:80,risk:20,tone:'opportunity'});
-assert.match(describePoint(a).body,/言いたいこと/);
+assert.match(describePoint(a).body,/賛成できない点/);
 assert.equal(describePoint(a).cause,'clash');
 assert.match(describePoint(a).note,/冲/);
 assert.match(describePoint(point(a.date,{parts:{daily:period({clashes:0,other:2})}})).note,/害・刑・破/);
@@ -63,7 +63,7 @@ assert.equal(supportReading(period({support:100}),'役割と約束'),null,'missi
 const materials=[{element:'water',share:10},{element:'fire',share:90}],originalMaterials=JSON.stringify(materials);
 assert.deepEqual(supportReading(period({support:100,supportElements:materials}),'意見の伝え方').elements,['fire']);assert.equal(JSON.stringify(materials),originalMaterials);
 const supportive=point(a.date,{tone:'opportunity',risk:0,parts:{daily:period({support:100,caution:0,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0},supportElements:[{element:'metal',share:100}]})}});
-assert.match(describePoint(supportive).body,/伝えたい結論/);
+assert.match(describePoint(supportive).body,/何を伝え/);assert.match(describePoint(supportive).note,/行動に移すなら：/);
 assert.equal(describePoint({...supportive,age:4}).supportReading,null);
 assert.match(describePoint({...supportive,tone:'caution',risk:80}).body,/言いたいこと/,'overall warning still takes priority over a supported element');
 // Root and symbolic scene, not date or random choice, determine the concrete guidance.
@@ -87,6 +87,8 @@ for(const tenGod of sceneGods){
   const reading=describePoint(point(a.date,{tone:'opportunity',parts:{daily}}));
   assert.deepEqual(reading.supportReading.elements,[element]);assert.ok(reading.note.includes(reading.supportReading.meaning));
   sceneSupportBodies.add(reading.supportReading.action);
+  assert.ok(reading.note.includes(reading.supportReading.action),'the full practical advice remains available with the evidence');
+  assert.doesNotMatch(reading.body,/書き分けて|15分/,'the story is not a rewritten task list');
   assert.equal(describePoint(point('2026-07-01',{tone:'opportunity',parts:{daily}})).body,reading.body,'symbolic scene guidance does not change solely with the date');
   const warning=describePoint(point(a.date,{tone:'caution',parts:{daily:{...daily,caution:100,attentionBreakdown:{element:100,clash:0,friction:0}}}}));
   assert.ok(!warning.body.includes(reading.supportReading.action),'support advice must not displace the overall warning');
@@ -98,12 +100,12 @@ for(const tenGod of ['食神','偏印','印綬']){const focused=describePoint(po
 assert.equal(sceneSupportBodies.size,50,'five symbolic meanings need distinct guidance in all ten scenes');
 assert.match(supportReading(period({support:100,supportElements:[{element:'metal',share:100}]}),'不明な場面').action,/不明な場面では、決めたい条件/,'unknown scenes retain the element-based fallback');
 assert.equal(describePoint(point(a.date,{tone:'steady',age:4})).body.includes('いつもの段取り'),false);
-const pairedActions=new Set();
+const pairedActions=new Set(),pairedStoryBodies=new Set();
 for(const tenGod of sceneGods)for(let i=0;i<5;i++)for(let j=i+1;j<5;j++){
  const shares=[{element:elementIds[i],share:50},{element:elementIds[j],share:50}];
  const daily=period({tenGod,support:100,caution:0,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0},supportElements:shares});
  const snapshot=JSON.stringify(daily),r=describePoint(point(a.date,{tone:'opportunity',parts:{daily}}));
- pairedActions.add(r.supportReading.action);assert.deepEqual(r.supportReading.elements,[elementIds[i],elementIds[j]]);
+ pairedActions.add(r.supportReading.action);pairedStoryBodies.add(r.body);assert.ok(r.note.includes(r.supportReading.action));assert.deepEqual(r.supportReading.elements,[elementIds[i],elementIds[j]]);
  assert.equal(r.supportReading.action.split('。').filter(x=>x.trim()).length,2,'paired advice must retain two complete, concise sentences');
  assert.equal(describePoint(point('2026-07-01',{tone:'opportunity',parts:{daily}})).body,r.body);
  assert.equal(describePoint(point(a.date,{tone:'opportunity',parts:{daily:{...daily,supportElements:[...shares].reverse()}}})).body,r.body,'input order must not change the reading');
@@ -112,11 +114,12 @@ for(const tenGod of sceneGods)for(let i=0;i<5;i++)for(let j=i+1;j<5;j++){
  assert.ok(!cautious.body.includes(r.supportReading.action),'overall caution still takes priority over paired support');
  assert.equal(describePoint(point(a.date,{age:4,tone:'opportunity',parts:{daily}})).supportReading,null);
 }
+assert.equal(pairedStoryBodies.size,100,'paired readings retain both symbolic meanings in the visible story');
 assert.equal(pairedActions.size,100,'ten element pairs are interpreted in all ten scenes');
 const researched=describePoint(point(a.date,{tone:'opportunity',parts:{daily:period({tenGod:'傷官',support:100,supportElements:[{element:'fire',share:50},{element:'water',share:50}]})}}));
-assert.ok(researched.body.indexOf('意見の根拠')<researched.body.indexOf('伝えたかった意見'),'research precedes communicating the opinion');
+assert.ok(researched.supportReading.action.indexOf('意見の根拠')<researched.supportReading.action.indexOf('伝えたかった意見'),'research precedes communicating the opinion');
 const chosen=describePoint(point(a.date,{tone:'opportunity',parts:{daily:period({tenGod:'正財',support:100,supportElements:[{element:'metal',share:50},{element:'water',share:50}]})}}));
-assert.ok(chosen.body.indexOf('迷う点を調べ')<chosen.body.indexOf('必要な条件'),'information precedes selection');
+assert.ok(chosen.supportReading.action.indexOf('迷う点を調べ')<chosen.supportReading.action.indexOf('必要な条件'),'information precedes selection');
 assert.equal((chosen.supportReading.action.match(/仕事や買い物/gu)||[]).length,1,'do not restate the same scene in both instructions');
 assert.doesNotMatch([...pairedActions].join('\n'),/まず、取りかかる前に/,'avoid a repeated timing instruction');
 assert.match(supportReading(period({support:100,supportElements:[{element:'wood',share:50},{element:'water',share:50}]}),'不明な場面').action,/不明な場面では、これから取り組みたい/,'unknown scenes retain the existing paired interpretation');
@@ -127,11 +130,11 @@ const contrastBodies=new Set();
 for(const tenGod of sceneGods){
  const daily=period({tenGod,support:100,caution:0,clashes:0,other:0,attentionBreakdown:{element:0,clash:0,friction:0}});
  const reading=describePoint(point(a.date,{tone:'rising',longTermScore:20,parts:{daily}}));
- assert.equal(reading.contrast.kind,'day-open-background-caution');assert.match(reading.body,/日運に後押しがあっても/);
+ assert.equal(reading.contrast.kind,'day-open-background-caution');assert.match(reading.body,/ただ、/);
  const without=describePoint(point(a.date,{tone:'rising',longTermScore:50,parts:{daily}}));
- assert.equal(without.contrast,null);assert.doesNotMatch(without.body,/日運に後押しがあっても/);
+ assert.equal(without.contrast,null);assert.doesNotMatch(without.body,/ただ、/);
  assert.ok(reading.body.endsWith(without.body.match(/[^。]+。$/u)[0]),'background caution must preserve the encouraging closing');
- contrastBodies.add(reading.body.match(/日運に後押しがあっても、[^。]+。/u)[0]);
+ contrastBodies.add(reading.body.match(/ただ、[^。]+。/u)[0]);
  const secondary=describePoint(point(a.date,{parts:{daily:{...daily,caution:90,clashes:1,attentionBreakdown:{element:90,clash:18,friction:0}}}}));
  assert.equal(secondary.cause,'element');assert.match(secondary.note,/冲もあります/);
  assert.doesNotMatch(secondary.body,/意見が食い違う用事には/,'known scenes must describe the relevant disagreement');
@@ -139,8 +142,23 @@ for(const tenGod of sceneGods){
  assert.equal(primary.cause,'clash');assert.equal(primary.body.split('。').filter(x=>x).length,new Set(primary.body.split('。').filter(x=>x)).size,'primary and secondary clash must not duplicate a sentence');
 }
 assert.equal(contrastBodies.size,10);
-assert.doesNotMatch(describePoint({...dayOpen,age:3}).body,/日運に後押しがあっても/);
+assert.doesNotMatch(describePoint({...dayOpen,age:3}).body,/ただ、/);
 assert.match(describePoint(point(a.date,{longTermScore:20,parts:{daily:period({tenGod:'不明',support:100,caution:0})}})).body,/長く続く約束/,'unknown scenes retain grounded fallback');
+// Reader experience changes with actual tone and cause, not random wording.
+const experiences=new Set();
+for(const tenGod of sceneGods)for(const tone of ['opportunity','rising','careful','caution','steady','mixed'])for(const cause of ['neutral','clash','friction']){
+ const daily=period({tenGod,support:0,caution:0,clashes:cause==='clash'?1:0,other:cause==='friction'?1:0,attentionBreakdown:{element:0,clash:cause==='clash'?18:0,friction:cause==='friction'?10:0}});
+ const r=describePoint(point(a.date,{tone,parts:{daily}}));experiences.add(r.storyKind);
+ assert.ok(r.paragraphs.length>=2&&r.paragraphs.length<=3);
+ assert.ok(!r.body.startsWith('確認')&&!r.body.startsWith('確かめ'),'lead with the reading rather than a checklist');
+ assert.doesNotMatch(r.body,/必ず|運命の相手が現れ|失敗する日|不幸になる|あなたは.+に違いない/);
+ assert.ok(describePoint(point(a.date,{tone,parts:{daily}}),{meta:{birthTimeUnknown:true}}).title.endsWith('（参考）'));
+ if(tone==='caution')assert.equal(r.storyKind,'shelter');
+ if(tone==='steady'&&cause==='clash')assert.equal(r.storyKind,'dialogue');
+ if(tone==='steady'&&cause==='friction')assert.equal(r.storyKind,'unburden');
+}
+assert.equal(experiences.size,8);
+assert.equal(describePoint({...a,age:4}).storyKind,null,'children retain the existing environment and care guidance');
 const report=[];
 for(const [date,gender,duplicates,sentenceLimits]of [['2000-02-29','male',[3,3,1,3],[3,3,3,3]],['1995-11-23','female',[5,3,5,4],[3,3,3,3]],['1982-07-15','male',[0,1,0,0],[4,3,4,3]],['1970-01-01','female',[4,3,3,2],[4,3,3,3]]]){
  const series=await buildSeries({gender,birthData:{date,time:'12:00',timeUnknown:false,place:{longitude:135,latitude:35,utcOffset:9,timezone:'Asia/Tokyo'}}});
@@ -148,10 +166,10 @@ for(const [date,gender,duplicates,sentenceLimits]of [['2000-02-29','male',[3,3,1
  for(const event of allEvents){assert.ok(event.start<=event.end);assert.equal(event.date,series.rows[event.start].date);if(event.kind==='opportunity')for(let i=event.start;i<=event.end;i++)assert.equal(series.rows[i].tone,'opportunity');if(event.kind==='caution')for(let i=event.start;i<=event.end;i++)assert.ok(series.rows[i].risk>=70);}
  for(const [season,month]of ['01','04','07','10'].entries()){
  const baseline=duplicates[season]/30;
- const bodies=new Set(),readings=new Set(),titles=new Set(),supportKinds=new Set();let sampleDays=0,flowCount=0,contrastCount=0,turnCount=0,maxBodyLength=0;const sentenceFrequency=new Map();
+ const bodies=new Set(),readings=new Set(),titles=new Set(),supportKinds=new Set();let sampleDays=0,flowCount=0,contrastCount=0,turnCount=0,maxBodyLength=0;const sentenceFrequency=new Map(),storyKinds=new Set(),paragraphCounts=new Set();
  for(let i=0;i<series.rows.length;i++){
   const r=series.rows[i];if(r.date<`2026-${month}-01`||r.date>`2026-${month}-30`)continue;
-  sampleDays++;const result=describePoint(r,readingContext(series.rows,i,series.meta));const full=result.body+result.flow.map(f=>f.text).join(' ');
+  sampleDays++;const result=describePoint(r,readingContext(series.rows,i,series.meta));storyKinds.add(result.storyKind);paragraphCounts.add(result.paragraphs.length);const full=result.body+result.flow.map(f=>f.text).join(' ');
   for(const sentence of new Set((result.body.match(/[^。]+。?/gu)||[]).map(x=>x.trim())))sentenceFrequency.set(sentence,(sentenceFrequency.get(sentence)||0)+1);
   bodies.add(result.body);readings.add(full);titles.add(result.title);flowCount+=result.flow.length;
   assert.equal(result.paragraphs.join('').replace(/\s/g,''),result.body.replace(/\s/g,''),'paragraph formatting must not change or omit words');
@@ -171,7 +189,7 @@ for(const [date,gender,duplicates,sentenceLimits]of [['2000-02-29','male',[3,3,1
  const duplicate=1-bodies.size/30;
  assert.ok(duplicate<=baseline+1e-9,`body duplication regression for ${date}: ${duplicate} > ${baseline}`);
  const maxSentenceDays=Math.max(...sentenceFrequency.values());assert.ok(maxSentenceDays<=sentenceLimits[season],`a single sentence occurs too often for ${date}: ${maxSentenceDays}`);
- report.push({month,maxSentenceDays,birth:date,days:series.rows.length,previousBodyDuplicateRate:+baseline.toFixed(3),bodyDuplicateRate:+duplicate.toFixed(3),bodyWithFlowDuplicateRate:+(1-readings.size/30).toFixed(3),titles:titles.size,flowCount,contrastCount,turnCount,supportKinds:[...supportKinds],maxBodyLength,milestones:allEvents.length});
+ report.push({storyKinds:[...storyKinds],paragraphCounts:[...paragraphCounts],month,maxSentenceDays,birth:date,days:series.rows.length,previousBodyDuplicateRate:+baseline.toFixed(3),bodyDuplicateRate:+duplicate.toFixed(3),bodyWithFlowDuplicateRate:+(1-readings.size/30).toFixed(3),titles:titles.size,flowCount,contrastCount,turnCount,supportKinds:[...supportKinds],maxBodyLength,milestones:allEvents.length});
  }
 }
 assert.equal(report.length,16,'four 30-day windows for each of four profiles');

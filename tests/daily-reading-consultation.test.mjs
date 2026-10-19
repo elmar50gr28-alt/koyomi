@@ -27,7 +27,7 @@ const ctx = {
 };
 ctx.window = ctx; vm.createContext(ctx);
 for (const file of ['src/reading/daily/daily-reading-core.js', 'src/reading/daily/daily-reading-controller.js']) vm.runInContext(await readFile(file, 'utf8'), ctx);
-ctx.KOYOMI_DAILY_CONTEXT = { selectedDate: () => new Date(ctx.selectedDate), formatDate: ctx.fmtIso, dailySignal: () => ({ score: 65, title: '検証' }), dayPillar: () => ({ text: '甲子' }) };
+ctx.KOYOMI_DAILY_CONTEXT = { requestKey: profile => ctx.koyomiPersonalReadingKey(profile), personalResult: () => ctx.lastPersonal, luckyContext: () => ({date:'2026-01-01'}), selectedDate: () => new Date(ctx.selectedDate), formatDate: ctx.fmtIso, dailySignal: () => ({ score: 65, title: '検証' }), dayPillar: () => ({ text: '甲子' }) };
 const extract = (start, end) => app.slice(app.indexOf(start), app.indexOf(end));
 ctx.v196RenderPersonalBase = ctx.renderPersonal;
 const resetStart = app.indexOf('renderPersonal=function(r){v196RenderPersonalBase(r);');
@@ -47,6 +47,15 @@ const core = ctx.KOYOMI_DAILY_READING_CORE, controller = ctx.KOYOMI_DAILY_READIN
 await ctx.koyomiStartPersonalReading();
 assert.equal(ctx.lastPersonal.dailyReading.domain, 'work'); assert.equal(calculations, 1);
 const firstKey = ctx.koyomiRenderedPersonalKey, firstText = nodes.get('overallReading').textContent;
+const privateResult=ctx.lastPersonal,privateKey=ctx.koyomiPersonalReadingKey,savedContext=ctx.KOYOMI_DAILY_CONTEXT,savedBazi=ctx.KOYOMI_LAST_BAZI_READING;
+ctx.KOYOMI_DAILY_CONTEXT={...savedContext,personalResult:()=>privateResult,requestKey:privateKey};
+delete ctx.lastPersonal;delete ctx.koyomiPersonalReadingKey;
+ctx.KOYOMI_READING_KEEPSAKE={selectedText:text=>text,currentSelection:(_result,context)=>context};
+const beforeScopeErrors=errors.length;
+const beforeScopeCalculations=calculations;await ctx.koyomiRenderBaziReading();calculations=beforeScopeCalculations;
+assert.equal(errors.length,beforeScopeErrors,'module must not reference private classic-script globals');
+ctx.lastPersonal=privateResult;ctx.koyomiPersonalReadingKey=privateKey;ctx.KOYOMI_DAILY_CONTEXT=savedContext;ctx.KOYOMI_LAST_BAZI_READING=savedBazi;delete ctx.KOYOMI_READING_KEEPSAKE;
+
 await ctx.koyomiStartPersonalReading();
 assert.equal(calculations, 1, 'unchanged consultation reuses its reading'); assert.equal(nodes.get('overallReading').textContent, firstText);
 nodes.get('overallReading').textContent = '表示を消去';
