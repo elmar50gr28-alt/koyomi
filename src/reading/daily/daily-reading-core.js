@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.KOYOMI_DAILY_READING_CORE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const VERSION = '3.11.0';
+  const VERSION = '3.11.1';
   const rawFoci = [
     ['complete', '完了', 'work', ['途中になっている仕事を、完了と伝えられる状態に仕上げる', '返答待ちの案件について、完了できるか相手に確認する', '仕上げの残っている成果物を、提出できる形にする'], ["新しい予定を増やす前に、残っている仕事を確認して。","仕上げが残っているうちに、別の仕事へ移らないで。","修正を続けるなら、どこで完了とするか決めておいて。"]],
     ['organize', '整理', 'life', ['机の上を、必要な物がすぐ取り出せる状態に整える', '作業を妨げている通知を止める', '今日使う資料を、探し回らずに済む場所へまとめる'], ["片づけだけで一日が終わらないよう、用事の時間も残して。","思い出の品まで、勢いで捨てないこと。","分類に迷ったら、まず取り出しやすい場所へまとめて。"]],
@@ -153,7 +153,11 @@
     // broaden within the requested domain without claiming a source theme for it.
     const supported = eligible.filter(focus => (input.themeIds || []).some(id => THEME_FOCI[id]?.includes(focus.id)));
     const supportedFresh = supported.filter(focus => focus.actions.some((_,index) => !history.some(row => row.actionId === `${focus.id}-${index}`)));
-    const ranked = (supportedFresh.length ? supportedFresh : eligible).map(focus => {
+    const previousKind = history.length ? historyKind(history[0]) : null;
+    const differentFresh = eligible.filter(focus => focus.actions.some((action,index) => !history.some(row => row.actionId === `${focus.id}-${index}`) && actionKind(action,focus.id)!==previousKind));
+    const supportedDifferent = supportedFresh.filter(focus=>differentFresh.includes(focus));
+    const pool = supportedDifferent.length ? supportedDifferent : differentFresh.length ? differentFresh : supportedFresh.length ? supportedFresh : eligible;
+    const ranked = eligible.map(focus => {
       let signalFit = 35;
       if (score >= 70 && ['complete', 'contact', 'create', 'focus', 'cooperate'].includes(focus.id)) signalFit += 22;
       if (score < 45 && ['rest', 'organize', 'prepare', 'observe', 'health'].includes(focus.id)) signalFit += 24;
@@ -166,7 +170,7 @@
       // Within a requested domain, daily preference (24), evidence fit (12), and recency (30)
       // must not force a used-up action pool over an eligible pool with fresh checks.
       const actionNovelty = focus.actions.every((_, index) => usedActions.has(`${focus.id}-${index}`)) ? -72 : 0;
-      return { focus, value: signalFit + questionFit + longTermFit + evidenceFit + novelty + actionNovelty, breakdown: { signalFit, questionFit, longTermFit, evidenceFit, novelty, actionNovelty } };
+      return { focus, value: signalFit + questionFit + longTermFit + evidenceFit + novelty + actionNovelty, breakdown: { signalFit, questionFit, longTermFit, evidenceFit, novelty, actionNovelty, poolPriority: pool.includes(focus) ? 1 : 0 } };
     });
     // Once every eligible action has appeared, recycle globally by frequency and age.
     // Otherwise a preferred theme can repeat while another theme's oldest action expires.
@@ -177,9 +181,9 @@
         item.breakdown.reuseCount = history.filter(row => row.actionId === id).length;
         item.breakdown.reuseAge = recentAge(history, 'actionId', id, input.date);
       }
-      return ranked.sort((a, b) => a.breakdown.reuseCount - b.breakdown.reuseCount || b.breakdown.reuseAge - a.breakdown.reuseAge || b.value - a.value || a.focus.id.localeCompare(b.focus.id));
+      return ranked.sort((a, b) => b.breakdown.poolPriority - a.breakdown.poolPriority || a.breakdown.reuseCount - b.breakdown.reuseCount || b.breakdown.reuseAge - a.breakdown.reuseAge || b.value - a.value || a.focus.id.localeCompare(b.focus.id));
     }
-    return ranked.sort((a, b) => b.value - a.value || a.focus.id.localeCompare(b.focus.id));
+    return ranked.sort((a, b) => b.breakdown.poolPriority - a.breakdown.poolPriority || b.value - a.value || a.focus.id.localeCompare(b.focus.id));
   }
 
   function chooseVariant(focus, input, history, key, size) {
