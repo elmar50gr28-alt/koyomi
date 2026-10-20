@@ -27,6 +27,20 @@ assert.notEqual(second.discoveryId,first.discoveryId,'the previous viewpoint sur
 assert.ok(restarted.recent(base.profileId,{storage})[0].discoveryId);
 assert.equal(restarted.getOrCreate(nextInput,{storage}).source,'cache');
 assert.equal(JSON.stringify(restarted.getOrCreate(nextInput,{storage}).reading),JSON.stringify(second));
+let full=true,stored=null;
+const fullStorage={getItem:()=>stored,setItem:(_key,value)=>{if(full)throw Error('QuotaExceededError');stored=value;}};
+const fallbackController=boot().KOYOMI_DAILY_READING;
+const unsaved=fallbackController.getOrCreate(base,{storage:fullStorage}).reading;
+assert.equal(fallbackController.getOrCreate(base,{storage:fullStorage}).source,'cache','quota failure must not regenerate the same day');
+const unsavedNext=fallbackController.getOrCreate(nextInput,{storage:fullStorage}).reading;
+assert.notEqual(unsavedNext.discoveryId,unsaved.discoveryId,'quota failure retains discovery history in this session');
+assert.equal(fallbackController.recent(base.profileId,{storage:fullStorage}).length,2);
+full=false;
+fallbackController.getOrCreate({...base,date:'2026-07-03'},{storage:fullStorage});
+assert.equal(boot().KOYOMI_DAILY_READING.recent(base.profileId,{storage:fullStorage}).length,3,'storage recovery persists the pending history');
+full=true;fallbackController.getOrCreate({...base,date:'2026-07-04'},{storage:fullStorage});
+stored='{"cache":{},"history":[]}';
+assert.equal(fallbackController.recent(base.profileId,{storage:fullStorage}).length,0,'external storage replacement must discard stale session state');
 
 let cases=0;const questions=new Set();
 for(const themeCategory of ['overall','work','love','money','health','family','growth','decision'])for(const dailyScore of [25,55,85]){
