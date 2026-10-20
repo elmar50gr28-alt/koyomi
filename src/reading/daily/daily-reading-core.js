@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.KOYOMI_DAILY_READING_CORE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const VERSION = '3.11.1';
+  const VERSION = '3.12.1';
   const rawFoci = [
     ['complete', '完了', 'work', ['途中になっている仕事を、完了と伝えられる状態に仕上げる', '返答待ちの案件について、完了できるか相手に確認する', '仕上げの残っている成果物を、提出できる形にする'], ["新しい予定を増やす前に、残っている仕事を確認して。","仕上げが残っているうちに、別の仕事へ移らないで。","修正を続けるなら、どこで完了とするか決めておいて。"]],
     ['organize', '整理', 'life', ['机の上を、必要な物がすぐ取り出せる状態に整える', '作業を妨げている通知を止める', '今日使う資料を、探し回らずに済む場所へまとめる'], ["片づけだけで一日が終わらないよう、用事の時間も残して。","思い出の品まで、勢いで捨てないこと。","分類に迷ったら、まず取り出しやすい場所へまとめて。"]],
@@ -54,6 +54,8 @@
   };
   // More checks and preparation tasks for prolonged protective periods. Eligibility is unchanged.
   const PROTECTIVE_ACTIONS = {
+    learn: ['教材の説明で意味が曖昧な言葉に印を付ける', '解けなかった問題のうち、どの手順で止まったかを書き出す', '手元の資料に載っていない疑問を、質問できる相手へ伝える', '復習する範囲を、今困っている問題に関わる所へ絞る', '分かった所までを説明し、残る疑問を聞いてもらう', '疲れて読むのが難しい場合は、続きのページに印を付けて休む'],
+    review: ['予定が変わった時点を、残っている記録から探す', '相手の都合で変わった部分と、自分が変えられる手順を分ける', '役立った段取りを、次にも使えるメモとして残す', 'まだ分からない原因は、事実と分けて保留にする', '手伝ってもらって助かった内容を、相手へ具体的に伝える', '振り返りが自責ばかりになる場合は、見直す範囲を決めて切り上げる'],
     prepare: ['期限までに必要な工程を一つ確認する', '使う資料が最新版か確認する', '作業前の状態を記録しておく', '手順で分からない箇所を担当者に聞く', '困ったときの連絡先を控える', '途中で作業を止める場合の保存方法を確認する'],
     negotiate: ['納品後に何を確認するか相手と共有する', '修正の回数や受付範囲を確認する', '延期が必要な場合の連絡手順を確認する', '追加の依頼を受ける窓口を確認する', '辞退する場合に必要な引継ぎを確認する', '返答する前に確認すべき資料を一つ指定する'],
     organize: ['同じ内容のメモを一か所へまとめる', '期限のある書類を取り出しやすい場所へ移す', '使わないアプリのショートカットを一つ整理する'],
@@ -505,16 +507,46 @@
     cooperate:[/仕上|認識|担当/,/頼|依頼|任せ/,/共有|相談|進み/],
     observe:[/記録|印象|変化/,/相手|反応|言葉/,/情報|違い|確かめ/]
   };
-  function narrativeFor(style, focus, scene, intensity, action) {
+  const DISCOVERIES = Object.freeze({
+    complete:[['仕上がりの基準','自分ではまだ足りないと思う所は、提出先も必要としている部分でしょうか。','夜には、自分のこだわりと相手の希望を分けられたか振り返って。'],['終えた仕事の価値','終わったことを数える時、人の確認を待つ時間まで自分の遅れにしていませんか。','夜には、自分で終えた部分と、相手の判断を待つ部分を分けてみて。']],
+    organize:[['探す手間の正体','探し物が多いなら、物の量と置き場所のどちらが困る原因でしょうか。','夜には、探さずに取り出せた物があったか思い出して。'],['残す理由','残しておきたい物には、今使う理由と、思い出として持つ理由のどちらがありますか。','夜には、残すか迷った物にどんな理由があったか振り返って。']],
+    contact:[['返事への期待','相手に答えてほしいのは、用件の確認でしょうか。それとも気持ちを分かってもらうことでしょうか。','夜には、相手へ伝えたいことと答えてほしいことが分かれていたか思い出して。'],['想像と事実','返信を待つ間に浮かんだ心配は、相手から聞いた事実でしょうか。','夜には、実際に受け取った言葉と、待つ間に想像したことを分けてみて。']],
+    negotiate:[['譲歩の理由','譲ろうとしている条件は、納得して選んだものですか。それとも話を早く終わらせたいからでしょうか。','夜には、応じた条件に自分が納得できる理由があったか振り返って。'],['合意の中身','話がまとまった時、自分と相手は同じ期限と担当を思い浮かべているでしょうか。','夜には、互いの言葉で確かめられた条件があったか思い出して。']],
+    rest:[['気がかりの置き場','休んでいても気になるのは、残った用事でしょうか。返事を待たせている相手でしょうか。','夜には、休みにくくしていた気がかりの名前が分かったか振り返って。'],['休める環境','時間が空くだけで休めそうですか。それとも通知や頼まれ事から離れる必要がありそうですか。','夜には、休めた長さだけでなく、用事から離れられた場面を思い出して。']],
+    learn:[['理解の手応え','読んで分かったことを、資料を閉じても自分の言葉で説明できそうですか。','夜には、説明できた所と、途中で言葉に詰まった所を思い出して。'],['次に聞きたいこと','分からないのは用語の意味でしょうか。それとも、なぜその答えになるかでしょうか。','夜には、調べたいことが以前より具体的な問いになったか振り返って。']],
+    create:[['届けたい相手','誰にでも良く見せようとして、いちばん届けたい相手を見失っていませんか。','夜には、誰に何を伝えたいかが言葉になった場面を思い出して。'],['最初の面白さ','人に見せることを考える前、どの部分に面白さを感じていましたか。','夜には、評価を気にする前から残しておきたかった部分を振り返って。']],
+    money:[['支出が支えるもの','その支出で助かっているのは、時間、手間、楽しみのうち、どれでしょうか。','夜には、金額だけでは分からなかった支出の役割を思い出して。'],['続ける負担','今払えるかに加えて、次の支払い時期や続ける手間も見えているでしょうか。','夜には、一度の金額と続ける負担を分けて考えられたか振り返って。']],
+    boundary:[['返事をするまで','頼まれてから返事をするまでに、自分の都合を考える時間はありましたか。','夜には、即答せず考える時間を持てた場面があったか思い出して。'],['引き受ける理由','助けたいから応じたいのか、断った時の反応が怖いのか。どちらに近いでしょうか。','夜には、引き受けたい気持ちと断りにくさを分けられたか振り返って。']],
+    relationship:[['望んでいる変化','分かってほしい気持ちの奥で、相手に具体的にどうしてほしいのでしょうか。','夜には、自分の願いを、相手に伝わるお願いへ言い直せたか振り返って。'],['言葉の受け取り方','相手の言葉そのものと、自分が受け取った意味に、違いがあるかもしれない所はどこでしょうか。','夜には、推測を重ねる前に尋ねられたことがあったか思い出して。']],
+    family:[['見えない家の仕事','実際の作業のほかに、予定を覚える、予約する、買い足す役目は誰が持っていますか。','夜には、普段数えていなかった家の仕事が見つかったか振り返って。'],['自分の予定の扱い','家族の予定を合わせる時、自分に必要な時間も相談する材料に入っていますか。','夜には、自分の用事も家族へ伝えられた場面を思い出して。']],
+    health:[['調子が変わる場面','調子を良い・悪いだけでなく、いつ、何をしている時に変わるか見られそうですか。','夜には、調子の変化を決めつけずに記録できたことを思い出して。'],['予定を変える目安','いつもの量をこなすことと、今の調子に合わせること。今日はどちらが必要でしょうか。','夜には、無理を続ける前に変えられた予定や、相談したいことを振り返って。']],
+    move:[['慌ただしさの原因','移動が慌ただしくなるのは、出発前の準備と、道中の余裕のどちらが足りない時でしょうか。','夜には、慌てずに済んだ準備や時間の取り方を思い出して。'],['帰るまでの予定','行き先だけでなく、帰りの手段や疲れた時に切り上げる方法も見えていますか。','夜には、行くだけでなく帰るまで考えて役立ったことを振り返って。']],
+    prepare:[['始めるために必要なもの','まだ始められないのは、資料や許可が足りないからか、終わりの基準が曖昧だからでしょうか。','夜には、待っているものや、先に尋ねたいことの名前が分かったか振り返って。'],['備える範囲','心配していること全部に備える必要がありますか。起きた時に相談できることはありませんか。','夜には、先に備えることと、起きてから対処することを分けられたか思い出して。']],
+    release:[['今も続けたい理由','始めた時の理由は、今の自分にも当てはまっていますか。','夜には、続けてきた時間とは別に、今残したい理由があったか振り返って。'],['手放した後の時間','やめることがあるなら、その時間や場所を今度は何に使いたいでしょうか。','夜には、やめた先に残したい時間や物が思い浮かんだか振り返って。']],
+    review:[['変えられる手順','結果が違った原因には、自分の工夫で変えられる部分と、相手の都合による部分のどちらがありましたか。','夜には、自分を責める言葉より、次に変えられる手順が残ったか振り返って。'],['残しておきたい工夫','目立つ成果にはならなくても、助かった連絡や段取りはありませんでしたか。','夜には、次にも使いたい工夫を思い出して。']],
+    decide:[['譲れない条件','候補を比べる基準の中で、どうしても守りたい条件はどれでしょうか。','夜には、他人の勧めとは別に、自分で選ぶ理由を持てたか振り返って。'],['選んだ後の暮らし','その案を選んだ後、普段の時間や費用の使い方はどう変わるでしょうか。','夜には、選ぶ瞬間だけでなく、その後の負担まで想像できたか振り返って。']],
+    focus:[['自分で選んだ優先順位','いちばん急いでいる人の用事と、自分が大切にしたい用事は同じでしょうか。','夜には、自分の優先順位で時間を使えた場面があったか思い出して。'],['割り込みの正体','集中が途切れるのは、別の用事が気になる時ですか。それとも連絡が入る時ですか。','夜には、集中を妨げていたものの名前が分かったか振り返って。']],
+    cooperate:[['任せる時の期待','相手に任せたいのは、作業の手順までですか。それとも必要な結果でしょうか。','夜には、任せる部分と一緒に決めたい部分を分けられたか振り返って。'],['頼みやすい形','助けてほしいことを、相手が引き受けられる範囲に分けて伝えられそうですか。','夜には、お願いしたいことと、相手ができることをすり合わせられたか振り返って。']],
+    observe:[['予想との違い','見えてきた事実の中に、最初の予想と違っていたことはありますか。','夜には、予想どおりだったことだけでなく、意外だった事実も思い出して。'],['まだ分からないこと','理由まで分かったことと、変化に気づいただけのことを分けられそうですか。','夜には、結論を急がず残しておきたい疑問を振り返って。']]
+  });
+  function discoveryFor(input,history,focus){
+    const size=DISCOVERIES[focus.id].length,previous=history.find(item=>daysSince(input.date,item.date)===1&&item.focusId===focus.id);
+    let index=chooseVariant(focus,input,history,'discoveryId',size);
+    if(previous?.discoveryId===`${focus.id}-${index}`)index=(index+1)%size;
+    const row=DISCOVERIES[focus.id][index];
+    return {id:`${focus.id}-${index}`,label:row[0],text:row[1],review:row[2]};
+  }
+  function narrativeFor(style, focus, scene, intensity, action, discovery, connection) {
     const index = STRUCTURES.findIndex(item => item.id === style);
     const strength = STRENGTH_READINGS[focus.id][{ protect: 0, test: 1, forward: 2 }[intensity]];
     // Scene and focus prose are independent complete sentences, never spliced noun clauses.
     const notes = FOCUS_PERSPECTIVES[focus.id] || FOCUS_READINGS[focus.id].match(/[^。]+。/g);
     const matched = PERSPECTIVE_MATCHES[focus.id]?.findIndex(pattern=>pattern.test(action));
     const opening = (focus.id==='money'&&MONEY_VOICES[actionKind(action,focus.id)]||FOCUS_VOICES[focus.id])?.[{protect:0,test:1,forward:2}[intensity]]||READING_VOICES[focus.domain][intensity], meaning = notes[matched>=0?matched:index % notes.length];
-    if (intensity === 'forward') return opening + '\n\n' + scene + ' ' + meaning + '\n\n' + strength + READING_LENSES[index];
-    if (intensity === 'protect') return opening + ' ' + strength + '\n\n' + scene + '\n\n' + meaning + READING_LENSES[index];
-    return opening + ' ' + scene + '\n\n' + meaning + strength + '\n\n' + READING_LENSES[index];
+    const lens=READING_LENSES[index]+'\n\n'+(connection||`今日の着眼点は「${discovery.label}」。`)+discovery.text;
+    if (intensity === 'forward') return opening + '\n\n' + scene + ' ' + meaning + '\n\n' + strength + lens;
+    if (intensity === 'protect') return opening + ' ' + strength + '\n\n' + scene + '\n\n' + meaning + lens;
+    return opening + ' ' + scene + '\n\n' + meaning + strength + lens;
   }
 
   function safetyFor(input, focus) {
@@ -611,13 +643,18 @@
     const structure = STRUCTURES[structureIndex];
     const yesterday = history.find(item => daysSince(input.date, item.date) === 1);
     const action = focus.actions[actionIndex], caution = focus.cautions[cautionIndex];
+    const discovery=discoveryFor(input,history,focus);
+    const strengthChanged=Boolean(yesterday?.intensity&&yesterday.intensity!==intensity);
     const strengthNames = { protect: '負担を見直し、休息や確認を優先する', test: '必要な条件を確かめて判断する', forward: '準備が揃ったことを実行する' };
-    const difference = yesterday?.intensity && yesterday.intensity !== intensity ? `昨日の強度は「${strengthNames[yesterday.intensity] || '前日の方針'}」、今日は「${strengthNames[intensity]}」。点数だけで予定を増減せず、今の余力と条件も確かめて。` : yesterday ? (yesterday.focusId === focus.id ? `昨日の「${focus.label}」を今日も扱うわ。${yesterday.actionId === `${focus.id}-${actionIndex}` ? '同じ一手が必要なら、今も条件が変わっていないか確かめて。' : '今日は扱う対象を切り替えながら、同じ主題を確かめていきましょう。'}` : `昨日の主題は「${yesterday.focusLabel || '前日の課題'}」。今日の主題は「${focus.label}」よ。前日の方針を否定せず、今日の作業を分けて考えて。`) : `今日の主題は「${focus.label}」。前日の記録がないため、日ごとの変化はまだ比べずに読んでいるわ。`;
+    const priorIndex=[0,1].find(index=>yesterday?.discoveryId===`${yesterday?.focusId}-${index}`);
+    const previousDiscovery=priorIndex!==undefined?DISCOVERIES[yesterday.focusId]?.[priorIndex]:null;
+    const difference = strengthChanged ? `昨日の強度は「${strengthNames[yesterday.intensity] || '前日の方針'}」、今日は「${strengthNames[intensity]}」。点数だけで予定を増減せず、今の余力と条件も確かめて。` : yesterday ? (yesterday.focusId === focus.id ? previousDiscovery ? `昨日と同じ「${focus.label}」を、別の角度から読みます。昨日の着眼点は「${previousDiscovery[0]}」、今日は「${discovery.label}」です。` : `昨日の鑑定に続いて「${focus.label}」を扱います。今日は「${discovery.label}」に目を向けてみて。` : `昨日の主題は「${yesterday.focusLabel || '前日の課題'}」、今日は「${focus.label}」を取り上げます。今日の着眼点は「${discovery.label}」です。`) : '';
     const recommendedTime = input.recommendedTime || '時刻の吉凶はこの信号からは決められないわ。必要な条件が揃い、落ち着いて取り組める時間を選んで。';
-    const review = focus.id === 'money' ? MONEY_REVIEWS[actionIndex] || REVIEWS.money : REVIEWS[focus.id];
-    const labels = { conclusion: '今日の読み', difference: '流れの変化', action: '今日のヒント', caution: '気をつけること', time: '動く頃合い', review: '夜に振り返るなら' };
+    const review = (focus.id === 'money' ? (MONEY_REVIEWS[actionIndex] || REVIEWS.money)+'\n' : '')+discovery.review;
+    const labels = { conclusion: '今日の読み', difference: strengthChanged?'流れの変化':'昨日からのつながり', action: '今日のヒント', caution: '気をつけること', time: '動く頃合い', review: '夜に振り返るなら' };
     const rationale = groundingFor(input, focus, intensity);
-    const story = narrativeFor(structure.id, focus, scene, intensity, action) + '\n' + rationale.basis + rationale.qualification;
+    const connection=!strengthChanged&&previousDiscovery&&yesterday.focusId===focus.id&&yesterday.discoveryId!==discovery.id?difference:'';
+    const story = narrativeFor(structure.id, focus, scene, intensity, action, discovery, connection) + '\n' + rationale.basis + rationale.qualification;
     const texts = { conclusion: story, difference, action, caution, time: recommendedTime, review };
     const evidence = (input.evidence || []).filter(Boolean).slice(0, 3);
     const safetyNotice = safetyFor(input, focus);
@@ -625,8 +662,9 @@
       schemaId: 'koyomi-daily-reading', version: VERSION, profileId: input.profileId, date: input.date,
       focusId: focus.id, focusLabel: focus.label, domain: focus.domain,
       mainTheme: focus.id, sceneId, scene, intensity, story,
+      discoveryId:discovery.id,discovery,connection,
       hasRecommendedTime: Boolean(input.recommendedTime),
-      showDifference: Boolean(yesterday && yesterday.intensity && yesterday.intensity !== intensity),
+      showDifference: strengthChanged,
       actionId: `${focus.id}-${actionIndex}`, actionKind: actionKind(action, focus.id), cautionId: `${focus.id}-${cautionIndex}`, structureId: structure.id,
       conclusionPatternId: structure.id, score, conclusion: texts.conclusion, difference, action, caution, recommendedTime, review,
       blocks: structure.order.map(role => ({ role, label: labels[role], text: texts[role] })),

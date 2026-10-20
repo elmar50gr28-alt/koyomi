@@ -30,8 +30,8 @@ for (const category of ['love', 'marriage', 'work', 'money', 'health', 'family',
 }
 assert.equal(context.KOYOMI_APP_NARRATIVE.frame({score:0}).direction, 'protect', 'zero is protective, not a missing medium score');
 const core = context.KOYOMI_DAILY_READING_CORE;
-assert.equal(core.FOCI.flatMap(focus => focus.actions).length, 177);
-assert.equal(new Set(core.FOCI.flatMap(focus => focus.actions)).size, 177);
+assert.equal(core.FOCI.flatMap(focus => focus.actions).length, 189);
+assert.equal(new Set(core.FOCI.flatMap(focus => focus.actions)).size, 189);
 for (const focus of core.FOCI) for (const action of focus.actions) assert.doesNotMatch(action, microTask);
 let copyCases = 0;
 for (const themeCategory of ['work', 'money', 'health', 'love', 'growth', 'decision']) for (const dailyScore of [0, 50, 85]) {
