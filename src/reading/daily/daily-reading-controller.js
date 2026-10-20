@@ -24,7 +24,7 @@
     const history = core.recentHistory(input, state.history);
     const reading = core.generate(input, history);
     state.cache[key] = reading;
-    state.history = [{ cacheKey: key, profileId: reading.profileId, date: reading.date, focusId: reading.focusId, focusLabel: reading.focusLabel, actionId: reading.actionId, actionKind: reading.actionKind, cautionId: reading.cautionId, structureId: reading.structureId, sceneId: reading.sceneId, intensity: reading.intensity, conclusionPatternId: reading.conclusionPatternId, fingerprint: reading.fingerprint }, ...state.history.filter(item => !(item.profileId === reading.profileId && item.date === reading.date))];
+    state.history = [{ cacheKey: key, profileId: reading.profileId, date: reading.date, focusId: reading.focusId, focusLabel: reading.focusLabel, actionId: reading.actionId, actionKind: reading.actionKind, cautionId: reading.cautionId, structureId: reading.structureId, sceneId: reading.sceneId, intensity: reading.intensity, discoveryId:reading.discoveryId, conclusionPatternId: reading.conclusionPatternId, fingerprint: reading.fingerprint }, ...state.history.filter(item => !(item.profileId === reading.profileId && item.date === reading.date))];
     // Retain up to 90 records per profile, so another person's use cannot erase the 30-day window.
     const counts = new Map();
     state.history.sort((a, b) => b.date.localeCompare(a.date));
