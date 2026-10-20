@@ -41,6 +41,6 @@ assert.doesNotMatch(health.answer.directAnswer, /診断|治療できる|必ず�
 
 const noQuestion = buildCommonReading(result, { tone: 'mitsunome' });
 assert.equal(noQuestion.answer.hasQuestion, false);
-assert.match(noQuestion.answer.directAnswer, /結論から言うわね/);
+assert.match(noQuestion.answer.directAnswer, /結論からお伝えします/);
 
 console.log('Common reading concrete answer passed');

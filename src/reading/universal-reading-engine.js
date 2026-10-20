@@ -30,9 +30,9 @@
 
   function conclusion(score, label, subject) {
     const focus = clean(subject, '今のテーマ');
-    if (score >= 72) return `結論から言うわね。${focus}は、条件を確かめたうえで進めていい流れよ。`;
-    if (score < 42) return `結論から言うわね。${focus}は、今は無理に進めず守りと確認を優先しなさい。`;
-    return `結論から言うわね。${focus}は、不明な条件を確かめてから、方針を決めましょう。`;
+    if (score >= 72) return `結論からお伝えします。${focus}は、条件を確かめたうえで進めていい流れです。`;
+    if (score < 42) return `結論からお伝えします。${focus}は、今は無理に進めず守りと確認を優先してください。`;
+    return `結論からお伝えします。${focus}は、不明な条件を確かめてから、方針を決めましょう。`;
   }
 
   function build(input = {}) {

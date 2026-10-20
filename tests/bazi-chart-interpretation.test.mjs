@@ -28,7 +28,7 @@ const text=context.KOYOMI_PERSONA_RENDERER.render({
 assert.ok(text.includes('【四柱推命の命式の読み解き】'));
 assert.ok(text.includes('暮らしで確かめること：'));
 assert.doesNotMatch(text,/姐さん|姉さん|ミツノメ|みつのめ|アンタ/);
-assert.ok(text.includes('現実ではね'));
+assert.ok(text.includes('生活の場面では：'));
 assert.ok(text.includes('【年柱'));
 assert.ok(text.includes('【五行の配分】'));
 assert.ok(text.includes('【柱同士の関係】'));

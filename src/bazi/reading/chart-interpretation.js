@@ -18,28 +18,28 @@ function readPillar(role,pillar){
  const hidden=(pillar.branch?.hiddenStems||[]).map(stem=>god(stem.tenGod)).filter(Boolean);
  const hiddenNames=unique(hidden.map(entry=>entry[0]));
  const stage=STAGES[pillar.branch?.twelveStage?.stageId];
- const surface=visible?`${name}は${pillar.label}で、表に${visible[0]}が出てるわ。人からは「${visible[1]}を持つ人」と見られやすいの。`:`${name}は${pillar.label}。ここはあなた自身の判断と、近い相手に見せる反応の中心よ。`;
- const inside=hiddenNames.length?`でも内側には${hiddenNames.join('・')}もあるから、外から見える顔だけで決めつけちゃ駄目。`:'内側は他の柱と重ねて見る場所よ。';
+ const surface=visible?`${name}は${pillar.label}で、表に${visible[0]}が出てる。人からは「${visible[1]}を持つ人」と見られやすいの。`:`${name}は${pillar.label}。ここはあなた自身の判断と、近い相手に見せる反応の中心です。`;
+ const inside=hiddenNames.length?`でも内側には${hiddenNames.join('・')}もあるから、外から見える顔だけで決めつけてはいけません。`:'内側は他の柱と重ねて見る場所です。';
  const example=role==='year'?'初対面や親族の集まりで、場を和ませる役と自分の意見を通す役が同時に出やすい':role==='month'?'職場では「自分でやった方が早い」と引き受け、後から負担が増えやすい':role==='day'?'親しい相手ほど説明を省き、自分の中では決まっていることを相手も分かっていると思いやすい':'将来のために貯める・整える意識が強く、予定やお金を管理できない状態に不安を感じやすい';
- return{id:`pillar-${role}`,title:`${name}（${pillar.label}）`,reading:`${surface}${inside}${stage?`十二運は${stage[0]}。今は「${stage[1]}」力として使うのがコツよ。`:''}`,meaning,evidence:unique([role==='day'?'日主':pillar.stem?.tenGod?.kanji,...hiddenNames,stage?.[0]]),example,action:visible?.[2]||hidden[0]?.[2]||'この柱だけで決めつけず、実際に繰り返している場面を一つ確認する',confidence:.72};
+ return{id:`pillar-${role}`,title:`${name}（${pillar.label}）`,reading:`${surface}${inside}${stage?`十二運は${stage[0]}。今は「${stage[1]}」力として使うのがコツです。`:''}`,meaning,evidence:unique([role==='day'?'日主':pillar.stem?.tenGod?.kanji,...hiddenNames,stage?.[0]]),example,action:visible?.[2]||hidden[0]?.[2]||'この柱だけで決めつけず、実際に繰り返している場面を一つ確認する',confidence:.72};
 }
 
 function readBalance(result){
  const balance=result.chart?.elementBalance||[],sorted=[...balance].sort((a,b)=>b.value-a.value),high=sorted[0],low=sorted.at(-1);
  if(!high||!low)return null;
- return{id:'element-balance',title:'五行の配分',reading:`いちばん多いのは${high.kanji}、少ないのは${low.kanji}よ。多い${high.kanji}は得意だから放っておいても使う。でも使い過ぎると、判断や予定を固めすぎるの。少ない${low.kanji}は欠点じゃなく、意識して補う余白よ。`,meaning:`${ELEMENTS[high.element]}。${ELEMENTS[low.element]}。`,example:`整理や判断ばかり続けて息が詰まった時は、${ELEMENTS[low.element]}を使う行動へ切り替えると偏りを戻しやすい`,evidence:balance.map(x=>`${x.kanji}${x.value}`),action:low.element==='fire'?'伝えたい内容を整理し、相手に届く方法で伝える':low.element==='water'?'必要な情報を調べたら、休息の時間も確保する':low.element==='wood'?'育てたい計画について、必要な段取りと担当を決める':low.element==='metal'?'曖昧になっている約束について、期限と担当を確認する':'机や予定表を見直し、必要な物や予定を探さずに済む状態にする',confidence:.78};
+ return{id:'element-balance',title:'五行の配分',reading:`いちばん多いのは${high.kanji}、少ないのは${low.kanji}です。多い${high.kanji}は得意だから放っておいても使う。でも使い過ぎると、判断や予定を固めすぎる。少ない${low.kanji}は欠点ではなく、意識して補う余白です。`,meaning:`${ELEMENTS[high.element]}。${ELEMENTS[low.element]}。`,example:`整理や判断ばかり続けて息が詰まった時は、${ELEMENTS[low.element]}を使う行動へ切り替えると偏りを戻しやすい`,evidence:balance.map(x=>`${x.kanji}${x.value}`),action:low.element==='fire'?'伝えたい内容を整理し、相手に届く方法で伝える':low.element==='water'?'必要な情報を調べたら、休息の時間も確保する':low.element==='wood'?'育てたい計画について、必要な段取りと担当を決める':low.element==='metal'?'曖昧になっている約束について、期限と担当を確認する':'机や予定表を見直し、必要な物や予定を探さずに済む状態にする',confidence:.78};
 }
 
 function readRelations(result){
  const r=result.relations||{},groups=[['干合',r.stems?.combinations],['支合',r.branches?.combinations],['冲',r.branches?.clashes],['刑',r.branches?.punishments],['害',r.branches?.harms],['破',r.branches?.destructions]].filter(([,x])=>x?.length);
  if(!groups.length)return{id:'relations',title:'柱同士の関係',reading:'強く優先すべき合・冲・刑・害・破は目立ちません。単独の記号を探すより、五行配分と運の重なりを優先します。',meaning:'柱同士の結びつきや緊張から、協力しやすい部分と調整が必要な部分を読みます。',evidence:['顕著な関係なし'],action:'一つの関係だけで吉凶を決めない',confidence:.68};
  const labels=groups.map(([name,x])=>`${name}${x.length}件`),support=groups.filter(([x])=>['干合','支合'].includes(x)).map(([x])=>x),tense=groups.filter(([x])=>['冲','刑','害','破'].includes(x)).map(([x])=>x);
- return{id:'relations',title:'柱同士の関係',reading:`${labels.join('、')}が出てるわ。${support.length?`${support.join('・')}は、別々の役割を一つの成果へ結びつける力。`:''}${tense.length?`${tense.join('・')}は不幸の印じゃないの。予定変更や意見の衝突が起きた時、組み直す必要がある場所よ。`:''}`,meaning:'結びつく力とぶつかる力を、仕事・家庭・本人・将来のどこで使うかを見る',example:tense.length?'家族と仕事の予定が重なった時や、自分の希望と周囲の役割が食い違った時に出やすい':'一人で完結させるより、役割の違う人と組んだ時に形になりやすい',evidence:labels,action:tense.length?'次に予定がぶつかったら、事実・担当者・期限を三行に分け、どれを変更するか相手と決める':'今週、役割の違う相手一人へ依頼内容と締切を一文で伝える',confidence:.72};
+ return{id:'relations',title:'柱同士の関係',reading:`${labels.join('、')}が出てる。${support.length?`${support.join('・')}は、別々の役割を一つの成果へ結びつける力。`:''}${tense.length?`${tense.join('・')}は不幸の印ではありません。予定変更や意見の衝突が起きた時、組み直す必要がある場所です。`:''}`,meaning:'結びつく力とぶつかる力を、仕事・家庭・本人・将来のどこで使うかを見る',example:tense.length?'家族と仕事の予定が重なった時や、自分の希望と周囲の役割が食い違った時に出やすい':'一人で完結させるより、役割の違う人と組んだ時に形になりやすい',evidence:labels,action:tense.length?'次に予定がぶつかったら、事実・担当者・期限を三行に分け、どれを変更するか相手と決める':'今週、役割の違う相手一人へ依頼内容と締切を一文で伝える',confidence:.72};
 }
 
 export function buildBaziChartInterpretation(result={}){
  const pillars=result.chart?.pillars||{},items=['year','month','day','hour'].map(role=>readPillar(role,pillars[role])),balance=readBalance(result);
  if(balance)items.push(balance);
  items.push(readRelations(result));
- return{schemaId:'koyomi-bazi-chart-interpretation',version:'1.0.0',title:'命式を一段ずつ読み解く',introduction:'命式表は記号の一覧じゃないの。どの場所に、どんな力が、表と内側のどちらへ出ているかを重ねて読むのよ。',conclusion:'日柱を中心に、月柱の社会的な役割、年柱の背景、時柱の未来像を順番に確認します。',items,evidence:unique(items.flatMap(x=>x.evidence||[])),closing:'一つの星だけであなたを決めつけないこと。重なっている特徴を現実の経験と照らして使いなさい。',sourcePolicy:{usesCalculatedChartOnly:true,noNewDivinationCalculation:true,noSingleSymbolVerdict:true}};
+ return{schemaId:'koyomi-bazi-chart-interpretation',version:'1.0.0',title:'命式を一段ずつ読み解く',introduction:'命式表は記号の一覧ではありません。どの場所に、どんな力が、表と内側のどちらへ出ているかを重ねて読む。',conclusion:'日柱を中心に、月柱の社会的な役割、年柱の背景、時柱の未来像を順番に確認します。',items,evidence:unique(items.flatMap(x=>x.evidence||[])),closing:'一つの星だけであなたを決めつけないこと。重なっている特徴を現実の経験と照らして使ってください。',sourcePolicy:{usesCalculatedChartOnly:true,noNewDivinationCalculation:true,noSingleSymbolVerdict:true}};
 }

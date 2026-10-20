@@ -672,8 +672,8 @@ function renderReadingTextJa(sections, mode, executiveSummary, timingReading) {
 }
 
 function buildMitsunomeInputJa(facts, sections, beginnerText, professionalText, executiveSummary, timingReading, options) {
-  const normalText = `\u3042\u306a\u305f\u306e\u4eca\u306e\u4e2d\u5fc3\u30c6\u30fc\u30de\u306f\u3001${executiveSummary.centralTheme}\u3002\u7126\u3089\u306a\u304f\u3066\u3044\u3044\u306e\u3002\u305f\u3060\u3057\u3001${sections.weakness.caution}\u3002\u4eca\u65e5\u306f${executiveSummary.doNow}\u304b\u3089\u59cb\u3081\u3066\u307f\u3066\u3002`;
-  const zubatText = `\u7d50\u8ad6\u3002${executiveSummary.centralTheme}\u3002\u4eca\u3084\u308b\u3053\u3068\u306f${executiveSummary.doNow}\u3002\u4f46\u3057\u3001${executiveSummary.avoid}\u306f\u907f\u3051\u3066\u3002\u9003\u3052\u9053\u306f\u3042\u308b\u308f\u3002${sections.weakness.avoidance}`;
+  const normalText = `今回の中心テーマ：${executiveSummary.centralTheme}\n急いで結論を出さず、次の注意点も確かめてください。\n${sections.weakness.caution}\n今日できること：${executiveSummary.doNow}`;
+  const zubatText = `結論：${executiveSummary.centralTheme}\n今できること：${executiveSummary.doNow}\n注意点：${executiveSummary.avoid}\n無理がある場合：${sections.weakness.avoidance}`;
   return {
     schemaId: 'koyomi-mitsunome-bazi-reading-input',
     locale: 'ja',
@@ -1196,8 +1196,8 @@ function buildReadingMitsunomeInput(facts, sections, beginner, professional, exe
   const normalText = [
     `まず結論ね。${executiveSummary.centralTheme}`,
     `今やることはこれよ: ${executiveSummary.doNow}`,
-    `注意点もあるわ。${sections.weakness.caution}`,
-    `でも逃げ道はあるの。${sections.weakness.avoidance}`
+    `注意点もあります。${sections.weakness.caution}`,
+    `でも逃げ道はあります。${sections.weakness.avoidance}`
   ].join(' ');
   const zubatText = [
     `結論: ${executiveSummary.centralTheme}`,
