@@ -1,0 +1,13 @@
+.reading-date-nav{position:sticky;top:8px;z-index:25;margin:12px 0 18px;padding:10px;border:1px solid #b99b68;border-radius:12px;background:#fcf5e7;color:#30251b;box-shadow:0 3px 14px #25170e20}
+.reading-date-nav[hidden],.reading-date-picker[hidden]{display:none}
+.reading-date-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:stretch}
+.reading-date-nav button{min-height:44px;padding:8px 12px;border:1px solid #b99b68;border-radius:9px;background:#fffaf1;color:#30251b;font:inherit;font-weight:700;cursor:pointer}
+.reading-date-nav button:hover:not(:disabled){background:#f1e2c5}.reading-date-nav button:focus-visible,.reading-date-nav input:focus-visible{outline:3px solid #795b24;outline-offset:2px}
+.reading-date-nav button:disabled{opacity:.45;cursor:default}.reading-date-nav .reading-date-label{font-variant-numeric:tabular-nums;line-height:1.4;overflow-wrap:anywhere}
+.reading-date-tools{display:flex;align-items:center;gap:10px;margin-top:8px}.reading-date-tools [role=status]{font-size:.85rem;line-height:1.5;flex:1}
+.reading-date-picker{display:flex;flex-wrap:wrap;align-items:end;gap:10px;margin-top:12px}.reading-date-picker label{display:grid;gap:4px}.reading-date-picker input{min-height:44px;max-width:100%;font:inherit;color:#30251b;background:#fffaf1;border:1px solid #b99b68;border-radius:8px;padding:6px}
+.reading-date-pending{visibility:hidden;pointer-events:none}
+@media(max-width:480px){.reading-date-nav{top:4px;padding:8px}.reading-date-row{gap:5px}.reading-date-nav button{padding:8px;font-size:.9rem}.reading-date-label{font-size:.86rem!important}.reading-date-tools{gap:8px}.reading-date-tools [role=status]{font-size:.78rem}}
+
+/* Avoid a non-scrolling body overflow container trapping the sticky date controls. */
+body.koyomi-mode-personal{overflow-x:clip;overflow-y:visible}
