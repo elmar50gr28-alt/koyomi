@@ -35,7 +35,7 @@ import { inspectBaziSettings, normalizeBaziSettings, toLegacySchoolConfig } from
 import { buildIntegratedBaziReadingData, validateIntegratedBaziReadingData } from './integration/index.js';
 import { buildCommonReading } from '../reading/index.js';
 
-export function calculateBazi(profile, schoolConfig = profile?.baziSettings || {}) {
+export function calculateBazi(profile, schoolConfig = profile?.baziSettings || {}, options = {}) {
   const baziSettings = normalizeBaziSettings(schoolConfig);
   const normalizedSchoolConfig = toLegacySchoolConfig(baziSettings);
   const chart = calculateBaziChart(profile, normalizedSchoolConfig);
@@ -73,7 +73,7 @@ export function calculateBazi(profile, schoolConfig = profile?.baziSettings || {
     { strengthResult: strengthForDependentRules, patternResult: patternsForYongshen }
   );
   const favorableElements = evaluateFavorableElements({ ...chart, relations }, schoolConfig, yongshen);
-  const luckCycles = calculateLuckCycles({ ...chart, relations, strength, patterns, yongshen }, profile, schoolConfig);
+  const luckCycles = calculateLuckCycles({ ...chart, relations, strength, patterns, yongshen }, profile, options.referenceDate ? { ...schoolConfig, referenceDate: options.referenceDate } : schoolConfig);
   const interpretationFacts = buildInterpretationFacts(chart, strength, patterns, yongshen, luckCycles);
   const result = {
     ...chart,

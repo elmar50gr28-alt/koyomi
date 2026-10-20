@@ -73,6 +73,6 @@ const chartSource = await readFile('src/bazi/chart/index.js', 'utf8');
 const appSource = await readFile('app.html', 'utf8');
 assert.ok(chartSource.includes('calculatePillarFoundation(calculationDate'), '鑑定入口が新コアを呼ぶこと');
 assert.ok(appSource.includes("import * as KOYOMI_BAZI from './src/bazi/index.js'"), '画面の四柱推命入口を維持すること');
-assert.ok(appSource.includes('KOYOMI_BAZI.calculateBazi(profile)'), '画面の鑑定呼び出しを維持すること');
+assert.ok(appSource.includes('KOYOMI_BAZI.calculateBazi(profile,profile.baziSettings,{referenceDate:window.KOYOMI_DAILY_CONTEXT?.selectedDate?.()||new Date()})'), '画面の鑑定呼び出しに選択日と流派設定を渡すこと');
 
 console.log(`Bazi chart core equivalence passed: boundaries=${BOUNDARY_CASES.length}, ziHourCases=${ZI_HOUR_CASES.length * 2}`);

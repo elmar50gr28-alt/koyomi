@@ -122,6 +122,6 @@ assert.equal(rebuiltReading.sourceIntegratedDataVersion, '1.0.0');
 assert.equal(rebuiltReading.executiveSummary.centralTheme, standard.reading.executiveSummary.centralTheme);
 assert.equal(rebuiltReading.beginnerText, standard.reading.beginnerText);
 const appSource = await readFile('app.html', 'utf8');
-assert.ok(appSource.includes('KOYOMI_BAZI.calculateBazi(profile)'), 'existing UI calculation entry remains unchanged');
+assert.ok(appSource.includes('KOYOMI_BAZI.calculateBazi(profile,profile.baziSettings,{referenceDate:window.KOYOMI_DAILY_CONTEXT?.selectedDate?.()||new Date()})'), 'UI calculation uses the selected reading date and current school settings');
 
 console.log('Bazi integrated reading data core passed');
