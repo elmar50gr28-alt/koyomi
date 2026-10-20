@@ -16,7 +16,7 @@ for (const type of ['personal', 'compatibility', 'timeline', 'oracle', 'qimen', 
     actions: ['一つ確認する', '結果を記録する']
   });
   assert.equal(answer.type, type);
-  assert.match(answer.directAnswer, /結論から言うわね/);
+  assert.match(answer.directAnswer, /結論からお伝えします/);
   assert.match(answer.reason, /根拠A／根拠B/);
   assert.equal(answer.actionPlan.length, 2);
   assert.ok(answer.stop);

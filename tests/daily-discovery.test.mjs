@@ -8,9 +8,12 @@ const base={profileId:'discovery',date:'2026-07-01',dailyScore:55,themeCategory:
 const first=core.generate(base),nextInput={...base,date:'2026-07-02'};
 const left=core.generate(nextInput,[{...first,discoveryId:'money-0'}]),right=core.generate(nextInput,[{...first,discoveryId:'money-1'}]);
 for(const field of ['focusId','score','intensity','actionId','cautionId','sceneId','structureId'])assert.equal(left[field],right[field],`a discovery cannot alter ${field}`);
-assert.notEqual(left.discoveryId,right.discoveryId);
+assert.notEqual(left.discoveryId,'money-0');assert.notEqual(right.discoveryId,'money-1');
+const third=core.generate(nextInput,[{...first,discoveryId:'money-2'}]);
+assert.notEqual(third.discoveryId,'money-2','the third viewpoint must not repeat yesterday');
+assert.ok(third.connection.includes('昨日の着眼点は「自分の暮らしの基準」'),'the third viewpoint is named in the next reading');
 const skewed=Array.from({length:10},(_,i)=>({...first,date:`2026-06-${String(20+i).padStart(2,'0')}`,discoveryId:'money-1'}));
-assert.equal(core.generate(nextInput,[...skewed,{...first,discoveryId:'money-0'}]).discoveryId,'money-1','yesterday takes precedence over uneven older usage counts');
+assert.notEqual(core.generate(nextInput,[...skewed,{...first,discoveryId:'money-0'}]).discoveryId,'money-0','yesterday takes precedence over uneven older usage counts');
 assert.ok(left.story.includes('昨日の着眼点'));assert.ok(left.story.includes(left.discovery.text));
 assert.ok(left.review.includes(left.discovery.review));assert.equal(left.showDifference,false,'a new viewpoint is not a new fortune strength');
 assert.ok(!core.toText(left).includes('【流れの変化】'));
@@ -58,5 +61,5 @@ for(const themeCategory of ['overall','work','love','money','health','family','g
  assert.equal(new Set(rows.map(r=>r.story)).size,30);
  assert.ok(1-new Set(rows.map(r=>r.actionId)).size/30<=.2+Number.EPSILON,themeCategory+'/'+dailyScore+' unique actions='+new Set(rows.map(r=>r.actionId)).size);
 }
-assert.equal(questions.size,40,'all 20 focus-specific pairs are reachable');
+assert.equal(questions.size,60,'all 20 focus-specific triples are reachable');
 console.log(`Daily discovery: ${cases} readings, ${questions.size} observations, source/strength invariance, matching reviews, honest yesterday links and restart/cache checks passed`);

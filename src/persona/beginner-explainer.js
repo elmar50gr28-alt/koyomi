@@ -11,6 +11,6 @@ function explain(model,{date}={}){
  const seed=[day,system,state,(model.evidence||[]).join('|')].join('|'),a=hash(seed)%list.length,b=(a+1+hash(seed+'next')%(list.length-1))%list.length,requested=String(model.scenario?.action||'').trim();
  const selectedGuide=requested?['提案された対応が必要なときに','この対応に必要な情報や連絡先',model.scenario?.go||'実行に必要な条件と今の負担を確かめる','できたことと、まだ確認が必要なことを分けられたら確認を終える']:guide;
  const alternative=requested?(model.serious||/受診|医療機関|相談窓口|安全確保|安全な距離/.test(requested)?'難しい場合：鑑定の条件が揃うのを待たず、必要な支援につながって。':state==='防御'?'難しい場合：今の負担を増やさず、必要なら信頼できる人や専門窓口へ相談して。':'難しい場合：実行を急がず、必要な準備や確認先を考えて。'):`難しい場合：${sentence(list[b])}実行を急がず、必要な準備や確認先を考えて。`;
- return{date:day,meaning:`今回の「${state}」は、${meanings[state]}という意味よ。`,primaryAction:requested,example:formatExample(requested||list[a],selectedGuide),alternative,unchanged:{state,evidence:[...(model.evidence||[])],stop:model.scenario?.stop,review:model.scenario?.review}};
+ return{date:day,meaning:`今回の「${state}」は、${meanings[state]}という意味です。`,primaryAction:requested,example:formatExample(requested||list[a],selectedGuide),alternative,unchanged:{state,evidence:[...(model.evidence||[])],stop:model.scenario?.stop,review:model.scenario?.review}};
 }
 return{examples,guides,meanings,explain}});

@@ -41,31 +41,31 @@ function directAnswer(context, item, reading, sister) {
   const action = item?.todayAction || reading.todayAction;
   if (!context.hasQuestion) {
     return sister
-      ? `結論から言うわね。今は「${theme}」が中心よ。${action}`
+      ? `結論からお伝えします。今は「${theme}」が中心です。${action}`
       : `現在の中心テーマは「${theme}」です。${action}`;
   }
   if (context.intent === 'timing') {
     return sister
-      ? `時期だけ先に言うわね。${topic}は、実行の条件が揃っているかを確認してから時期を決めましょう。${action}`
+      ? `時期について先にお伝えします。${topic}は、実行の条件が揃っているかを確認してから時期を決めましょう。${action}`
       : `${topic}は、必要な準備と確認事項を整理してから時期を判断しましょう。${action}`;
   }
   if (context.intent === 'decision') {
     return sister
-      ? `結論は「判断に必要な条件を確かめる」よ。勢いだけで決めず、まず${action}`
+      ? `結論は「判断に必要な条件を確かめる」です。勢いだけで決めず、まず${action}`
       : `判断に必要な条件を確認してから方針を決めましょう。まず${action}`;
   }
   if (context.intent === 'outlook') {
     return sister
-      ? `可能性はあるわ。ただし自動的にうまくいく流れじゃないの。「${theme}」を実行できるかで結果が分かれるわ。`
+      ? `可能性はあります。ただし自動的にうまくいく流れではありません。「${theme}」を実行できるかで結果が分かれる。`
       : `可能性はありますが、結果は「${theme}」を実行できるかに左右されます。`;
   }
   if (context.intent === 'reason') {
     return sister
-      ? `理由は単純よ。今は「${theme}」の信号が重なっていて、急ぐより整えた方が結果につながるから。`
+      ? `理由は単純です。今は「${theme}」の信号が重なっていて、急ぐより整えた方が結果につながるから。`
       : `現在は「${theme}」の傾向が重なり、急ぐより整える方が結果につながりやすいためです。`;
   }
   return sister
-    ? `${topic}については、まず「${theme}」を形にするのが答えよ。${action}`
+    ? `${topic}については、まず「${theme}」を形にするのが答えです。${action}`
     : `${topic}では、まず「${theme}」を実行することが具体的な答えです。${action}`;
 }
 

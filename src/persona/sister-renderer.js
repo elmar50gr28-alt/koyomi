@@ -8,8 +8,8 @@
  function plain(value){return PLAIN.reduce((text,[pattern,replacement])=>text.replace(pattern,replacement),String(value||''))}
  function render(model,{voice='sister',level='standard',date}={}){const selected=level==='beginner'?'beginner':voice,v=voices.get(selected)||voices.get('sister');if(!v)throw new Error(`unknown voice: ${selected}`);const lex=globalThis.KOYOMI_SISTER_LEXICON?.session([model.system,model.scenario?.state,(model.evidence||[]).join('|'),selected].join('|')),phrase=(group,offset)=>lex?.pick(group,offset)||'',beginner=level==='beginner'?globalThis.KOYOMI_BEGINNER_EXPLAINER?.explain(model,{date}):null,context={...model,voice:v,phrase,level,plain,beginner};const order=model.order||(level==='beginner'?['opening','result','beginner','action','stop','review','evidence','closing']:['opening','result','scenario','action','stop','review','evidence','closing']);context.hasResult=order.includes('result');context.primaryInExample=Boolean(beginner?.primaryAction&&order.includes('beginner')&&beginner.primaryAction===line(model.scenario?.action));return order.map(name=>sections.get(name)?.(context)).filter(Boolean).join('\n\n')}
  const api={registerVoice,registerSection,render,plain,listVoices:()=>[...voices.keys()],listSections:()=>[...sections.keys()]};
- registerVoice('sister',{address:'あなた',result:'今回の見立て',evidence:'根拠はここよ',action:'今日の一歩',stop:'気をつけたいこと',review:'あとで確かめること',closing:'最後に'});
- registerVoice('zubat',{address:'あなた',result:'ズバッと結論',evidence:'言い切る根拠',action:'今すぐやること',stop:'絶対にやめること',review:'合否判定',closing:'覚えておきなさい'});
+ registerVoice('sister',{address:'あなた',result:'今回の見立て',evidence:'判断の根拠',action:'今日の一歩',stop:'気をつけたいこと',review:'あとで確かめること',closing:'最後に'});
+ registerVoice('zubat',{address:'あなた',result:'ズバッと結論',evidence:'言い切る根拠',action:'今すぐやること',stop:'絶対にやめること',review:'合否判定',closing:'覚えておいてください'});
  registerVoice('beginner',{address:'あなた',result:'まず結論',evidence:'そう判断した理由',action:'今日すること',stop:'やめておくこと',review:'あとで確認すること',closing:'覚えておいてほしいこと'});
  registerSection('opening',c=>`【${c.system}の読み解き】\n${line(c.opening)}\n${line(c.axis)}`);
  registerSection('result',c=>`【${c.voice.result}】\n${c.phrase(c.scenario?.state==='前進'?'forward':c.scenario?.state==='防御'?'defense':'trial')}\n${sentence(c.result,c.scenario?.scene)}`);
@@ -17,9 +17,9 @@
  registerSection('beginner',c=>c.beginner?`【簡単にいうと】\n${c.beginner.meaning}\n\n【今日の具体例】\n${c.beginner.example}\n\n${c.beginner.alternative}`:'');
  registerSection('action',c=>c.primaryInExample?'':`【${line(c.headings?.action,c.voice.action)}】\n${c.phrase('transition')} ${sentence(c.scenario?.action)}\n続ける条件：${sentence(c.scenario?.go)}\n条件が変わったら、進め方も見直して。`);
  registerSection('stop',c=>`【${line(c.headings?.stop,c.voice.stop)}】\n${sentence(c.scenario?.stop)}`);
- registerSection('review',c=>`【${line(c.headings?.review,c.voice.review)}】\n${line(c.scenario?.review,'14日')}ほど経った頃に、負担が減ったか、相手や状況が実際に動いたかを見てちょうだい。`);
+ registerSection('review',c=>`【${line(c.headings?.review,c.voice.review)}】\n${line(c.scenario?.review,'14日')}ほど経った頃に、負担が減ったか、相手や状況が実際に動いたかを見てください。`);
  registerSection('evidence',c=>{const raw=(c.evidence||[]).filter(Boolean).join('／')||'算出結果を確認済み',glossary=globalThis.KOYOMI_DIVINATION_GLOSSARY;if(c.level==='beginner'){if(glossary){const g=glossary.beginner(raw);return`【${c.voice.evidence}】\n占いの結果を普通の言葉に直すと、${sentence(g.plain)}${g.notes.length?`\n\n【専門用語と読み】\n${g.notes.join('\n')}`:''}`}return`【${c.voice.evidence}】\n占いの結果を普通の言葉に直すと、${sentence(c.plain(raw))}`}return`【${line(c.headings?.evidence,c.voice.evidence)}】\n${c.phrase('evidence')}\n${sentence(glossary?glossary.annotate(raw):raw)}`});
- registerSection('analysis',c=>{const items=Array.isArray(c.analysis)?c.analysis:[];if(!items.length)return'';return items.map((item,index)=>`【${line(item.title,'命式の読み')}】\n${index?'次はここよ。':'まず、ここを見なさい。'}${line(item.reading)}\nつまり、${line(item.meaning)}ってこと。${item.example?`\n現実ではね、${line(item.example)}`:''}${item.action?`\n暮らしで確かめること：${line(item.action)}`:''}`).join('\n\n')});
+ registerSection('analysis',c=>{const items=Array.isArray(c.analysis)?c.analysis:[];if(!items.length)return'';return items.map((item,index)=>`【${line(item.title,'命式の読み')}】\n${index?'次に、この部分を見ていきます。':'まず、ここを見てください。'}${line(item.reading)}\n読み解き：${sentence(item.meaning)}${item.example?`\n生活の場面では：${sentence(item.example)}`:''}${item.action?`\n暮らしで確かめること：${line(item.action)}`:''}`).join('\n\n')});
  registerSection('closing',c=>`【${c.voice.closing}】\n${line(c.closing)}`);
  return api
 });
