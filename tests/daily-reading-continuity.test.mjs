@@ -1,3 +1,4 @@
+import { renderBaziCalculationSummary } from '../src/bazi/reading/summary-ui.js';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
@@ -93,6 +94,7 @@ const ui = {
   ...context, lastPersonal: target, document: { getElementById: id => id === 'overallReading' ? overall : id === 'personalVerdictNote' ? verdictNote : id === 'dailyTraditionalReading' ? traditional : id === 'dailyTraditionalDetails' ? details : id === 'theme' ? { value: 'work' } : null },
   selectedDate: new Date('2026-01-01'), fmtIso: value => value.toISOString().slice(0, 10),
   koyomiBaziReadingProfile: () => ({ personId: 'fixture', birthData: {} }), koyomiDailyProfileKey: () => 'ui-profile', koyomiBaziLocale: () => 'ja',
+  renderBaziCalculationSummary,
   KOYOMI_BAZI: { prepareCommonReadingThemes: async () => {}, calculateBazi: () => ({}), buildCommonReading: () => ({ items: [{ themeId: 'WORK_STEADY_PROGRESS' }] }), buildBaziReading: () => ({}) },
   KOYOMI_DAILY_CONTEXT: { requestKey: profile => ui.koyomiPersonalReadingKey(profile), personalResult: () => ui.lastPersonal, luckyContext: () => ({}), syncLuckyItem: () => {}, selectedDate: () => new Date('2026-01-01'), formatDate: () => '2026-01-01', dailySignal: () => ({ score: 90, title: 'fixture' }), dayPillar: () => ({ text: '甲子' }) },
   KOYOMI_DAILY_READING: { getOrCreate: input => ({ reading: core.generate(input) }) }, console
