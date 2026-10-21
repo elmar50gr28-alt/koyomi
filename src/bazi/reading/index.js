@@ -400,7 +400,7 @@ function buildExecutiveSummaryJa(facts, sections) {
       : '\u4e00\u3064\u306e\u5f37\u5f31\u3060\u3051\u3067\u65ad\u5b9a\u305b\u305a\u3001\u72b6\u6cc1\u3054\u3068\u306e\u30d0\u30e9\u30f3\u30b9\u3092\u898b\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059\u3002';
   const guidance = buildIntegratedGuidanceJa(facts);
   return {
-    centralTheme: `${dayMaster}\u306e\u65e5\u4e3b\u304c\u6301\u3064\u50be\u5411\u3092\u3001${element}\u306b\u3088\u3063\u3066\u7740\u5b9f\u306a\u6210\u679c\u3078\u3064\u306a\u3052\u308b\u6642\u671f\u3067\u3059\u3002`,
+    centralTheme: facts.primaryFavorable ? `${dayMaster}\u306e\u65e5\u4e3b\u304c\u6301\u3064\u50be\u5411\u3092\u3001${element}\u306b\u3088\u3063\u3066\u7740\u5b9f\u306a\u6210\u679c\u3078\u3064\u306a\u3052\u308b\u6642\u671f\u3067\u3059\u3002` : '用神候補が算出されていないため、五行に基づく助言は保留します。',
     strength,
     currentIssue: sections.weakness?.conclusion || sections.overall.conclusion,
     currentFlow: guidance.currentFlow,
@@ -416,7 +416,7 @@ function buildExecutiveSummaryJa(facts, sections) {
 function buildIntegratedGuidanceJa(facts) {
   const signals = facts.signals;
   const favorable = elementWordsJa(facts.primaryFavorable);
-  const avoid = elementWordsJa(facts.avoid[0] || facts.dayMasterElement);
+  const avoid = facts.avoid.length ? elementWordsJa(facts.avoid[0]) : null;
   const supportBalance = signals.currentLuckSupports - signals.currentLuckPressures;
   const currentFlow = supportBalance > 0
     ? `現在の運には命式を支える作用が${signals.currentLuckSupports}件あり、追い風を活かしやすい状態です。準備が整っている計画は実行に移し、途中の負担や成果を確認してください。`
@@ -424,9 +424,9 @@ function buildIntegratedGuidanceJa(facts) {
       ? `現在の運には注意して扱う作用が${signals.currentLuckPressures}件あります。急いで結論を出さず、準備と確認を優先してください。`
       : '現在の運は追い風と注意要素が拮抗しています。実行に必要な条件と、まだ不明な点を分けて確認してください。';
   return {
-    strength: `${favorable}を意識すると、命式が持つ${signals.strengths}件の支えを活かしやすくなります。`,
+    strength: facts.primaryFavorable ? `${favorable}を意識すると、命式が持つ${signals.strengths}件の支えを活かしやすくなります。` : '用神候補が算出されていないため、五行に基づく助言は保留します。',
     support: signals.supports ? `命式と運勢から${signals.supports}件の追い風候補を確認しています。` : '明確な追い風は限定的なため、日々の安定を優先してください。',
-    pressure: signals.pressures ? `${avoid}に偏る場面を含め、${signals.pressures}件の注意作用があります。負荷を一度に増やさないでください。` : '強く警戒すべき圧力は現在の判定では目立ちません。',
+    pressure: signals.pressures ? `${avoid ? avoid+'に偏る場面を含め、' : ''}${signals.pressures}件の注意作用があります。負荷を一度に増やさないでください。` : '強く警戒すべき圧力は現在の判定では目立ちません。',
     currentFlow
   };
 }
@@ -437,7 +437,7 @@ function buildTimingReadingJa(facts, sections, originalTiming) {
     annualTheme: sections.annualLuck.conclusion,
     monthlyTheme: sections.monthlyLuck.conclusion,
     supportiveAreas: unique([sections.career.tendency, sections.learning.tendency, elementWordsJa(facts.primaryFavorable)]).slice(0, 3),
-    cautionAreas: unique([sections.weakness.tendency, sections.health.tendency, elementWordsJa(facts.avoid[0] || facts.dayMasterElement)]).slice(0, 3),
+    cautionAreas: unique([sections.weakness.tendency, sections.health.tendency, facts.avoid.length ? elementWordsJa(facts.avoid[0]) : '']).slice(0, 3),
     changeWindow: '\u5927\u904b\u306e\u5207\u308a\u66ff\u308f\u308a\u306f\u4e00\u65e5\u3067\u65ad\u5b9a\u305b\u305a\u3001\u524d\u5f8c\u306e\u671f\u9593\u5e45\u3067\u5909\u5316\u3092\u898b\u307e\u3059\u3002',
     preparationWindow: '\u6708\u904b\u304c\u6df7\u3058\u308b\u6642\u671f\u306f\u3001\u767a\u8868\u3084\u6c7a\u65ad\u3088\u308a\u6e96\u5099\u3001\u8a18\u9332\u3001\u78ba\u8a8d\u306b\u5411\u304d\u307e\u3059\u3002',
     executionWindow: '\u5927\u904b\u3068\u6b73\u904b\u304c\u540c\u3058\u65b9\u5411\u3092\u793a\u3059\u6642\u671f\u306f\u3001\u5c0f\u3055\u3044\u5b9f\u884c\u3092\u91cd\u306d\u3066\u7d50\u679c\u3092\u898b\u307e\u3059\u3002',
@@ -479,6 +479,7 @@ function buildGlossaryJa() {
 }
 
 function tendencyJa(id, facts) {
+  if (!facts.primaryFavorable && ['overall','talent','creation','advice'].includes(id)) return '用神候補が未確定の状態';
   const primary = elementWordsJa(facts.primaryFavorable);
   const occupation = occupationFocusJa(facts.occupation);
   const dayMaster = dayMasterLabelJa(facts);
@@ -507,6 +508,7 @@ function tendencyJa(id, facts) {
 }
 
 function conclusionJa(id, facts, tendency, confidence) {
+  if (!facts.primaryFavorable && ['overall','talent','creation','advice'].includes(id)) return '日主や身強弱の傾向は確認できますが、用神候補が未確定のため、五行に基づく助言は保留します。';
   const prefix = confidence < 0.55 ? '\u78ba\u5ea6\u306f\u9650\u5b9a\u7684\u3067\u3059\u304c\u3001' : '';
   const map = {
     overall: `${prefix}\u547d\u5f0f\u5168\u4f53\u306f\u3001${tendency}\u3092\u793a\u3057\u3066\u3044\u307e\u3059\u3002`,
@@ -549,6 +551,7 @@ function cautionJa(id, facts, confidence) {
 }
 
 function avoidanceJa(id, facts) {
+  if (!facts.primaryFavorable && !['health','finance','love','relationship','marriage'].includes(id) && !PROFESSIONAL_CATEGORIES.has(id)) return '用神候補が確認できるまでは、特定の五行を補うことを目的に予定や持ち物を変えないでください。';
   if (id === 'health') return '\u4e0d\u8abf\u3084\u4e0d\u5b89\u304c\u3042\u308b\u5834\u5408\u306f\u3001\u9451\u5b9a\u3092\u4e00\u5ea6\u6b62\u3081\u3001\u533b\u7642\u3084\u5c02\u9580\u5bb6\u306e\u652f\u63f4\u3092\u512a\u5148\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
   if (id === 'finance') return '\u884c\u52d5\u524d\u306b\u640d\u5207\u308a\u30e9\u30a4\u30f3\u3092\u6c7a\u3081\u3001\u4fe1\u983c\u3067\u304d\u308b\u4eba\u306b\u524d\u63d0\u3092\u78ba\u8a8d\u3057\u3066\u3082\u3089\u3063\u3066\u304f\u3060\u3055\u3044\u3002';
   if (id === 'love' || id === 'relationship' || id === 'marriage') return '\u300c\u5fc5\u8981\u306a\u3053\u3068\u300d\u300c\u63d0\u4f9b\u3067\u304d\u308b\u3053\u3068\u300d\u300c\u73fe\u5b9f\u7684\u306a\u30da\u30fc\u30b9\u300d\u3092\u76f4\u63a5\u306e\u8a00\u8449\u306b\u623b\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
@@ -560,13 +563,14 @@ function evidenceJa(section, facts, tendency) {
   return [
     `\u65e5\u4e3b\u306f${dayMasterLabelJa(facts)}\u3067\u3059\u3002`,
     `\u547d\u5f0f\u5168\u4f53\u3067\u306f${strengthLabelJa(facts.strengthLevel)}\u306e\u50be\u5411\u304c\u3042\u308a\u307e\u3059\u3002`,
-    `\u30d0\u30e9\u30f3\u30b9\u3092\u6574\u3048\u308b\u5019\u88dc\u3068\u3057\u3066${elementJa(facts.primaryFavorable)}\u304c\u91cd\u8996\u3055\u308c\u307e\u3059\u3002`,
-    `\u3053\u306e\u9805\u76ee\u3067\u306f\u3001${tendency}\u3092\u4e3b\u306a\u7406\u7531\u3068\u3057\u3066\u8aad\u307f\u307e\u3059\u3002`,
+    facts.primaryFavorable ? `\u30d0\u30e9\u30f3\u30b9\u3092\u6574\u3048\u308b\u5019\u88dc\u3068\u3057\u3066${elementJa(facts.primaryFavorable)}\u304c\u91cd\u8996\u3055\u308c\u307e\u3059\u3002` : '用神候補が算出されていないため、補う五行は特定しません。',
+    facts.primaryFavorable ? `\u3053\u306e\u9805\u76ee\u3067\u306f\u3001${tendency}\u3092\u4e3b\u306a\u7406\u7531\u3068\u3057\u3066\u8aad\u307f\u307e\u3059\u3002` : '用神候補に依存する解釈は保留し、命式で確認できた事実を分けて示します。',
     PROFESSIONAL_CATEGORIES.has(section.id) ? '\u904b\u52e2\u306e\u91cd\u306d\u8aad\u307f\u304c\u5fc5\u8981' : '\u547d\u5f0f\u5168\u4f53\u306e\u6587\u8108\u304c\u5fc5\u8981'
   ];
 }
 
 function publicEvidenceJa(id, facts) {
+  if (!facts.primaryFavorable) return `日主は${dayMasterLabelJa(facts)}、身強弱は${strengthLabelJa(facts.strengthLevel)}です。用神候補が算出されていないため、補う五行は特定しません。`;
   const dayMaster = dayMasterLabelJa(facts);
   const strength = strengthLabelJa(facts.strengthLevel);
   const yongshen = elementJa(facts.primaryFavorable);
@@ -626,7 +630,7 @@ function sanitizePublicJa(value) {
 function opposingJa(section, facts) {
   const factors = [];
   if (facts.precision === 'partial-without-hour-pillar') factors.push('\u51fa\u751f\u6642\u523b\u4e0d\u660e\u306e\u305f\u3081\u3001\u6642\u67f1\u3068\u6642\u671f\u5224\u65ad\u306e\u78ba\u5ea6\u304c\u4e0b\u304c\u308a\u307e\u3059');
-  if (facts.avoid.length) factors.push(`\u6ce8\u610f\u5143\u7d20\u304c${elementJa(facts.primaryFavorable)}\u3068\u62ee\u6297\u3059\u308b\u53ef\u80fd\u6027\uff1a${facts.avoid.map(elementJa).join(', ')}`);
+  if (facts.avoid.length) factors.push(facts.primaryFavorable ? `注意する五行が${elementJa(facts.primaryFavorable)}と拮抗する可能性：${facts.avoid.map(elementJa).join(', ')}` : `注意する五行の候補：${facts.avoid.map(elementJa).join(', ')}`);
   if (section.id === 'annualLuck' || section.id === 'monthlyLuck') factors.push('\u77ed\u671f\u306e\u904b\u52e2\u3060\u3051\u3067\u547d\u5f0f\u5168\u4f53\u3092\u8986\u3055\u306a\u3044\u3053\u3068');
   if (section.id === 'health') factors.push('\u751f\u6d3b\u7fd2\u6163\u3001\u5e74\u9f62\u3001\u30b9\u30c8\u30ec\u30b9\u3001\u533b\u5b66\u7684\u6587\u8108\u306f\u547d\u5f0f\u306e\u5916\u306b\u3042\u308a\u307e\u3059');
   if (!factors.length) factors.push('\u683c\u5c40\u3068\u6276\u6291\u304c\u5206\u304b\u308c\u308b\u5834\u5408\u306f\u53cd\u5bfe\u8aac\u3092\u78ba\u8a8d\u3057\u307e\u3059');
@@ -719,6 +723,7 @@ function buildMitsunomeInputJa(facts, sections, beginnerText, professionalText, 
 }
 
 function elementJa(element) {
+  if (!normalizeElement(element)) return '判定保留';
   return JA_ELEMENTS[normalizeElement(element)] || '\u8a73\u7d30\u306a\u6280\u8853\u60c5\u5831\u306f\u5c02\u9580\u5bb6\u8868\u793a\u3067\u78ba\u8a8d\u3067\u304d\u307e\u3059';
 }
 
@@ -727,6 +732,7 @@ function elementWordsJa(element) {
 }
 
 function actionByElementJa(element) {
+  if (!normalizeElement(element)) return '用神候補の判定は保留です。特定の五行を補う前に、出生情報と計算条件を確認してください';
   const map = {
     wood: '\u6b21\u306b\u80b2\u3066\u308b\u3053\u3068\u3092\u4e00\u3064\u9078\u3073\u3001\u4e88\u5b9a\u8868\u306b\u66f8\u3044\u3066\u898b\u3048\u308b\u5f62\u306b\u3057\u3066\u304f\u3060\u3055\u3044',
     fire: '\u4f1d\u3048\u305f\u3044\u3053\u3068\u3092\u4e00\u3064\u660e\u78ba\u306b\u3057\u3001\u7d9a\u3051\u3089\u308c\u308b\u5c0f\u3055\u306a\u7d04\u675f\u3068\u3057\u3066\u51fa\u3057\u3066\u304f\u3060\u3055\u3044',
@@ -779,8 +785,9 @@ function extractFacts(result = {}, options = {}) {
   const dayMaster = result.chart?.dayMaster || result.chart?.pillars?.day?.stem || {};
   const strength = result.strength?.dayMasterStrength || result.strength?.result || {};
   const yongshen = result.yongshen || {};
-  const favorable = result.favorableElements?.favorable || yongshen.favorable || yongshen.favorableElements?.favorable || [];
+  const favorable = result.favorableElements?.favorable || yongshen.favorable || yongshen.favorableElements?.favorable || (yongshen.primary?.element ? [yongshen.primary.element] : []);
   const avoid = result.favorableElements?.unfavorable || yongshen.unfavorable || yongshen.favorableElements?.unfavorable || [];
+  const favorableIds = unique(asArray(favorable).map(normalizeElement).filter(Boolean));
   const patterns = result.patterns?.candidates || result.patterns?.primaryCandidates || [];
   const cycles = result.luckCycles?.cycles || [];
   const evidence = [
@@ -802,9 +809,9 @@ function extractFacts(result = {}, options = {}) {
     dayMasterElement: normalizeElement(dayMaster.element) || 'earth',
     strengthLevel: strength.level || strength.result || result.strength?.result || 'indeterminate',
     strengthConfidence: clamp01(strength.confidence || result.strength?.confidence || confidence),
-    favorable: asArray(favorable).map(normalizeElement).filter(Boolean),
+    favorable: favorableIds,
     avoid: asArray(avoid).map(normalizeElement).filter(Boolean),
-    primaryFavorable: normalizeElement(asArray(favorable)[0] || yongshen.primary?.element || dayMaster.element) || 'earth',
+    primaryFavorable: favorableIds[0] || null,
     patterns,
     cycles,
     currentCycle: cycles[0] || null,
@@ -877,7 +884,7 @@ function buildExecutiveSummary(facts, sections) {
       : 'balance and situation reading matter more than one label';
   const guidance = buildIntegratedGuidance(facts);
   return {
-    centralTheme: `Use ${ELEMENT_WORDS[facts.primaryFavorable] || 'balance'} to turn ${facts.dayMasterName} day-master tendencies into steady action.`,
+    centralTheme: facts.primaryFavorable ? `Use ${ELEMENT_WORDS[facts.primaryFavorable] || 'balance'} to turn ${facts.dayMasterName} day-master tendencies into steady action.` : 'Favorable elements are undetermined; element-specific advice is withheld.',
     strength: `Core strength: ${strengthMeaning}.`,
     currentIssue: sections.weakness?.conclusion || sections.overall.conclusion,
     currentFlow: guidance.currentFlow,
@@ -899,7 +906,7 @@ function buildIntegratedGuidance(facts) {
       ? `Current luck contains ${signals.currentLuckPressures} pressure signal(s); prioritize preparation and review over speed.`
       : 'Supportive and cautionary signals are balanced; check the conditions for acting and identify what is still uncertain before committing.';
   return {
-    strength: `${ELEMENT_WORDS[facts.primaryFavorable] || 'balance'} helps activate ${signals.strengths} existing support signal(s).`,
+    strength: facts.primaryFavorable ? `${ELEMENT_WORDS[facts.primaryFavorable] || 'balance'} helps activate ${signals.strengths} existing support signal(s).` : 'Favorable elements are undetermined; element-specific advice is withheld.',
     support: signals.supports ? `${signals.supports} supportive chart or luck signal(s) are available.` : 'Clear tailwinds are limited, so prioritize stability.',
     pressure: signals.pressures ? `${signals.pressures} pressure signal(s) call for controlled pacing.` : 'No prominent pressure signal is present in the current result.',
     currentFlow
@@ -912,7 +919,7 @@ function buildTimingReading(facts, sections) {
     annualTheme: sections.annualLuck.conclusion,
     monthlyTheme: sections.monthlyLuck.conclusion,
     supportiveAreas: unique([sections.career.tendency, sections.learning.tendency, elementPhrase(facts.primaryFavorable)]).slice(0, 3),
-    cautionAreas: unique([sections.weakness.tendency, sections.health.tendency, elementPhrase(facts.avoid[0] || facts.dayMasterElement)]).slice(0, 3),
+    cautionAreas: unique([sections.weakness.tendency, sections.health.tendency, facts.avoid.length ? elementPhrase(facts.avoid[0]) : '']).slice(0, 3),
     changeWindow: 'Use a range around luck-cycle transitions rather than one exact day.',
     preparationWindow: 'When monthly signals are mixed, prepare, document, and test before announcing.',
     executionWindow: 'When decade and annual signals support the same element, move in small visible steps.',
@@ -946,6 +953,7 @@ function buildUiModel(sections, executiveSummary, timingReading) {
 }
 
 function tendencyFor(id, facts) {
+  if (!facts.primaryFavorable && ['overall','talent','creation','advice'].includes(id)) return 'Favorable elements are undetermined; element-specific advice is withheld.';
   const t = facts.tendencies;
   const primary = ELEMENT_WORDS[facts.primaryFavorable] || 'balance';
   const careerBase = t.career?.tendency || 'responsibility-and-learning';
@@ -974,6 +982,7 @@ function tendencyFor(id, facts) {
 }
 
 function conclusionFor(id, facts, tendency, confidence) {
+  if (!facts.primaryFavorable && ['overall','talent','creation','advice'].includes(id)) return 'Natal tendencies remain available, but favorable elements are undetermined; element-specific advice is withheld.';
   const soft = confidence < 0.55 ? 'may ' : '';
   const prefix = confidence < 0.55 ? 'With limited confidence, this ' : 'This ';
   const map = {
@@ -990,7 +999,7 @@ function evidenceFor(id, facts, tendency) {
   return [
     `dayMaster=${facts.dayMaster.id || facts.dayMasterName}`,
     `strength=${facts.strengthLevel}`,
-    `favorable=${facts.primaryFavorable}`,
+    `favorable=${facts.primaryFavorable || 'undetermined'}`,
     `tendency=${tendency}`,
     PROFESSIONAL_CATEGORIES.has(id) ? 'luck-overlay-required' : 'natal-context-required'
   ];
@@ -999,7 +1008,7 @@ function evidenceFor(id, facts, tendency) {
 function opposingFactorsFor(id, facts) {
   const factors = [];
   if (facts.precision === 'partial-without-hour-pillar') factors.push('hour-pillar is unavailable, so timing and late-life signals are lower confidence');
-  if (facts.avoid.length) factors.push(`unfavorable elements may pull against ${facts.primaryFavorable}: ${facts.avoid.join(', ')}`);
+  if (facts.avoid.length) factors.push(facts.primaryFavorable ? `unfavorable elements may pull against ${facts.primaryFavorable}: ${facts.avoid.join(', ')}` : `cautionary element candidates: ${facts.avoid.join(', ')}`);
   if (id === 'annualLuck' || id === 'monthlyLuck') factors.push('short-term luck must not override the natal structure alone');
   if (id === 'health') factors.push('life habits, age, stress, and medical context are outside the chart');
   if (!factors.length) factors.push('opposite school readings should be checked when pattern and balancing rules disagree');
@@ -1007,7 +1016,7 @@ function opposingFactorsFor(id, facts) {
 }
 
 function actionFor(id, facts) {
-  const base = ELEMENT_ACTIONS[facts.primaryFavorable] || ELEMENT_ACTIONS.earth;
+  const base = ELEMENT_ACTIONS[facts.primaryFavorable] || 'Favorable elements are undetermined. Check the birth information and calculation settings before choosing an element-specific action';
   const occupation = facts.occupation ? ` In ${facts.occupation.label}, translate this into ${facts.occupation.focus}.` : '';
   const map = {
     career: `${base}.${occupation || ' Apply it to role clarity, communication, and repeatable work rhythm.'}`,
@@ -1037,6 +1046,7 @@ function cautionFor(id, facts, confidence) {
 }
 
 function avoidanceFor(id, facts) {
+  if (!facts.primaryFavorable && !['health','finance','love','relationship','marriage'].includes(id) && !PROFESSIONAL_CATEGORIES.has(id)) return 'Do not change plans or belongings to supplement a particular element while favorable elements remain undetermined.';
   if (id === 'health') return 'If discomfort or anxiety appears, pause the reading and use licensed support or emergency care as appropriate.';
   if (id === 'finance') return 'Set a stop line before acting and ask one trusted person to review the assumption.';
   if (id === 'love' || id === 'relationship' || id === 'marriage') return 'Return to direct language: what you need, what you can offer, and what pace is realistic.';
@@ -1065,6 +1075,7 @@ function conditionsFor(id, facts) {
 
 function unresolvedFactorsFor(id, facts, confidence) {
   const items = [];
+  if (!facts.primaryFavorable) items.push('favorable-elements-undetermined');
   if (confidence < 0.55) items.push('confidence-below-practical-threshold');
   if (facts.precision === 'partial-without-hour-pillar') items.push('birth-time-unknown');
   if (PROFESSIONAL_CATEGORIES.has(id)) items.push('luck-overlay-school-review');
@@ -1081,7 +1092,7 @@ function professionalSummaryFor(id, facts, tendency, sourceIds, opposingFactors,
     `sourceIds=${sourceIds.join('|')}`,
     `dayMaster=${facts.dayMaster.id || facts.dayMasterName}`,
     `strength=${facts.strengthLevel}`,
-    `yongshen=${facts.primaryFavorable}`,
+    `yongshen=${facts.primaryFavorable || 'undetermined'}`,
     `patterns=${patternIds.join('|') || 'candidate-only'}`,
     `luck=${cycle}`,
     `opposing=${opposingFactors.join('|')}`,
