@@ -95,8 +95,8 @@ function grounding(f){
  if(f.contradiction)return '判断材料に異なる傾向があるため、進める部分と保留する部分を分けて読みます。';
  if(f.confidence<50)return '判断材料が限られるため、確定した見通しではなく確認の手掛かりとして読みます。';
  const evidence=f.evidence.find(value=>value.length<=42&&!/入力条件を確認済み|総合信号|信号\s*\d|^\d+点$/.test(value));
- const reading={forward:'準備済みのことを進める',test:'条件を確かめて判断する',protect:'負担を増やさない'}[f.direction];
- return evidence?`「${evidence.replace(/[。]+$/,'')}」を判断材料に、${reading}読み方です。`:`今回の判定に合わせ、${reading}読み方です。`;
+ const reading={forward:'準備が揃ったことは、実行へ移せそうです。',test:'必要な条件を確かめてから、進めるか決めましょう。',protect:'今は無理を増やさず、引き受けている負担を見直しましょう。'}[f.direction];
+ return evidence?`「${evidence.replace(/[。]+$/,'')}」が今回の判断材料です。${reading}`:`${reading}`;
 }
 const REFLECTIONS={
  work:[[/担当|範囲|役割|分担/,'もし期待に応えようとして、自分の予定が後回しになっているなら、引き受ける範囲も大切にしてください。','力を貸す範囲は、自分で選んでかまいません。'],[/期限|完了|仕上|提出/,'もし終わらせることに気を取られているなら、何をもって完了とするかを相手と確かめてみてください。','終わりが見えると、力を注ぐ場所も選びやすくなります。'],[/./,'もし返事を急ぎたくなっているなら、分からないことを残したまま約束しなくても大丈夫です。','確かめたうえでの返事も、誠実な返事です。']],

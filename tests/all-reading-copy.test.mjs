@@ -21,6 +21,7 @@ const themes = JSON.parse(await readFile('data/reading/common_reading_themes.jso
 setCommonReadingThemes(themes);
 const micro = /小さく(?:試|始|動|進|実行)|小さな(?:一歩|試行|実行)|最小の一手|一件だけ|一つだけ|\d+分(?:だけ|試|実行)|十五分で終わる/;
 function check(text, name) {
+  assert.doesNotMatch(String(text),/読み方です/,'direct advice rather than an explanation of the reading style: '+name);
   const voiceIssue=String(text).match(/わ(?:よ|ね)?(?=[。、！？\n]|$)|よ[。！？]|いいの。|日ね。|ところね。|ってこと。|現実ではね|ここよ|なさい|ちょうだい|深呼吸て|優先て|借ってください|見てんでください|悪くないではない/);assert.equal(voiceIssue?.[0],undefined,'consistent voice: '+name+' / '+(voiceIssue?String(text).slice(Math.max(0,voiceIssue.index-30),voiceIssue.index+45):''));
   assert.doesNotMatch(String(text), micro, name);
   assert.doesNotMatch(String(text), /ミツノメ|みつのめ|姐さん|姉さん|アンタ|アタシ|三つ目|あなたね、|ハイヒール/, 'character-free generated reading: '+name);

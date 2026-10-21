@@ -26,6 +26,7 @@ for(const [themeCategory,themeId,label] of [['work','WORK_STEADY_PROGRESS','着�
     for(let day=1;day<=30;day++){
       const input={...base,themeCategory,themeIds:[themeId],themeEvidence:[{id:themeId,label}],date:`2026-06-${String(day).padStart(2,'0')}`,dailyScore:score};
       const row=core.generate(input,rows);
+      assert.doesNotMatch(core.toText(row),/読み方です/);
       assert.equal(row.intensity,score<45?'protect':score>=70?'forward':'test');
       assert.ok(row.story.length>=180&&row.story.length<=950,'concrete paragraphs remain readable');
       assert.ok(!/undefined|NaN|\[object Object\]|小さく達す|15分だけ/.test(core.toText(row)));

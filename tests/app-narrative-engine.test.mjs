@@ -17,6 +17,7 @@ for(const surface of surfaces)for(const domain of domains)for(const direction of
  const result=engine.compose({surface,domain,direction,score:direction==='forward'?79:direction==='protect'?31:56,confidence:40+variant*15,risk:surface==='compatibility'&&variant===3?80:10,contradiction:variant===2,subject:'今回の相談',evidence:variant%2?['確認できる変化があります','負担も残っています']:['四柱推命の用神','西洋占星術の第10室'],seed:`${surface}-${domain}-${direction}-${variant}`,variant});
  assert.equal(result.meta.quality.pass,true,`${surface}/${domain}/${direction}/${variant}: ${result.meta.quality.issues}`);
  assert.doesNotMatch(result.text,engine.FORBIDDEN);
+ assert.doesNotMatch(result.text,/読み方です/);
  assert.doesNotMatch(result.text,/必ず|絶対|確実に|間違いなく/);
  assert.ok(result.blocks.length>=3);
  assert.equal(result.frame.surface,surface);
