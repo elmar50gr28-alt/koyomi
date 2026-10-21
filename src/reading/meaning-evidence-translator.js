@@ -17,7 +17,7 @@
   function clean(value){return String(value??'').replace(/\s+/g,' ').trim()}
   function domain(value){const key=clean(value).toLowerCase(),map={career:'work',changejob:'work',income:'money',purchase:'money',love:'relationship',marriage:'relationship',reconcile:'relationship',healthrhythm:'health',choice:'overall'};return DOMAIN[key]?key:(map[key]||'overall')}
   function state(value,score){if(['forward','test','protect'].includes(value))return value;return Number(score)>=72?'forward':Number(score)<42?'protect':'test'}
-  function translate(judgment={}){const key=domain(judgment.domain),copy=DOMAIN[key],mode=state(judgment.state,judgment.score),lines=[copy[mode]];
+  function translate(judgment={}){if(judgment.scoreAvailable===false||judgment.status==='insufficient')return['判断に必要な材料が揃っていません。','結果がないことを、悪い知らせと考える必要はありません。','入力内容や計算条件を確認してください。'];const key=domain(judgment.domain),copy=DOMAIN[key],mode=state(judgment.state,judgment.score),lines=[copy[mode]];
     if(judgment.contradiction)lines.push(`ただ、${copy.subject}には追い風と慎重さが同時に出ています。進める部分と、まだ約束しない部分を分けましょう。`);
     else if(mode==='forward')lines.push('すべてを変える必要はありません。すでに準備できていることから始めるほど、手応えにつながります。');
     else if(mode==='test')lines.push('予想だけで判断せず、相手と確認できたことや、実際にかかる負担を見てください。');
