@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.KOYOMI_DAILY_READING_CORE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const VERSION = '3.13.0';
+  const VERSION = '3.13.1';
   const rawFoci = [
     ['complete', '完了', 'work', ['途中になっている仕事を、完了と伝えられる状態に仕上げる', '返答待ちの案件について、完了できるか相手に確認する', '仕上げの残っている成果物を、提出できる形にする'], ["新しい予定を増やす前に、残っている仕事を確認して。","仕上げが残っているうちに、別の仕事へ移らないで。","修正を続けるなら、どこで完了とするか決めておいて。"]],
     ['organize', '整理', 'life', ['机の上を、必要な物がすぐ取り出せる状態に整える', '作業を妨げている通知を止める', '今日使う資料を、探し回らずに済む場所へまとめる'], ["片づけだけで一日が終わらないよう、用事の時間も残して。","思い出の品まで、勢いで捨てないこと。","分類に迷ったら、まず取り出しやすい場所へまとめて。"]],
@@ -645,7 +645,7 @@
     const theme = (input.themeEvidence || []).find(item => (input.themeIds || []).includes(item?.id) && THEME_FOCI[item.id]?.includes(focus.id));
     const name = String(theme?.label || '').replace(/[\n\r]/g, ' ').trim();
     const basis = name && name.length <= 30 ? `鑑定で出た「${name}」を、今日の焦点に結びつけています。` : `日運の強さと相談分野から、今日扱う焦点を選んでいます。`;
-    const qualification = clamp(input.dailyScore) >= 70 && input.longTermScore != null && clamp(input.longTermScore) < 45 ? '日運は強めでも長期の判定は慎重なため、条件の確認を優先します。' : input.contradiction ? '長期の傾向と日運が一致しないため、結論は急がずに読みます。' : input.confidence != null && Number(input.confidence) < 0.5 ? '判断材料が限られるため、現実の条件を確かめる読み方です。' : intensity === 'protect' ? '日運の判定に合わせ、負担を増やさない対応を優先します。' : intensity === 'test' ? '日運の判定に合わせ、条件を確かめてから判断する読み方です。' : '日運の判定に合わせ、準備済みのことを進める読み方です。';
+    const qualification = clamp(input.dailyScore) >= 70 && input.longTermScore != null && clamp(input.longTermScore) < 45 ? '日運は強めでも長期の判定は慎重なため、条件の確認を優先します。' : input.contradiction ? '長期の傾向と日運が一致していません。進められることと、まだ決めないことを分けましょう。' : input.confidence != null && Number(input.confidence) < 0.5 ? '判断材料が限られています。相手の意向や期限など、実際に確かめられることから確認してください。' : intensity === 'protect' ? '今は無理を増やさず、引き受けている負担を見直しましょう。' : intensity === 'test' ? '必要な条件を確かめてから、進めるか決めましょう。' : '準備が揃ったことは、実行へ移せそうです。';
     return { basis, qualification, themeId: name && name.length <= 30 ? theme.id : null };
   }
 

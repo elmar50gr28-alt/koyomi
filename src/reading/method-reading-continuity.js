@@ -52,7 +52,7 @@ function plan(input,options={}){
  const contextual=sceneAngles(input.readingScene,d,angles),eligible=contextual.length?contextual:angles;
  const matching=eligible.filter(a=>PATTERNS[d][a.index]?.test(action));angle=choose(matching.length?matching:eligible,recent,'angleId',input.date,scope+input.date);
  if(missing&&!serious&&!care)angle={id:d+'-input',label:'不足している情報',text:'入力や算出結果が揃うまで、鑑定だけで実行を決めないようにします。'};
- if(care)angle={id:d+'-care',label:'必要な受診や相談',text:'鑑定の点数や日付を理由に、必要な対応を先延ばしにしない読み方です。'};
+ if(care)angle={id:d+'-care',label:'必要な受診や相談',text:'鑑定の点数や日付にかかわらず、必要な受診や相談は先延ばしにしないでください。'};
  if(serious)angle={id:d+'-safety',label:'安全と必要な支援',text:'安全確保と必要な支援を優先します。'};
  const step=yesterday?.angleId===angle.id?((yesterday.step||0)+1)%3:0;
  const stages=['','昨日の提案を扱ったなら、想定した条件と実際の条件に違いがないか見て。まだなら、確認する先を絞ってください。','対応を始めているなら、続けるために残っている条件を見ます。まだなら、今の負担で取り組める範囲を確かめて。'];
