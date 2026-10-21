@@ -645,7 +645,7 @@
     const theme = (input.themeEvidence || []).find(item => (input.themeIds || []).includes(item?.id) && THEME_FOCI[item.id]?.includes(focus.id));
     const name = String(theme?.label || '').replace(/[\n\r]/g, ' ').trim();
     const basis = name && name.length <= 30 ? `鑑定で出た「${name}」を、今日の焦点に結びつけています。` : `日運の強さと相談分野から、今日扱う焦点を選んでいます。`;
-    const qualification = clamp(input.dailyScore) >= 70 && input.longTermScore != null && clamp(input.longTermScore) < 45 ? '日運は強めでも長期には慎重さが残ります。長く続く約束を増やす前に、条件を確かめましょう。' : input.contradiction ? '長期の傾向と日運が一致していません。進められることと、まだ決めないことを分けましょう。' : input.confidence != null && Number(input.confidence) < 0.5 ? '判断材料が限られています。相手の意向や期限など、実際に確かめられることから確認してください。' : intensity === 'protect' ? '今は無理を増やさず、引き受けている負担を見直しましょう。' : intensity === 'test' ? '必要な条件を確かめてから、進めるか決めましょう。' : '準備が揃ったことは、実行へ移せそうです。';
+    const qualification = clamp(input.dailyScore) >= 70 && input.longTermScore != null && clamp(input.longTermScore) < 45 ? '日運は強めでも長期の判定は慎重なため、条件の確認を優先します。' : input.contradiction ? '長期の傾向と日運が一致していません。進められることと、まだ決めないことを分けましょう。' : input.confidence != null && Number(input.confidence) < 0.5 ? '判断材料が限られています。相手の意向や期限など、実際に確かめられることから確認してください。' : intensity === 'protect' ? '今は無理を増やさず、引き受けている負担を見直しましょう。' : intensity === 'test' ? '必要な条件を確かめてから、進めるか決めましょう。' : '準備が揃ったことは、実行へ移せそうです。';
     return { basis, qualification, themeId: name && name.length <= 30 ? theme.id : null };
   }
 
