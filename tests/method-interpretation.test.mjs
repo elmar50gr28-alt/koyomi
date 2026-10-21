@@ -179,8 +179,8 @@ for(const input of [{confidence:20},{psychRisk:95},{action:'医療機関へ相�
 vm.runInContext(appLines.find(x=>x.startsWith('const NUM_FULL=')),context);
 const numberMeanings=vm.runInContext('NUM_FULL',context);
 const distanceLine=appLines.find(x=>x.startsWith('function sukuyo(d)'));
-const distances=[...distanceLine.matchAll(/return '([^']+)'/g)].map(x=>x[1]);
-assert.equal(Object.keys(numberMeanings).length,12);assert.equal(distances.length,7);
+const distances=[...distanceLine.matchAll(/'((?:命|業胎|栄親|友衰|危成|安壊)：[^']+)'/g)].map(x=>x[1]);
+assert.equal(Object.keys(numberMeanings).length,12);assert.equal(distances.length,6,'all 27 offsets belong to six groups; no unclassified middle distance');
 const profileFixtures=[...Object.entries(numberMeanings).map(([number,meaning])=>({methodId:'numerology',evidence:['個人年'+number,meaning],meaning})),...distances.map(basis=>({methodId:'sukuyo',evidence:[basis],meaning:basis.split('：')[1]}))];
 let profileCases=0;const profileSamples=[],profileMetrics=[];
 for(const fixture of profileFixtures)for(const domain of ['work','relationship','money','health','overall']) {
@@ -263,7 +263,7 @@ assert.equal(interpret({...base,methodId:'name',interpretationAssets:[{basis:'�
 assert.equal(interpret({...base,methodId:'kyusei',interpretationAssets:[{basis:'本命1紫白',meaning:'未知の解釈'}]}).story.profileFocus,null);
 if(process.env.KOYOMI_REFLECTION_REPORT)await writeFile(process.env.KOYOMI_REFLECTION_REPORT,JSON.stringify({days:30,samples,oracleMetrics,oracleSamples,lifeMetrics,lifeSamples,symbolicCases,symbolicSamples,profileCases,profileSamples,profileMetrics,assetCases,assetSamples},null,2));
 console.log('Source-linked name/star language: '+assetCases+' rendered cases, real nine-star dictionary integration and grouped name readings');
-console.log('Source-linked number/distance language: '+profileCases+' rendered cases, 19 shipped meanings, annual/daily/person scope preserved');
+console.log('Source-linked number/distance language: '+profileCases+' rendered cases, '+profileFixtures.length+' shipped meanings, annual/daily/person scope preserved');
 console.log('Symbol-linked application: '+symbolicCases+' rendered cases, reversed/mixed/missing-position checks passed');
 console.log('Living language: '+lifeCases+' rendered cases, 30 distinct application bodies per fixed fortune, unchanged evidence');
 console.log('Existing spread story verification: '+JSON.stringify(oracleMetrics));

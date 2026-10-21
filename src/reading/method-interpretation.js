@@ -139,7 +139,7 @@
   '中間距離：会話設計で変わる':['伝え方を変える余地を、残しておく','込み入った用件なら、話し始める前に「相談する時間は取れそう？」と声をかけてみて。返事が曖昧な時は、何が決まっていて、何がまだ分からないかを聞けます。伝える時間や方法を変えることも選択肢です。',['用件を伝える時は、何を相談したいかを先に添えて。','話す前に、相手が聞ける時間や方法を相談して。','返事が曖昧なら、何が決まっていて、何がまだ分からないかを聞いてみて。']]
  };
  const STAR_NAMES=['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
- function nineStarName(label){const match=String(label||'').match(/^(?:本命)?([1-9])紫白$/);return match?STAR_NAMES[Number(match[1])-1]:STAR_NAMES.includes(label)?label:'';}
+ function nineStarName(label){const match=String(label||'').match(/^(?:本命)?([1-9])(?:紫白|（[^）]+）)$/);return match?STAR_NAMES[Number(match[1])-1]:STAR_NAMES.includes(label)?label:'';}
  function nineStarMeaning(label,bank){const name=nineStarName(label),row=name&&bank&&Object.hasOwn(bank,name)?bank[name]:null;return Array.isArray(row)&&row.length===3&&row.every(x=>typeof x==='string'&&x.trim())?row.join('／'):'';}
  const STAR_LENSES={
   一白水星:['静かな水／観察と交渉／孤立と迷い','静かに見る力を、伝える言葉へ','気づいたことを、一人で考え続けずに確かめてみて。一白水星の観察と交渉は、「私はこう受け取ったけれど、合っています？」と話す場面に生かせます。相手の返事を聞く前に、想像だけで結論を出さなくて大丈夫。',['気づいた点を、事実と自分の受け取り方に分けて話して。','返事をする前に、自分が確かめたい条件を聞いて。','一人で決めにくい話は、判断に必要な点を添えて相談して。']],

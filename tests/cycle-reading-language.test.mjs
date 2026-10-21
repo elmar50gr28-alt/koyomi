@@ -69,8 +69,10 @@ const editable=interpret(inputFor('停止','停止')),unchanged=editable.story.i
 assert.equal(interpret(inputFor('停止','停止')).story.invitation,unchanged,'editing a returned model cannot change the source bank');
 for(const extra of [{confidence:20},{psychRisk:95},{generatedAction:false,action:'医療機関へ相談する'}])assert.notEqual(adapter.applyDivination('計算済み資料',{...inputFor('達成','達成'),...extra}).narrative.structure,'symbolic-story');
 context.$=()=>null;context.clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+context.v191zEphemerisActive=()=>false;
+vm.runInContext(await readFile('src/reading/calculation-readiness.js','utf8'),context);
 vm.runInContext(app.slice(app.indexOf('function v191zConfidence('),app.indexOf('function v191zElementRelation(')),context);
-const actualConfidence=context.v191zConfidence({},'rokusei');assert.equal(actualConfidence.score,38);
+const actualConfidence=context.v191zConfidence({i:{birthDate:new Date(1990,5,15)}},'rokusei');assert.equal(actualConfidence.score,35);assert.equal(actualConfidence.label,'独自参考');assert.equal(actualConfidence.predictiveAccuracy,null);
 let referenceCases=0;const referenceTexts=new Map();
 for(const stage of stages)for(const domain of ['work','relationship','money'])for(let day=1;day<=30;day++){
  const input={...inputFor(stage,stage,domain,`2026-09-${String(day).padStart(2,'0')}`),confidence:actualConfidence.score},before=JSON.stringify(input),parsed=interpret(input);
