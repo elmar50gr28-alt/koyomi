@@ -31,8 +31,11 @@
   }
   if(!input.validDate||method==='sukuyo'&&!input.lunarAvailable||method==='kyusei'&&!input.nineStarAvailable||method==='name'&&!input.nameComplete)score=15;
   const label=input.validDate&&['tarot','runes'].includes(method)?'象徴補助':input.validDate&&method==='rokusei'?'独自参考':score>=80?'充足':score>=55?'一部制約':'要確認';
-  return{score,label,kind:'calculation-readiness',predictiveAccuracy:null,notes:[...checks.map(c=>c.description),...limits,'この指標は的中率ではありません'],checks};
+  const available=Boolean(input.validDate&&!(method==='sukuyo'&&!input.lunarAvailable)&&!(method==='kyusei'&&!input.nineStarAvailable)&&!(method==='name'&&!input.nameComplete)&&!(method==='kabbalah'&&!input.hasRomanName));
+  return{score,label,available,kind:'calculation-readiness',predictiveAccuracy:null,notes:[...new Set([...checks.map(c=>c.description),...limits]),'この指標は的中率ではありません'],checks};
  }
  function formatEvidence(value,english=false){return String(value??'').replace(/^(\d+(?:\.\d+)?)%$/,'$1/100')+(english?' (not predictive accuracy)':'（的中率ではありません）')}
- root.KOYOMI_CALCULATION_READINESS=Object.freeze({assess,formatEvidence});
+ function unavailableGrade(){return{label:'判定保留',summary:'計算に必要な条件が不足しています',command:'入力・計算条件を確認してください',tone:'mid'}}
+ function withheldReading(method={}){const notes=Array.isArray(method.conf?.notes)?method.conf.notes:[];return['【判定保留】','入力・計算条件が揃っていないため、この占術の吉凶は判定しません。',...notes,'必要な入力や計算条件を確認してください。'].join('\n')}
+ root.KOYOMI_CALCULATION_READINESS=Object.freeze({assess,formatEvidence,unavailableGrade,withheldReading});
 })(typeof globalThis!=='undefined'?globalThis:this);

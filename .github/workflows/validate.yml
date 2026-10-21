@@ -16,4 +16,5 @@ jobs:
       - run: npm run test:qimen
       - run: npm run test:static
       - run: npm run test:traditional-calendar
+      - run: npm run test:reading-availability
       - run: npm run test:world-map-detail
