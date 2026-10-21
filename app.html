@@ -1988,6 +1988,7 @@ import { createCryptoCompatibility } from './src/shared/crypto-compat.js';
 import { createIndexedDbCompatibility } from './src/shared/indexeddb-compat.js';
 import { createBackupCompatibility } from './src/shared/backup-compat.js';
 import * as KOYOMI_BAZI from './src/bazi/index.js';
+import { renderBaziCalculationSummary } from './src/bazi/reading/summary-ui.js';
 import {mountLifetimeChart} from './src/ui/lifetime-chart.js';
 window.KOYOMI_CALENDAR_TIME=createCalendarTimeCompatibility(window.KOYOMI_CALENDAR_TIME_LEGACY);
 window.KOYOMI_PROFILE_SCHEMA=createProfileSchemaCompatibility(window.KOYOMI_PROFILE_SCHEMA_LEGACY);
@@ -2370,6 +2371,7 @@ async function koyomiRenderBaziReading(){
     result.dailyReading=dailyReading;
     const reading={...KOYOMI_BAZI.buildBaziReading(result,{locale}),commonReading};
     window.KOYOMI_LAST_BAZI_READING={result,reading};
+    renderBaziCalculationSummary(document,reading.calculationSummary);
     const pillars=result.chart?.pillars||{};
     const pillarGrid=document.getElementById('pillarGrid');
     if(pillarGrid)pillarGrid.innerHTML=koyomiBaziChartTableHtml(pillars);

@@ -117,6 +117,14 @@ export function buildBaziReading(baziResult, options = {}) {
     sourceIntegratedDataVersion: options.integratedData?.version || baziResult?.integratedReadingData?.version || null,
     sourceAdapter: adapted.audit,
     sourceGuardrails: facts.guardrails,
+    calculationSummary: {
+      strengthLabel: strengthLabelJa(facts.strengthLevel), strengthLevel: facts.strengthLevel,
+      dayMaster: dayMasterLabelJa(facts), dayPillar: baziResult.chart?.pillars?.day?.label || '',
+      favorable: facts.favorable.filter(value => Object.hasOwn(JA_ELEMENTS, value)),
+      avoid: facts.avoid.filter(value => Object.hasOwn(JA_ELEMENTS, value)),
+      elementBalance: (baziResult.chart?.elementBalance || []).map(({element,value}) => ({element,value})),
+      timeUnknown: facts.precision === 'partial-without-hour-pillar'
+    },
     personId: facts.personId,
     executiveSummary,
     timingReading,
@@ -733,6 +741,7 @@ function strengthLabelJa(value) {
   const raw = String(value || '').toLowerCase();
   if (raw.includes('strong') || raw.includes('旺') || raw.includes('身強')) return '\u8eab\u5f37';
   if (raw.includes('weak') || raw.includes('弱') || raw.includes('身弱')) return '\u8eab\u5f31';
+  if (raw === 'balanced' || raw === '中和') return '中和';
   return '\u5224\u65ad\u4fdd\u7559';
 }
 
