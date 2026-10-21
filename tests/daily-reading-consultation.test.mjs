@@ -1,3 +1,4 @@
+import { renderBaziCalculationSummary } from '../src/bazi/reading/summary-ui.js';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
@@ -23,6 +24,7 @@ const ctx = {
   koyomiOpenGeneratedPersonalReading: () => opened++,
   buildPersonal: () => ({ reading: '元の鑑定', luck: { current: { score: 50 } }, divinations: {} }),
   renderPersonal: result => { ctx.lastPersonal = result; result.reading = `従来鑑定:${nodes.get('qFocus').value}:${nodes.get('memo').value}`; nodes.get('overallReading').textContent = result.reading; },
+  renderBaziCalculationSummary,
   KOYOMI_BAZI: { prepareCommonReadingThemes: async () => {}, calculateBazi: () => { calculations++; return {}; }, buildCommonReading: (_result, options) => ({ items: [], answer: interpretReadingQuestion(options.question) }), buildBaziReading: () => ({}) }
 };
 ctx.window = ctx; vm.createContext(ctx);
