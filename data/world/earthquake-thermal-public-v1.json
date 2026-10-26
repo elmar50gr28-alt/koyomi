@@ -1,8 +1,8 @@
 {
   "schemaId": "koyomi-earthquake-thermal-public-v1",
   "status": "available",
-  "generatedAt": "2026-10-25T08:30:43.720Z",
-  "retrievedAt": "2026-10-25T08:30:43.720Z",
+  "generatedAt": "2026-10-26T09:03:30.443Z",
+  "retrievedAt": "2026-10-26T09:03:30.443Z",
   "coverageStartUtc": "2024-01-01T00:00:00.000Z",
   "coverageEndUtc": "2026-10-22T00:00:00.000Z",
   "spatialResolution": 2,
@@ -12,7 +12,7 @@
     "status": "complete-cell-requests",
     "requestedCellCount": 115,
     "availableCellCount": 115,
-    "completeObservationFraction": 0.8,
+    "completeObservationFraction": 0.7272727272727273,
     "missingValuePolicy": "drop-incomplete-day"
   },
   "provider": {
@@ -39,9 +39,9 @@
     "sourceUrl": "https://registry.opendata.aws/noaa-himawari/",
     "bucketUrl": "https://noaa-himawari9.s3.amazonaws.com",
     "status": "available",
-    "checkedAt": "2026-10-25T08:30:43.720Z",
-    "latestPrefix": "AHI-L1b-Japan/2026/10/25/0820/",
-    "latestObjectModifiedUtc": "2026-10-25T08:30:53.000Z",
+    "checkedAt": "2026-10-26T09:03:30.443Z",
+    "latestPrefix": "AHI-L1b-Japan/2026/10/26/0850/",
+    "latestObjectModifiedUtc": "2026-10-26T09:03:29.000Z",
     "availableBands": [
       "01",
       "02",
@@ -65,7 +65,7 @@
   },
   "request": {
     "start": "2026-10-15T00:00:00.000Z",
-    "end": "2026-10-24T08:30:43.720Z",
+    "end": "2026-10-25T09:03:30.443Z",
     "region": "Japan 20N-48N, 122E-154E",
     "timeStandard": "UTC"
   },
