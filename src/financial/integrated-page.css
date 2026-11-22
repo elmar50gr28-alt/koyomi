@@ -1,0 +1,21 @@
+#page-financial{max-width:920px;margin-inline:auto;padding-bottom:24px;color:var(--sol-paper)}
+#page-financial .financial-hero{padding:clamp(20px,5vw,40px);border:1px solid var(--sol-line);border-radius:24px;background:radial-gradient(ellipse at top right,#81683d33,transparent 65%),#101c27;margin-bottom:18px}
+#page-financial h2{color:var(--sol-gold-soft);font-family:Georgia,"Yu Mincho",serif;font-size:clamp(1.6rem,5vw,2.5rem);margin:8px 0 16px}
+#page-financial p{line-height:1.85;white-space:pre-line;overflow-wrap:anywhere}
+#page-financial .financial-eyebrow{letter-spacing:.16em;color:var(--sol-gold);font-size:.875rem}
+#page-financial form,#financialReadingResult{padding:clamp(16px,4vw,28px);background:#142030;border:1px solid var(--sol-line);border-radius:20px;margin-bottom:18px}
+#page-financial .financial-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+#page-financial label{display:grid;gap:8px;font-size:1rem}
+#page-financial select,#page-financial input{width:100%;min-width:0;min-height:48px;background:#08111c;color:var(--sol-paper);border:1px solid var(--sol-bronze);border-radius:12px;padding:12px;font:inherit}
+#page-financial button{width:100%;min-height:52px;background:var(--sol-gold-soft);color:#241a11;font:inherit;font-weight:700;border:0;margin-top:20px;padding:14px}
+#page-financial button:disabled{opacity:.65}
+#page-financial .financial-links{display:flex;gap:12px;flex-wrap:wrap}
+#page-financial a{color:var(--sol-gold-soft);min-height:44px;display:inline-flex;align-items:center}
+#page-financial .financial-meta{font-size:.875rem;color:#bdc8ca}
+#page-financial .financial-block{padding:14px 0;border-bottom:1px solid var(--sol-line)}
+#page-financial details{border-bottom:1px solid var(--sol-line);padding:12px 0}
+#page-financial summary{min-height:44px;cursor:pointer;font-size:1rem;font-weight:700;align-content:center}
+#page-financial [hidden]{display:none!important}
+@media(max-width:600px){#page-financial .financial-fields{grid-template-columns:1fr}}
+
+.financial-home-link{display:inline-flex;align-items:center;min-height:48px;color:var(--sol-gold-soft);font-size:1rem;margin-bottom:10px}
