@@ -4,6 +4,7 @@
   const DEFAULT_PAGE = 'calendar';
   const PAGES = Object.freeze([
     'personal',
+    'financial',
     'qimen',
     'mundane',
     'compat',

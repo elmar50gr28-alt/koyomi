@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ja">
 <head>
+<link rel="stylesheet" href="./src/financial/integrated-page.css">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#24170f">
@@ -180,6 +181,13 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <section class="paper"><h2>選択日の世界タイムマシン</h2><p class="lead">世界の出来事を取得し、暦の主題と並べて確認します。因果関係を断定せず、判断の背景資料として扱います。</p><div class="calendar-history-preview"><div class="history-status" id="calendarHistoryStatus">同日史を読み込みます。</div><div id="calendarHistoryPreview"></div><div class="actions" style="grid-template-columns:1fr"><button class="action primary" id="openHistoryPage">世界タイムマシンを詳しく見る</button></div></div></section>
 </section>
 
+<section id="page-financial" class="page" aria-labelledby="financialReadingTitle">
+<header class="financial-hero"><div class="financial-eyebrow">KOYOMI · FINANCIAL READING</div><h2 id="financialReadingTitle">財運の総合鑑定</h2><p>収入、貯蓄、大きな買い物。
+生まれ持った傾向と今の流れを、お金のテーマだけに絞って読み解きます。</p><div class="financial-links"><a href="#calendar">アプリホーム</a><a href="financial.html">財運タロットを引く</a></div></header>
+<form id="financialReadingForm"><div class="financial-fields"><label for="financialReadingFocus">見たいテーマ<select id="financialReadingFocus"><option value="income">収入・貯蓄・固定費</option><option value="purchase">大きな買い物・契約</option></select></label><label for="financialReadingDate">鑑定する日<input id="financialReadingDate" type="date" required></label></div><button id="financialReadingSubmit" type="submit">財運を総合鑑定する</button><p id="financialReadingStatus" role="status" aria-live="polite"></p><p class="financial-meta">登録済みの本人プロフィールを使います。初めての方は<a href="#ledger">人物プロフィールを登録</a>してください。</p></form>
+<section id="financialReadingResult" hidden aria-live="polite" aria-label="財運の鑑定結果"></section>
+<p class="financial-meta">四柱推命・西洋占星術・タロットなど、入力条件を満たす占術から財運を読みます。計算できない占術は総合判定から除外します。点数はアプリ独自の象徴的な目安で、利益や資産価格の予測ではありません。実際のお金の判断は収支や契約条件も確かめてください。</p>
+</section>
 <section id="page-personal" class="page">
 <section class="paper sol-reading-choices" aria-labelledby="solReadingChoicesTitle"><h2 id="solReadingChoicesTitle">何を知りたいですか？</h2><p class="lead">分かることと必要な入力を見て選んでください。</p><div class="sol-reading-choice-grid">
 <button class="sol-reading-choice" type="button" data-sol-reading-page="personal" data-sol-reading-target="personalForm"><strong>自分を総合的に知る</strong><span class="sol-knows">四柱推命・西洋占星術などを重ね、持ち味と今の流れを読みます。</span><dl><dt>入力</dt><dd>人物・生年月日</dd><dt>目安</dt><dd>約3分</dd></dl><span class="sol-open">本鑑定へ進む →</span></button>
@@ -461,6 +469,7 @@ input,select,textarea{scroll-margin-top:calc(92px + env(safe-area-inset-top));sc
 <script src="./src/shared/profile-normalization-core.js"></script>
 <script src="./src/shared/profile-save-core.js"></script>
 <script src="./src/shared/menu-routing-core.js"></script>
+<script src="./src/financial/integrated-page.js"></script>
 <script src="./src/shared/native-date-picker-core.js"></script>
 <script src="./src/mundane/western/browser-global.js"></script>
 <script src="./src/persona/sister-lexicon.js"></script>
@@ -1820,7 +1829,7 @@ function koyomiInstallHome(){
  const nav=document.createElement('section');
  nav.id='koyomiHomeNav';
  nav.className='koyomi-home-nav';
- nav.innerHTML='<h2 class="koyomi-home-heading">今日の本鑑定</h2><p class="koyomi-home-lead">保存済みの本人プロフィールで、本鑑定を直接開きます。</p><p class="koyomi-home-profile" id="koyomiHomeProfileName">本人プロフィールを確認中…</p><button class="koyomi-main-action" id="koyomiStartReading" type="button">今日の鑑定を見る</button><p class="compact-note" id="koyomiDailyReadingNote">同じ日は同じ結果。入力画面や簡易結果は挟みません。</p><details class="koyomi-more-actions"><summary>ほかの占い方</summary><div class="koyomi-more-body"><button class="koyomi-date-action" id="koyomiChooseReadingDate" type="button" aria-expanded="false" aria-controls="koyomiDatePicker">日付を選んで鑑定する</button><div class="koyomi-date-picker" id="koyomiDatePicker" hidden><label for="koyomiReadingDate">鑑定する日</label><input id="koyomiReadingDate" type="date"><button id="koyomiStartDateReading" type="button">この日を鑑定</button></div><div class="koyomi-home-grid"><button class="koyomi-home-card" id="koyomiChoosePerson" type="button"><b>人物を選ぶ</b></button><button class="koyomi-home-card" id="koyomiChooseTheme" type="button" aria-expanded="false" aria-controls="koyomiThemePanel"><b>テーマを選ぶ</b></button><button class="koyomi-home-card" id="koyomiOpenResult" type="button"><b>前回の結果</b></button></div><div class="koyomi-theme-panel" id="koyomiThemePanel" aria-live="polite" hidden></div></div></details>';
+ nav.innerHTML='<a class="financial-home-link" href="#financial">財運の総合鑑定</a><h2 class="koyomi-home-heading">今日の本鑑定</h2><p class="koyomi-home-lead">保存済みの本人プロフィールで、本鑑定を直接開きます。</p><p class="koyomi-home-profile" id="koyomiHomeProfileName">本人プロフィールを確認中…</p><button class="koyomi-main-action" id="koyomiStartReading" type="button">今日の鑑定を見る</button><p class="compact-note" id="koyomiDailyReadingNote">同じ日は同じ結果。入力画面や簡易結果は挟みません。</p><details class="koyomi-more-actions"><summary>ほかの占い方</summary><div class="koyomi-more-body"><button class="koyomi-date-action" id="koyomiChooseReadingDate" type="button" aria-expanded="false" aria-controls="koyomiDatePicker">日付を選んで鑑定する</button><div class="koyomi-date-picker" id="koyomiDatePicker" hidden><label for="koyomiReadingDate">鑑定する日</label><input id="koyomiReadingDate" type="date"><button id="koyomiStartDateReading" type="button">この日を鑑定</button></div><div class="koyomi-home-grid"><button class="koyomi-home-card" id="koyomiChoosePerson" type="button"><b>人物を選ぶ</b></button><button class="koyomi-home-card" id="koyomiChooseTheme" type="button" aria-expanded="false" aria-controls="koyomiThemePanel"><b>テーマを選ぶ</b></button><button class="koyomi-home-card" id="koyomiOpenResult" type="button"><b>前回の結果</b></button></div><div class="koyomi-theme-panel" id="koyomiThemePanel" aria-live="polite" hidden></div></div></details>';
  first.parentNode.insertBefore(nav,first);
  $('koyomiStartReading').onclick=koyomiStartPersonalReading;
  $('koyomiChooseReadingDate').onclick=koyomiToggleDatePicker;
@@ -1935,6 +1944,7 @@ async function koyomiPrepareCompat(){
  if($('ledgerSelectCompatA'))$('ledgerSelectCompatA').style.display='none';
 }
 async function koyomiFinalizeUi(){
+ window.KOYOMI_FINANCIAL_PAGE?.mount({document,prepare:async()=>Boolean((await koyomiApplyPrimaryProfile())?.birthData?.date),calculate:(focus,date)=>window.KOYOMI_FINANCIAL_PAGE.withInputs({document,getDate:()=>selectedDate,setDate:value=>{selectedDate=value},calculate:()=>{const legacy=buildPersonal();return {legacy,profile:window.KOYOMI_BAZI_READING?.profile(),judgment:v202IntegratedJudgment(legacy),methods:legacy?Object.keys(V191Z_METHOD_LABEL).map(key=>({key,...v191zMethodScore(key,legacy)})):[]}}},focus,date)});
  koyomiInstallHome();
  koyomiInstallModeSettings();
  koyomiMarkProOnly();
