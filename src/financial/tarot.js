@@ -22,7 +22,16 @@ world:{title:"世界経済の象徴",positions:["現状","成長の象徴","注�
 function randomInt(max){const limit=Math.floor(4294967296/max)*max;const sample=new Uint32Array(1);do{crypto.getRandomValues(sample)}while(sample[0]>=limit);return sample[0]%max}
 export function drawCards(count){if(!Number.isInteger(count)||count<1||count>78)throw new RangeError("Invalid count");const pool=DECK.map((_,i)=>i),out=[];for(let i=0;i<count;i++){const j=i+randomInt(pool.length-i);[pool[i],pool[j]]=[pool[j],pool[i]];out.push({id:DECK[pool[i]].id,reversed:randomInt(2)===1})}return out}
 function localDay(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")}
-export function getDaily(){const key="koyomi-financial-tarot-v1-"+localDay();try{const old=JSON.parse(localStorage.getItem(key)||"null");if(Array.isArray(old)&&old.length===1&&DECK.some(c=>c.id===old[0].id)&&typeof old[0].reversed==="boolean")return old;const cards=drawCards(1);localStorage.setItem(key,JSON.stringify(cards));return cards}catch{return drawCards(1)}}
+let dailyMemory;
+export function getDaily(){
+const key="koyomi-financial-tarot-v1-"+localDay();
+if(dailyMemory?.key===key)return dailyMemory.cards.map(c=>({...c}));
+let cards;
+try{const old=JSON.parse(localStorage.getItem(key)||"null");if(Array.isArray(old)&&old.length===1&&old[0]&&DECK.some(c=>c.id===old[0].id)&&typeof old[0].reversed==="boolean")cards=[{id:old[0].id,reversed:old[0].reversed}]}catch{}
+if(!cards){cards=drawCards(1);try{localStorage.setItem(key,JSON.stringify(cards))}catch{}}
+dailyMemory={key,cards};
+return cards.map(c=>({...c}));
+}
 export function interpret(item,position){const c=DECK.find(x=>x.id===item.id);if(!c)throw new Error("Unknown card");return {card:c,position,orientation:item.reversed?"逆位置":"正位置",message:item.reversed?c.caution:c.positive}}
 function node(tag,content,className){const e=document.createElement(tag);if(content!==undefined)e.textContent=content;if(className)e.className=className;return e}
 function render(type,items){const spread=SPREADS[type],readings=items.map((item,i)=>interpret(item,spread.positions[i]));
@@ -30,10 +39,12 @@ document.getElementById("results").hidden=false;document.getElementById("resultT
 const cards=document.getElementById("cards");cards.replaceChildren();
 readings.forEach(r=>{const el=node("div",undefined,"card");el.append(node("span",r.card.symbol,"glyph"),node("small",r.position),node("strong",r.card.name),node("em",r.orientation));cards.append(el)});
 const intro=type==="world"?"世界の行方をカードだけで決めつけることはできないわ。象徴として眺めてみましょう。":"財運は運任せにするものじゃないわ。カードをきっかけに今日の選択を整理しましょう。";
-document.getElementById("reading").textContent=intro+"\n\n"+readings.map(r=>r.position+"：「"+r.card.name+"」"+r.orientation+"。"+r.message+"ことが今回のテーマね。").join("\n")+"\n\n数字や契約条件は現実の情報で確認してちょうだい。";
+document.getElementById("reading").textContent=intro+"\n\n"+readings.map(r=>r.position+"：「"+r.card.name+"」"+r.orientation+"。今回のテーマは「"+r.message+"」ね。").join("\n")+"\n\n数字や契約条件は現実の情報で確認してちょうだい。";
 const evidence=document.getElementById("evidence");evidence.replaceChildren();readings.forEach(r=>evidence.append(node("p",r.position+"："+r.card.name+"／"+r.orientation+"／"+r.card.theme+"。採用した象意："+r.message)));
 document.getElementById("results").scrollIntoView({behavior:"smooth",block:"start"});
 }
-if(typeof document!=="undefined"){let chosen="daily";const buttons=[...document.querySelectorAll("[data-spread]")];
+if(typeof document!=="undefined"){
+if('serviceWorker'in navigator)navigator.serviceWorker.register(new URL('../../service-worker.js',import.meta.url)).catch(()=>{});
+let chosen="daily";const buttons=[...document.querySelectorAll("[data-spread]")];
 function select(type){chosen=type;buttons.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.spread===type)));document.getElementById("description").textContent=SPREADS[type].description;document.getElementById("results").hidden=true}
 buttons.forEach(b=>b.addEventListener("click",()=>select(b.dataset.spread)));document.getElementById("draw").addEventListener("click",()=>render(chosen,chosen==="daily"?getDaily():drawCards(SPREADS[chosen].positions.length)));select(chosen)}
