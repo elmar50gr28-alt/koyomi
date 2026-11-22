@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101725"><title>こよみ | 財運タロット</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,"Hiragino Sans",sans-serif;background:#08111c;color:#f0e6ce}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#243246,#08111c 65%);min-height:100vh}
+main{width:min(760px,100%);margin:auto;padding:20px 15px 75px}a{color:#ead29d}header{padding:14px 0 20px}
+small,.muted{color:#b8c0c3}h1{font:normal clamp(2rem,8vw,3.2rem) Georgia,serif;margin:.2em 0;color:#f5d99e}
+.panel{border:1px solid #716245;border-radius:20px;background:#142030;padding:18px;margin:15px 0;box-shadow:0 15px 40px #0003}
+.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{flex:1;min-width:115px}
+button{background:#e7c484;color:#171b24;border:0;border-radius:12px;padding:12px;font-weight:750;cursor:pointer;min-height:48px}
+button[aria-pressed="true"]{outline:3px solid #f3e5bd;outline-offset:2px}
+#draw{width:100%;margin-top:15px}button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px;margin-top:17px}
+.card{background:linear-gradient(160deg,#2d3347,#101624);border:1px solid #caa865;border-radius:13px;padding:17px 10px;text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;gap:7px}
+.card strong{color:#f9d995}.card .glyph{font:2rem Georgia,serif;color:#eac681}.card em{font-style:normal;color:#d6c9b1;font-size:.82rem}
+.reading{white-space:pre-line;line-height:1.85;background:#101b2a;padding:15px;border-radius:13px}
+.note{font-size:.83rem;line-height:1.7;color:#bdc8ca}#history{font-size:.83rem}
+</style></head><body><main>
+<header><a href="./index.html">← こよみホーム</a><div class="muted">KOYOMI FINANCIAL DESTINY</div><h1>財運タロット</h1><p>一枚の象徴から、いまのお金との向き合い方を読み解く。</p></header>
+<section class="panel" aria-labelledby="choose"><h2 id="choose">鑑定を選ぶ</h2><div class="controls" role="group" aria-label="タロット展開">
+<button data-spread="daily" aria-pressed="true">今日の金運・1枚</button>
+<button data-spread="personal" aria-pressed="false">個人財運・3枚</button>
+<button data-spread="world" aria-pressed="false">世界経済・5枚</button></div>
+<p id="description" class="muted"></p><button id="draw" type="button">カードを引く</button>
+<p class="note">今日の金運は同じ端末・同じ日付では原則同じカードです。3枚・5枚は引くたびに新しい展開です。</p></section>
+<section id="results" class="panel" hidden aria-live="polite"><h2 id="resultTitle">鑑定結果</h2><div id="cards" class="cards"></div><h3>姐さんの鑑定</h3><p id="reading" class="reading"></p><details><summary>カードと鑑定の根拠</summary><div id="evidence"></div></details></section>
+<section class="panel"><h2>この機能について</h2><p class="note">78枚のカードを、正位置・逆位置を含めて重複なく抽選するオフライン対応のタロット鑑定です。カードの象徴を使った内省・娯楽であり、利益・景気・株価・為替の動きを予測できると実証されたものではありません。投資判断・財務判断の根拠にはしないでください。</p>
+<p class="note">初期版では四柱推命・マンデン占星術とのスコア統合を行いません。既存の計算結果と混同させず、個別鑑定として提供します。</p></section>
+</main><script type="module" src="./src/financial/tarot.js"></script></body></html>

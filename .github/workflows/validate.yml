@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: npm run test:financial-tarot
       - run: npm run test:qimen
       - run: npm run test:static
       - run: npm run test:traditional-calendar
