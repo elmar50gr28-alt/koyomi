@@ -38,39 +38,37 @@ function drawCurve(days) {
   const svg=document.createElementNS(ns,'svg');
   svg.setAttribute('viewBox','0 0 600 175');
   svg.setAttribute('aria-hidden','true');
-  const max=Math.max(1,...days.map(day=>day.tightAspectCount));
   const x=index=>32+index*536/Math.max(days.length-1,1);
-  const y=value=>137-value/max*100;
+  const y=mode=>mode==='good'?38:mode==='caution'?131:84;
   const shape=(tag,attributes,text)=>{
     const node=document.createElementNS(ns,tag);
     for(const [key,value] of Object.entries(attributes)) node.setAttribute(key,String(value));
     if(text!==undefined)node.textContent=text;
     svg.append(node);return node;
   };
-  for(let n=0;n<=max;n++){
-    if(max>6 && n!==0 && n!==max)continue;
-    const yy=y(n);
+  [['good','吉'],['mixed','平'],['caution','凶']].forEach(([mode,label])=>{
+    const yy=y(mode);
     shape('line',{x1:30,y1:yy,x2:572,y2:yy,stroke:'#45566a','stroke-width':1});
-    shape('text',{x:7,y:yy+4,fill:'#d2d9db','font-size':12},String(n));
-  }
-  shape('polyline',{points:days.map((day,index)=>x(index)+','+y(day.tightAspectCount)).join(' '),
+    shape('text',{x:7,y:yy+4,fill:'#d2d9db','font-size':12},label);
+  });
+  shape('polyline',{points:days.map((day,index)=>x(index)+','+y(day.verdict.mode)).join(' '),
     fill:'none',stroke:'#f0ce86','stroke-width':3,'stroke-linejoin':'round','stroke-linecap':'round'});
   days.forEach((day,index)=>{
-    shape('circle',{cx:x(index),cy:y(day.tightAspectCount),r:3.5,fill:'#f8deab'});
+    shape('circle',{cx:x(index),cy:y(day.verdict.mode),r:3.5,fill:'#f8deab'});
   });
   shape('text',{x:31,y:164,fill:'#d5dade','font-size':12},days[0].date.slice(5));
   shape('text',{x:563,y:164,'text-anchor':'end',fill:'#d5dade','font-size':12},days.at(-1).date.slice(5));
   host.append(svg);
-  host.setAttribute('aria-label','アスペクト密度：'+days.map(day=>day.date+' '+day.tightAspectCount+'件').join('、'));
+  host.setAttribute('aria-label','経済運の占星術上の吉凶：'+days.map(day=>day.date+' '+day.verdict.label).join('、'));
 }
 function fillWindow(days) {
   drawCurve(days);
   const list=byId('astroWindow');
   list.replaceChildren();
-  const items=days.filter((day,index)=>index===0 || day.tightAspectCount>=2 || day.phase.label.includes('月付近')).slice(0,5);
-  (items.length?items:days.slice(0,3)).forEach(day=>{
+  days.forEach(day=>{
     const row=el('div',undefined,'day');
-    row.append(el('strong',day.date.slice(5).replace('-','/')),el('span',day.headline),el('em','密度 '+day.tightAspectCount+'件'));
+    row.append(el('strong',day.date.slice(5).replace('-','/')),
+      el('span',day.verdict.headline),el('em','占術上：'+day.verdict.label));
     list.append(row);
   });
 }
@@ -82,8 +80,12 @@ function renderDate() {
     const astronomy=window.Astronomy;
     const result=readFinancialSky(day,astronomy);
     const days=readFinancialWindow(day,astronomy,14);
+    byId('astroVerdict').textContent=result.verdict.label;
+    byId('astroVerdict').dataset.mode=result.verdict.mode;
     byId('astroHeadline').textContent=result.headline;
     byId('astroSummary').textContent=result.overview;
+    byId('astroAction').textContent=result.verdict.action;
+    byId('astroReason').textContent=result.verdict.reason;
     byId('astroPhase').textContent=result.phase.label;
     byId('astroPhaseTheme').textContent='象徴：'+result.phase.theme+' ／ 太陽と月の黄経差 '+Math.round(result.phase.angle)+'°';
     byId('astroRetrogrades').textContent=result.retrogrades.length
