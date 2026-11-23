@@ -82,9 +82,12 @@ export function codeCycleAt(code,anchorDate,periodIndex=0){
   const dateRoot=rootOf([...keyOf(date).replaceAll('-','')].reduce((sum,ch)=>sum+Number(ch),0));
   const number=rootOf(base+positionRoot+dateRoot+periodIndex);
   const item=CYCLE_THEMES[number];
+  const core=codeNumerology(ticker);
   return {
     number,title:item.title,mood:item.mood,
-    message:'コード数秘では「'+item.title+'」がテーマ。'+item.theme+'。株価の騰落を示すものではありません。',
+    coreNumber:base,coreMeaning:core.meaning,positionRoot,
+    message:'コードの基礎数'+base+'「'+core.meaning+'」と、今期の数'+
+      number+'「'+item.title+'」がテーマ。'+item.theme+'。株価の騰落を示すものではありません。',
     focus:item.focus,caution:item.caution,
     basis:'証券コード '+ticker+' → 基礎数'+base+'・加重数'+positionRoot+
       '・期間日付数'+dateRoot+'・区間'+(periodIndex+1)+' → '+number,
