@@ -36,3 +36,10 @@ input::placeholder{color:#8d9fac}button{border-radius:11px;min-height:48px}
 .stock-footer{padding:10px 6px 32px;color:#bfcbd0;font-size:.8rem}.stock-footer a{display:inline-flex;margin-right:20px;min-height:44px;align-items:center}
 @media(max-width:570px){.month-list{grid-template-columns:1fr}.month{padding:13px 14px}.compact-two{grid-template-columns:1fr}.compact-two .eye-panel+.eye-panel{padding:15px 0 0;border-left:0;border-top:1px solid #4b6070}.stock-hero h1{font-size:2rem}.stock-app{padding-inline:14px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+/* Distinguish a company's dated transit from the independent code-number cycle. */
+.reference-settings[open]{border:1px solid #a58f6c;background:#182b3c;border-radius:12px;padding:7px 12px;margin:14px 0}
+.reference-settings .manual-form{padding-bottom:11px}
+.period-number{font-size:.82rem;font-weight:800;color:#f5d596;border-top:1px solid #486072;padding-top:7px}
+.period-focus{color:#f0e4cc!important;font-size:.81rem!important}
+.period-code-basis{font-size:.69rem!important;line-height:1.5!important;color:#a7bdc9!important}
+.market-context{padding-top:7px;border-top:1px dashed #5c6874;color:#b3c4cc!important}
