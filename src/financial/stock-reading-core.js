@@ -63,9 +63,7 @@ function evaluateAspect(transit,natal,transitBody,natalBody){
   return {transitBody,natalBody,aspect:aspect.kind,label,orb:Number(aspect.orb.toFixed(2)),
     score,description:score>0?'発展・組み合わせの象徴':score<0?'調整・再構築の象徴':'転換の象徴'};
 }
-export function companyDateAspects(referenceDate,transitDate,astronomy){
-  const natal=positionsAt(strToDate(referenceDate),astronomy);
-  const transits=positionsAt(strToDate(transitDate),astronomy);
+function aspectsFromPositions(natal,transits){
   const findings=[];
   for(const t of TRANSIT_BODIES){
     for(const n of NATAL_BODIES){
@@ -75,6 +73,12 @@ export function companyDateAspects(referenceDate,transitDate,astronomy){
   }
   return findings.sort((a,b)=>a.orb-b.orb||
     a.label.localeCompare(b.label));
+}
+export function companyDateAspects(referenceDate,transitDate,astronomy){
+  return aspectsFromPositions(
+    positionsAt(strToDate(referenceDate),astronomy),
+    positionsAt(strToDate(transitDate),astronomy)
+  );
 }
 function sampleOffsets(bucket){
   const offsets=[];
@@ -97,9 +101,12 @@ export function readStockSymbolic({stock,asOfDate,referenceDate=null,referenceTy
   if(!['listing','established'].includes(referenceType))throw new Error('基準日の種類が不明です。');
   const start=strToDate(asOfDate);
   const hasReference=!!referenceDate;
+  let natalPositions=null;
   if(hasReference){
     const ref=strToDate(referenceDate);
     if(ref.getTime()>start.getTime())throw new Error('企業の基準日が鑑定日より未来です。');
+    // The natal chart is constant across 90 days. Calculate it once on mobile.
+    natalPositions=positionsAt(ref,astronomy);
   }
   // Strictly independent from market closes. Position computations are deterministic
   // and valid ahead of time; no later observations can change this result.
@@ -108,7 +115,7 @@ export function readStockSymbolic({stock,asOfDate,referenceDate=null,referenceTy
     for(const offset of sampleOffsets(bucket)){
       const date=keyOf(addDays(start,offset));
       if(hasReference){
-        const aspects=companyDateAspects(referenceDate,date,astronomy);
+        const aspects=aspectsFromPositions(natalPositions,positionsAt(strToDate(date),astronomy));
         totals.push(aspects.reduce((sum,item)=>sum+item.score,0));
         aspects.forEach(item=>findings.push({...item,date}));
       }else{
