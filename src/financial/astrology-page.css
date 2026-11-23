@@ -150,3 +150,20 @@ details p {margin:6px 0 10px}
 .market-audit-warning{border:1px solid #b38c72;background:#30282b;color:#f6e4d8;border-radius:12px;padding:11px 12px;line-height:1.65;font-size:.86rem}
 .market-audit-warning strong{color:#ffd4b9}
 .market-audit-warning a{display:inline-block;min-height:44px;align-content:center;color:#f5d69a;font-weight:750;text-underline-offset:3px}
+
+/* Fixed, price-only historical risk check, intentionally separate from symbolic stars. */
+.market-risk-panel{padding:14px;margin-top:14px;border:1px solid #8b9aab;background:#111f2d;border-radius:14px}
+.market-risk-panel .heading-row{align-items:center}
+.market-risk-panel h3{margin:0;font-size:1.02rem;color:#f0e5c7}
+.risk-label{flex-shrink:0;max-width:50%;text-align:center;border-radius:9px;border:1px solid #a8b2bc;padding:6px 8px;font-size:.8rem;font-weight:850;overflow-wrap:anywhere}
+.risk-label[data-level="normal"]{border-color:#a5c6b1;color:#d3ebd4;background:#264231}
+.risk-label[data-level="high"],.risk-label[data-level="caution"]{border-color:#f0a696;color:#ffe0cd;background:#50302d}
+.risk-label[data-level="unavailable"]{border-color:#adb5bd;color:#deded6}
+.market-risk-panel p{margin:9px 0 2px;font-size:.86rem;line-height:1.68;color:#dde4e2;overflow-wrap:anywhere}
+.market-risk-panel .risk-verdict{font-weight:750;color:#ffe1a6}
+.history-crashes{margin-top:16px;padding-top:12px;border-top:1px solid #536679}
+.history-crashes h3{color:#ffe0a9;font-size:1.07rem;margin:2px 0 8px}
+.crash-case{background:#122839;border:1px solid #4e667d;padding:12px;margin:10px 0;border-radius:12px}
+.crash-case h4{color:#ffe7bc;font-size:.96rem;margin:0 0 7px}
+.crash-case p{font-size:.82rem;line-height:1.6;margin:6px 0;color:#e0e5e4}
+@media(max-width:430px){.market-risk-panel .heading-row{flex-wrap:wrap}.risk-label{max-width:100%}}
