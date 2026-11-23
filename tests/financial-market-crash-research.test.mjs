@@ -28,7 +28,7 @@ shocked.push({date:'2026-03-01',close:70});
 assert.equal(priceRiskAt(shocked,safeDate).level,'normal','an unseen crash must not be predicted in hindsight');
 assert.equal(CRASH_RISK_RULES.thresholds.cautionDrawdown,-8);
 assert.deepEqual(HISTORICAL_CRASH_WINDOWS.map(x=>x.id),[
-  'nikkei-2008','nikkei-2011','nasdaq-2020','nasdaq-2022'
+  'nikkei-1987','nikkei-2008','nikkei-2011','nikkei-2024','nasdaq-2000','nasdaq-2020','nasdaq-2022'
 ]);
 const downReading=(date,count)=>Array.from({length:count},(_,i)=>({
   date:new Date(date.getTime()+i*86400000).toISOString().slice(0,10),
@@ -50,6 +50,6 @@ assert.ok(e.astro.falseAlerts>0,'always-bearish astrology also generates false a
 assert.ok(e.checkpoint);
 assert.ok(e.firstCrisisDate);
 assert.ok(result.warning.includes('予言ではありません'));
-assert.equal(studyHistoricalCrashes({prices:rows,market:'nasdaq',readWindow:downReading}).events.length,2);
+assert.equal(studyHistoricalCrashes({prices:rows,market:'nasdaq',readWindow:downReading}).events.length,3);
 assert.throws(()=>studyHistoricalCrashes({prices:rows,market:'nikkei',readWindow:downReading,horizon:7}),/固定/);
 console.log('Historical crash windows, pre-event leakage prevention, old-price exclusion and early-vs-late warning guard passed');
