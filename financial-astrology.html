@@ -48,7 +48,7 @@
           <div id="leadValidation" class="lead-validation"></div>
         </details>
       </div>
-      <p class="small"><strong>研究段階：</strong>スコアは暴落確率ではありません。未来の株価は学習に使用しません。過学習を抑えるため、正則化と天体特徴量を学習側の時系列検証だけで選び、90日の空白期間を挟んだ未使用期間で比較します。天体が価格だけのモデルより役立たなければ天体特徴を不採用にします。</p>
+      <p class="small"><strong>研究段階：</strong>スコアは暴落確率ではありません。未来の株価は学習に使用しません。過学習を抑えるため、正則化と天体特徴量を学習側の時系列検証だけで選び、90日の空白期間を挟んだ後方期間で比較します。開発中にも検証データを確認しているため、最終的な性能は前向き検証が必要です。天体が価格だけのモデルより役立たなければ天体特徴を不採用にします。</p>
       <p class="market-audit-warning"><strong>長期検証の注意：</strong>1987・2008・2011・2020・2024年の著名な5局面の事前研究では、最高スコアの30日区間が実際に8%下落を初めて記録した区間と一致したのは1局面でした。特定の暴落を前もって捉えられる能力は確認できていません。<a href="https://github.com/elmar50gr28-alt/koyomi/blob/feature/financial-historical-market-validation-20261123/docs/financial-lead-optimization-20261123.md" target="_blank" rel="noopener noreferrer">検証内容</a></p>
     </section>
 

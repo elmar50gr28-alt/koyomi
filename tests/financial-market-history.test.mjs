@@ -58,6 +58,8 @@ assert.ok(html.includes('./src/financial/market-history-page.js'));
 for(const asset of ['./src/financial/market-history.js','./src/financial/market-history-page.js','./src/financial/market-history-worker.js','./src/financial/market-crash-research.js'])
   assert.ok(sw.includes("'"+asset+"'"),asset+' offline asset missing');
 assert.match(css,/\.history-metrics/);
+assert.match(fs.readFileSync('src/financial/market-history-page.js','utf8'),/時期の予測力は未確認/);
+assert.match(html,/前向き検証が必要/);
 assert.match(css,/\.market-risk-panel/);
 assert.match(html,/id="marketRiskTag"/);
 assert.match(html,/id="historyCrashList"/);

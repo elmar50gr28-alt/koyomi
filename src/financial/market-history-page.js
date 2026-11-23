@@ -224,14 +224,14 @@ function showLeadForecast(data){
   const detail=get('leadValidation');detail.replaceChildren();
   data.diagnostics.forEach(item=>{
     const row=node('p',item.bucket+'：'+(item.status==='evaluated'?
-      '未使用期間 '+item.testN+'件 ／ Brier：選択モデル '+item.model.brier+
+      '後方評価 '+item.testN+'件 ／ Brier：選択モデル '+item.model.brier+
       '・価格のみ '+item.priceOnly.brier+'・一定予想 '+item.model.baseBrier+
       ' ／ 警戒 '+item.model.alerts+'件（誤警戒 '+item.model.falseAlerts+'件）'+
       ' ／ 天体採用：'+(item.optimization?.usedAstronomy?'あり':'なし'):
       '評価データ不足'));
     detail.append(row);
   });
-  get('leadDiagnostics').textContent='時系列を分けた未使用期間の検証：'+evaluated.length+
+  get('leadDiagnostics').textContent='時系列後方の探索的検証：'+evaluated.length+
     '/3期間に評価値あり。価格のみ・単純予想の両方を上回った期間：'+superior.length+
     '/'+evaluated.length+'。'+
     (data.canClaimVerified?'全期間で過去比較に優位性。ただし前向きの精度は未証明。':
