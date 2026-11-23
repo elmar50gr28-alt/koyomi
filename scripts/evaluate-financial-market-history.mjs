@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {readFinancialWindow} from '../src/financial/astrology-core.js';
 import {backtestMarketDirection,MARKET_PRICE_SOURCE,parseMarketCSV} from '../src/financial/market-history.js';
+import {studyHistoricalCrashes} from '../src/financial/market-crash-research.js';
 
 function loadAstronomy(){
   const source=fs.readFileSync(new URL('../vendor/astronomy-engine/2.1.19/astronomy.browser.min.js',import.meta.url),'utf8');
@@ -56,6 +57,9 @@ const summary={
 };
 console.log('KOYOMI ACTUAL MARKET HISTORY AUDIT');
 console.log(JSON.stringify(summary,null,2));
+const crisis=studyHistoricalCrashes({prices,market:selectedMarket,readWindow,horizon:14});
+console.log('KOYOMI HISTORICAL MAJOR CRASH AUDIT');
+console.log(JSON.stringify(crisis,null,2));
 if(process.env.GITHUB_STEP_SUMMARY){
   const lines=['## KOYOMI 金融占星術・実市場の過去照合 '+selectedMarket,
     '',
@@ -69,7 +73,20 @@ if(process.env.GITHUB_STEP_SUMMARY){
     '',
     '> 後知恵による過去照合であり、予測能力は証明されていません。方向感なしは的中率から除外。',
     '',
-    '出典：'+summary.source
+    '出典：'+summary.source,
+    '',
+    '### 大暴落の個別検証',
+    '',
+    '|過去事例|観測DD|下落例 / 評価数|占星術警戒（再現率 / 誤警戒）|実価格警戒（再現率 / 誤警戒）|直前チェック地点|',
+    '|---|---:|---:|---|---|---|',
+    ...crisis.events.map(e=>e.status!=='evaluated'
+      ? '|'+e.title+'|対象期間データなし|–|–|–|–|'
+      : '|'+e.title+'|'+e.observedDrawdownPct+'%|'+e.crashCases+'/'+e.n+'|'+
+        (e.astro.recall??'–')+'% / '+e.astro.falseAlerts+'件|'+
+        (e.priceGuard.recall??'–')+'% / '+e.priceGuard.falseAlerts+'件|'+
+        (e.checkpoint?.date||'–')+'：星 '+(e.checkpoint?.astro||'–')+' ／ 価格 '+(e.checkpoint?.priceRisk||'–')+'|'),
+    '',
+    '> 14暦日以内に終値が8%以上下がる事例を別途検証。価格警戒は下落済み情報のみ使用。イベント内の毎営業日評価は重複し、標本独立ではありません。'
   ];
   fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,lines.join('\n')+'\n');
 }
