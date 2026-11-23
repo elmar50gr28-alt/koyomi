@@ -52,7 +52,7 @@ try{
  assert.equal(els.stockForecast.hidden,false);
  assert.equal(els.stockMonths.children.length,3);
  assert.match(els.stockBasis.textContent,/市場全体に共通/,'unknown founding date is not fabricated');
- assert.equal(els.stockNumerology.textContent,'9','ticker-based numerology is separate');
+ assert.equal(String(els.stockNumerology.textContent),'9','ticker-based numerology is separate');
  els.stockReferenceDate.value='2020-01-01';
  els.stockReferenceDate.listeners.change();
  assert.match(els.stockBasis.textContent,/企業の上場日/);
