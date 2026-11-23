@@ -146,3 +146,7 @@ details p {margin:6px 0 10px}
   .market-direction {flex-basis:84px;min-height:74px}
   .market-day-grid {grid-template-columns:repeat(4,minmax(0,1fr))}
 }
+
+.market-audit-warning{border:1px solid #b38c72;background:#30282b;color:#f6e4d8;border-radius:12px;padding:11px 12px;line-height:1.65;font-size:.86rem}
+.market-audit-warning strong{color:#ffd4b9}
+.market-audit-warning a{display:inline-block;min-height:44px;align-content:center;color:#f5d69a;font-weight:750;text-underline-offset:3px}
