@@ -139,7 +139,8 @@ function renderStock(){
       '90日間の企業占星術とコード数秘':'90日間の銘柄コード数秘';
     for(const period of reading.periods){
       const card=elt('article',undefined,'month');card.dataset.mood=period.mood;
-      const number=elt('div','数秘 '+period.codeCycle.number+' · '+period.codeCycle.title,'period-number');
+      const number=elt('div','基礎数 '+period.codeCycle.coreNumber+' ／ 今期 '+
+        period.codeCycle.number+' · '+period.codeCycle.title,'period-number');
       const action=elt('p','確認する視点：'+period.codeCycle.focus+
         ' ／ 注意：'+period.codeCycle.caution,'period-focus');
       const codeBasis=elt('small',period.codeCycle.basis,'period-code-basis');
