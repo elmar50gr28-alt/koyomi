@@ -5,10 +5,11 @@ import {marketDaySignal} from './market-direction.js';
 import {normalizeStockCode} from './stock-directory.js';
 
 export const STOCK_READING_META=Object.freeze({
-  id:'koyomi-stock-symbolic-v1',status:'symbolic-unvalidated',
+  id:'koyomi-stock-symbolic-v2-distinct-bases',status:'symbolic-unvalidated',
   warning:'占い上の象徴であり、株価の上昇・下落や暴落発生確率の予測ではありません。売買判断には使わないでください。',
   dateBasis:'設立日・上場日のどちらかを自分で確認して入力。時刻・場所が不明な場合は天体のハウス、ASC、月を個別企業の根拠として使用しない。',
-  dataBasis:'実価格は自動取得しない。銘柄を変えると以前の企業の価格を継承しない。'
+  dataBasis:'個別株の実価格・業績は使用しない。企業基準日がなければコードの数秘周期のみを銘柄別に算出し、共通天体の占いと分離する。',
+  differentiation:'証券コードの数秘周期は識別子の象徴計算。類似コード・数秘の一致はあり、株価との因果関係や予測力はない。'
 });
 const DAY=86400000;
 const PREDICTION_HORIZONS=Object.freeze([
@@ -49,6 +50,49 @@ export function codeNumerology(code){
   };
   return {number:n,meaning:meanings[n],formula:values.join('＋')+' → '+n,
     note:'証券コードに割り振られた数字・英文字の数秘術です。企業の業績や株価との因果関係はありません。'};
+}
+// Clearly defined ticker-number symbolism. It is NOT an enterprise ephemeris,
+// nor is its apparent differentiation evidence of forecast skill.
+const CYCLE_THEMES=Object.freeze({
+  1:{title:'始動',mood:'吉',theme:'新しい選択肢を整理する',focus:'新規事業・新製品の公表情報',caution:'勢いだけで飛び付かない'},
+  2:{title:'連携',mood:'平',theme:'関係を整え、協力の条件を確かめる',focus:'提携・取引先との関係',caution:'思惑を事実と混同しない'},
+  3:{title:'発信',mood:'吉',theme:'情報の流れを見直す',focus:'企業発表や説明資料',caution:'話題性だけで判断しない'},
+  4:{title:'土台',mood:'平',theme:'基礎を点検し、持続性を考える',focus:'財務と事業の継続性',caution:'目先の変化に振り回されない'},
+  5:{title:'変化',mood:'慎重',theme:'変化への備えを整える',focus:'事業環境・制度変更',caution:'急な結論を避ける'},
+  6:{title:'均衡',mood:'吉',theme:'バランスを調べる',focus:'収益源と支出の構成',caution:'好材料だけを集めない'},
+  7:{title:'検証',mood:'平',theme:'根拠を深く確かめる',focus:'決算資料と数字の整合性',caution:'一つの指標に依存しない'},
+  8:{title:'実務',mood:'吉',theme:'計画と実行力を見直す',focus:'設備投資・事業計画',caution:'目標だけで評価しない'},
+  9:{title:'区切り',mood:'慎重',theme:'これまでの前提を再評価する',focus:'方針の転換・事業整理',caution:'変化を売買の確定合図にしない'}
+});
+const rootOf=value=>{
+  let n=value;
+  while(n>9)n=[...String(n)].reduce((sum,d)=>sum+Number(d),0);
+  return n||9;
+};
+const codeValues=ticker=>[...ticker].map(ch=>/[0-9]/.test(ch)?Number(ch):ch.charCodeAt(0)-64);
+export function codeCycleAt(code,anchorDate,periodIndex=0){
+  const ticker=normalizeStockCode(code);
+  if(!ticker)throw new RangeError('証券コードを確認してください。');
+  const date=strToDate(anchorDate);
+  if(!Number.isInteger(periodIndex)||periodIndex<0||periodIndex>2)
+    throw new RangeError('占い期間を確認してください。');
+  const values=codeValues(ticker);
+  const base=codeNumerology(ticker).number;
+  const positionRoot=rootOf(values.reduce((sum,v,i)=>sum+v*(i+1),0));
+  const dateRoot=rootOf([...keyOf(date).replaceAll('-','')].reduce((sum,ch)=>sum+Number(ch),0));
+  const number=rootOf(base+positionRoot+dateRoot+periodIndex);
+  const item=CYCLE_THEMES[number];
+  const core=codeNumerology(ticker);
+  return {
+    number,title:item.title,mood:item.mood,
+    coreNumber:base,coreMeaning:core.meaning,positionRoot,
+    message:'コードの基礎数'+base+'「'+core.meaning+'」と、今期の数'+
+      number+'「'+item.title+'」がテーマ。'+item.theme+'。株価の騰落を示すものではありません。',
+    focus:item.focus,caution:item.caution,
+    basis:'証券コード '+ticker+' → 基礎数'+base+'・加重数'+positionRoot+
+      '・期間日付数'+dateRoot+'・区間'+(periodIndex+1)+' → '+number,
+    method:'証券コードの数秘周期。企業の日付・業績・市場価格の代わりにはなりません。'
+  };
 }
 function evaluateAspect(transit,natal,transitBody,natalBody){
   const separation=absAngle(transit,natal);
@@ -110,7 +154,7 @@ export function readStockSymbolic({stock,asOfDate,referenceDate=null,referenceTy
   }
   // Strictly independent from market closes. Position computations are deterministic
   // and valid ahead of time; no later observations can change this result.
-  const periods=PREDICTION_HORIZONS.map(bucket=>{
+  const periods=PREDICTION_HORIZONS.map((bucket,index)=>{
     const findings=[];const totals=[];
     for(const offset of sampleOffsets(bucket)){
       const date=keyOf(addDays(start,offset));
@@ -126,6 +170,9 @@ export function readStockSymbolic({stock,asOfDate,referenceDate=null,referenceTy
     }
     // A sampled symbolic trend, deliberately NOT calibrated to price or odds.
     const avg=totals.reduce((s,v)=>s+v,0)/totals.length;
+    // Fix the anchor across the three 30-day buckets; month index advances
+    // the symbolic cycle rather than accidentally cancelling the date-root.
+    const codeCycle=codeCycleAt(stock.code,asOfDate,index);
     // Prefer evidence involving the company's dated Sun to generic slow-planet
     // coincidences. Show distinct pairs, not 18 near-identical daily statements.
     findings.sort((a,b)=>(a.natalBody==='Sun'?-1:0)-(b.natalBody==='Sun'?-1:0)
@@ -142,19 +189,26 @@ export function readStockSymbolic({stock,asOfDate,referenceDate=null,referenceTy
     return {
       label:bucket.label,from:keyOf(addDays(start,bucket.from)),
       to:keyOf(addDays(start,bucket.to)),
-      mood:summary.mood,message:summary.message,
-      grounds:main.length?main:
-        [hasReference?'計算対象の企業基準日と主要な角度関係は期間内に強く現れませんでした。':
-          '企業の基準日未登録のため、市場全体に共通する天体の象意のみを表示しています。'],
+      // When no enterprise date is supplied, do NOT reuse the identical
+      // general-market sky score as if it were an individual stock forecast.
+      mood:hasReference?summary.mood:codeCycle.mood,
+      message:hasReference?summary.message:codeCycle.message,
+      grounds:hasReference?
+        (main.length?main:['入力された企業基準日と対象天体の主要な角度関係は見られませんでした。']):
+        [codeCycle.basis],
+      symbolicBasis:hasReference?'company-date-astrology':'ticker-code-numerology',
+      codeCycle,
+      marketContext:hasReference?null:
+        '共通の市場天体象徴：'+summary.mood+'。すべての銘柄に共通し、銘柄固有の根拠ではありません。',
       companySpecific:hasReference,scanDays:totals.length
     };
   });
   return {stock:{code:normalizeStockCode(stock.code),name:stock.name.trim(),sector:stock.sector||'不明'},
     asOfDate,referenceDate:hasReference?referenceDate:null,referenceType,
-    basis:hasReference?'company-date':'general-market-only',
+    basis:hasReference?'company-date':'code-numerology-only',
     referenceNote:hasReference?
       (referenceType==='listing'?'入力された上場日':'入力された設立日')+
         'を12:00 UTCの仮時刻で計算しています。時刻不明のため月・ハウス・ASCは企業固有鑑定に使用しません。':
-      '設立日・上場日がないため、企業固有の占星術は未計算です。',
+      '設立日・上場日が未登録です。90日間の銘柄別表示はコードの数秘周期であり、企業固有の星回りは計算していません。',
     periods,numerology:codeNumerology(stock.code),meta:STOCK_READING_META};
 }

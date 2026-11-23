@@ -4,7 +4,7 @@ import {
   parseStockCatalogCSV,makeManualStock,updateStockCatalog
 } from '../src/financial/stock-directory.js';
 import {
-  STOCK_READING_META,codeNumerology,companyDateAspects,readStockSymbolic
+  STOCK_READING_META,codeNumerology,codeCycleAt,companyDateAspects,readStockSymbolic
 } from '../src/financial/stock-reading-core.js';
 import {DECK,interpret,drawCards} from '../src/financial/tarot.js';
 import {webcrypto} from 'node:crypto';
@@ -50,14 +50,55 @@ const astronomy={
 const stock=lookupStock('6480');
 const params={stock,asOfDate:'2026-11-23',astronomy};
 const general=readStockSymbolic(params);
-assert.equal(general.basis,'general-market-only');
+assert.equal(general.basis,'code-numerology-only');
+assert.ok(general.periods.every(p=>p.symbolicBasis==='ticker-code-numerology'));
+assert.ok(general.periods.every(p=>p.marketContext.includes('市場天体象徴')));
+assert.ok(general.periods.every(p=>p.grounds[0].includes('証券コード 6480')));
+assert.ok(general.periods.every(p=>p.codeCycle.basis.includes('6480')));
+const otherTicker=lookupStock('7203');
+const another=readStockSymbolic({...params,stock:otherTicker});
+assert.notDeepEqual(general.periods.map(p=>[p.mood,p.message,p.codeCycle.number]),
+  another.periods.map(p=>[p.mood,p.message,p.codeCycle.number]),
+  'different codes MUST NOT re-use identical market-wide results as individual readings');
+assert.deepEqual(general.periods,
+  readStockSymbolic({...params}).periods,'same code and day must be deterministic');
+assert.equal(codeCycleAt('6480','2026-12-15',0).number,
+  codeCycleAt('6480','2026-12-15',0).number);
+assert.notEqual(codeCycleAt('6480','2026-12-15',0).basis,
+  codeCycleAt('7203','2026-12-15',0).basis,
+  'number symbolism documents ticker input, even if labels sometimes coincide');
+assert.throws(()=>codeCycleAt('6480','2026-02-30',0),/日付/);
+assert.throws(()=>codeCycleAt('6480','2026-11-23',3),/期間/);
+const symbolicProfiles=new Set();
+for(const listed of BUILTIN_STOCKS){
+  const dates=[0,1,2].map(i=>codeCycleAt(listed.code,'2026-11-23',i));
+  const nums=dates.map(x=>x.number);
+  assert.equal(new Set(nums).size,3,
+    listed.code+' must have three distinct consecutive monthly cycle indices');
+  assert.ok(dates.every(x=>x.coreNumber>=1&&x.coreNumber<=9));
+  symbolicProfiles.add(dates[0].coreNumber+'-'+dates[0].positionRoot);
+}
+assert.ok(symbolicProfiles.size>=35,
+ 'most built-in codes should have distinct two-axis number archetypes; some overlaps are normal');
+assert.deepEqual(general.periods.map(p=>p.marketContext),
+  another.periods.map(p=>p.marketContext),
+  'common market astrology rightly remains shared across companies; only the code symbolism differs');
 assert.equal(general.periods.length,3);
 assert.ok(general.periods.every(x=>x.companySpecific===false));
 assert.ok(general.periods.every(x=>x.from< x.to));
-assert.match(general.referenceNote,/未計算/);
+assert.match(general.referenceNote,/企業固有の星回りは計算していません/);
 assert.match(general.meta.warning,/株価/);
+assert.match(general.meta.differentiation,/数秘/);
 const enterprise=readStockSymbolic({...params,referenceDate:'2026-01-01',referenceType:'listing'});
 assert.equal(enterprise.basis,'company-date');
+assert.ok(enterprise.periods.every(p=>p.symbolicBasis==='company-date-astrology'));
+const sameNatalOtherStock=readStockSymbolic({...params,stock:otherTicker,referenceDate:'2026-01-01'});
+assert.deepEqual(enterprise.periods.map(p=>p.grounds),
+  sameNatalOtherStock.periods.map(p=>p.grounds),
+  'same input date means the astronomical geometry is necessarily the same');
+assert.notDeepEqual(enterprise.periods.map(p=>p.codeCycle),
+  sameNatalOtherStock.periods.map(p=>p.codeCycle),
+  'distinct ticker numerology is shown alongside same-date astrology, never disguised as astronomy');
 assert.equal(enterprise.periods.length,3);
 assert.ok(enterprise.periods.every(x=>x.companySpecific));
 assert.match(enterprise.referenceNote,/12:00 UTC/);
