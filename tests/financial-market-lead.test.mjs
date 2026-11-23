@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {forecastLeadMonths,evaluateLeadModels,LEAD_RESEARCH_POLICY,LEAD_CANDIDATE_COUNT} from '../src/financial/market-lead-forecast.js';
+import {forecastLeadMonths,evaluateLeadModels,LEAD_RESEARCH_POLICY,LEAD_CANDIDATE_COUNT,historicalFirstCrashBucket} from '../src/financial/market-lead-forecast.js';
 
 function iso(d){return d.toISOString().slice(0,10);}
 const prices=[];
@@ -46,6 +46,18 @@ const old=forecastLeadMonths({prices:extended,asOfDate:asOf,readSky:()=>({date:'
 const original=forecastLeadMonths({prices,asOfDate:asOf,readSky:()=>({date:'2050-01-01',aspects:[],retrogrades:[]}),market:'nikkei'});
 assert.deepEqual(old,original,'unseen future crash or spike must never affect previous forecasts');
 assert.equal(forecastLeadMonths({prices,asOfDate:'2028-01-01',readSky}).status,'unavailable','stale market data cannot support live months');
+const daily=Array.from({length:110},(_,i)=>{
+ const date=new Date(Date.UTC(2026,0,1+i)).toISOString().slice(0,10);
+ return {date,close:i<20?100:90};
+});
+assert.deepEqual(historicalFirstCrashBucket(daily,0,daily.at(-1).date),[1,0,0],
+ 'a crash in month one must NOT be counted as a new crash in months two and three');
+const monthTwo=daily.map((x,i)=>({...x,close:i<45?100:90}));
+assert.deepEqual(historicalFirstCrashBucket(monthTwo,0,monthTwo.at(-1).date),[0,1,0]);
+const monthThree=daily.map((x,i)=>({...x,close:i<75?100:90}));
+assert.deepEqual(historicalFirstCrashBucket(monthThree,0,monthThree.at(-1).date),[0,0,1]);
+assert.deepEqual(historicalFirstCrashBucket(daily.slice(0,30),0,daily[29].date),[null,null,null],
+ 'unobserved future months must not get assumed negative outcomes');
 assert.equal(LEAD_RESEARCH_POLICY.targetDropPct,-8);
 assert.equal(LEAD_RESEARCH_POLICY.purgeCalendarDays,90);
 assert.equal(LEAD_CANDIDATE_COUNT.price,3);
