@@ -33,13 +33,50 @@ dailyMemory={key,cards};
 return cards.map(c=>({...c}));
 }
 export function interpret(item,position){const c=DECK.find(x=>x.id===item.id);if(!c)throw new Error("Unknown card");return {card:c,position,orientation:item.reversed?"逆位置":"正位置",message:item.reversed?c.caution:c.positive}}
+// A tarot verdict is computed only from drawn cards and their spread positions.
+const BRIGHT_MAJORS = new Set([1,3,4,6,7,8,11,14,17,19,20,21]);
+const CHALLENGE_MAJORS = new Set([12,13,15,16,18]);
+function cardDirection(item){
+  const major=Number(item.id.startsWith('major-')?item.id.slice(6):NaN);
+  if(item.reversed)return -1;
+  if(Number.isInteger(major)){
+    if(BRIGHT_MAJORS.has(major))return 1;
+    if(CHALLENGE_MAJORS.has(major))return -1;
+    return 0;
+  }
+  const rank=Number(item.id.split('-')[2]);
+  return rank===4||rank===9?-1:1; // Five: scarcity; Ten: burden in this v1 tarot rule.
+}
+export function tarotVerdict(type,items){
+  if(!Object.hasOwn(SPREADS,type)||!Array.isArray(items)||items.length!==SPREADS[type].positions.length)throw new Error('Invalid tarot spread');
+  const weights={daily:[2],personal:[2,0,1],world:[2,0,0,1,1]}[type];
+  const total=items.reduce((sum,item,index)=>{
+    if(!DECK.some(card=>card.id===item.id)||typeof item.reversed!=='boolean')throw new Error('Invalid tarot card');
+    return sum+cardDirection(item)*weights[index];
+  },0);
+  const mode=total>=2?'good':total<=-2?'caution':'mixed';
+  const subject=type==='world'?'世界経済運':type==='personal'?'個人財運':'今日の金運';
+  const phrases={
+    good:['吉',subject+'は吉。前進の流れが勝る。','良い兆しが強い。準備を整え、次の一歩を具体化して。'],
+    caution:['凶',subject+'は凶。無理な拡大は禁物。','警戒のカードが優勢。衝動を止め、守るべき条件を確認して。'],
+    mixed:['半吉半凶',subject+'は半吉半凶。勝負を急ぐな。','好機と注意が混じる流れ。まず状況を整理し、条件を比べて。']
+  };
+  const [label,headline,action]=phrases[mode];
+  const card=DECK.find(x=>x.id===items[0].id);
+  return {mode,label,headline,action,reason:'主な象徴：'+card.name+'（'+(items[0].reversed?'逆位置':'正位置')+'）。'+
+    (items.length>1?'ほかの展開も含めて総合しました。':'このカードの意味を中心に鑑定しました。')};
+}
 function node(tag,content,className){const e=document.createElement(tag);if(content!==undefined)e.textContent=content;if(className)e.className=className;return e}
 function render(type,items){const spread=SPREADS[type],readings=items.map((item,i)=>interpret(item,spread.positions[i]));
 document.getElementById("results").hidden=false;document.getElementById("resultTitle").textContent=spread.title;
 const cards=document.getElementById("cards");cards.replaceChildren();
 readings.forEach(r=>{const el=node("div",undefined,"card");el.append(node("span",r.card.symbol,"glyph"),node("small",r.position),node("strong",r.card.name),node("em",r.orientation));cards.append(el)});
-const intro=type==="world"?"世界の行方をカードだけで決めつけることはできないわ。象徴として眺めてみましょう。":"財運は運任せにするものじゃないわ。カードをきっかけに今日の選択を整理しましょう。";
-document.getElementById("reading").textContent=intro+"\n\n"+readings.map(r=>r.position+"：「"+r.card.name+"」"+r.orientation+"。今回のテーマは「"+r.message+"」ね。").join("\n")+"\n\n数字や契約条件は現実の情報で確認してちょうだい。";
+const verdict=tarotVerdict(type,items);
+document.getElementById("tarotVerdict").textContent=verdict.headline;
+document.getElementById("tarotVerdict").dataset.mode=verdict.mode;
+document.getElementById("reading").textContent=verdict.action+"\n"+verdict.reason+"\n\n"+
+  readings.map(r=>r.position+"：「"+r.card.name+"」"+r.orientation+"。"+r.message+"。").join("\n")+
+  "\n\nカードが示す占術上の吉凶です。実際の売買や家計の判断は、数字と契約条件で確かめてください。";
 const evidence=document.getElementById("evidence");evidence.replaceChildren();readings.forEach(r=>evidence.append(node("p",r.position+"："+r.card.name+"／"+r.orientation+"／"+r.card.theme+"。採用した象意："+r.message)));
 document.getElementById("results").scrollIntoView({behavior:"smooth",block:"start"});
 }
