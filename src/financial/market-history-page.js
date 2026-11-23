@@ -201,8 +201,10 @@ function showLeadForecast(data){
     return;
   }
   get('leadResult').hidden=false;
-  get('leadHeadline').textContent='最も注意を集める候補時期：'+
-    (data.leadingPeriod||'判定保留')+'（研究スコア '+data.highestRiskScore+'/100）';
+  get('leadHeadline').textContent=data.canClaimVerified
+    ? '検証条件を満たした注意候補：'+(data.leadingPeriod||'判定保留')+'（スコア '+data.highestRiskScore+'/100）'
+    : '時期の予測力は未確認。研究上の相対的な最高点：'+
+      (data.leadingPeriod||'判定保留')+'（スコア '+data.highestRiskScore+'/100）';
   for(const item of data.buckets){
     const box=node('article','');box.className='lead-month';
     box.append(node('strong',item.period),

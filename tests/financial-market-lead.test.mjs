@@ -58,6 +58,7 @@ const monthThree=daily.map((x,i)=>({...x,close:i<75?100:90}));
 assert.deepEqual(historicalFirstCrashBucket(monthThree,0,monthThree.at(-1).date),[0,0,1]);
 assert.deepEqual(historicalFirstCrashBucket(daily.slice(0,30),0,daily[29].date),[null,null,null],
  'unobserved future months must not get assumed negative outcomes');
+assert.equal(LEAD_RESEARCH_POLICY.method,'first-crossing-of-eight-percent-from-asof-close');
 assert.equal(LEAD_RESEARCH_POLICY.targetDropPct,-8);
 assert.equal(LEAD_RESEARCH_POLICY.purgeCalendarDays,90);
 assert.equal(LEAD_CANDIDATE_COUNT.price,3);
