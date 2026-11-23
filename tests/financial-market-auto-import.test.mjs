@@ -69,7 +69,7 @@ assert.equal(calls.length,2,'attempt FRED before falling back to a stale third-p
 assert.equal(nikkei.stale,true);
 assert.equal(nikkei.asOf,'2026-04-13');
 assert.match(nikkei.errors.join(' '),/CORS/);
-await assert.rejects(fetchAutomaticMarket('nasdaq',{now:date,fetcher:async()=>response('Not found')}),/CSV/);
+await assert.rejects(fetchAutomaticMarket('nasdaq',{now:date,fetcher:async()=>response('Not found')}),/終値データ|CSV/);
 await assert.rejects(fetchAutomaticMarket('unknown',{now:date}),/不正/);
 
 const merged=reconcileMarketHistory(
