@@ -15,7 +15,7 @@ permissions:
 jobs:
   verify-real-closes:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,3 +27,15 @@ jobs:
         run: npm run evaluate:market-history
       - name: Re-evaluate historical Nikkei 225 archive (independent period)
         run: npm run evaluate:market-history -- --market=nikkei
+
+  verify-extended-nikkei:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Research 1987/2008/2011/2020/2024 crash lead times against long FRED index data
+        run: npm run evaluate:market-nikkei-long
