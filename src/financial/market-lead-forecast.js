@@ -185,6 +185,16 @@ function chooseModel(rows,type) {
   innerBrier:evaluations.find(x=>x.config===selected)?.avg??null
  }};
 }
+function chooseArchitecture(astro,price) {
+ const astroLoss=astro.optimization.innerBrier,priceLoss=price.optimization.innerBrier;
+ // Architecture is chosen ONLY by inner folds, BEFORE the outer holdout is scored.
+ // Even a slight sky improvement is too easy to data-mine, so require a fixed margin.
+ const skyUseful=!!astro.model&&!!price.model&&astro.optimization.folds>=2&&
+   Number.isFinite(astroLoss)&&Number.isFinite(priceLoss)&&astroLoss<priceLoss-0.003;
+ return {model:skyUseful?astro.model:price.model,usesAstronomy:skyUseful,
+   reason:skyUseful?'内側の時系列検証で天体特徴量の追加が価格のみを0.003以上改善':
+     '内側の時系列検証で天体の上乗せ効果を確認できず、価格のみを優先'};
+}
 function metric(model,testRows,baseRate) {
  if(testRows.length<LEAD_RESEARCH_POLICY.minHoldout)return {n:testRows.length,brier:null,baseBrier:null,recall:null,precision:null,alerts:0,events:0};
  const predictions=testRows.map(row=>({truth:row.y,p:score(model,row)}));
@@ -224,13 +234,15 @@ export function evaluateLeadModels({prices,readSky,latestDate=prices.at(-1)?.dat
  const results=LEAD_RESEARCH_POLICY.horizons.map((bucket,j)=>{
   const {train,test,splitDate}=splits(obs,j);
   const chosenCombined=chooseModel(train,'combined'),chosenPrice=chooseModel(train,'price');
-  const combined=chosenCombined.model,price=chosenPrice.model;
+  const arch=chooseArchitecture(chosenCombined,chosenPrice);
+  const combined=arch.model,price=chosenPrice.model;
   if(!combined||!price)return {bucket:bucket.label,status:'insufficient',trainN:train.length,testN:test.length};
   const model=metric(combined,test,combined.baseRate),priceOnly=metric(price,test,price.baseRate);
   return {bucket:bucket.label,status:model.brier===null?'insufficient':'evaluated',
    splitDate,lastTrainDate:train.at(-1)?.date??null,firstHoldoutDate:test[0]?.date??null,
    trainN:train.length,trainEvents:combined.positives,testN:test.length,
-   optimization:{combined:chosenCombined.optimization,priceOnly:chosenPrice.optimization},
+   optimization:{combined:chosenCombined.optimization,priceOnly:chosenPrice.optimization,
+     usedAstronomy:arch.usesAstronomy,reason:arch.reason},
    model,priceOnly,beatPriceOnly:model.brier!==null&&model.brier<priceOnly.brier,
    beatConstant:model.brier!==null&&model.brier<model.baseBrier};
  });
@@ -251,7 +263,8 @@ export function forecastLeadMonths({prices,asOfDate,readSky,market='nikkei'}){
  const buckets=LEAD_RESEARCH_POLICY.horizons.map((h,j)=>{
   const trainRows=past.filter(x=>x.buckets[j]).map(x=>({date:x.date,...x.buckets[j]}));
   const fitCombined=chooseModel(trainRows,'combined'),fitPrice=chooseModel(trainRows,'price');
-  const model=fitCombined.model,priceModel=fitPrice.model;
+  const arch=chooseArchitecture(fitCombined,fitPrice);
+  const model=arch.model,priceModel=fitPrice.model;
   if(!model||!priceModel)return {period:h.label,start:dateAdd(last.date,h.start),end:dateAdd(last.date,h.end),
     status:'insufficient',score:null,reason:'過去の暴落事例が少なく、この月のリスクを学習できません。'};
   const features={price,combined:[...price,...astroFeatures(last.date,h,readSky,cache)]};
@@ -261,7 +274,8 @@ export function forecastLeadMonths({prices,asOfDate,readSky,market='nikkei'}){
   return {period:h.label,start:dateAdd(last.date,h.start),end:dateAdd(last.date,h.end),
     status:'experimental',riskScore:Math.round(100*scoreCombined),
     priceOnlyScore:Math.round(100*scorePrice),
-    selection:{combined:fitCombined.optimization,priceOnly:fitPrice.optimization},
+    selection:{combined:fitCombined.optimization,priceOnly:fitPrice.optimization,
+      usedAstronomy:arch.usesAstronomy,reason:arch.reason},
     alertCutoff:Math.round(model.alertThreshold*100),
     baselineScore:Math.round(100*model.baseRate),
     classification:scoreCombined>=model.alertThreshold?'注意候補':
@@ -269,7 +283,8 @@ export function forecastLeadMonths({prices,asOfDate,readSky,market='nikkei'}){
     verifiedOutOfSampleAdvantage:verified,
     testN:diagnostic.testN??0,holdoutBrier:diagnostic.model?.brier??null,
     priceOnlyBrier:diagnostic.priceOnly?.brier??null,
-    description:'価格の過去指標と、計算可能な未来の天体配置を使った研究スコア。実際の暴落確率ではありません。'};
+    description:arch.usesAstronomy?'過去価格と未来の天体配置を使う研究スコア。暴落確率ではありません。':
+      '過学習回避により天体特徴量を不採用。過去価格のみで算出した研究スコア。暴落確率ではありません。'};
  });
  const valid=buckets.filter(x=>Number.isFinite(x.riskScore));
  const leader=valid.length?[...valid].sort((a,b)=>b.riskScore-a.riskScore)[0]:null;
