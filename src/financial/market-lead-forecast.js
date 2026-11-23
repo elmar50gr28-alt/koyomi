@@ -67,7 +67,8 @@ function rowAtOrBefore(prices,date) {
 }
 function samples(prices,readSky,latestLabelDate) {
  const cache=new Map(),result=[];
- for(let i=LEAD_RESEARCH_POLICY.priorTradingDays;i<prices.length;i+=LEAD_RESEARCH_POLICY.stepTradingDays){
+ const step=prices.length>7000?30:LEAD_RESEARCH_POLICY.stepTradingDays;
+ for(let i=LEAD_RESEARCH_POLICY.priorTradingDays;i<prices.length;i+=step){
   if(prices[i].date>latestLabelDate)break;
   const pricesPart=priceFeatures(prices,i);
   const byBucket=LEAD_RESEARCH_POLICY.horizons.map(bucket=>{
