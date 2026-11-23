@@ -31,7 +31,8 @@ function userStocks(){
     &&x.name.trim().length>=2).slice(0,100):[];
 }
 function allStocks(){
-  const map=new Map(catalog.map(x=>[x.code,x]));
+  const map=new Map(BUILTIN_STOCKS.map(x=>[x.code,x]));
+  for(const item of catalog)map.set(item.code,item);
   for(const item of userStocks())if(!map.has(item.code))map.set(item.code,item);
   return [...map.values()];
 }
@@ -223,7 +224,7 @@ function setup(){
   const store=typeof localStorage==='undefined'?null:localStorage;
   void updateStockCatalog({store}).then(result=>{
     catalog=result.items;
-    renderResults();
+    if(!selected)renderResults();
     get('stockSearchStatus').textContent= result.error?
       'オンライン一覧を利用できません。端末内の'+catalog.length+'銘柄で検索できます。':
       '銘柄一覧 '+catalog.length+'件から検索できます。資料基準 '+STOCK_CATALOG_META.snapshotDate+'。';
