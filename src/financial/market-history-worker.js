@@ -7,7 +7,7 @@ const DAY_MS=86400000;
 self.addEventListener('message',event=>{
   const {market,horizon,prices,requestId}=event.data||{};
   try{
-    if(typeof self.Astronomy?.SunPosition!=='function')throw new Error('天文計算モジュールが起動できません。');
+    if(typeof globalThis.Astronomy?.SunPosition!=='function')throw new Error('天文計算モジュールが起動できません。');
     const cache=new Map();
     const readWindow=(date,count)=>{
       const days=[];
@@ -15,7 +15,7 @@ self.addEventListener('message',event=>{
         const key=new Date(date.getTime()+i*DAY_MS).toISOString().slice(0,10);
         if(!cache.has(key)){
           const at=new Date(key+'T03:00:00Z');
-          const reading=readFinancialSky(at,self.Astronomy);
+          const reading=readFinancialSky(at,globalThis.Astronomy);
           cache.set(key,{...reading,date:key});
         }
         days.push(cache.get(key));
