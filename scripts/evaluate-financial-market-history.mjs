@@ -1,5 +1,5 @@
 // Run via Node 22+: npm run evaluate:market-history
-// Downloads (without republishing) public ^NDX daily closes. All calculations are deterministic.
+// Downloads public historical closes for research, without republishing. Astronomy rules remain fixed.
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {readFinancialWindow} from '../src/financial/astrology-core.js';
@@ -52,7 +52,7 @@ const summary={
     upPredictions,downPredictions,testStatus
   })),
   methodology:'No overlapping periods. Prediction uses only deterministic ephemeris, never future prices. Outcome uses next close on/after +N calendar days. Accuracy excludes neutral predictions.',
-  caveat:'Retrospective non-registered rule. Statistics are descriptive, not prospective accuracy proof. Third-party Yahoo Finance ^NDX mirror, not official.'
+  caveat:'Retrospective non-registered rule. Statistics are descriptive, not prospective accuracy proof. External third-party historical data; independent market-source validation is not complete.'
 };
 console.log('KOYOMI ACTUAL MARKET HISTORY AUDIT');
 console.log(JSON.stringify(summary,null,2));
