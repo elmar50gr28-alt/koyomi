@@ -119,13 +119,24 @@ export function readStockSymbolic({stock,asOfDate,referenceDate=null,referenceTy
     }
     // A sampled symbolic trend, deliberately NOT calibrated to price or odds.
     const avg=totals.reduce((s,v)=>s+v,0)/totals.length;
-    const main=findings.sort((a,b)=>a.orb-b.orb)[0];
+    // Prefer evidence involving the company's dated Sun to generic slow-planet
+    // coincidences. Show distinct pairs, not 18 near-identical daily statements.
+    findings.sort((a,b)=>(a.natalBody==='Sun'?-1:0)-(b.natalBody==='Sun'?-1:0)
+      ||Math.abs(b.score)-Math.abs(a.score)||a.orb-b.orb||a.date.localeCompare(b.date));
+    const unique=new Set(),main=[];
+    for(const finding of findings){
+      const key=finding.transitBody+':'+finding.natalBody+':'+finding.aspect;
+      if(unique.has(key))continue;
+      unique.add(key);
+      main.push(finding.date+'：'+finding.label+'（ずれ'+finding.orb+'°）／'+finding.description);
+      if(main.length===3)break;
+    }
     const summary=labels(avg);
     return {
       label:bucket.label,from:keyOf(addDays(start,bucket.from)),
       to:keyOf(addDays(start,bucket.to)),
       mood:summary.mood,message:summary.message,
-      grounds:main?[main.date+'：'+main.label+'（ずれ'+main.orb+'°）／'+main.description]:
+      grounds:main.length?main:
         [hasReference?'計算対象の企業基準日と主要な角度関係は期間内に強く現れませんでした。':
           '企業の基準日未登録のため、市場全体に共通する天体の象意のみを表示しています。'],
       companySpecific:hasReference,scanDays:totals.length
