@@ -150,7 +150,8 @@ export function evaluateLeadModels({prices,readSky,latestDate=prices.at(-1)?.dat
   if(!combined||!price)return {bucket:bucket.label,status:'insufficient',trainN:train.length,testN:test.length};
   const model=metric(combined,test,combined.baseRate),priceOnly=metric(price,test,price.baseRate);
   return {bucket:bucket.label,status:model.brier===null?'insufficient':'evaluated',
-   splitDate,trainN:train.length,trainEvents:combined.positives,testN:test.length,
+   splitDate,lastTrainDate:train.at(-1)?.date??null,firstHoldoutDate:test[0]?.date??null,
+   trainN:train.length,trainEvents:combined.positives,testN:test.length,
    model,priceOnly,beatPriceOnly:model.brier!==null&&model.brier<priceOnly.brier,
    beatConstant:model.brier!==null&&model.brier<model.baseBrier};
  });
