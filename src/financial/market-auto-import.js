@@ -56,6 +56,27 @@ export function ageOfLastClose(rows,at=new Date()){
   const days=Math.floor((Date.parse(today+'T00:00:00Z')-Date.parse(last+'T00:00:00Z'))/MS_DAY);
   return {lastDate:last,daysOld:days,stale:days>AUTO_STALE_AFTER_DAYS};
 }
+// Third-party ganase archive has MISLABELED OHLC columns:
+// header "open,high,low,close" actually stores close,open,high,low.
+// Reject its file if this invariant stops holding, rather than importing the low as the close.
+export function parseGanaseNikkeiCSV(text){
+  const rows=String(text).trim().split(/\r?\n/);
+  if(rows.length<3 || rows[0].trim()!=='index_id,date,open,high,low,close,source,fetched_at')
+    throw new Error('日経アーカイブの列構造が変更されました。');
+  const result=[];
+  for(const row of rows.slice(1)){
+    if(!row.trim())continue;
+    const fields=row.split(',');
+    if(fields.length!==8 || fields[0]!=='nikkei225')
+      throw new Error('日経アーカイブに異なる銘柄や異常な列があります。');
+    const [close,open,high,low]=fields.slice(2,6).map(Number);
+    if(![close,open,high,low].every(Number.isFinite)||Math.min(close,open,high,low)<=0||
+       high<Math.max(close,open)||low>Math.min(close,open)||low>high)
+      throw new Error('日経アーカイブの四本値に矛盾があるため採用しません。');
+    result.push({date:fields[1],close});
+  }
+  return validatePriceRows(result);
+}
 export function parseFrankfurterRates(payload) {
   if(!payload||payload.base!=='USD'||!payload.rates||typeof payload.rates!=='object'||Array.isArray(payload.rates)) {
     throw new Error('米ドル基準の為替履歴を取得できませんでした。');
@@ -103,7 +124,8 @@ async function readSource(source,fetcher,now,timeoutMs){
     const body=await Promise.race([response.text(),timeout]);
     if(typeof body!=='string'||body.length>MAX_BYTES)throw new Error('取得データが大きすぎます。');
     let rows,upstreamStale=false;
-    if(source.format==='csv')rows=parseMarketCSV(body);
+    if(source.id==='ganase-nikkei225')rows=parseGanaseNikkeiCSV(body);
+    else if(source.format==='csv')rows=parseMarketCSV(body);
     else {
       let parsed;
       try{parsed=JSON.parse(body);}catch{throw new Error('データがJSONとして解析できません。');}
