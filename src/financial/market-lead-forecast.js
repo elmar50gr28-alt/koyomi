@@ -7,7 +7,7 @@ import {marketDaySignal} from './market-direction.js';
 export const LEAD_RESEARCH_POLICY=Object.freeze({
  id:'koyomi-crash-lead-v2-inner-purged-selection',
  horizons:[{start:1,end:30,label:'今後1〜30日'},{start:31,end:60,label:'31〜60日先'},{start:61,end:90,label:'61〜90日先'}],
- targetDropPct:-8,stepTradingDays:15,priorTradingDays:60,purgeCalendarDays:90,
+ targetDropPct:-8,method:'first-crossing-of-eight-percent-from-asof-close',stepTradingDays:15,priorTradingDays:60,purgeCalendarDays:90,
  minTrain:28,minPositive:4,minNegative:8,minHoldout:8,
  optimization:'inner-forward-validation-purged-90d-regularization-and-feature-ablation',
  status:'experimental-unvalidated',
@@ -53,13 +53,23 @@ function outcome(prices,idx,bucket,latestAllowedDate) {
  const start=dateAdd(prices[idx].date,bucket.start);
  const end=dateAdd(prices[idx].date,bucket.end);
  if(end>latestAllowedDate)return null;
- let low=Infinity,count=0;
+ const barrier=prices[idx].close*(1+LEAD_RESEARCH_POLICY.targetDropPct/100);
+ let firstCross=null,count=0;
  for(let i=idx+1;i<prices.length;i++){
   if(prices[i].date>end||prices[i].date>latestAllowedDate)break;
-  if(prices[i].date>=start){low=Math.min(low,prices[i].close);count++;}
+  if(prices[i].date>=start)count++;
+  if(firstCross===null&&prices[i].close<=barrier)firstCross=prices[i].date;
  }
  if(count<4)return null;
- return Number(low/prices[idx].close-1<=LEAD_RESEARCH_POLICY.targetDropPct/100);
+ // Classify the FIRST crossing: a drop in month one cannot be labeled anew
+ // in months two and three just because prices remained depressed.
+ return Number(firstCross!==null&&firstCross>=start&&firstCross<=end);
+}
+export function historicalFirstCrashBucket(prices,originIndex,latestAllowedDate) {
+ validatePriceRows(prices);
+ if(!Number.isInteger(originIndex)||originIndex<0||originIndex>=prices.length||!validDate(latestAllowedDate))
+  throw new RangeError('暴落の発生時期を判定できません。');
+ return LEAD_RESEARCH_POLICY.horizons.map(bucket=>outcome(prices,originIndex,bucket,latestAllowedDate));
 }
 function rowAtOrBefore(prices,date) {
  let lo=0,hi=prices.length;
