@@ -51,6 +51,7 @@
     "test:reading-availability": "node tests/integrated-judgment-core.test.mjs && node tests/unavailable-reading-integration.test.mjs && node tests/meaning-evidence-translator.test.mjs",
     "test:financial-astrology": "node tests/financial-astrology.test.mjs && node tests/financial-market-direction.test.mjs && node tests/financial-market-history.test.mjs && node tests/financial-market-history-worker.test.mjs && node tests/financial-market-crash-research.test.mjs && node tests/financial-market-crash-ui.test.mjs && node tests/financial-market-lead.test.mjs",
     "evaluate:market-history": "node scripts/evaluate-financial-market-history.mjs",
+    "evaluate:market-nikkei-long": "node scripts/evaluate-long-nikkei-history.mjs",
     "test:financial-reading": "node tests/financial-integrated-page.test.mjs",
     "test:financial-tarot": "node tests/financial-tarot.test.mjs && node tests/financial-tarot-resilience.test.mjs && node tests/financial-tarot-ui.test.mjs"
   }
