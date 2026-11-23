@@ -7,7 +7,7 @@ Object.defineProperty(globalThis,'self',{configurable:true,value:{
 }});
 try {
   await import('../src/financial/market-history-worker.js?worker-test');
-  assert.equal(typeof globalThis.self.Astronomy?.SunPosition,'function','browser astronomy bundle available in module worker');
+  assert.equal(typeof globalThis.Astronomy?.SunPosition,'function','browser astronomy bundle available in module worker');
   const prices=[];
   for(let i=0;i<60;i++){
     const d=new Date(Date.UTC(2025,0,1+i));
