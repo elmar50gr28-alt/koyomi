@@ -32,6 +32,7 @@ assert.equal(reading.phase.label,'新月付近');
 assert.equal(reading.meta.reviewStatus,'traditional-symbolism-not-market-validated');
 assert.deepEqual(readFinancialWindow(base,astronomy,3).map(x=>x.date),['2026-11-23','2026-11-24','2026-11-25']);
 assert.equal(readFinancialWindow(new Date(2026,11,31,12),astronomy,2)[1].date,'2027-01-01');
+assert.equal(readFinancialWindow(new Date(2099,11,31,12),astronomy,14).length,1,'window gracefully ends at supported year');
 assert.equal(localDateKey(new Date(2026,10,23,12)),'2026-11-23');
 assert.throws(()=>positionsAt(base,null),/天文計算/);
 assert.throws(()=>readFinancialWindow(base,astronomy,32),/表示期間/);
