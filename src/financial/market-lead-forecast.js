@@ -5,10 +5,11 @@ import {validatePriceRows} from './market-history.js';
 import {marketDaySignal} from './market-direction.js';
 
 export const LEAD_RESEARCH_POLICY=Object.freeze({
- id:'koyomi-crash-lead-v1',
+ id:'koyomi-crash-lead-v2-inner-purged-selection',
  horizons:[{start:1,end:30,label:'今後1〜30日'},{start:31,end:60,label:'31〜60日先'},{start:61,end:90,label:'61〜90日先'}],
  targetDropPct:-8,stepTradingDays:15,priorTradingDays:60,purgeCalendarDays:90,
  minTrain:28,minPositive:4,minNegative:8,minHoldout:8,
+ optimization:'inner-forward-validation-purged-90d-regularization-and-feature-ablation',
  status:'experimental-unvalidated',
  disclaimer:'表示される0〜100の値は学習モデルの研究スコアで、検証済みの暴落確率ではありません。'
 });
@@ -80,34 +81,103 @@ function samples(prices,readSky,latestLabelDate) {
  }
  return result;
 }
-function fit(rows,type) {
+const BASE_INDICES=Object.freeze([0,1,2,3,4,5]);
+const ONE_SKY=Object.freeze([0,1,2,3,4,5,6]);
+const THREE_SKY=Object.freeze([0,1,2,3,4,5,6,7,8]);
+const CANDIDATES=Object.freeze({
+ price:[0.1,0.5,2].map(l2=>({l2,indices:BASE_INDICES,kind:'price-only'})),
+ combined:[0.1,0.5,2].flatMap(l2=>[
+  {l2,indices:ONE_SKY,kind:'price-plus-astro-mean'},
+  {l2,indices:THREE_SKY,kind:'price-plus-all-astro'}
+ ])
+});
+export const LEAD_CANDIDATE_COUNT=Object.freeze({
+ price:CANDIDATES.price.length,combined:CANDIDATES.combined.length
+});
+function fit(rows,type,options) {
  if(rows.length<LEAD_RESEARCH_POLICY.minTrain)return null;
  const pos=rows.filter(x=>x.y).length,neg=rows.length-pos;
  if(pos<LEAD_RESEARCH_POLICY.minPositive||neg<LEAD_RESEARCH_POLICY.minNegative)return null;
- const cols=type==='combined'?9:6;
- const means=Array.from({length:cols},(_,j)=>mean(rows.map(x=>x[type][j])));
- const std=means.map((m,j)=>Math.max(0.15,Math.sqrt(mean(rows.map(x=>(x[type][j]-m)**2)))));
- const x=rows.map(r=>r[type].map((v,j)=>clip((v-means[j])/std[j],-5,5)));
+ const config=options??(type==='price'?CANDIDATES.price[1]:CANDIDATES.combined[2]);
+ const columns=config.indices;
+ const means=columns.map(j=>mean(rows.map(x=>x[type][j])));
+ const std=columns.map((j,k)=>Math.max(0.15,Math.sqrt(mean(rows.map(x=>(x[type][j]-means[k])**2)))));
+ const x=rows.map(r=>columns.map((j,k)=>clip((r[type][j]-means[k])/std[k],-5,5)));
  const b=clip(pos/rows.length,0.01,0.99);
- const w=Array(cols+1).fill(0);w[0]=Math.log(b/(1-b));
- // Fixed L2-regularized batch logistic regression. No random initialization.
- for(let epoch=0;epoch<300;epoch++){
-  const grad=Array(cols+1).fill(0);
+ const w=Array(columns.length+1).fill(0);w[0]=Math.log(b/(1-b));
+ // Fixed L2-regularized logistic regression, deterministic and trained on rows only.
+ for(let epoch=0;epoch<180;epoch++){
+  const grad=Array(columns.length+1).fill(0);
   for(let i=0;i<rows.length;i++){
    const p=sig(w[0]+x[i].reduce((v,z,j)=>v+z*w[j+1],0));
    const e=p-rows[i].y;grad[0]+=e;
-   for(let j=0;j<cols;j++)grad[j+1]+=e*x[i][j];
+   for(let j=0;j<columns.length;j++)grad[j+1]+=e*x[i][j];
   }
   const step=0.18/(1+epoch/200);
   w[0]-=step*grad[0]/rows.length;
-  for(let j=1;j<w.length;j++)w[j]-=step*(grad[j]/rows.length+0.25*w[j]);
+  for(let j=1;j<w.length;j++)w[j]-=step*(grad[j]/rows.length+config.l2*w[j]);
  }
- return {type,w,means,std,trainN:rows.length,positives:pos,baseRate:pos/rows.length};
+ return {type,w,means,std,indices:columns,l2:config.l2,kind:config.kind,
+   trainN:rows.length,positives:pos,baseRate:pos/rows.length};
 }
 function score(model,row){
  if(!model)return null;
- const xs=row[model.type].map((v,j)=>clip((v-model.means[j])/model.std[j],-5,5));
+ const xs=model.indices.map((j,k)=>clip((row[model.type][j]-model.means[k])/model.std[k],-5,5));
  return sig(model.w[0]+xs.reduce((s,v,j)=>s+v*model.w[j+1],0));
+}
+function validationFolds(rows) {
+ // Validation is always later than training, with a 90d embargo of ALL labels.
+ const n=rows.length,folds=[];
+ for(const frac of [0.58,0.72,0.86]){
+  const from=Math.floor(n*frac);
+  const end=Math.min(n,from+Math.max(8,Math.floor(n*0.12)));
+  const first=rows[from]?.date;
+  if(!first)continue;
+  const earlier=rows.filter(x=>ms(x.date)+LEAD_RESEARCH_POLICY.purgeCalendarDays*DAY<ms(first));
+  const later=rows.slice(from,end);
+  const positives=earlier.filter(x=>x.y).length;
+  if(earlier.length>=LEAD_RESEARCH_POLICY.minTrain &&
+    positives>=LEAD_RESEARCH_POLICY.minPositive &&
+    earlier.length-positives>=LEAD_RESEARCH_POLICY.minNegative &&
+    later.length>=LEAD_RESEARCH_POLICY.minHoldout)folds.push({earlier,later,first});
+ }
+ return folds;
+}
+function chooseModel(rows,type) {
+ const configs=CANDIDATES[type],folds=validationFolds(rows),evaluations=[];
+ // Do not pick hyperparameters based on outer test outcomes.
+ if(folds.length>=2) {
+  for(const config of configs) {
+   const errors=[];
+   for(const fold of folds){
+    const m=fit(fold.earlier,type,config);
+    if(!m)continue;
+    errors.push(mean(fold.later.map(r=>(score(m,r)-r.y)**2)));
+   }
+   if(errors.length===folds.length){
+    const avg=mean(errors);
+    const se=Math.sqrt(mean(errors.map(x=>(x-avg)**2))/errors.length);
+    evaluations.push({config,avg,se});
+   }
+  }
+ }
+ // The one-standard-error rule favors simplicity rather than chasing tiny gains.
+ let selected,choice='not-enough-inner-folds';
+ if(evaluations.length) {
+  const best=[...evaluations].sort((a,b)=>a.avg-b.avg)[0];
+  const eligible=evaluations.filter(x=>x.avg<=best.avg+best.se);
+  eligible.sort((a,b)=>a.config.indices.length-b.config.indices.length||
+    b.config.l2-a.config.l2||a.avg-b.avg);
+  selected=eligible[0].config;choice='inner-cv-one-standard-error';
+ }else{
+  selected=type==='price'?CANDIDATES.price[2]:CANDIDATES.combined.at(-1);
+ }
+ return {model:fit(rows,type,selected),optimization:{
+  selection:choice,folds:folds.length,candidates:configs.length,
+  regularization:selected.l2,featureSet:selected.kind,
+  featureCount:selected.indices.length,
+  innerBrier:evaluations.find(x=>x.config===selected)?.avg??null
+ }};
 }
 function metric(model,testRows,baseRate) {
  if(testRows.length<LEAD_RESEARCH_POLICY.minHoldout)return {n:testRows.length,brier:null,baseBrier:null,recall:null,precision:null,alerts:0,events:0};
@@ -147,12 +217,14 @@ export function evaluateLeadModels({prices,readSky,latestDate=prices.at(-1)?.dat
  const obs=samples(prices,readSky,date);
  const results=LEAD_RESEARCH_POLICY.horizons.map((bucket,j)=>{
   const {train,test,splitDate}=splits(obs,j);
-  const combined=fit(train,'combined'),price=fit(train,'price');
+  const chosenCombined=chooseModel(train,'combined'),chosenPrice=chooseModel(train,'price');
+  const combined=chosenCombined.model,price=chosenPrice.model;
   if(!combined||!price)return {bucket:bucket.label,status:'insufficient',trainN:train.length,testN:test.length};
   const model=metric(combined,test,combined.baseRate),priceOnly=metric(price,test,price.baseRate);
   return {bucket:bucket.label,status:model.brier===null?'insufficient':'evaluated',
    splitDate,lastTrainDate:train.at(-1)?.date??null,firstHoldoutDate:test[0]?.date??null,
    trainN:train.length,trainEvents:combined.positives,testN:test.length,
+   optimization:{combined:chosenCombined.optimization,priceOnly:chosenPrice.optimization},
    model,priceOnly,beatPriceOnly:model.brier!==null&&model.brier<priceOnly.brier,
    beatConstant:model.brier!==null&&model.brier<model.baseBrier};
  });
@@ -172,7 +244,8 @@ export function forecastLeadMonths({prices,asOfDate,readSky,market='nikkei'}){
  const reports=evaluateLeadModels({prices:known,readSky,latestDate:last.date});
  const buckets=LEAD_RESEARCH_POLICY.horizons.map((h,j)=>{
   const trainRows=past.filter(x=>x.buckets[j]).map(x=>x.buckets[j]);
-  const model=fit(trainRows,'combined'),priceModel=fit(trainRows,'price');
+  const fitCombined=chooseModel(trainRows,'combined'),fitPrice=chooseModel(trainRows,'price');
+  const model=fitCombined.model,priceModel=fitPrice.model;
   if(!model||!priceModel)return {period:h.label,start:dateAdd(last.date,h.start),end:dateAdd(last.date,h.end),
     status:'insufficient',score:null,reason:'過去の暴落事例が少なく、この月のリスクを学習できません。'};
   const features={price,combined:[...price,...astroFeatures(last.date,h,readSky,cache)]};
@@ -182,6 +255,7 @@ export function forecastLeadMonths({prices,asOfDate,readSky,market='nikkei'}){
   return {period:h.label,start:dateAdd(last.date,h.start),end:dateAdd(last.date,h.end),
     status:'experimental',riskScore:Math.round(100*scoreCombined),
     priceOnlyScore:Math.round(100*scorePrice),
+    selection:{combined:fitCombined.optimization,priceOnly:fitPrice.optimization},
     baselineScore:Math.round(100*model.baseRate),
     classification:scoreCombined>=Math.max(.2,model.baseRate*1.5)?'注意候補':
       scoreCombined<=model.baseRate*.7?'低め':'通常',
