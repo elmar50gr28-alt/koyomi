@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#091522">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>銘柄の運勢 | こよみ</title>
+<link rel="stylesheet" href="./src/financial/stock-reading.css">
+</head>
+<body>
+<main class="stock-app">
+<header class="stock-hero">
+  <a class="back" href="./financial-astrology.html">‹ 金融占星術へ戻る</a>
+  <div class="eyebrow">KOYOMI · STOCK READING</div>
+  <h1>銘柄の運勢を読む。</h1>
+  <p>証券コードまたは企業名から、90日先までの占術上のテーマを読み解きます。</p>
+</header>
+<section class="panel stock-search" aria-labelledby="stockSearchHeading">
+  <h2 id="stockSearchHeading">どの銘柄を占う？</h2>
+  <label for="stockQuery">銘柄名・証券コード</label>
+  <div class="search-input"><span aria-hidden="true">⌕</span>
+    <input id="stockQuery" type="search" autocomplete="off" spellcheck="false"
+      placeholder="例：日本トムソン、6480、NTT、130A" maxlength="100"
+      aria-controls="stockResults">
+  </div>
+  <div id="stockResults" class="stock-results" role="group" aria-label="検索候補" hidden></div>
+  <p id="stockSearchStatus" class="subnote" role="status" aria-live="polite">銘柄を検索してください。</p>
+  <details class="manual-details">
+    <summary>一覧にない銘柄を登録する</summary>
+    <div class="manual-form">
+      <label for="stockManualCode">証券コード（4文字・英字対応）</label>
+      <input id="stockManualCode" placeholder="例：123A" maxlength="4" autocapitalize="characters">
+      <label for="stockManualName">正式な銘柄名</label>
+      <input id="stockManualName" placeholder="企業名を入力" maxlength="100">
+      <button id="stockManualSave" type="button">この名前とコードで鑑定</button>
+      <p class="subnote">手動登録した内容は本人が確認する必要があります。架空の企業情報は補いません。</p>
+    </div>
+  </details>
+</section>
+<section id="stockReading" hidden aria-labelledby="selectedStockName">
+  <section class="panel company-identity">
+    <div class="eyebrow">SELECTED SECURITY</div>
+    <div class="identity-top">
+      <div><h2 id="selectedStockName">銘柄名</h2>
+        <p><strong id="selectedStockCode"></strong> <span id="selectedStockSector"></span></p></div>
+      <button id="stockFavorite" type="button" aria-pressed="false" class="favorite">☆ 保存</button>
+    </div>
+    <p id="selectedStockSource" class="subnote"></p>
+    <div class="date-line">
+      <label for="stockDate">鑑定基準日</label>
+      <input id="stockDate" type="date" min="1900-01-01" max="2099-09-30" required>
+    </div>
+    <details class="reference-settings">
+      <summary>企業固有の占星術を使う（設立日・上場日を入力）</summary>
+      <div class="manual-form">
+        <label for="stockReferenceType">日付の種類</label>
+        <select id="stockReferenceType">
+          <option value="listing">上場日</option>
+          <option value="established">設立日</option>
+        </select>
+        <label for="stockReferenceDate">確認済みの年月日</label>
+        <input id="stockReferenceDate" type="date" min="1900-01-01" max="2099-09-30">
+        <p class="subnote">設立日と上場日は別の基準です。自動推定せず、確認した日付だけを入力してください。時刻不明のためハウス・ASC・月は使いません。</p>
+      </div>
+    </details>
+    <button id="stockRead" type="button" class="primary-action">この銘柄の90日間を鑑定</button>
+    <p id="stockStatus" class="subnote" role="status" aria-live="polite"></p>
+  </section>
+  <section id="stockForecast" class="panel stock-forecast" hidden>
+    <div class="eyebrow">90 DAY SYMBOLIC CALENDAR</div>
+    <h2>これから90日間の星の象意</h2>
+    <p id="stockBasis" class="basis"></p>
+    <div id="stockMonths" class="month-list"></div>
+    <details class="reading-method">
+      <summary>鑑定根拠と制約を確認</summary>
+      <p id="stockReferenceExplanation"></p>
+      <p>銘柄の基準日と天体配置の角度を比較した、こよみ独自の占術です。30日間を7日間隔の観測点で計算し、占術上の吉凶を整理します。実際の株価や業績を学習した予測ではありません。</p>
+    </details>
+  </section>
+  <section class="panel compact-two">
+    <div class="eye-panel">
+      <div class="eyebrow">CODE NUMEROLOGY</div>
+      <h2>証券コードの数秘</h2>
+      <div class="numerology-line"><strong id="stockNumerology">–</strong><span id="stockNumerologyText"></span></div>
+      <p id="stockNumerologyReason" class="subnote"></p>
+    </div>
+    <div class="eye-panel">
+      <div class="eyebrow">ONE CARD TAROT</div>
+      <h2>銘柄タロット</h2>
+      <button id="stockTarotDraw" class="secondary-action" type="button">1枚引いてみる</button>
+      <div id="stockTarotResult" aria-live="polite"></div>
+    </div>
+  </section>
+  <section class="panel price-section">
+    <div class="eyebrow">REAL PRICE · SEPARATE EVIDENCE</div>
+    <h2>実際の値動きとの照合</h2>
+    <p>上の運勢は占いです。この銘柄の価格リスクは、<strong>実際の終値がある場合だけ</strong>別に評価します。</p>
+    <label for="stockCSV" class="file-pick">この銘柄の終値CSVを読み込む
+      <input id="stockCSV" type="file" accept=".csv,text/csv">
+    </label>
+    <p id="stockPriceStatus" class="subnote" role="status" aria-live="polite">この銘柄の価格は未取得です。現在値や安全度は推測しません。</p>
+    <div id="stockPriceResult" hidden>
+      <div class="price-highlight"><strong id="stockLastClose"></strong><span id="stockPriceDate"></span></div>
+      <p id="stockPriceWarning"></p>
+    </div>
+    <p class="subnote">CSVは日付列とClose列がある形式に対応。銘柄コードの証明がないCSVは、選んだ銘柄のデータか必ず確認してください。データは端末内のみで保存します。</p>
+  </section>
+</section>
+<footer class="stock-footer">
+  <p><strong>これは株価予想ではありません。</strong> 個別企業の占星術・数秘術・タロットは娯楽上の象徴です。上昇率・暴落確率・売買時期を保証しません。</p>
+  <a href="https://www.jpx.co.jp/markets/statistics-equities/misc/01.html" rel="noopener noreferrer" target="_blank">JPXで銘柄情報を確認</a>
+  <a href="./financial-astrology.html">市場全体の金融占星術</a>
+</footer>
+</main>
+<script src="./vendor/astronomy-engine/2.1.19/astronomy.browser.min.js"></script>
+<script type="module" src="./src/financial/stock-reading-page.js"></script>
+</body>
+</html>
