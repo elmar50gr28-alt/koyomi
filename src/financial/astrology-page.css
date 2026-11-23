@@ -1,0 +1,83 @@
+:root {
+  color-scheme: dark;
+  --bg:#07111d; --panel:#122335; --panel-2:#172a3d;
+  --line:#495365; --gold:#e4c483; --ink:#f5f1e8; --muted:#c4cdd0;
+  font-family: -apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+}
+* { box-sizing:border-box }
+html { background:var(--bg);scroll-behavior:smooth }
+body { margin:0; min-height:100dvh; background:radial-gradient(circle at 50% 0,#21364b 0,#07111d 550px);color:var(--ink);line-height:1.7 }
+[hidden] { display:none!important }
+button,input { font:inherit }
+button { cursor:pointer }
+a { color:var(--gold) }
+button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible { outline:3px solid #fff2b5;outline-offset:3px }
+.astro-app { width:min(780px,100%);margin:0 auto;padding:16px clamp(14px,4vw,27px) calc(50px + env(safe-area-inset-bottom)) }
+.astro-header { position:relative;isolation:isolate;min-height:230px;padding:5px 0 21px;overflow:hidden }
+.back-link { display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-size:.94rem;font-weight:750 }
+.eyebrow { font-size:.72rem;letter-spacing:.14em;font-weight:850;color:var(--gold) }
+h1 { font-family:Georgia,"Yu Mincho",serif;font-size:clamp(2rem,7vw,3.3rem);font-weight:600;line-height:1.2;margin:15px 0 11px }
+.intro { max-width:510px;color:#e0dccf;margin:0;font-size:.95rem }
+.orbit-art { width:220px;height:220px;position:absolute;right:-72px;top:11px;z-index:-1;opacity:.55;border:1px solid #b69a60;border-radius:50%;box-shadow:0 0 0 25px #c7a66b12,0 0 0 48px #c7a66b0c;background:repeating-conic-gradient(from 4deg,#e5c68c65 0deg 1deg,transparent 1deg 30deg);display:grid;place-items:center;animation:orbit-spin 120s linear infinite }
+.orbit-art:before { content:"";position:absolute;inset:31px;border:1px dashed #d9ba8580;border-radius:50% }
+.orbit-core { font:72px Georgia,serif;color:#edce92;animation:orbit-spin 120s linear infinite reverse }
+@keyframes orbit-spin { to{transform:rotate(360deg)} }
+.tabs { display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border:1px solid #806c49;border-radius:18px;background:#0e1d2e;margin-bottom:17px;position:relative }
+.tabs button { min-width:0;min-height:52px;border:0;border-radius:13px;background:transparent;color:var(--ink);font-weight:750;padding:8px 4px }
+.tabs button[aria-pressed="true"] { color:#1c1b1b;background:linear-gradient(#f5dba4,#e4bd76);box-shadow:0 4px 15px #0005 }
+.panel { background:linear-gradient(145deg,#15283a,#101d2c);border:1px solid var(--line);border-radius:20px;padding:clamp(16px,4vw,24px);margin:13px 0;box-shadow:0 12px 32px #0003 }
+.date-tools { display:grid;gap:10px }
+.date-tools label { font-size:.93rem;font-weight:750 }
+.date-row { display:grid;grid-template-columns:44px minmax(0,1fr) 44px 60px;gap:7px;align-items:stretch }
+.date-row button { border:1px solid #947b54;border-radius:11px;background:#203347;color:#fff;min-height:48px;font-size:1.5rem;padding:0 }
+.date-row .today-button {font-size:.9rem;font-weight:750;background:#d6ba80;color:#1b1d20}
+.date-row input { min-width:0;min-height:48px;width:100%;border:1px solid #8c93a1;border-radius:11px;padding:8px 8px;background:#071725;color:#fff;font-size:1rem }
+.date-row input::-webkit-calendar-picker-indicator {filter:invert(1)}
+.status { min-height:1.5rem;color:#e7c899;margin:9px 3px;font-size:.9rem }
+.hero-reading {border-color:#af8c57;background:radial-gradient(circle at 95% 15%,#654c3155,transparent 55%),linear-gradient(145deg,#192e40,#101c2c)}
+.hero-reading h2 {font-family:Georgia,"Yu Mincho",serif;font-size:clamp(1.43rem,5.5vw,2rem);color:#ffe2a8;line-height:1.45;margin:8px 0 12px}
+.hero-reading > p {color:#f5efe4;margin:0 0 15px}
+.sky-facts {display:flex;align-items:center;gap:14px;padding:12px;background:#0b1b2ccc;border:1px solid #5e615e;border-radius:14px}
+.moon-face {width:53px;height:53px;flex:0 0 53px;border-radius:50%;border:1px solid #d4c49a;display:grid;place-items:center;font:2.1rem Georgia,serif;color:#f2dfaf;background:radial-gradient(circle at 35% 35%,#4e5b6c,#111924)}
+.sky-facts strong,.fact-label,.fact-detail {display:block}
+.fact-label {font-size:.79rem;color:var(--muted)}
+.fact-detail {font-size:.82rem;color:#d6d2c7}
+h2 {font-size:1.23rem;line-height:1.5;margin:0;color:#ffdfa3}
+.heading-row {display:flex;align-items:center;justify-content:space-between;gap:9px}
+.tag {background:#2e4050;border:1px solid #7a7463;border-radius:100px;color:#f0d9a5;font-size:.74rem;padding:5px 9px;white-space:nowrap}
+.subtext,.small {font-size:.87rem;color:var(--muted)}
+.subtext {margin:8px 0 16px}
+.aspect-list {display:grid;gap:9px}
+.aspect {display:grid;gap:3px;padding:13px 14px;background:#091927;border:1px solid #5a6671;border-radius:13px}
+.aspect strong {font-size:.98rem;color:#f7e2b7}
+.aspect span {font-size:.9rem}
+.aspect small {font-size:.8rem;color:var(--muted)}
+.empty {padding:15px;background:#091927;border-radius:12px;color:var(--muted)}
+details {margin-top:12px;border-top:1px solid #536071;padding-top:8px}
+summary {cursor:pointer;min-height:44px;align-content:center;font-weight:750;color:#e9d5ac}
+details p {margin:6px 0 10px}
+.chart-area {width:100%;background:#091927;border:1px solid #465365;border-radius:13px;padding:8px 5px;overflow:hidden}
+.chart-area svg {display:block;width:100%;height:auto;max-height:205px}
+.day-list {display:grid;gap:7px;margin-top:13px}
+.day {display:grid;grid-template-columns:76px minmax(0,1fr) auto;align-items:center;gap:7px;padding:11px 8px;border-bottom:1px solid #394e61;font-size:.88rem}
+.day strong {font-size:.86rem}
+.day span {min-width:0;overflow-wrap:anywhere}
+.day em {font-size:.75rem;font-style:normal;color:#e6cd96}
+.next-panel p {color:var(--muted);margin-bottom:0}
+.personal-panel .panel {padding:25px}
+.personal-panel h2 {font-family:Georgia,"Yu Mincho",serif;font-size:1.8rem;margin:9px 0 12px}
+.primary-link,.secondary-link {min-height:53px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px 14px;border-radius:12px;font-weight:800;text-decoration:none;margin-top:11px}
+.primary-link {background:#e6c483;color:#1c1b17}
+.secondary-link {border:1px solid #ddbc7e;background:#102437;color:#f1d6a2}
+.footer-note {padding:22px 5px;font-size:.88rem;color:#bfc7cd;line-height:1.8}
+.footer-note strong {color:#ead6a8}
+.foot-links {display:flex;flex-wrap:wrap;justify-content:space-around;gap:10px;border-top:1px solid #49576b;margin-top:20px;padding-top:14px}
+.foot-links a {min-height:44px;display:inline-flex;align-items:center}
+@media(max-width:450px){
+  .astro-header {min-height:240px}
+  .orbit-art {right:-120px;top:20px;opacity:.29}
+  .intro {max-width:300px}
+  .day {grid-template-columns:65px minmax(0,1fr);gap:5px}
+  .day em {grid-column:2}
+}
+@media(prefers-reduced-motion:reduce) {.orbit-art,.orbit-core {animation:none}}
