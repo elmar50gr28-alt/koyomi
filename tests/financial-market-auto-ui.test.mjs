@@ -54,7 +54,7 @@ try{
  assert.ok(keys.every(k=>storage.has(k)),'all four markets should import on startup without taps');
  assert.equal(calls.length,4,'one request per market when primary source succeeds');
  assert.equal(elements.marketAutoStatuses.children.length,4);
- assert.match(elements.historyAutoStatus.textContent,/保存終値 2026-11-20/);
+ assert.match(elements.historyAutoStatus.textContent,/基準日 2026-11-20/);
  assert.match(elements.historySource.textContent,/Yahoo Finance/);
  assert.equal(elements.marketAutoStatuses.children[0].children[1].textContent,'56,436.65');
  assert.match(elements.marketAutoStatuses.children[0].children.at(-1).textContent,/直近の公表終値/);
