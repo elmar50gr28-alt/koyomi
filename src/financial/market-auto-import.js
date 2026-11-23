@@ -145,11 +145,11 @@ export function reconcileMarketHistory(previous,incoming){
   if(!previous?.rows?.length)return {data:incoming,updated:true,reason:'initial'};
   validatePriceRows(previous.rows);
   const oldLast=previous.rows.at(-1).date,newLast=incoming.rows.at(-1).date;
+  const differentInstrument=previous.instrument&&incoming.instrument&&previous.instrument!==incoming.instrument;
+  if(differentInstrument)return {data:previous,updated:false,reason:'different-instrument'};
   if(newLast<oldLast)return {data:previous,updated:false,reason:'older'};
   if(newLast===oldLast && incoming.rows.length<=previous.rows.length)
     return {data:previous,updated:false,reason:'unchanged'};
-  const differentInstrument=previous.instrument&&incoming.instrument&&previous.instrument!==incoming.instrument;
-  if(differentInstrument)return {data:previous,updated:false,reason:'different-instrument'};
   const overlaps=new Map(previous.rows.map(r=>[r.date,r.close]));
   let common=0;
   for(const row of incoming.rows){
