@@ -167,8 +167,9 @@ export function readStockSymbolic({stock,asOfDate,referenceDate=null,referenceTy
     }
     // A sampled symbolic trend, deliberately NOT calibrated to price or odds.
     const avg=totals.reduce((s,v)=>s+v,0)/totals.length;
-    const midpoint=keyOf(addDays(start,Math.floor((bucket.from+bucket.to)/2)));
-    const codeCycle=codeCycleAt(stock.code,midpoint,index);
+    // Fix the anchor across the three 30-day buckets; month index advances
+    // the symbolic cycle rather than accidentally cancelling the date-root.
+    const codeCycle=codeCycleAt(stock.code,asOfDate,index);
     // Prefer evidence involving the company's dated Sun to generic slow-planet
     // coincidences. Show distinct pairs, not 18 near-identical daily statements.
     findings.sort((a,b)=>(a.natalBody==='Sun'?-1:0)-(b.natalBody==='Sun'?-1:0)
