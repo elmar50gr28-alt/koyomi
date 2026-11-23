@@ -44,8 +44,13 @@ function cardDirection(item){
     if(CHALLENGE_MAJORS.has(major))return -1;
     return 0;
   }
-  const rank=Number(item.id.split('-')[2]);
-  return rank===4||rank===9?-1:1; // Five: scarcity; Ten: burden in this v1 tarot rule.
+  const [,suitId,rankId]=item.id.split('-');
+  const suit=Number(suitId), rank=Number(rankId);
+  // All Fives are difficult in the selected interpretive school. Ten of Cups and
+  // Ten of Pentacles remain auspicious; Ten of Wands is a burden.
+  const difficult=rank===4 || (suit===0&&rank===9) ||
+    (suit===2&&[6,7,8,9].includes(rank));
+  return difficult?-1:1;
 }
 export function tarotVerdict(type,items){
   if(!Object.hasOwn(SPREADS,type)||!Array.isArray(items)||items.length!==SPREADS[type].positions.length)throw new Error('Invalid tarot spread');
