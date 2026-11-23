@@ -14,7 +14,7 @@ class Element{
 const keys=['stockQuery','stockSearchStatus','stockResults','stockManualCode','stockManualName',
  'stockManualSave','stockReading','selectedStockName','selectedStockCode','selectedStockSector',
  'selectedStockSource','stockFavorite','stockDate','stockReferenceType','stockReferenceDate',
- 'stockRead','stockStatus','stockForecast','stockBasis','stockMonths','stockReferenceExplanation',
+ 'stockRead','stockStatus','stockForecast','stockForecastHeading','stockBasis','stockMonths','stockReferenceExplanation',
  'stockNumerology','stockNumerologyText','stockNumerologyReason','stockTarotDraw','stockTarotResult',
  'stockCSV','stockPriceStatus','stockPriceResult','stockLastClose','stockPriceDate','stockPriceWarning'];
 const els=Object.fromEntries(keys.map(k=>[k,new Element()]));
@@ -51,11 +51,18 @@ try{
  assert.equal(els.selectedStockName.textContent,'日本トムソン');
  assert.equal(els.stockForecast.hidden,false);
  assert.equal(els.stockMonths.children.length,3);
- assert.match(els.stockBasis.textContent,/市場全体に共通/,'unknown founding date is not fabricated');
+ assert.match(els.stockBasis.textContent,/コード数秘/,'unknown founding date is not fabricated');
+ assert.match(els.stockForecastHeading.textContent,/銘柄コード数秘/);
+ assert.equal(els.stockMonths.children[0].children[3].className,'period-number');
+ const firstCardNumerology=els.stockMonths.children[0].children[3].textContent;
+ assert.ok(els.stockMonths.children.every(el=>el.children.some(child=>
+   child.className==='market-context')),
+   'universal market astrology is labeled as shared context, not a company-specific result');
  assert.equal(String(els.stockNumerology.textContent),'9','ticker-based numerology is separate');
  els.stockReferenceDate.value='2020-01-01';
  els.stockReferenceDate.listeners.change();
  assert.match(els.stockBasis.textContent,/企業の上場日/);
+ assert.match(els.stockForecastHeading.textContent,/企業占星術とコード数秘/);
  els.stockFavorite.listeners.click();
  assert.equal(els.stockFavorite.attributes['aria-pressed'],'true');
  els.stockTarotDraw.listeners.click();
@@ -70,6 +77,9 @@ try{
  els.stockManualSave.listeners.click();
  assert.equal(els.selectedStockCode.textContent,'555A');
  assert.equal(els.stockPriceResult.hidden,true,'another ticker never inherits previous close data');
+ assert.match(els.stockBasis.textContent,/555A/);
+ assert.notEqual(els.stockMonths.children[0].children[3].textContent,firstCardNumerology,
+  'different ticker should change visible numerological cycle evidence');
  assert.match(els.stockPriceStatus.textContent,/未取得/);
  await new Promise(r=>setTimeout(r,20));
  els.stockQuery.value='日本トムソン';
