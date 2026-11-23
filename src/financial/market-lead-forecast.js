@@ -243,7 +243,7 @@ export function forecastLeadMonths({prices,asOfDate,readSky,market='nikkei'}){
  const cache=new Map(),price=priceFeatures(known,idx);
  const reports=evaluateLeadModels({prices:known,readSky,latestDate:last.date});
  const buckets=LEAD_RESEARCH_POLICY.horizons.map((h,j)=>{
-  const trainRows=past.filter(x=>x.buckets[j]).map(x=>x.buckets[j]);
+  const trainRows=past.filter(x=>x.buckets[j]).map(x=>({date:x.date,...x.buckets[j]}));
   const fitCombined=chooseModel(trainRows,'combined'),fitPrice=chooseModel(trainRows,'price');
   const model=fitCombined.model,priceModel=fitPrice.model;
   if(!model||!priceModel)return {period:h.label,start:dateAdd(last.date,h.start),end:dateAdd(last.date,h.end),
