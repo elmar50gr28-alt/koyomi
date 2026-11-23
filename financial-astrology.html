@@ -34,6 +34,19 @@
       </div>
     </div>
     <p id="astroStatus" class="status" role="status" aria-live="polite"></p>
+    <section class="panel lead-panel" aria-labelledby="leadHeading">
+      <div class="eyebrow">CRASH LEAD · 1〜3か月先</div>
+      <h2 id="leadHeading">大きく下がるのは、いつ頃か？</h2>
+      <p class="subtext">取り込んだ過去の実際の終値から学習し、過去価格と将来の天体配置を使って<strong>最大90日先までの警戒候補時期</strong>を表示します。</p>
+      <button id="leadRun" class="lead-run" type="button">過去の相場から学習して3か月先を占う</button>
+      <p id="leadStatus" class="status" role="status" aria-live="polite">この機能には実際の終値データが必要です。下の「値動きと答え合わせ」から読み込んでください。</p>
+      <div id="leadResult" hidden>
+        <p id="leadHeadline" class="lead-headline"></p>
+        <div id="leadMonths" class="lead-months"></div>
+        <p id="leadDiagnostics" class="lead-diagnostics"></p>
+      </div>
+      <p class="small"><strong>研究段階：</strong>スコアは暴落確率ではありません。未来の株価は学習に使用しません。時系列を分割して過去の未使用期間で比較し、単なる価格モデルを上回らなければ「予測力未確認」と表示します。</p>
+    </section>
 
     <section class="panel market-forecast" id="marketForecast" aria-labelledby="marketForecastTitle">
       <div class="eyebrow">MARKET DIRECTION · 星による相場占い</div>
