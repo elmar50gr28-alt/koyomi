@@ -20,6 +20,8 @@ const safeDate=rows[29].date,warningDate=rows[58].date;
 assert.equal(priceRiskAt(rows,safeDate).level,'normal');
 assert.ok(['high','caution'].includes(priceRiskAt(rows,warningDate).level));
 assert.equal(priceRiskAt(rows,rows[0].date).level,'unavailable');
+assert.throws(()=>priceRiskAt(rows,'2026-02-30'),/不正/);
+assert.throws(()=>priceRiskAt(rows,'not-a-date'),/不正/);
 assert.equal(priceRiskAt(rows,'2027-06-01').level,'unavailable','stale closes must not imply current safety');
 const exact=priceRiskAt(rows,safeDate), extended=rows.concat([{date:'2027-01-01',close:1}]);
 assert.deepEqual(priceRiskAt(extended,safeDate),exact,'future price must never affect prior risk!');
