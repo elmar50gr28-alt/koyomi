@@ -23,6 +23,12 @@ try {
   assert.equal(messages[0].result.horizon,7);
   assert.equal(messages[0].result.crises.market,'nasdaq');
   assert.equal(messages[0].result.crises.events.length,3);
+  const asOfDate=prices.at(-1).date;
+  listeners.get('message')({data:{mode:'lead-months',requestId:12,market:'nasdaq',asOfDate,prices}});
+  assert.equal(messages.length,2);
+  assert.equal(messages[1].requestId,12);
+  assert.equal(messages[1].ok,true,messages[1].error);
+  assert.ok(['experimental','unavailable'].includes(messages[1].result.status));
 }finally{
   if(original)Object.defineProperty(globalThis,'self',original);
   else delete globalThis.self;
