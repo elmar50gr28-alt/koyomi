@@ -149,7 +149,7 @@ export function interpretEconomy(aspects, retrogrades, phase) {
   const total = factors.reduce((sum, item) => sum + item.direction * item.strength, 0);
   const supports = factors.filter(item => item.direction > 0);
   const cautions = factors.filter(item => item.direction < 0);
-  const mode = total >= 3 ? 'good' : total <= -3 ? 'caution' : 'mixed';
+  const mode = total >= 2 ? 'good' : total <= -2 ? 'caution' : 'mixed';
   const statements = {
     good: {
       label: '吉', headline: '経済運は吉。前進の気配が優勢。',
