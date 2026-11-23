@@ -1,5 +1,6 @@
 import {readFinancialWindow} from './astrology-core.js';
 import {priceRiskAt,studyHistoricalCrashes} from './market-crash-research.js';
+import {forecastLeadMonths} from './market-lead-forecast.js';
 import {
   MARKET_PRICE_SOURCE,OFFICIAL_CSV_LINKS,parseMarketCSV,validatePriceRows,backtestMarketDirection
 } from './market-history.js';
@@ -34,6 +35,7 @@ function drawPriceCurve(rows){
 function showDataset(){
   const market=selectedMarket(),data=datasets.get(market);
   get('historyStatistics').hidden=true;
+  get('leadResult').hidden=true;
   get('historyResult').hidden=!data;
   if(!data){showMarketRisk();return;}
   const rows=data.rows,first=rows[0],last=rows.at(-1);
@@ -167,6 +169,79 @@ async function loadFile(){
   }catch(e){get('historyStatus').textContent='取込エラー：'+e.message;}
   finally{get('historyFile').value='';}
 }
+function evaluateLeadOffThread(prices,market,asOfDate){
+  const fallback=()=>{
+    const readSky=key=>{
+      const [y,m,d]=key.split('-').map(Number);
+      return readFinancialWindow(new Date(y,m-1,d,12),window.Astronomy,1)[0];
+    };
+    return forecastLeadMonths({prices,market,asOfDate,readSky});
+  };
+  if(typeof Worker==='undefined')return Promise.resolve(fallback());
+  return new Promise((resolve,reject)=>{
+    let worker;
+    try{worker=new Worker(new URL('./market-history-worker.js',import.meta.url),{type:'module'});}
+    catch{resolve(fallback());return;}
+    const stop=()=>{clearTimeout(timer);worker.terminate();};
+    const timer=setTimeout(()=>{stop();reject(new Error('学習の実行時間が上限を超えました。'));},120000);
+    worker.onmessage=e=>{
+      if(e.data?.requestId!==2)return;
+      stop();
+      if(e.data.ok)resolve(e.data.result);else reject(new Error(e.data.error||'学習に失敗しました。'));
+    };
+    worker.onerror=()=>{stop();reject(new Error('学習用の天文計算を起動できませんでした。'));};
+    worker.postMessage({mode:'lead-months',requestId:2,prices,market,asOfDate});
+  });
+}
+function showLeadForecast(data){
+  const host=get('leadMonths');host.replaceChildren();
+  if(data.status!=='experimental'){
+    get('leadResult').hidden=true;
+    get('leadStatus').textContent='予測保留：'+(data.reason||'学習に必要な暴落事例が不足しています。');
+    return;
+  }
+  get('leadResult').hidden=false;
+  get('leadHeadline').textContent='最も注意を集める候補時期：'+
+    (data.leadingPeriod||'判定保留')+'（研究スコア '+data.highestRiskScore+'/100）';
+  for(const item of data.buckets){
+    const box=node('article','');box.className='lead-month';
+    box.append(node('strong',item.period),
+      node('small',item.start+' ～ '+item.end));
+    if(item.status==='experimental'){
+      box.dataset.risk=item.classification==='注意候補'?'high':'normal';
+      box.append(node('span','研究スコア '+item.riskScore+'/100　'+item.classification),
+        node('small','過去価格だけのモデル：'+item.priceOnlyScore+'/100'));
+    }else{
+      box.append(node('span','学習不足・判定保留'));
+    }
+    host.append(box);
+  }
+  const evaluated=data.diagnostics.filter(d=>d.status==='evaluated');
+  const superior=evaluated.filter(d=>d.beatPriceOnly&&d.beatConstant);
+  get('leadDiagnostics').textContent='時系列を分けた未使用期間の検証：'+evaluated.length+
+    '/3期間に評価値あり。価格のみ・単純予想の両方を上回った期間：'+superior.length+
+    '/'+evaluated.length+'。'+
+    (data.canClaimVerified?'全期間で過去比較に優位性。ただし前向きの精度は未証明。':
+     '安定した予測優位性は未確認。スコアを投資判断に使用しないでください。');
+  get('leadStatus').textContent='学習と試験完了：'+data.asOf+
+    'までの価格だけを利用（未来の天体計算は可能）。';
+}
+async function runLeadForecast(){
+  const market=selectedMarket(),data=datasets.get(market);
+  if(!data){get('leadStatus').textContent='先に対象市場の終値データを取り込んでください。';return;}
+  const asOfDate=get('astroDate').value,button=get('leadRun');
+  button.disabled=true;button.textContent='過去相場から学習しています…';
+  get('leadResult').hidden=true;
+  get('leadStatus').textContent='未来の相場価格を見ずに、月別の特徴と下落事例を照合しています…';
+  try{
+    await new Promise(r=>setTimeout(r,30));
+    const result=await evaluateLeadOffThread(data.rows,market,asOfDate);
+    if(selectedMarket()!==market||get('astroDate').value!==asOfDate)return;
+    showLeadForecast(result);
+  }catch(e){
+    get('leadResult').hidden=true;get('leadStatus').textContent='予測エラー：'+e.message;
+  }finally{button.disabled=false;button.textContent='過去の相場から学習して3か月先を占う';}
+}
 function evaluateOffThread(prices,market,horizon){
   const fallback=()=>{
     const readWindow=(date,days)=>readFinancialWindow(date,window.Astronomy,days);
@@ -215,6 +290,8 @@ function setup(){
   get('historyAuto').addEventListener('click',loadOnline);
   get('historyFile').addEventListener('change',loadFile);
   get('historyRun').addEventListener('click',runHistoricalValidation);
+  get('leadRun').addEventListener('click',runLeadForecast);
+  get('astroDate').addEventListener('change',()=>{get('leadResult').hidden=true;});
   restore();
 }
 if(typeof document!=='undefined')setup();
