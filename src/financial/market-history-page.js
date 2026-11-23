@@ -37,7 +37,8 @@ function showDataset(){
   if(!data)return;
   const rows=data.rows,first=rows[0],last=rows.at(-1);
   get('historyLatest').textContent=last.close.toLocaleString('ja-JP',{maximumFractionDigits:4});
-  get('historyLatestDate').textContent=last.date;
+  const prev=rows.at(-2),daily=prev?(last.close/prev.close-1)*100:null;
+  get('historyLatestDate').textContent=last.date+(daily===null?'':' ／ 前回比 '+(daily>0?'+':'')+daily.toFixed(2)+'%');
   get('historyRange').textContent=first.date.slice(0,7)+' ～ '+last.date.slice(0,7);
   get('historyRows').textContent=rows.length.toLocaleString('ja-JP')+'営業日分';
   get('historySource').textContent='取得元：'+data.source;
@@ -109,6 +110,28 @@ async function loadFile(){
   }catch(e){get('historyStatus').textContent='取込エラー：'+e.message;}
   finally{get('historyFile').value='';}
 }
+function evaluateOffThread(prices,market,horizon){
+  const fallback=()=>backtestMarketDirection({
+    prices,market,horizon,
+    readWindow:(date,days)=>readFinancialWindow(date,window.Astronomy,days)
+  });
+  if(typeof Worker==='undefined')return Promise.resolve(fallback());
+  return new Promise((resolve,reject)=>{
+    let worker;
+    try{worker=new Worker(new URL('./market-history-worker.js',import.meta.url),{type:'module'});}
+    catch{resolve(fallback());return;}
+    const stop=()=>{clearTimeout(limit);worker.terminate();};
+    const limit=setTimeout(()=>{stop();reject(new Error('検証処理が長時間続いたため中断しました。'));},120000);
+    worker.onmessage=e=>{
+      if(e.data?.requestId!==1)return;
+      stop();
+      if(e.data.ok)resolve(e.data.result);
+      else reject(new Error(e.data?.error||'計算に失敗しました。'));
+    };
+    worker.onerror=()=>{stop();reject(new Error('バックグラウンドの天文計算を開始できませんでした。'));};
+    worker.postMessage({requestId:1,prices,market,horizon});
+  });
+}
 async function runHistoricalValidation(){
   const market=selectedMarket(),data=datasets.get(market),horizon=Number(get('marketHorizon').value);
   if(!data){get('historyStatus').textContent='先に終値CSVを取り込んでください。';return;}
@@ -117,10 +140,7 @@ async function runHistoricalValidation(){
   try{
     // Yield a frame before CPU-bound offline ephemeris evaluation.
     await new Promise(resolve=>setTimeout(resolve,30));
-    const result=backtestMarketDirection({
-      prices:data.rows,market,horizon,
-      readWindow:(date,days)=>readFinancialWindow(date,window.Astronomy,days)
-    });
+    const result=await evaluateOffThread(data.rows,market,horizon);
     if(selectedMarket()!==market||Number(get('marketHorizon').value)!==horizon)return;
     showBacktest(result);
     get('historyStatus').textContent='検証完了：'+result.sourceStart+' ～ '+result.sourceEnd+' ／ '+horizon+'暦日判定。';
