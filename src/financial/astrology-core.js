@@ -144,6 +144,11 @@ export function readFinancialSky(date, astronomy) {
 export function readFinancialWindow(start, astronomy, days=14) {
   validDate(start);
   if (!Number.isInteger(days) || days < 1 || days > 31) throw new RangeError('表示期間は1〜31日です。');
-  return Array.from({length:days}, (_, index) =>
-    readFinancialSky(addCalendarDays(start,index),astronomy));
+  const output=[];
+  for (let index=0; index<days; index++) {
+    const current=addCalendarDays(start,index);
+    if (current.getFullYear() > 2099) break;
+    output.push(readFinancialSky(current,astronomy));
+  }
+  return output;
 }
