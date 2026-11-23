@@ -1,4 +1,5 @@
 import {readFinancialWindow} from './astrology-core.js';
+import {priceRiskAt,studyHistoricalCrashes} from './market-crash-research.js';
 import {
   MARKET_PRICE_SOURCE,OFFICIAL_CSV_LINKS,parseMarketCSV,validatePriceRows,backtestMarketDirection
 } from './market-history.js';
@@ -34,7 +35,7 @@ function showDataset(){
   const market=selectedMarket(),data=datasets.get(market);
   get('historyStatistics').hidden=true;
   get('historyResult').hidden=!data;
-  if(!data)return;
+  if(!data){showMarketRisk();return;}
   const rows=data.rows,first=rows[0],last=rows.at(-1);
   get('historyLatest').textContent=last.close.toLocaleString('ja-JP',{maximumFractionDigits:4});
   const prev=rows.at(-2),daily=prev?(last.close/prev.close-1)*100:null;
@@ -44,8 +45,38 @@ function showDataset(){
   get('historySource').textContent='取得元：'+data.source;
   drawPriceCurve(rows);
   get('historyStatus').textContent='終値データを読み込みました。期間を選んで「過去検証を実行」を押してください。';
+  showMarketRisk();
 }
-function updateMarket(){sourceLink();showDataset();}
+function showMarketRisk(){
+  const market=selectedMarket(),data=datasets.get(market);
+  const date=get('astroDate').value;
+  const tag=get('marketRiskTag'),reason=get('marketRiskText'),verdict=get('marketRiskVerdict');
+  const star=get('marketDirection').dataset.direction;
+  if(!data){
+    tag.textContent='価格未取得';tag.dataset.level='unavailable';
+    reason.textContent='相場終値を読み込むと、既に起こった価格の下落を独立して判定できます。';
+    verdict.textContent='価格データがないため、占星術の結果を補正していません。';
+    return;
+  }
+  try{
+    const risk=priceRiskAt(data.rows,date);
+    tag.textContent=risk.label;tag.dataset.level=risk.level;
+    reason.textContent=risk.available
+      ? '判定の基準日：'+risk.lastDate+'終値 ／ '+risk.reason
+      : risk.reason;
+    verdict.textContent=!risk.available
+      ? '価格による危険度は判定保留。星の判断だけで安全とは言えません。'
+      : risk.warning
+        ? (star==='up'?'星は上昇占断ですが、実際の価格は急落警戒。売買判断への転用は避けてください。':
+          '実際の下落が観測されています。ただし暴落前に予知したことではありません。')
+        : '実価格に固定閾値の下落警戒はありません。将来の上昇や安全を保証しません。';
+  }catch(error){
+    tag.textContent='判定保留';tag.dataset.level='unavailable';
+    reason.textContent='価格の条件を確認できません：'+error.message;
+    verdict.textContent='実市場の安全性は未確認です。';
+  }
+}
+function updateMarket(){sourceLink();showDataset();showMarketRisk();}
 function save(market,rows,source){
   validatePriceRows(rows);
   // The browser keeps only closes and dates; no remote upload or account required.
@@ -68,8 +99,30 @@ function restore(){
   }
   updateMarket();
 }
+function showCrashResults(data){
+  const section=get('historyCrashes'),host=get('historyCrashList');
+  host.replaceChildren();
+  const events=data?.events||[];
+  section.hidden=!events.some(item=>item.status==='evaluated');
+  for(const item of events){
+    if(item.status!=='evaluated')continue;
+    const box=node('article','');box.className='crash-case';
+    box.append(node('h4',item.title),
+      node('p','この期間の最大下落 '+item.observedDrawdownPct.toFixed(1)+'% ／ 14日以内8%以上下落 '+item.crashCases+'件 ／ 評価日 '+item.n+'件'),
+      node('p','星の「下落」判定：下落例の捕捉 '+(item.astro.recall===null?'–':item.astro.recall.toFixed(1)+'%')+
+        '、非暴落時の誤警戒 '+item.astro.falseAlerts+'件'),
+      node('p','実価格の下落警戒：下落例の捕捉 '+(item.priceGuard.recall===null?'–':item.priceGuard.recall.toFixed(1)+'%')+
+        '、非暴落時の誤警戒 '+item.priceGuard.falseAlerts+'件'));
+    if(item.checkpoint){
+      box.append(node('p','暴落前後の基準日 '+item.checkpoint.date+'：星 '+item.checkpoint.astro+
+        ' ／ 価格 '+item.checkpoint.priceRisk+' ／ 次の14日間の最大下落 '+item.checkpoint.futureWorstPct.toFixed(1)+'%'));
+    }
+    host.append(box);
+  }
+}
 function showBacktest(result){
   get('historyStatistics').hidden=false;
+  showCrashResults(result.crises);
   get('historyAccuracy').textContent=result.modelAccuracy===null?'算出不可':result.modelAccuracy.toFixed(1)+'%';
   get('historyBaseline').textContent=result.baselineAccuracy===null?'算出不可':result.baselineAccuracy.toFixed(1)+'%';
   get('historyCount').textContent=result.evaluated+'件';
@@ -111,10 +164,13 @@ async function loadFile(){
   finally{get('historyFile').value='';}
 }
 function evaluateOffThread(prices,market,horizon){
-  const fallback=()=>backtestMarketDirection({
-    prices,market,horizon,
-    readWindow:(date,days)=>readFinancialWindow(date,window.Astronomy,days)
-  });
+  const fallback=()=>{
+    const readWindow=(date,days)=>readFinancialWindow(date,window.Astronomy,days);
+    return {
+      ...backtestMarketDirection({prices,market,horizon,readWindow}),
+      crises:studyHistoricalCrashes({prices,market,readWindow,horizon:14})
+    };
+  };
   if(typeof Worker==='undefined')return Promise.resolve(fallback());
   return new Promise((resolve,reject)=>{
     let worker;
@@ -149,6 +205,8 @@ async function runHistoricalValidation(){
 }
 function setup(){
   get('marketInstrument').addEventListener('change',updateMarket);
+  get('astroDate').addEventListener('change',showMarketRisk);
+  for(const id of ['astroPrev','astroNext','astroToday'])get(id).addEventListener('click',showMarketRisk);
   get('marketHorizon').addEventListener('change',()=>{get('historyStatistics').hidden=true;});
   get('historyAuto').addEventListener('click',loadOnline);
   get('historyFile').addEventListener('change',loadFile);
