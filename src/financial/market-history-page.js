@@ -107,6 +107,7 @@ function renderAutoStatuses(){
     const last=cached?.rows?.at(-1);
     const age=last?ageOfLastClose(cached.rows):null;
     const label=MARKET_LABELS[market];
+    const displayName=market==='gold'&&cached?.instrument!=='COMEX-GC'?'金価格':label.title;
     const state=info?.status||'queued';
     const stale=!!(age?.stale||state==='stale');
     const headline=stale?'更新が遅れています':
@@ -117,7 +118,7 @@ function renderAutoStatuses(){
     card.type='button';card.className='market-price-card';
     card.setAttribute('aria-pressed',String(market===selected));
     card.dataset.status=stale?'stale':state;
-    const name=node('span',label.title);name.className='market-price-name';
+    const name=node('span',displayName);name.className='market-price-name';
     const amount=node('strong',last?
       last.close.toLocaleString('ja-JP',{minimumFractionDigits:market==='nikkei'?0:2,maximumFractionDigits:label.digits}):
       '—');amount.className='market-price-value';
@@ -142,15 +143,16 @@ function setAutoState(market,status,message=''){
   autoStates.set(market,{status,message});
   renderAutoStatuses();
   if(selectedMarket()===market){
-    const info=autoStates.get(market);
     const existing=datasets.get(market);
-    const date=existing?.rows?.at(-1)?.date||'未取得';
-    get('historyAutoStatus').textContent='自動取込：'+(status==='checking'?'更新中':
-      status==='updated'?'成功':status==='stale'?'取得元が古い':
-      status==='offline'?'オフライン':
-      status==='unavailable'?'取得失敗・キャッシュ使用':
-      status==='conflict'?'系列不一致で保留':'確認済み')+
-      ' ／ 保存終値 '+date+(message?' ／ '+message:'');
+    const last=existing?.rows?.at(-1)?.date;
+    get('historyAutoStatus').textContent=
+      status==='checking'?'最新の公表終値を確認しています…':
+      status==='updated'?'更新しました。基準日 '+last:
+      status==='stale'?'提供元の更新が遅れています。基準日 '+(last||'不明'):
+      status==='offline'?'オフラインです。保存済みの終値を表示しています。':
+      status==='unavailable'?'自動取得に失敗しました。保存済みの終値を表示しています。':
+      status==='conflict'?'価格系列が一致しないため、既存の終値を保持しました。':
+      last?'保存済みの終値：'+last:'価格データはまだ取得できていません。';
   }
 }
 function updateMarket(){
