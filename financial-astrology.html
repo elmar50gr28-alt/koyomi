@@ -73,6 +73,11 @@
       <h3 class="market-subtitle">日ごとの占断</h3>
       <div id="marketDaily" class="market-day-grid" aria-label="日別の上昇・下落占い"></div>
       <p class="market-warning">注意：これは市場価格を一切使わない<strong>占星術上の相場占い</strong>です。各市場の違いを反映した予測モデルではなく、対象を切り替えても同じ天体占断を表示します。実際の騰落を予測できると実証されたものではありません。</p>
+      <section class="market-risk-panel" id="marketRiskPanel" aria-labelledby="marketRiskHeading" aria-live="polite">
+        <div class="heading-row"><h3 id="marketRiskHeading">実相場の急落警戒</h3><span id="marketRiskTag" class="risk-label">価格未取得</span></div>
+        <p id="marketRiskText">実際の終値を取り込むと、過去の値下がりから警戒度を表示します。</p>
+        <p id="marketRiskVerdict" class="risk-verdict">天体占断と価格の警戒は、別々の根拠として表示します。</p>
+      </section>
       <p class="market-audit-warning"><strong>実相場の検証では予測優位性なし。</strong>NASDAQ100の過去履歴（2019〜2026年）で、7日間の占断的中率は42.53%、常に上昇と予想する場合は61.69%でした。<a href="#historyHeading">終値と検証方法を見る</a></p>
     </section>
 
@@ -103,6 +108,11 @@
             <div><span>判定数</span><strong id="historyCount">検証待ち</strong></div>
           </div>
           <p id="historyInterpretation" class="history-interpretation"></p>
+          <section id="historyCrashes" class="history-crashes" aria-labelledby="crashStudyHeading" hidden>
+            <h3 id="crashStudyHeading">過去の暴落で本当に警戒できたか</h3>
+            <p class="small">14暦日以内に終値が8%以上下がった事例と照合。過去の暴落前・暴落中の星占断と、価格警戒を分けて表示します。</p>
+            <div id="historyCrashList"></div>
+          </section>
           <details><summary>過去の占断と実際の騰落を確認</summary><div id="historyExamples" class="history-examples"></div></details>
         </div>
       </div>
