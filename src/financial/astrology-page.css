@@ -37,6 +37,13 @@ h1 { font-family:Georgia,"Yu Mincho",serif;font-size:clamp(2rem,7vw,3.3rem);font
 .hero-reading {border-color:#af8c57;background:radial-gradient(circle at 95% 15%,#654c3155,transparent 55%),linear-gradient(145deg,#192e40,#101c2c)}
 .hero-reading h2 {font-family:Georgia,"Yu Mincho",serif;font-size:clamp(1.43rem,5.5vw,2rem);color:#ffe2a8;line-height:1.45;margin:8px 0 12px}
 .hero-reading > p {color:#f5efe4;margin:0 0 15px}
+.verdict-word {display:inline-flex;align-items:center;justify-content:center;min-width:72px;min-height:58px;padding:5px 18px;margin:12px 0 2px;border:2px solid #e9c88e;border-radius:15px;background:#372f25;color:#fff2c5;font:800 2rem Georgia,"Yu Mincho",serif;letter-spacing:.12em}
+.verdict-word[data-mode="good"] {border-color:#b5d9ad;background:#234034;color:#e0f5d7}
+.verdict-word[data-mode="caution"] {border-color:#f0b3a0;background:#492b2d;color:#ffe0d5}
+.verdict-word[data-mode="mixed"] {border-color:#e9c88e;background:#423c30;color:#fff1c3}
+.hero-reading .astro-action {padding:12px 14px;border-left:3px solid #e8c681;border-radius:8px;background:#263747;color:#fff3d6;font-weight:750}
+.hero-reading .astro-reason {font-size:.87rem;color:#c6d2d4;line-height:1.7}
+
 .sky-facts {display:flex;align-items:center;gap:14px;padding:12px;background:#0b1b2ccc;border:1px solid #5e615e;border-radius:14px}
 .moon-face {width:53px;height:53px;flex:0 0 53px;border-radius:50%;border:1px solid #d4c49a;display:grid;place-items:center;font:2.1rem Georgia,serif;color:#f2dfaf;background:radial-gradient(circle at 35% 35%,#4e5b6c,#111924)}
 .sky-facts strong,.fact-label,.fact-detail {display:block}

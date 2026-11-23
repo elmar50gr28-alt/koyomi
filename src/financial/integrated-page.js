@@ -12,6 +12,30 @@
     finally{fields.forEach((el,i)=>el.value=previous[i]);setDate(previousDate);}
   }
   function localDate(date){return [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');}
+  function directVerdict(judgment,focus){
+    if (judgment.scoreAvailable===false || judgment.status==='insufficient') return {
+      label:'保留',title:'鑑定材料が不足。吉凶を捏造しません。',
+      reason:'計算できた占術が不足しています。',action:'入力条件を確認してください。'
+    };
+    const mode=['forward','test','protect'].includes(judgment.state)?judgment.state:
+      (judgment.score>=72?'forward':judgment.score<42?'protect':'test');
+    const phrases={
+      income:{
+        forward:['吉','金運は吉。収入と貯蓄を前進させる時。','収入を増やす方法を一つ具体化する。'],
+        test:['半吉半凶','金運は半吉半凶。増収より収支の整理が先。','固定費か貯蓄の条件を一つ見直す。'],
+        protect:['凶','金運は凶。今日は守りに徹せよ。','支出を増やさず、固定費を一つ点検する。']
+      },
+      purchase:{
+        forward:['吉','買い物運は吉。ただし条件を揃えて進め。','総額と契約条件を確認してから決める。'],
+        test:['半吉半凶','買い物運は半吉半凶。即決は凶。','複数の候補と維持費を比較する。'],
+        protect:['凶','買い物運は凶。大きな契約は見送れ。','購入の必要性と解約費用を見直す。']
+      }
+    };
+    const [label,title,action]=phrases[focus]?.[mode]||phrases.income.test;
+    const disagree=judgment.contradiction?'占術同士の判断は割れていますが、':'';
+    const reason=disagree+'利用可能な占術を統合した結果、'+label+'と判定しました。';
+    return {label,title,reason,action:'今日の一手：'+action};
+  }
   function createReading({legacy,methods,judgment,profile},bazi,focus,date){
     if(!legacy||!profile||!judgment)throw new Error('鑑定に必要なデータを取得できませんでした。');
     const structured=bazi.calculateBazi(profile,profile.baziSettings||root.KOYOMI_BAZI_SETTINGS?.()||{},{referenceDate:new Date(date+'T12:00:00')});
@@ -52,8 +76,14 @@
         const pack=calculate(focus,date),reading=createReading(pack,bazi,focus,date);
         if(focus!==get('financialReadingFocus').value||date!==get('financialReadingDate').value)return;
         output.append(element('h2',reading.name+'さんの財運'),element('p',date+' ／ '+reading.focusLabel,'financial-meta'));
-        const j=reading.judgment,summary=j.scoreAvailable===false?'判定保留：利用できる計算結果がありません。':root.KOYOMI_MEANING_EVIDENCE.translate(j).join('\n');
-        output.append(block('財運の結論',summary));
+        const j=reading.judgment,verdict=directVerdict(j,focus);
+        const verdictBox=element('section',null,'financial-verdict');
+        verdictBox.append(element('span','占術上の判定：'+verdict.label,'financial-verdict-label'),
+          element('h3',verdict.title),element('p',verdict.action,'financial-verdict-action'),
+          element('p',verdict.reason,'financial-meta'));
+        output.append(verdictBox);
+        const summary=j.scoreAvailable===false?'判定保留：利用できる計算結果がありません。':root.KOYOMI_MEANING_EVIDENCE.translate(j).join('\n');
+        output.append(block('詳しい鑑定',summary));
         const finance=reading.finance;
         output.append(block('四柱推命から見る財運',[finance.beginnerSummary,finance.action,finance.caution].filter(Boolean).join('\n\n')));
         if(reading.timeUnknown)output.append(element('p','出生時刻が不明のため、四柱推命・西洋占星術の一部は限定した条件で読んでいます。','financial-meta'));
@@ -64,5 +94,5 @@
       finally{button.disabled=false;button.textContent='財運を総合鑑定する';}
     });
   }
-  root.KOYOMI_FINANCIAL_PAGE=Object.freeze({FOCUSES,withInputs,createReading,mount});
+  root.KOYOMI_FINANCIAL_PAGE=Object.freeze({FOCUSES,withInputs,createReading,directVerdict,mount});
 })(typeof window==='undefined'?globalThis:window);

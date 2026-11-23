@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
   positionsAt, lunarPhase, findAspects, retrogradesAt, readFinancialSky,
-  readFinancialWindow, localDateKey, FINANCIAL_ASTROLOGY_META
+  readFinancialWindow, localDateKey, interpretEconomy, FINANCIAL_ASTROLOGY_META
 } from '../src/financial/astrology-core.js';
 
 const base=new Date(2026,10,23,12);
@@ -29,6 +29,18 @@ const reading=readFinancialSky(base,astronomy);
 assert.equal(reading.date,'2026-11-23');
 assert.ok(reading.headline);
 assert.equal(reading.phase.label,'新月付近');
+assert.ok(['吉','平','凶'].includes(reading.verdict.label));
+assert.match(reading.verdict.headline,/経済運は/);
+assert.match(reading.verdict.action,/今日の一手/);
+assert.match(reading.verdict.reason,/根拠/);
+assert.deepEqual(reading.verdict,readFinancialSky(base,astronomy).verdict,'same date always has same judgment');
+const mock=(type,bodies)=>({type,bodies,orb:0.5,label:bodies.join(' × '),aspect:type});
+const phase={label:'新月付近'};
+assert.equal(interpretEconomy([mock('trine',['Venus','Jupiter']),mock('sextile',['Mercury','Jupiter'])],[],phase).label,'吉');
+assert.equal(interpretEconomy([mock('square',['Venus','Saturn']),mock('opposition',['Mercury','Mars'])],[],phase).label,'凶');
+assert.equal(interpretEconomy([],[],phase).label,'平');
+assert.equal(interpretEconomy([mock('trine',['Venus','Jupiter']),mock('square',['Mercury','Saturn'])],[],phase).label,'平');
+assert.equal(interpretEconomy([], [{body:'Mercury',label:'水星'}],phase).label,'平');
 assert.equal(reading.meta.reviewStatus,'traditional-symbolism-not-market-validated');
 assert.deepEqual(readFinancialWindow(base,astronomy,3).map(x=>x.date),['2026-11-23','2026-11-24','2026-11-25']);
 assert.equal(readFinancialWindow(new Date(2026,11,31,12),astronomy,2)[1].date,'2027-01-01');
@@ -47,10 +59,14 @@ const tarot=fs.readFileSync('financial.html','utf8');
 const worker=fs.readFileSync('service-worker.js','utf8');
 assert.match(html,/data-panel="world"/);
 assert.match(html,/data-panel="personal"/);
+assert.match(html,/id="astroVerdict"/);
+assert.match(html,/id="astroReason"/);
+assert.match(html,/id="astroAction"/);
+assert.match(html,/吉・平・凶/);
 assert.match(html,/aria-live="polite"/);
 assert.match(html,/astroDate/);
 assert.match(html,/astronomy.browser.min.js/);
-assert.match(html,/株価や上昇期待値ではありません/);
+assert.match(html,/株価や景気の実測・予測値ではありません/);
 assert.match(html,/ブラッドリー曲線は原典の係数/);
 assert.match(css,/min-height:48px/);
 assert.match(css,/:focus-visible/);
@@ -72,7 +88,7 @@ class Element {
   click(){this.listeners.click();}
 }
 const ids=Object.fromEntries(['astroStatus','astroDate','astroPrev','astroNext','astroToday','astroHeadline',
-  'astroSummary','astroPhase','astroPhaseTheme','astroRetrogrades','astroAspects','astroCurve',
+  'astroSummary','astroVerdict','astroReason','astroAction','astroPhase','astroPhaseTheme','astroRetrogrades','astroAspects','astroCurve',
   'astroWindow','astroResult','worldPanel','personalPanel'].map(key=>[key,new Element()]));
 const tabs=['world','personal'].map(panel=>Object.assign(new Element(),{dataset:{panel}}));
 globalThis.document={getElementById:id=>ids[id],querySelectorAll:()=>tabs,
@@ -83,6 +99,9 @@ Object.defineProperty(globalThis,'navigator',{configurable:true,value:{serviceWo
 try {
   await import('../src/financial/astrology-page.js?ui');
   assert.equal(ids.astroResult.hidden,false);
+  assert.ok(['吉','平','凶'].includes(ids.astroVerdict.textContent));
+  assert.match(ids.astroHeadline.textContent,/経済運は/);
+  assert.match(ids.astroAction.textContent,/今日の一手/);
   assert.ok(ids.astroAspects.children.length);
   assert.ok(ids.astroCurve.children[0].children.length>0);
   tabs[1].click();

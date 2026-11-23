@@ -16,6 +16,9 @@ button[aria-pressed="true"]{outline:3px solid #f3e5bd;outline-offset:2px}
 .card strong{color:#f9d995}.card .glyph{font:2rem Georgia,serif;color:#eac681}.card em{font-style:normal;color:#d6c9b1;font-size:.82rem}
 .reading{white-space:pre-line;line-height:1.85;background:#101b2a;padding:15px;border-radius:13px}
 .note{font-size:.83rem;line-height:1.7;color:#bdc8ca}#history{font-size:.83rem}
+.verdict-banner{border:1px solid #ddbe81;border-radius:14px;background:#342b26;color:#ffdea7;font-size:clamp(1.2rem,4.5vw,1.7rem);font-weight:800;line-height:1.55;padding:16px 14px;margin:12px 0}
+.verdict-banner[data-mode="good"]{background:#1d3a31;border-color:#b6d7b1;color:#e2f6d4}
+.verdict-banner[data-mode="caution"]{background:#442b2c;border-color:#edae9e;color:#ffdfd7}
 </style></head><body><main>
 <header><a href="./index.html">← こよみホーム</a><p><a href="app.html#financial">財運の総合鑑定を開く</a>　｜　<a href="financial-astrology.html">金融占星術を開く</a></p><div class="muted">KOYOMI FINANCIAL DESTINY</div><h1>財運タロット</h1><p>一枚の象徴から、いまのお金との向き合い方を読み解く。</p></header>
 <section class="panel" aria-labelledby="choose"><h2 id="choose">鑑定を選ぶ</h2><div class="controls" role="group" aria-label="タロット展開">
@@ -24,7 +27,7 @@ button[aria-pressed="true"]{outline:3px solid #f3e5bd;outline-offset:2px}
 <button data-spread="world" aria-pressed="false">世界経済・5枚</button></div>
 <p id="description" class="muted"></p><button id="draw" type="button">カードを引く</button>
 <p class="note">今日の金運は同じ端末・同じ日付では原則同じカードです。3枚・5枚は引くたびに新しい展開です。</p></section>
-<section id="results" class="panel" hidden aria-live="polite"><h2 id="resultTitle">鑑定結果</h2><div id="cards" class="cards"></div><h3>姐さんの鑑定</h3><p id="reading" class="reading"></p><details><summary>カードと鑑定の根拠</summary><div id="evidence"></div></details></section>
+<section id="results" class="panel" hidden aria-live="polite"><h2 id="resultTitle">鑑定結果</h2><p id="tarotVerdict" class="verdict-banner"></p><div id="cards" class="cards"></div><h3>姐さんの鑑定</h3><p id="reading" class="reading"></p><details><summary>カードと鑑定の根拠</summary><div id="evidence"></div></details></section>
 <section class="panel"><h2>この機能について</h2><p class="note">78枚のカードを、正位置・逆位置を含めて重複なく抽選するオフライン対応のタロット鑑定です。カードの象徴を使った内省・娯楽であり、利益・景気・株価・為替の動きを予測できると実証されたものではありません。投資判断・財務判断の根拠にはしないでください。</p>
 <p class="note">初期版では四柱推命・マンデン占星術とのスコア統合を行いません。既存の計算結果と混同させず、個別鑑定として提供します。</p></section>
 </main><script type="module" src="./src/financial/tarot.js"></script></body></html>
