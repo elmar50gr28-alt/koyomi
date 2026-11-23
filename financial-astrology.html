@@ -75,6 +75,40 @@
       <p class="market-warning">注意：これは市場価格を一切使わない<strong>占星術上の相場占い</strong>です。各市場の違いを反映した予測モデルではなく、対象を切り替えても同じ天体占断を表示します。実際の騰落を予測できると実証されたものではありません。</p>
     </section>
 
+    <section class="panel history-panel" aria-labelledby="historyHeading">
+      <div class="heading-row"><h2 id="historyHeading">実際の値動きと答え合わせ</h2><span class="tag">過去検証</span></div>
+      <p class="subtext">終値データを取り込み、占断した「上昇／下落」と実際の結果を比較します。数値は端末だけに保存し、外部へ送信しません。</p>
+      <div class="history-tools">
+        <button id="historyAuto" type="button">NASDAQ100の実データを読み込む</button>
+        <label class="history-file-label" for="historyFile">手元の終値CSVを取り込む
+          <input id="historyFile" type="file" accept=".csv,text/csv">
+        </label>
+        <a id="historyCSVLink" href="https://fred.stlouisfed.org/graph/fredgraph.csv?id=NIKKEI225" target="_blank" rel="noopener noreferrer">FREDから終値CSVを入手</a>
+        <button id="historyRun" type="button">この市場の過去検証を実行</button>
+      </div>
+      <p id="historyStatus" class="status" role="status" aria-live="polite">終値データ未登録。オンライン取得かCSVの読み込みを行ってください。</p>
+      <div id="historyResult" hidden>
+        <p id="historySource" class="history-source"></p>
+        <div class="history-price">
+          <div><span>最新収録終値</span><strong id="historyLatest"></strong><small id="historyLatestDate"></small></div>
+          <div><span>収録期間</span><strong id="historyRange"></strong><small id="historyRows"></small></div>
+        </div>
+        <div id="historyPriceCurve" class="chart-area" role="img" aria-label="直近の実際の終値の推移"></div>
+        <div id="historyStatistics" hidden>
+          <h3>占いは実際に当たったのか？</h3>
+          <div class="history-metrics">
+            <div><span>占断的中率</span><strong id="historyAccuracy">検証待ち</strong></div>
+            <div><span>常に上昇と予想</span><strong id="historyBaseline">検証待ち</strong></div>
+            <div><span>判定数</span><strong id="historyCount">検証待ち</strong></div>
+          </div>
+          <p id="historyInterpretation" class="history-interpretation"></p>
+          <details><summary>過去の占断と実際の騰落を確認</summary><div id="historyExamples" class="history-examples"></div></details>
+        </div>
+      </div>
+      <p class="small">比較方法：選んだ日の終値から、1・7・14暦日後以降の最初の取引日の終値まで。重複しない期間だけを集計し、方向感なし・変化ゼロは的中率から除外します。過去データに合わせて占星術の規則を変更しません。</p>
+      <p class="small">データ出典：FRED / 日経・NASDAQ・米連邦準備制度など。FREDはブラウザから直接読めないためCSVを保存して取り込んでください。NASDAQ100のオンライン取得はYahoo Financeデータの第三者公開ミラーを利用します。金のFRED系列は2022年で終了しています。</p>
+    </section>
+
     <section class="hero-reading panel" aria-labelledby="astroHeadline" id="astroResult">
       <div class="eyebrow">補足 · 社会全体の経済運（相場方向とは別）</div>
       <div class="verdict-word" id="astroVerdict">鑑定中</div>
@@ -104,7 +138,7 @@
 
     <section class="panel next-panel">
       <h2>検証について</h2>
-      <p>ブラッドリー曲線は原典の係数と計算法を精査した後に追加します。実際の金融価格との比較も研究機能として分離し、未検証の結果を的中率とは表示しません。</p>
+      <p>過去の終値に対する検証機能を追加しました。比較しただけで予測力が証明されるわけではありません。外部データの信頼性、期間による偏り、相場全体の上昇傾向を踏まえて結果を見てください。ブラッドリー曲線は原典の係数・計算法を確認した後に追加します。</p>
     </section>
   </section>
 
