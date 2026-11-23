@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import {readFinancialWindow} from '../src/financial/astrology-core.js';
 import {backtestMarketDirection,MARKET_PRICE_SOURCE,parseMarketCSV} from '../src/financial/market-history.js';
 import {studyHistoricalCrashes} from '../src/financial/market-crash-research.js';
+import {forecastLeadMonths} from '../src/financial/market-lead-forecast.js';
 
 function loadAstronomy(){
   const source=fs.readFileSync(new URL('../vendor/astronomy-engine/2.1.19/astronomy.browser.min.js',import.meta.url),'utf8');
@@ -60,6 +61,18 @@ console.log(JSON.stringify(summary,null,2));
 const crisis=studyHistoricalCrashes({prices,market:selectedMarket,readWindow,horizon:14});
 console.log('KOYOMI HISTORICAL MAJOR CRASH AUDIT');
 console.log(JSON.stringify(crisis,null,2));
+const lead=forecastLeadMonths({
+ prices,market:selectedMarket,asOfDate:prices.at(-1).date,
+ readSky:key=>readWindow(new Date(key+'T12:00:00Z'),1)[0]
+});
+console.log('KOYOMI MONTHLY PRE-CRASH LEAD MODEL HOLDOUT');
+console.log(JSON.stringify({
+ market:selectedMarket,asOf:lead.asOf,status:lead.status,
+ sampleN:lead.trainingRecords,highestRiskPeriod:lead.leadingPeriod,
+ months:lead.buckets?.map(({period,start,end,status,riskScore,priceOnlyScore,baselineScore})=>
+  ({period,start,end,status,riskScore,priceOnlyScore,baselineScore})),
+ diagnostics:lead.diagnostics,canClaimVerified:lead.canClaimVerified
+},null,2));
 if(process.env.GITHUB_STEP_SUMMARY){
   const lines=['## KOYOMI 金融占星術・実市場の過去照合 '+selectedMarket,
     '',
@@ -74,6 +87,16 @@ if(process.env.GITHUB_STEP_SUMMARY){
     '> 後知恵による過去照合であり、予測能力は証明されていません。方向感なしは的中率から除外。',
     '',
     '出典：'+summary.source,
+    '',
+    '### 1〜3か月先の事前学習モデル（研究段階）',
+    '',
+    '|時期|学習状況|未使用期間Brier（天体+価格）|価格だけBrier|一定予測Brier|',
+    '|---|---|---:|---:|---:|',
+    ...lead.diagnostics.map(d=>'|'+d.bucket+'|'+d.status+
+      '|'+(d.model?.brier??'–')+'|'+(d.priceOnly?.brier??'–')+'|'+
+      (d.model?.baseBrier??'–')+'|'),
+    '',
+    '> 時系列の未使用期間を使って性能比較。Brierは小さい方が優秀。星を使った予測が価格だけの予測を上回らない場合、予測力があるとは判定しない。' ,
     '',
     '### 大暴落の個別検証',
     '',
