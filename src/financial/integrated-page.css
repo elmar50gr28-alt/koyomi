@@ -12,6 +12,10 @@
 #page-financial .financial-links{display:flex;gap:12px;flex-wrap:wrap}
 #page-financial a{color:var(--sol-gold-soft);min-height:44px;display:inline-flex;align-items:center}
 #page-financial .financial-meta{font-size:.875rem;color:#bdc8ca}
+#page-financial .financial-verdict{padding:17px;margin:14px 0 8px;background:linear-gradient(150deg,#3f3527,#162a39);border:1px solid #d4b77d;border-radius:16px}
+#page-financial .financial-verdict-label{display:inline-block;color:#ffe2a9;font-weight:800;font-size:.9rem}
+#page-financial .financial-verdict h3{font-size:clamp(1.35rem,4.3vw,1.8rem);color:#fff0c5;line-height:1.5;margin:10px 0}
+#page-financial .financial-verdict-action{font-weight:750;color:#fff1d2}
 #page-financial .financial-block{padding:14px 0;border-bottom:1px solid var(--sol-line)}
 #page-financial details{border-bottom:1px solid var(--sol-line);padding:12px 0}
 #page-financial summary{min-height:44px;cursor:pointer;font-size:1rem;font-weight:700;align-content:center}
