@@ -66,7 +66,7 @@ assert.match(html,/吉・平・凶/);
 assert.match(html,/aria-live="polite"/);
 assert.match(html,/astroDate/);
 assert.match(html,/astronomy.browser.min.js/);
-assert.match(html,/株価や上昇期待値ではありません/);
+assert.match(html,/株価や景気の実測・予測値ではありません/);
 assert.match(html,/ブラッドリー曲線は原典の係数/);
 assert.match(css,/min-height:48px/);
 assert.match(css,/:focus-visible/);
