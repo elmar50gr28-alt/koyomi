@@ -13,13 +13,18 @@ function loadAstronomy(){
   if(typeof astronomy?.SunPosition!=='function')throw new Error('Astronomy Engine loading failed');
   return astronomy;
 }
+const selectedMarket=process.argv.find(x=>x.startsWith('--market='))?.slice(9)||'nasdaq';
+const ARCHIVE_NIKKEI='https://raw.githubusercontent.com/it-ces/Datasets/main/Nikkei225.csv';
+if(!['nikkei','nasdaq'].includes(selectedMarket))throw new Error('Unsupported audit market');
 async function getCSV(){
   const path=process.argv.find(x=>x.startsWith('--csv='))?.slice(6);
   if(path)return {content:fs.readFileSync(path,'utf8'),source:'local CSV'};
-  const link=MARKET_PRICE_SOURCE.nasdaq.url;
+  const link=selectedMarket==='nikkei'?ARCHIVE_NIKKEI:MARKET_PRICE_SOURCE.nasdaq.url;
   const response=await fetch(link,{headers:{'User-Agent':'KOYOMI historical model audit (public data read-only)'},signal:AbortSignal.timeout(25000)});
   if(!response.ok)throw new Error('External CSV returned HTTP '+response.status);
-  return {content:await response.text(),source:MARKET_PRICE_SOURCE.nasdaq.attribution};
+  return {content:await response.text(),source:selectedMarket==='nikkei'
+    ? 'Historical Nikkei 225 close sample / it-ces/Datasets (2008–2018 archive; publisher not official)'
+    : MARKET_PRICE_SOURCE.nasdaq.attribution};
 }
 const {content,source}=await getCSV();
 const prices=parseMarketCSV(content);
@@ -36,10 +41,10 @@ const cache=new Map(),readWindow=(date,days)=>{
   return result;
 };
 const reports=[1,7,14].map(horizon=>
-  backtestMarketDirection({prices,market:'nasdaq',horizon,readWindow}));
+  backtestMarketDirection({prices,market:selectedMarket,horizon,readWindow}));
 const summary={
   evaluatedAt:new Date().toISOString(),
-  source,sourceStart:prices[0].date,sourceEnd:prices.at(-1).date,
+  market:selectedMarket,source,sourceStart:prices[0].date,sourceEnd:prices.at(-1).date,
   sourceRows:prices.length,methodId:'koyomi-market-symbolic-direction-v1',
   horizons:reports.map(({horizon,evaluated,correct,modelAccuracy,baselineAccuracy,differencePoints,
    neutralOrFlat,upPredictions,downPredictions,testStatus})=>({
@@ -52,9 +57,9 @@ const summary={
 console.log('KOYOMI ACTUAL MARKET HISTORY AUDIT');
 console.log(JSON.stringify(summary,null,2));
 if(process.env.GITHUB_STEP_SUMMARY){
-  const lines=['## KOYOMI 金融占星術・実市場の過去照合',
+  const lines=['## KOYOMI 金融占星術・実市場の過去照合 '+selectedMarket,
     '',
-    '対象：NASDAQ100（'+summary.sourceStart+'〜'+summary.sourceEnd+'）、実終値 '+summary.sourceRows+'件',
+    '対象：'+selectedMarket+'（'+summary.sourceStart+'〜'+summary.sourceEnd+'）、実終値 '+summary.sourceRows+'件',
     '',
     '|期間（暦日）|判定数|的中率|常に上昇予想|差|',
     '|---|---:|---:|---:|---:|',
