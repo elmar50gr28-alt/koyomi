@@ -124,7 +124,7 @@ export function localDateKey(date) {
 }
 // KOYOMI interpretive rules: these are symbolic judgments, not validated market signals.
 const FINANCE_BODIES = new Set(['Mercury', 'Venus', 'Jupiter', 'Saturn']);
-function interpretEconomy(aspects, retrogrades, phase) {
+export function interpretEconomy(aspects, retrogrades, phase) {
   const factors = [];
   for (const aspect of aspects) {
     if (!aspect.bodies.some(body => FINANCE_BODIES.has(body))) continue;
