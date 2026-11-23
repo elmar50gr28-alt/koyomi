@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#091522">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>金融占星術 | こよみ</title>
+<link rel="stylesheet" href="./src/financial/astrology-page.css">
+</head>
+<body>
+<main class="astro-app">
+  <header class="astro-header">
+    <a class="back-link" href="./index.html">‹ こよみホーム</a>
+    <div class="eyebrow">KOYOMI / FINANCIAL ASTROLOGY</div>
+    <h1>お金と、星の暦。</h1>
+    <p class="intro">天体の周期から金融と暮らしのテーマを読む。<br>占いの楽しさと、確かめられる根拠を一緒に。</p>
+    <div class="orbit-art" aria-hidden="true"><div class="orbit-core">☉</div></div>
+  </header>
+
+  <div id="astroTabs" class="tabs" role="group" aria-label="鑑定の種類">
+    <button type="button" data-panel="world" aria-pressed="true">世界の経済運</button>
+    <button type="button" data-panel="personal" aria-pressed="false">私の金運</button>
+  </div>
+
+  <section id="worldPanel" aria-label="世界の経済運">
+    <div class="date-tools panel">
+      <label for="astroDate">鑑定する日</label>
+      <div class="date-row">
+        <button id="astroPrev" type="button" aria-label="前の日">‹</button>
+        <input id="astroDate" type="date" min="1900-01-01" max="2099-12-31" required>
+        <button id="astroNext" type="button" aria-label="次の日">›</button>
+        <button id="astroToday" type="button" class="today-button">今日</button>
+      </div>
+    </div>
+    <p id="astroStatus" class="status" role="status" aria-live="polite"></p>
+
+    <section class="hero-reading panel" aria-labelledby="astroHeadline" id="astroResult">
+      <div class="eyebrow">今日の天体から読むテーマ</div>
+      <h2 id="astroHeadline">天体を計算しています</h2>
+      <p id="astroSummary"></p>
+      <div class="sky-facts">
+        <div class="moon-face" aria-hidden="true">☾</div>
+        <div><span class="fact-label">月の満ち欠け</span><strong id="astroPhase">読み込み中</strong><span id="astroPhaseTheme" class="fact-detail"></span></div>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="aspectHeading">
+      <div class="heading-row"><h2 id="aspectHeading">今日の星の配置</h2><span class="tag">根拠を確認</span></div>
+      <p class="subtext">惑星の位置関係を計算し、金融占星術の象徴に置き換えます。</p>
+      <div id="astroAspects" class="aspect-list"></div>
+      <details><summary>惑星の逆行について</summary><p id="astroRetrogrades"></p><p class="small">逆行は地球から見た見かけの動きです。市場の騰落を示すものではありません。</p></details>
+    </section>
+
+    <section class="panel" aria-labelledby="windowHeading">
+      <div class="heading-row"><h2 id="windowHeading">この先14日間</h2><span class="tag">天体周期</span></div>
+      <p class="subtext">線は「主要アスペクトのうち、正確な角度との差が2°以内にある組み合わせの数」です。株価や上昇期待値ではありません。</p>
+      <div id="astroCurve" class="chart-area" role="img" aria-label="14日間のアスペクト件数を示すグラフ"></div>
+      <div id="astroWindow" class="day-list"></div>
+    </section>
+
+    <section class="panel next-panel">
+      <h2>検証について</h2>
+      <p>ブラッドリー曲線は原典の係数と計算法を精査した後に追加します。実際の金融価格との比較も研究機能として分離し、未検証の結果を的中率とは表示しません。</p>
+    </section>
+  </section>
+
+  <section id="personalPanel" class="personal-panel" aria-labelledby="personalHeading" hidden>
+    <div class="panel">
+      <div class="eyebrow">PERSONAL FINANCIAL READING</div>
+      <h2 id="personalHeading">あなた自身の金運</h2>
+      <p>収入や貯蓄、買い物を、登録した人物の四柱推命や西洋占星術と組み合わせて読みます。新たに生年月日を入力する必要はありません。</p>
+      <a class="primary-link" href="./app.html#financial">財運の総合鑑定を開く</a>
+      <a class="secondary-link" href="./financial.html">財運タロットを引く</a>
+      <p class="small">個人の出生図と、このページの金融占星術を合成した独自スコアはまだ設けていません。別々の根拠としてご覧ください。</p>
+    </div>
+  </section>
+
+  <footer class="footer-note">
+    <strong>これは相場予測ではありません。</strong>
+    <p>惑星位置は端末内の天文計算で求めています。占星術的な読みは象徴解釈であり、価格・景気・為替の予測力が実証されたものではありません。売買や家計の判断には実際のデータと条件を使ってください。</p>
+    <nav class="foot-links" aria-label="関連ページ"><a href="./index.html">ホーム</a><a href="./app.html#financial">総合財運</a><a href="./financial.html">タロット</a></nav>
+  </footer>
+</main>
+<script src="./vendor/astronomy-engine/2.1.19/astronomy.browser.min.js"></script>
+<script type="module" src="./src/financial/astrology-page.js"></script>
+</body></html>
