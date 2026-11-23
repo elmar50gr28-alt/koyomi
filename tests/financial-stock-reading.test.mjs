@@ -69,6 +69,20 @@ assert.notEqual(codeCycleAt('6480','2026-12-15',0).basis,
   'number symbolism documents ticker input, even if labels sometimes coincide');
 assert.throws(()=>codeCycleAt('6480','2026-02-30',0),/日付/);
 assert.throws(()=>codeCycleAt('6480','2026-11-23',3),/期間/);
+const symbolicProfiles=new Set();
+for(const listed of BUILTIN_STOCKS){
+  const dates=[0,1,2].map(i=>codeCycleAt(listed.code,'2026-11-23',i));
+  const nums=dates.map(x=>x.number);
+  assert.equal(new Set(nums).size,3,
+    listed.code+' must have three distinct consecutive monthly cycle indices');
+  assert.ok(dates.every(x=>x.coreNumber>=1&&x.coreNumber<=9));
+  symbolicProfiles.add(dates[0].coreNumber+'-'+dates[0].positionRoot);
+}
+assert.ok(symbolicProfiles.size>=35,
+ 'most built-in codes should have distinct two-axis number archetypes; some overlaps are normal');
+assert.deepEqual(general.periods.map(p=>p.marketContext),
+  another.periods.map(p=>p.marketContext),
+  'common market astrology rightly remains shared across companies; only the code symbolism differs');
 assert.equal(general.periods.length,3);
 assert.ok(general.periods.every(x=>x.companySpecific===false));
 assert.ok(general.periods.every(x=>x.from< x.to));
