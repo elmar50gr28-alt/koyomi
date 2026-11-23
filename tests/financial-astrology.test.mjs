@@ -62,6 +62,10 @@ assert.match(html,/data-panel="personal"/);
 assert.match(html,/id="astroVerdict"/);
 assert.match(html,/id="astroReason"/);
 assert.match(html,/id="astroAction"/);
+assert.match(html,/id="marketDirection"/);
+assert.match(html,/id="marketInstrument"/);
+assert.match(html,/id="marketHorizon"/);
+assert.match(html,/同じ天体占断を表示/);
 assert.match(html,/吉・平・凶/);
 assert.match(html,/aria-live="polite"/);
 assert.match(html,/astroDate/);
@@ -71,9 +75,11 @@ assert.match(html,/ブラッドリー曲線は原典の係数/);
 assert.match(css,/min-height:48px/);
 assert.match(css,/:focus-visible/);
 assert.match(css,/prefers-reduced-motion/);
+assert.match(css,/\.market-day-grid/);
+assert.match(css,/min-height:48px/);
 assert.match(home,/href="financial-astrology.html"/);
 assert.match(tarot,/href="financial-astrology.html"/);
-for (const asset of ['./financial-astrology.html','./src/financial/astrology-core.js','./src/financial/astrology-page.js','./src/financial/astrology-page.css']) {
+for (const asset of ['./financial-astrology.html','./src/financial/astrology-core.js','./src/financial/market-direction.js','./src/financial/astrology-page.js','./src/financial/astrology-page.css']) {
   assert.ok(worker.includes("'"+asset+"'"),asset+' must be precached offline');
 }
 console.log('Financial astrology calculation, offline assets, mobile accessibility contracts passed');
@@ -89,7 +95,7 @@ class Element {
 }
 const ids=Object.fromEntries(['astroStatus','astroDate','astroPrev','astroNext','astroToday','astroHeadline',
   'astroSummary','astroVerdict','astroReason','astroAction','astroPhase','astroPhaseTheme','astroRetrogrades','astroAspects','astroCurve',
-  'astroWindow','astroResult','worldPanel','personalPanel'].map(key=>[key,new Element()]));
+  'astroWindow','astroResult','worldPanel','personalPanel','marketForecast','marketDirection','marketInstrument','marketHorizon','marketHeadline','marketSummary','marketEvidence','marketCounter','marketPeriod','marketDaily'].map(key=>[key,new Element()]));
 const tabs=['world','personal'].map(panel=>Object.assign(new Element(),{dataset:{panel}}));
 globalThis.document={getElementById:id=>ids[id],querySelectorAll:()=>tabs,
   createElement:()=>new Element(),createElementNS:()=>new Element()};
@@ -99,6 +105,15 @@ Object.defineProperty(globalThis,'navigator',{configurable:true,value:{serviceWo
 try {
   await import('../src/financial/astrology-page.js?ui');
   assert.equal(ids.astroResult.hidden,false);
+  assert.equal(ids.marketForecast.hidden,false);
+  assert.ok(['上昇','下落','方向感なし'].includes(ids.marketDirection.textContent));
+  assert.equal(ids.marketDaily.children.length,7);
+  ids.marketHorizon.value='1';ids.marketHorizon.listeners.change();
+  assert.equal(ids.marketDaily.children.length,1);
+  ids.marketInstrument.value='gold';ids.marketInstrument.listeners.change();
+  assert.match(ids.marketPeriod.textContent,/金価格/);
+  ids.marketHorizon.value='14';ids.marketHorizon.listeners.change();
+  assert.equal(ids.marketDaily.children.length,14);
   assert.ok(['吉','平','凶'].includes(ids.astroVerdict.textContent));
   assert.match(ids.astroHeadline.textContent,/経済運は/);
   assert.match(ids.astroAction.textContent,/今日の一手/);
@@ -118,6 +133,7 @@ try {
   ids.astroDate.value='2026-02-30';
   ids.astroDate.listeners.change();
   assert.equal(ids.astroResult.hidden,true,'invalid date hides stale interpretation');
+  assert.equal(ids.marketForecast.hidden,true,'invalid date hides stale market reading');
   assert.match(ids.astroStatus.textContent,/表示できません/);
 } finally {
   delete globalThis.document;delete globalThis.window;
