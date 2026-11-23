@@ -44,8 +44,11 @@
         <p id="leadHeadline" class="lead-headline"></p>
         <div id="leadMonths" class="lead-months"></div>
         <p id="leadDiagnostics" class="lead-diagnostics"></p>
+        <details><summary>時系列検証の数字を見る</summary>
+          <div id="leadValidation" class="lead-validation"></div>
+        </details>
       </div>
-      <p class="small"><strong>研究段階：</strong>スコアは暴落確率ではありません。未来の株価は学習に使用しません。時系列を分割して過去の未使用期間で比較し、単なる価格モデルを上回らなければ「予測力未確認」と表示します。</p>
+      <p class="small"><strong>研究段階：</strong>スコアは暴落確率ではありません。未来の株価は学習に使用しません。過学習を抑えるため、正則化と天体特徴量を学習側の時系列検証だけで選び、90日の空白期間を挟んだ未使用期間で比較します。天体が価格だけのモデルより役立たなければ天体特徴を不採用にします。</p>
     </section>
 
     <section class="panel market-forecast" id="marketForecast" aria-labelledby="marketForecastTitle">
