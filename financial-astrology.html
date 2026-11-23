@@ -34,6 +34,23 @@
       </div>
     </div>
     <p id="astroStatus" class="status" role="status" aria-live="polite"></p>
+    <section class="panel lead-panel" aria-labelledby="leadHeading">
+      <div class="eyebrow">CRASH LEAD · 1〜3か月先</div>
+      <h2 id="leadHeading">大きく下がるのは、いつ頃か？</h2>
+      <p class="subtext">取り込んだ過去の実際の終値から学習し、過去価格と将来の天体配置を使って<strong>最大90日先までの警戒候補時期</strong>を表示します。</p>
+      <button id="leadRun" class="lead-run" type="button">過去の相場から学習して3か月先を占う</button>
+      <p id="leadStatus" class="status" role="status" aria-live="polite">この機能には実際の終値データが必要です。下の「値動きと答え合わせ」から読み込んでください。</p>
+      <div id="leadResult" hidden>
+        <p id="leadHeadline" class="lead-headline"></p>
+        <div id="leadMonths" class="lead-months"></div>
+        <p id="leadDiagnostics" class="lead-diagnostics"></p>
+        <details><summary>時系列検証の数字を見る</summary>
+          <div id="leadValidation" class="lead-validation"></div>
+        </details>
+      </div>
+      <p class="small"><strong>研究段階：</strong>スコアは暴落確率ではありません。未来の株価は学習に使用しません。過学習を抑えるため、正則化と天体特徴量を学習側の時系列検証だけで選び、90日の空白期間を挟んだ後方期間で比較します。開発中にも検証データを確認しているため、最終的な性能は前向き検証が必要です。天体が価格だけのモデルより役立たなければ天体特徴を不採用にします。</p>
+      <p class="market-audit-warning"><strong>長期検証の注意：</strong>1987・2008・2011・2020・2024年の著名な5局面の事前研究では、最高スコアの30日区間が実際に8%下落を初めて記録した区間と一致したのは1局面でした。特定の暴落を前もって捉えられる能力は確認できていません。<a href="https://github.com/elmar50gr28-alt/koyomi/blob/feature/financial-historical-market-validation-20261123/docs/financial-lead-optimization-20261123.md" target="_blank" rel="noopener noreferrer">検証内容</a></p>
+    </section>
 
     <section class="panel market-forecast" id="marketForecast" aria-labelledby="marketForecastTitle">
       <div class="eyebrow">MARKET DIRECTION · 星による相場占い</div>
@@ -63,6 +80,12 @@
           <p id="marketSummary"></p>
         </div>
       </div>
+      <section class="market-risk-panel" id="marketRiskPanel" aria-labelledby="marketRiskHeading" aria-live="polite">
+        <div class="heading-row"><h3 id="marketRiskHeading">実相場の急落警戒</h3><span id="marketRiskTag" class="risk-label">価格未取得</span></div>
+        <p id="marketRiskText">実際の終値を取り込むと、過去の値下がりから警戒度を表示します。</p>
+        <p id="marketRiskVerdict" class="risk-verdict">天体占断と価格の警戒は、別々の根拠として表示します。</p>
+        <p class="small">実価格の警戒にも誤警戒が多数あります。すでに発生した下落への反応であり、将来の急落の予知ではありません。</p>
+      </section>
       <div class="market-evidence">
         <p><strong>判断の根拠</strong><span id="marketEvidence"></span></p>
         <details><summary>逆方向の材料と判定ルール</summary>
@@ -73,6 +96,47 @@
       <h3 class="market-subtitle">日ごとの占断</h3>
       <div id="marketDaily" class="market-day-grid" aria-label="日別の上昇・下落占い"></div>
       <p class="market-warning">注意：これは市場価格を一切使わない<strong>占星術上の相場占い</strong>です。各市場の違いを反映した予測モデルではなく、対象を切り替えても同じ天体占断を表示します。実際の騰落を予測できると実証されたものではありません。</p>
+
+      <p class="market-audit-warning"><strong>実相場の検証では予測優位性なし。</strong>NASDAQ100の過去履歴（2019〜2026年）で、7日間の占断的中率は42.53%、常に上昇と予想する場合は61.69%でした。<a href="#historyHeading">終値と検証方法を見る</a></p>
+    </section>
+
+    <section class="panel history-panel" aria-labelledby="historyHeading">
+      <div class="heading-row"><h2 id="historyHeading">実際の値動きと答え合わせ</h2><span class="tag">過去検証</span></div>
+      <p class="subtext">終値データを取り込み、占断した「上昇／下落」と実際の結果を比較します。数値は端末だけに保存し、外部へ送信しません。</p>
+      <div class="history-tools">
+        <button id="historyAuto" type="button">NASDAQ100の実データを読み込む</button>
+        <label class="history-file-label" for="historyFile">手元の終値CSVを取り込む
+          <input id="historyFile" type="file" accept=".csv,text/csv">
+        </label>
+        <a id="historyCSVLink" href="https://fred.stlouisfed.org/graph/fredgraph.csv?id=NIKKEI225" target="_blank" rel="noopener noreferrer">FREDから終値CSVを入手</a>
+        <button id="historyRun" type="button">この市場の過去検証を実行</button>
+      </div>
+      <p id="historyStatus" class="status" role="status" aria-live="polite">終値データ未登録。オンライン取得かCSVの読み込みを行ってください。</p>
+      <div id="historyResult" hidden>
+        <p id="historySource" class="history-source"></p>
+        <div class="history-price">
+          <div><span>最新収録終値</span><strong id="historyLatest"></strong><small id="historyLatestDate"></small></div>
+          <div><span>収録期間</span><strong id="historyRange"></strong><small id="historyRows"></small></div>
+        </div>
+        <div id="historyPriceCurve" class="chart-area" role="img" aria-label="直近の実際の終値の推移"></div>
+        <div id="historyStatistics" hidden>
+          <h3>占いは実際に当たったのか？</h3>
+          <div class="history-metrics">
+            <div><span>占断的中率</span><strong id="historyAccuracy">検証待ち</strong></div>
+            <div><span>常に上昇と予想</span><strong id="historyBaseline">検証待ち</strong></div>
+            <div><span>判定数</span><strong id="historyCount">検証待ち</strong></div>
+          </div>
+          <p id="historyInterpretation" class="history-interpretation"></p>
+          <section id="historyCrashes" class="history-crashes" aria-labelledby="crashStudyHeading" hidden>
+            <h3 id="crashStudyHeading">過去の暴落で本当に警戒できたか</h3>
+            <p class="small">14暦日以内に終値が8%以上下がった事例と照合。過去の暴落前・暴落中の星占断と、価格警戒を分けて表示します。</p>
+            <div id="historyCrashList"></div>
+          </section>
+          <details><summary>過去の占断と実際の騰落を確認</summary><div id="historyExamples" class="history-examples"></div></details>
+        </div>
+      </div>
+      <p class="small">比較方法：選んだ日の終値から、1・7・14暦日後以降の最初の取引日の終値まで。重複しない期間だけを集計し、方向感なし・変化ゼロは的中率から除外します。過去データに合わせて占星術の規則を変更しません。</p>
+      <p class="small">データ出典：FRED / 日経・NASDAQ・米連邦準備制度など。FREDはブラウザから直接読めないためCSVを保存して取り込んでください。NASDAQ100のオンライン取得はYahoo Financeデータの第三者公開ミラーを利用します。金のFRED系列は2022年で終了しています。</p>
     </section>
 
     <section class="hero-reading panel" aria-labelledby="astroHeadline" id="astroResult">
@@ -104,7 +168,7 @@
 
     <section class="panel next-panel">
       <h2>検証について</h2>
-      <p>ブラッドリー曲線は原典の係数と計算法を精査した後に追加します。実際の金融価格との比較も研究機能として分離し、未検証の結果を的中率とは表示しません。</p>
+      <p>過去の終値に対する検証機能を追加しました。比較しただけで予測力が証明されるわけではありません。外部データの信頼性、期間による偏り、相場全体の上昇傾向を踏まえて結果を見てください。ブラッドリー曲線は原典の係数・計算法を確認した後に追加します。</p>
     </section>
   </section>
 
@@ -127,4 +191,5 @@
 </main>
 <script src="./vendor/astronomy-engine/2.1.19/astronomy.browser.min.js"></script>
 <script type="module" src="./src/financial/astrology-page.js"></script>
+<script type="module" src="./src/financial/market-history-page.js"></script>
 </body></html>

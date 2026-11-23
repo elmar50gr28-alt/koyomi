@@ -1,0 +1,41 @@
+name: Verify Historical Market Data
+
+on:
+  pull_request:
+    paths:
+      - 'src/financial/**'
+      - 'scripts/evaluate-financial-market-history.mjs'
+      - 'tests/financial-market-history.test.mjs'
+      - '.github/workflows/market-history-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-real-closes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check historical evaluation invariants
+        run: npm run test:financial-astrology
+      - name: Re-evaluate published Nasdaq-100 historical closes
+        run: npm run evaluate:market-history
+      - name: Re-evaluate historical Nikkei 225 archive (independent period)
+        run: npm run evaluate:market-history -- --market=nikkei
+
+  verify-extended-nikkei:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Research 1987/2008/2011/2020/2024 crash lead times against long FRED index data
+        run: npm run evaluate:market-nikkei-long
