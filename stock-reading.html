@@ -51,8 +51,8 @@
       <label for="stockDate">鑑定基準日</label>
       <input id="stockDate" type="date" min="1900-01-01" max="2099-09-30" required>
     </div>
-    <details class="reference-settings">
-      <summary>企業固有の占星術を使う（設立日・上場日を入力）</summary>
+    <details class="reference-settings" open>
+      <summary>企業固有の星占いにするには、設立日・上場日を登録</summary>
       <div class="manual-form">
         <label for="stockReferenceType">日付の種類</label>
         <select id="stockReferenceType">
@@ -61,7 +61,7 @@
         </select>
         <label for="stockReferenceDate">確認済みの年月日</label>
         <input id="stockReferenceDate" type="date" min="1900-01-01" max="2099-09-30">
-        <p class="subnote">設立日と上場日は別の基準です。自動推定せず、確認した日付だけを入力してください。時刻不明のためハウス・ASC・月は使いません。</p>
+        <p class="subnote">未入力ならコードの数秘周期だけを銘柄別に表示します。市場全体の星の動きは全銘柄共通です。設立日と上場日は別の基準で、確認できた日付のみ入力してください。</p>
       </div>
     </details>
     <button id="stockRead" type="button" class="primary-action">この銘柄の90日間を鑑定</button>
@@ -69,13 +69,13 @@
   </section>
   <section id="stockForecast" class="panel stock-forecast" hidden>
     <div class="eyebrow">90 DAY SYMBOLIC CALENDAR</div>
-    <h2>これから90日間の星の象意</h2>
+    <h2 id="stockForecastHeading">これから90日間の象意</h2>
     <p id="stockBasis" class="basis"></p>
     <div id="stockMonths" class="month-list"></div>
     <details class="reading-method">
       <summary>鑑定根拠と制約を確認</summary>
       <p id="stockReferenceExplanation"></p>
-      <p>銘柄の基準日と天体配置の角度を比較した、こよみ独自の占術です。30日間を7日間隔の観測点で計算し、占術上の吉凶を整理します。実際の株価や業績を学習した予測ではありません。</p>
+      <p>設立日・上場日が入力された場合に限り、企業基準日と天体配置の角度関係を計算します。未入力なら証券コードの数字・英字と鑑定日から数秘の周期を計算し、共通の市場星占いとは明確に区別します。コード数秘が似る別銘柄は、同じ象徴になる場合があります。どちらも実際の株価や業績を学習した予測ではありません。</p>
     </details>
   </section>
   <section class="panel compact-two">
