@@ -182,3 +182,11 @@ details p {margin:6px 0 10px}
 .lead-month small{font-size:.72rem;color:#cbd4dc;overflow-wrap:anywhere}
 .lead-diagnostics{border-left:3px solid #cc986f;padding:9px 12px;background:#192a3a;color:#f2e0cf;font-size:.83rem;line-height:1.75}
 @media(max-width:550px){.lead-months{grid-template-columns:1fr}.lead-month{padding:11px 13px}}
+
+/* Autonomous market imports: status is observable without suggesting stale values are current. */
+.market-auto-status{font-size:.85rem;font-weight:750;color:#e9dcbe;margin:13px 0 7px;line-height:1.6;overflow-wrap:anywhere}
+.market-auto-overview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:10px 0 14px}
+.market-auto-line{margin:0!important;padding:8px 9px;border-radius:9px;border:1px solid #45677a;background:#122838;color:#dce3e5;font-size:.78rem;line-height:1.6;overflow-wrap:anywhere}
+.market-auto-line[data-status="stale"],.market-auto-line[data-status="unavailable"],.market-auto-line[data-status="conflict"]{border-color:#bc9872;background:#332b2b;color:#ffe1bd}
+.market-auto-line[data-status="updated"]{border-color:#70a68a;color:#caebd8}
+@media(max-width:550px){.market-auto-overview{grid-template-columns:1fr}}

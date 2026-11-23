@@ -407,8 +407,8 @@ function setup(){
 
   restore();
   // No background polling: refresh automatically only on launch/reconnect/foreground.
-  void refreshAllMarkets();
   if(typeof window!=='undefined'){
+    void refreshAllMarkets();
     window.addEventListener('online',()=>{void refreshAllMarkets();});
     document.addEventListener('visibilitychange',()=>{
       if(!document.hidden)void refreshAllMarkets();

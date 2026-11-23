@@ -102,16 +102,18 @@
 
     <section class="panel history-panel" aria-labelledby="historyHeading">
       <div class="heading-row"><h2 id="historyHeading">実際の値動きと答え合わせ</h2><span class="tag">過去検証</span></div>
-      <p class="subtext">終値データを取り込み、占断した「上昇／下落」と実際の結果を比較します。数値は端末だけに保存し、外部へ送信しません。</p>
+      <p class="subtext">この画面を開くと、4市場の終値履歴を<strong>自動取得・端末内保存</strong>します。通信できないときは保存履歴を利用し、取得日が古ければ明示します。相場データの通信先は各提供元のみです。</p>
       <div class="history-tools">
-        <button id="historyAuto" type="button">NASDAQ100の実データを読み込む</button>
+        <button id="historyAuto" type="button">この市場の終値を再取得</button>
         <label class="history-file-label" for="historyFile">手元の終値CSVを取り込む
           <input id="historyFile" type="file" accept=".csv,text/csv">
         </label>
         <a id="historyCSVLink" href="https://fred.stlouisfed.org/graph/fredgraph.csv?id=NIKKEI225" target="_blank" rel="noopener noreferrer">FREDから終値CSVを入手</a>
         <button id="historyRun" type="button">この市場の過去検証を実行</button>
       </div>
-      <p id="historyStatus" class="status" role="status" aria-live="polite">終値データ未登録。オンライン取得かCSVの読み込みを行ってください。</p>
+      <p id="historyAutoStatus" class="market-auto-status" aria-live="polite">自動取込：起動時に確認します。</p>
+      <div id="marketAutoStatuses" class="market-auto-overview" role="status" aria-label="4市場の自動取得状況"></div>
+      <p id="historyStatus" class="status" role="status" aria-live="polite">保存済み終値を確認しています。未取得なら自動的に取り込みます。</p>
       <div id="historyResult" hidden>
         <p id="historySource" class="history-source"></p>
         <div class="history-price">
@@ -136,7 +138,7 @@
         </div>
       </div>
       <p class="small">比較方法：選んだ日の終値から、1・7・14暦日後以降の最初の取引日の終値まで。重複しない期間だけを集計し、方向感なし・変化ゼロは的中率から除外します。過去データに合わせて占星術の規則を変更しません。</p>
-      <p class="small">データ出典：FRED / 日経・NASDAQ・米連邦準備制度など。FREDはブラウザから直接読めないためCSVを保存して取り込んでください。NASDAQ100のオンライン取得はYahoo Financeデータの第三者公開ミラーを利用します。金のFRED系列は2022年で終了しています。</p>
+      <p class="small">自動取得元：日経平均はFREDを試し、接続できなければ第三者の公開アーカイブを使用します。アーカイブが更新停止している場合は「古い」と表示します。NASDAQ100は第三者ミラー、ドル円はFrankfurterの参考レート、金は<a href="https://xaudaily.com/" rel="noopener noreferrer" target="_blank">xaudaily.com</a>（CC BY 4.0）による<strong>COMEX金先物</strong>の終値で、現物金やLBMAと同一の価格系列ではありません。自動取得元が利用不能な場合はCSVの手動取込も残します。外部データは提供元・収録日を確認してください。</p>
     </section>
 
     <section class="hero-reading panel" aria-labelledby="astroHeadline" id="astroResult">

@@ -52,10 +52,10 @@ assert.equal(flat.evaluated,0);
 assert.equal(flat.modelAccuracy,null);
 assert.ok(flat.neutralOrFlat>0,'neutral cases counted separately');
 const html=fs.readFileSync('financial-astrology.html','utf8'),css=fs.readFileSync('src/financial/astrology-page.css','utf8'),sw=fs.readFileSync('service-worker.js','utf8');
-for(const name of ['historyAuto','historyFile','historyRun','historyAccuracy','historyBaseline','historyCount','historyPriceCurve'])
+for(const name of ['historyAuto','historyFile','historyRun','historyAccuracy','historyBaseline','historyCount','historyPriceCurve','historyAutoStatus','marketAutoStatuses'])
   assert.ok(html.includes('id="'+name+'"'),name+' UI missing');
 assert.ok(html.includes('./src/financial/market-history-page.js'));
-for(const asset of ['./src/financial/market-history.js','./src/financial/market-history-page.js','./src/financial/market-history-worker.js','./src/financial/market-crash-research.js'])
+for(const asset of ['./src/financial/market-history.js','./src/financial/market-auto-import.js','./src/financial/market-history-page.js','./src/financial/market-history-worker.js','./src/financial/market-crash-research.js'])
   assert.ok(sw.includes("'"+asset+"'"),asset+' offline asset missing');
 assert.match(css,/\.history-metrics/);
 assert.match(fs.readFileSync('src/financial/market-history-page.js','utf8'),/時期の予測力は未確認/);
