@@ -21,6 +21,8 @@ try {
   assert.ok(messages[0].result.evaluated>=0);
   assert.ok(messages[0].result.cases.length<=12,'worker sends summary not bulk price data');
   assert.equal(messages[0].result.horizon,7);
+  assert.equal(messages[0].result.crises.market,'nasdaq');
+  assert.equal(messages[0].result.crises.events.length,2);
 }finally{
   if(original)Object.defineProperty(globalThis,'self',original);
   else delete globalThis.self;
