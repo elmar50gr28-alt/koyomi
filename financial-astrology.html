@@ -36,9 +36,12 @@
     <p id="astroStatus" class="status" role="status" aria-live="polite"></p>
 
     <section class="hero-reading panel" aria-labelledby="astroHeadline" id="astroResult">
-      <div class="eyebrow">選んだ日の天体から読むテーマ</div>
+      <div class="eyebrow">選んだ日の経済運 · 占星術上の吉凶</div>
+      <div class="verdict-word" id="astroVerdict">鑑定中</div>
       <h2 id="astroHeadline">天体を計算しています</h2>
       <p id="astroSummary"></p>
+      <p id="astroAction" class="astro-action"></p>
+      <p id="astroReason" class="astro-reason"></p>
       <div class="sky-facts">
         <div class="moon-face" aria-hidden="true">☾</div>
         <div><span class="fact-label">月の満ち欠け</span><strong id="astroPhase">読み込み中</strong><span id="astroPhaseTheme" class="fact-detail"></span></div>
@@ -53,8 +56,8 @@
     </section>
 
     <section class="panel" aria-labelledby="windowHeading">
-      <div class="heading-row"><h2 id="windowHeading">この先14日間</h2><span class="tag">天体周期</span></div>
-      <p class="subtext">線は「主要アスペクトのうち、正確な角度との差が2°以内にある組み合わせの数」です。株価や上昇期待値ではありません。</p>
+      <div class="heading-row"><h2 id="windowHeading">これから14日間の経済運</h2><span class="tag">吉・平・凶</span></div>
+      <p class="subtext">吉凶は「こよみ」独自の象徴的な占星術判定です。下の線は占術上の吉凶の移り変わりで、株価や景気の実測・予測値ではありません。</p>
       <div id="astroCurve" class="chart-area" role="img" aria-label="14日間のアスペクト件数を示すグラフ"></div>
       <div id="astroWindow" class="day-list"></div>
     </section>
@@ -68,9 +71,9 @@
   <section id="personalPanel" class="personal-panel" aria-labelledby="personalHeading" hidden>
     <div class="panel">
       <div class="eyebrow">PERSONAL FINANCIAL READING</div>
-      <h2 id="personalHeading">あなた自身の金運</h2>
-      <p>収入や貯蓄、買い物を、登録した人物の四柱推命や西洋占星術と組み合わせて読みます。新たに生年月日を入力する必要はありません。</p>
-      <a class="primary-link" href="./app.html#financial">財運の総合鑑定を開く</a>
+      <h2 id="personalHeading">あなたの金運を吉凶で鑑定</h2>
+      <p>個人の金運は、生年月日などの登録情報を使うため、この画面で誰にでも同じ吉凶を出しません。「財運の総合鑑定」を開き、鑑定日を選んでください。<strong>結論を最初に表示</strong>します。</p>
+      <a class="primary-link" href="./app.html#financial">登録済みの情報から金運を鑑定する</a>
       <a class="secondary-link" href="./financial.html">財運タロットを引く</a>
       <p class="small">個人の出生図と、このページの金融占星術を合成した独自スコアはまだ設けていません。別々の根拠としてご覧ください。</p>
     </div>
