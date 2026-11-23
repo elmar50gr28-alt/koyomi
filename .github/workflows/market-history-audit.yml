@@ -25,3 +25,5 @@ jobs:
         run: npm run test:financial-astrology
       - name: Re-evaluate published Nasdaq-100 historical closes
         run: npm run evaluate:market-history
+      - name: Re-evaluate historical Nikkei 225 archive (independent period)
+        run: npm run evaluate:market-history -- --market=nikkei
