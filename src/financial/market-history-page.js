@@ -82,7 +82,7 @@ function updateMarket(){sourceLink();showDataset();showMarketRisk();}
 function save(market,rows,source){
   validatePriceRows(rows);
   // The browser keeps only closes and dates; no remote upload or account required.
-  const slim=rows.slice(-4200).map(r=>[r.date,r.close]);
+  const slim=rows.slice(-15000).map(r=>[r.date,r.close]);
   const data={rows:slim.map(([date,close])=>({date,close})),source};
   datasets.set(market,data);
   try{localStorage.setItem(KEY+market,JSON.stringify({rows:slim,source}));}
@@ -224,7 +224,7 @@ function showLeadForecast(data){
     (data.canClaimVerified?'全期間で過去比較に優位性。ただし前向きの精度は未証明。':
      '安定した予測優位性は未確認。スコアを投資判断に使用しないでください。');
   get('leadStatus').textContent='学習と試験完了：'+data.asOf+
-    'までの価格だけを利用（未来の天体計算は可能）。';
+    '終値確定後に利用できる価格だけを学習（将来の天体配置は事前に計算可能）。';
 }
 async function runLeadForecast(){
   const market=selectedMarket(),data=datasets.get(market);
