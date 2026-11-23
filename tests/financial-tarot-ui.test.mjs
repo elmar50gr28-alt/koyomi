@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 class Element {
-  constructor(){this.children=[];this.attributes={};this.listeners={};this.textContent='';this.hidden=false;}
+  constructor(){this.children=[];this.attributes={};this.listeners={};this.textContent='';this.hidden=false;this.dataset={};}
   append(...children){this.children.push(...children);}
   replaceChildren(...children){this.children=children;}
   setAttribute(name,value){this.attributes[name]=value;}
@@ -10,7 +10,7 @@ class Element {
   click(){this.listeners.click();}
   scrollIntoView(){}
 }
-const ids=Object.fromEntries(['results','resultTitle','cards','reading','evidence','description','draw'].map(id=>[id,new Element()]));
+const ids=Object.fromEntries(['results','resultTitle','cards','reading','evidence','description','draw','tarotVerdict'].map(id=>[id,new Element()]));
 const buttons=['daily','personal','world'].map(spread=>Object.assign(new Element(),{dataset:{spread}}));
 const registered=[];
 const originalNavigator=Object.getOwnPropertyDescriptor(globalThis,'navigator');
@@ -32,6 +32,8 @@ try {
     assert.equal(ids.description.textContent,spread.description);
     ids.draw.click();
     assert.equal(ids.results.hidden,false);
+    assert.match(ids.tarotVerdict.textContent,/運は|財運は/);
+    assert.ok(['good','mixed','caution'].includes(ids.tarotVerdict.dataset.mode));
     assert.equal(ids.resultTitle.textContent,spread.title);
     assert.equal(ids.cards.children.length,spread.positions.length);
     assert.equal(ids.evidence.children.length,spread.positions.length);
@@ -54,5 +56,6 @@ assert.match(html,/name="viewport"/);
 assert.match(html,/flex-wrap:wrap/);
 assert.match(html,/min-height:48px/);
 assert.match(html,/aria-live="polite"/);
+assert.match(html,/id="tarotVerdict"/);
 assert.match(html,/:focus-visible/);
 console.log('Financial tarot UI interaction, navigation and mobile contracts passed');
