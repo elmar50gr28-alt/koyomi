@@ -167,3 +167,18 @@ details p {margin:6px 0 10px}
 .crash-case h4{color:#ffe7bc;font-size:.96rem;margin:0 0 7px}
 .crash-case p{font-size:.82rem;line-height:1.6;margin:6px 0;color:#e0e5e4}
 @media(max-width:430px){.market-risk-panel .heading-row{flex-wrap:wrap}.risk-label{max-width:100%}}
+
+/* Forward-looking monthly study, with experimental status clear on a phone. */
+.lead-panel{border:1px solid #d6b780;background:linear-gradient(145deg,#2a2c3c,#0d2333)}
+.lead-panel h2{font-family:Georgia,"Yu Mincho",serif;font-size:clamp(1.38rem,5vw,1.95rem);color:#ffe1ad;margin:8px 0}
+.lead-run{width:100%;min-height:52px;border:1px solid #f4d39a;background:#f0cc8b;color:#1d2530;border-radius:13px;padding:12px;font-weight:850;font-size:.94rem;line-height:1.45}
+.lead-run:disabled{opacity:.6}
+.lead-headline{font-weight:850;color:#f9d999;font-size:clamp(1.12rem,4.5vw,1.5rem);line-height:1.5}
+.lead-months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:15px 0}
+.lead-month{display:grid;align-content:center;min-width:0;gap:4px;padding:12px 9px;background:#132736;border:1px solid #677889;border-radius:12px}
+.lead-month[data-risk="high"]{border-color:#f0b29f;background:#392e33}
+.lead-month strong{font-size:.88rem;color:#f6d5a4}
+.lead-month span{font-weight:800;color:#ffebcf;font-size:.9rem;overflow-wrap:anywhere}
+.lead-month small{font-size:.72rem;color:#cbd4dc;overflow-wrap:anywhere}
+.lead-diagnostics{border-left:3px solid #cc986f;padding:9px 12px;background:#192a3a;color:#f2e0cf;font-size:.83rem;line-height:1.75}
+@media(max-width:550px){.lead-months{grid-template-columns:1fr}.lead-month{padding:11px 13px}}
