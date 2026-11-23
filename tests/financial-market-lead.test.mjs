@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {forecastLeadMonths,evaluateLeadModels,LEAD_RESEARCH_POLICY} from '../src/financial/market-lead-forecast.js';
+import {forecastLeadMonths,evaluateLeadModels,LEAD_RESEARCH_POLICY,LEAD_CANDIDATE_COUNT} from '../src/financial/market-lead-forecast.js';
 
 function iso(d){return d.toISOString().slice(0,10);}
 const prices=[];
@@ -48,4 +48,17 @@ assert.deepEqual(old,original,'unseen future crash or spike must never affect pr
 assert.equal(forecastLeadMonths({prices,asOfDate:'2028-01-01',readSky}).status,'unavailable','stale market data cannot support live months');
 assert.equal(LEAD_RESEARCH_POLICY.targetDropPct,-8);
 assert.equal(LEAD_RESEARCH_POLICY.purgeCalendarDays,90);
+assert.equal(LEAD_CANDIDATE_COUNT.price,3);
+assert.equal(LEAD_CANDIDATE_COUNT.combined,6);
+for(const row of audit.results){
+  if(row.status!=='evaluated')continue;
+  assert.ok(['inner-cv-one-standard-error','not-enough-inner-folds'].includes(row.optimization.combined.selection));
+  assert.ok([.1,.5,2].includes(row.optimization.combined.regularization));
+  assert.ok([7,9].includes(row.optimization.combined.featureCount));
+  assert.ok(row.model.alerts>=0 && row.model.alerts<=row.testN);
+  assert.ok(row.model.falseAlerts>=0 && row.model.falseAlerts<=row.model.alerts);
+  assert.ok(row.model.threshold>=0 && row.model.threshold<=1,'alert cutoff calibrated only from train scores');
+}
+assert.ok(forecast.buckets.filter(b=>b.status==='experimental').every(b=>
+  Number.isFinite(b.alertCutoff)&&b.alertCutoff>=0&&b.alertCutoff<=100));
 console.log('Offline monthly crash lead model: supervised fit, chronological holdout, 90-day purge, no price future leakage passed');
