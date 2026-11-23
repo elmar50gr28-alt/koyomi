@@ -61,6 +61,7 @@ assert.match(css,/\.history-metrics/);
 assert.match(css,/\.market-risk-panel/);
 assert.match(html,/id="marketRiskTag"/);
 assert.match(html,/id="historyCrashList"/);
+assert.ok(html.indexOf('id="marketRiskPanel"')<html.indexOf('id="marketDaily"'),'price crash warning must be visible ahead of chart details');
 assert.match(css,/min-height:48px/);
 assert.match(fs.readFileSync('src/financial/market-history-page.js','utf8'),/new Worker/);
 assert.match(fs.readFileSync('src/financial/market-history-worker.js','utf8'),/readFinancialSky/);
