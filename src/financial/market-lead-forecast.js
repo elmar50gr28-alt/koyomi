@@ -172,7 +172,13 @@ function chooseModel(rows,type) {
  }else{
   selected=type==='price'?CANDIDATES.price[2]:CANDIDATES.combined.at(-1);
  }
- return {model:fit(rows,type,selected),optimization:{
+ const model=fit(rows,type,selected);
+ if(model){
+  const history=rows.map(r=>score(model,r)).sort((a,b)=>a-b);
+  // Predeclared 80th percentile alert budget; fitted on TRAINING predictions only.
+  model.alertThreshold=history[Math.floor(0.8*(history.length-1))];
+ }
+ return {model,optimization:{
   selection:choice,folds:folds.length,candidates:configs.length,
   regularization:selected.l2,featureSet:selected.kind,
   featureCount:selected.indices.length,
@@ -186,10 +192,10 @@ function metric(model,testRows,baseRate) {
  const brier=mean(predictions.map(x=>(x.p-x.truth)**2));
  const baseBrier=mean(predictions.map(x=>(baseRate-x.truth)**2));
  // Fixed alert rule from training prevalence, never tuned using test labels.
- const threshold=Math.max(0.2,baseRate*1.5);
+ const threshold=model.alertThreshold;
  const flagged=predictions.filter(x=>x.p>=threshold),hits=flagged.filter(x=>x.truth).length;
  return {
-  n:predictions.length,events:prevalence,alerts:flagged.length,
+  n:predictions.length,events:prevalence,alerts:flagged.length,falseAlerts:flagged.length-hits,
   brier:Number(brier.toFixed(4)),baseBrier:Number(baseBrier.toFixed(4)),
   precision:flagged.length?Number((100*hits/flagged.length).toFixed(1)):null,
   recall:prevalence?Number((100*hits/prevalence).toFixed(1)):null,
@@ -256,8 +262,9 @@ export function forecastLeadMonths({prices,asOfDate,readSky,market='nikkei'}){
     status:'experimental',riskScore:Math.round(100*scoreCombined),
     priceOnlyScore:Math.round(100*scorePrice),
     selection:{combined:fitCombined.optimization,priceOnly:fitPrice.optimization},
+    alertCutoff:Math.round(model.alertThreshold*100),
     baselineScore:Math.round(100*model.baseRate),
-    classification:scoreCombined>=Math.max(.2,model.baseRate*1.5)?'注意候補':
+    classification:scoreCombined>=model.alertThreshold?'注意候補':
       scoreCombined<=model.baseRate*.7?'低め':'通常',
     verifiedOutOfSampleAdvantage:verified,
     testN:diagnostic.testN??0,holdoutBrier:diagnostic.model?.brier??null,
