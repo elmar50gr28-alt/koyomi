@@ -1,4 +1,7 @@
 import {readFinancialSky, readFinancialWindow, localDateKey} from './astrology-core.js';
+import {forecastMarketDirection} from './market-direction.js';
+
+let latestSkyDays=[];
 
 function el(tag, text, className) {
   const node = document.createElement(tag);
@@ -29,6 +32,27 @@ function fillAspects(aspects) {
       el('small','象徴：'+item.topic+' ／ 角度のずれ '+item.orb.toFixed(2)+'°')
     );
     list.append(box);
+  });
+}
+function renderMarketDirection() {
+  if (!latestSkyDays.length) return;
+  const market=byId('marketInstrument').value||'nikkei';
+  const horizon=Number(byId('marketHorizon').value)||7;
+  const result=forecastMarketDirection(latestSkyDays,market,horizon);
+  byId('marketDirection').textContent=result.label;
+  byId('marketDirection').dataset.direction=result.direction;
+  byId('marketHeadline').textContent=result.headline;
+  byId('marketSummary').textContent=result.summary;
+  byId('marketPeriod').textContent=result.marketLabel+' ／ '+result.periodStart+' ～ '+result.periodEnd+'（暦日'+result.observedDays+'日）';
+  byId('marketEvidence').textContent=result.reason;
+  byId('marketCounter').textContent=result.counterEvidence;
+  const list=byId('marketDaily');
+  list.replaceChildren();
+  result.daily.forEach(day=>{
+    const row=el('div',undefined,'market-day');
+    row.dataset.direction=day.direction;
+    row.append(el('strong',day.date.slice(5).replace('-','/')),el('span',day.label));
+    list.append(row);
   });
 }
 function drawCurve(days) {
@@ -80,6 +104,9 @@ function renderDate() {
     const astronomy=window.Astronomy;
     const result=readFinancialSky(day,astronomy);
     const days=readFinancialWindow(day,astronomy,14);
+    latestSkyDays=days;
+    renderMarketDirection();
+    byId('marketForecast').hidden=false;
     byId('astroVerdict').textContent=result.verdict.label;
     byId('astroVerdict').dataset.mode=result.verdict.mode;
     byId('astroHeadline').textContent=result.headline;
@@ -96,7 +123,9 @@ function renderDate() {
     status.textContent=result.date+'の天文計算結果を表示中。';
     byId('astroResult').hidden=false;
   } catch (error) {
+    latestSkyDays=[];
     status.textContent='表示できません：'+(error?.message||'日付と計算環境を確認してください。');
+    byId('marketForecast').hidden=true;
     byId('astroResult').hidden=true;
     byId('astroAspects').replaceChildren();
     byId('astroWindow').replaceChildren();
@@ -123,6 +152,8 @@ function setup() {
   }));
   byId('astroDate').value=localDateKey(new Date());
   byId('astroDate').addEventListener('change',renderDate);
+  byId('marketInstrument').addEventListener('change',renderMarketDirection);
+  byId('marketHorizon').addEventListener('change',renderMarketDirection);
   byId('astroPrev').addEventListener('click',()=>updateDate(-1));
   byId('astroNext').addEventListener('click',()=>updateDate(1));
   byId('astroToday').addEventListener('click',()=>{

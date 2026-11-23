@@ -35,8 +35,48 @@
     </div>
     <p id="astroStatus" class="status" role="status" aria-live="polite"></p>
 
+    <section class="panel market-forecast" id="marketForecast" aria-labelledby="marketForecastTitle">
+      <div class="eyebrow">MARKET DIRECTION · 星による相場占い</div>
+      <h2 id="marketForecastTitle">相場は上がる？ 下がる？</h2>
+      <div class="market-controls">
+        <label for="marketInstrument">対象市場
+          <select id="marketInstrument">
+            <option value="nikkei">日経平均</option>
+            <option value="nasdaq">NASDAQ100</option>
+            <option value="gold">金価格</option>
+            <option value="usdjpy">ドル／円</option>
+          </select>
+        </label>
+        <label for="marketHorizon">占う期間
+          <select id="marketHorizon">
+            <option value="1">選択日の1日</option>
+            <option value="7" selected>選択日から7日間</option>
+            <option value="14">選択日から14日間</option>
+          </select>
+        </label>
+      </div>
+      <p id="marketPeriod" class="market-period"></p>
+      <div class="market-judgment" aria-live="polite">
+        <span id="marketDirection" class="market-direction">鑑定中</span>
+        <div class="market-reading">
+          <h3 id="marketHeadline">天体の配置を計算しています</h3>
+          <p id="marketSummary"></p>
+        </div>
+      </div>
+      <div class="market-evidence">
+        <p><strong>判断の根拠</strong><span id="marketEvidence"></span></p>
+        <details><summary>逆方向の材料と判定ルール</summary>
+          <p id="marketCounter"></p>
+          <p class="small">計算対象：惑星の角度関係と水星・金星の逆行。対象日は暦日で、取引所の休場日も含みます。</p>
+        </details>
+      </div>
+      <h3 class="market-subtitle">日ごとの占断</h3>
+      <div id="marketDaily" class="market-day-grid" aria-label="日別の上昇・下落占い"></div>
+      <p class="market-warning">注意：これは市場価格を一切使わない<strong>占星術上の相場占い</strong>です。各市場の違いを反映した予測モデルではなく、対象を切り替えても同じ天体占断を表示します。実際の騰落を予測できると実証されたものではありません。</p>
+    </section>
+
     <section class="hero-reading panel" aria-labelledby="astroHeadline" id="astroResult">
-      <div class="eyebrow">選んだ日の経済運 · 占星術上の吉凶</div>
+      <div class="eyebrow">補足 · 社会全体の経済運（相場方向とは別）</div>
       <div class="verdict-word" id="astroVerdict">鑑定中</div>
       <h2 id="astroHeadline">天体を計算しています</h2>
       <p id="astroSummary"></p>
