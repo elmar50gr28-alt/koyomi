@@ -210,7 +210,8 @@ function showLeadForecast(data){
     if(item.status==='experimental'){
       box.dataset.risk=item.classification==='注意候補'?'high':'normal';
       box.append(node('span','研究スコア '+item.riskScore+'/100　'+item.classification),
-        node('small','過去価格だけのモデル：'+item.priceOnlyScore+'/100'));
+        node('small','過去価格だけのモデル：'+item.priceOnlyScore+'/100'),
+        node('small',item.selection?.usedAstronomy?'天体特徴を採用':'天体特徴は検証不足につき不採用'));
     }else{
       box.append(node('span','学習不足・判定保留'));
     }
@@ -218,6 +219,16 @@ function showLeadForecast(data){
   }
   const evaluated=data.diagnostics.filter(d=>d.status==='evaluated');
   const superior=evaluated.filter(d=>d.beatPriceOnly&&d.beatConstant);
+  const detail=get('leadValidation');detail.replaceChildren();
+  data.diagnostics.forEach(item=>{
+    const row=node('p',item.bucket+'：'+(item.status==='evaluated'?
+      '未使用期間 '+item.testN+'件 ／ Brier：選択モデル '+item.model.brier+
+      '・価格のみ '+item.priceOnly.brier+'・一定予想 '+item.model.baseBrier+
+      ' ／ 警戒 '+item.model.alerts+'件（誤警戒 '+item.model.falseAlerts+'件）'+
+      ' ／ 天体採用：'+(item.optimization?.usedAstronomy?'あり':'なし'):
+      '評価データ不足'));
+    detail.append(row);
+  });
   get('leadDiagnostics').textContent='時系列を分けた未使用期間の検証：'+evaluated.length+
     '/3期間に評価値あり。価格のみ・単純予想の両方を上回った期間：'+superior.length+
     '/'+evaluated.length+'。'+
