@@ -5,7 +5,11 @@ import {validatePriceRows} from './market-history.js';
 import {forecastMarketDirection} from './market-direction.js';
 
 const DAY_MS=86400000;
-const dateMillis=date=>Date.parse(date+'T00:00:00Z');
+const dateMillis=date=>{
+  if(typeof date!=='string'||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date))return NaN;
+  const time=Date.parse(date+'T00:00:00Z');
+  return Number.isFinite(time)&&new Date(time).toISOString().slice(0,10)===date?time:NaN;
+};
 const round=(value,digits=2)=>Number(value.toFixed(digits));
 const pct=(a,b)=>round((a/b-1)*100);
 const thresholds=Object.freeze({
