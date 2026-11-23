@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {
   AUTO_MARKET_SOURCES, AUTO_REFRESH_INTERVAL_MS, AUTO_STALE_AFTER_DAYS,
-  ageOfLastClose, parseFrankfurterRates,parseGoldReadings,
+  ageOfLastClose, parseFrankfurterRates,parseGoldReadings,parseGanaseNikkeiCSV,
   fetchAutomaticMarket,reconcileMarketHistory
 } from '../src/financial/market-auto-import.js';
 
@@ -13,6 +13,16 @@ const prices=[
 assert.equal(AUTO_REFRESH_INTERVAL_MS,6*3600*1000);
 assert.equal(AUTO_STALE_AFTER_DAYS,7);
 assert.deepEqual(Object.keys(AUTO_MARKET_SOURCES).sort(),['gold','nasdaq','nikkei','usdjpy']);
+const nikkeiArchiveFixture=[
+ 'index_id,date,open,high,low,close,source,fetched_at',
+ 'nikkei225,2026-04-10,56924.11,56265.77,57012.77,56251.18,public,2026-04-11',
+ 'nikkei225,2026-04-13,56502.77,56421.46,56765.72,56232.78,public,2026-04-14'
+].join('\n');
+assert.deepEqual(parseGanaseNikkeiCSV(nikkeiArchiveFixture),[
+ {date:'2026-04-10',close:56924.11},{date:'2026-04-13',close:56502.77}
+], 'ganase CSV mislabels close as open and low as close');
+assert.throws(()=>parseGanaseNikkeiCSV(nikkeiArchiveFixture.replace('57012.77','55000.00')),/矛盾/,
+ 'reject misleading malformed index OHLC');
 assert.equal(ageOfLastClose(prices,date).stale,false);
 assert.equal(ageOfLastClose([{date:'2026-10-20',close:100},{date:'2026-10-21',close:101}],date).stale,true);
 
@@ -63,11 +73,12 @@ let calls=[];
 const nikkei=await fetchAutomaticMarket('nikkei',{now:date,fetcher:async(uri)=>{
  calls.push(uri);
  if(uri.includes('fred.stlouisfed.org'))throw new Error('CORS rejected');
- return response('index_id,date,close\nnikkei225,2026-04-11,55500\nnikkei225,2026-04-13,55600\n');
+ return response(nikkeiArchiveFixture);
 }});
 assert.equal(calls.length,2,'attempt FRED before falling back to a stale third-party archive');
 assert.equal(nikkei.stale,true);
 assert.equal(nikkei.asOf,'2026-04-13');
+assert.equal(nikkei.rows.at(-1).close,56502.77, 'the correct published CLOSE, never the LOW');
 assert.match(nikkei.errors.join(' '),/CORS/);
 await assert.rejects(fetchAutomaticMarket('nasdaq',{now:date,fetcher:async()=>response('Not found')}),/終値データ|CSV/);
 await assert.rejects(fetchAutomaticMarket('unknown',{now:date}),/不正/);
