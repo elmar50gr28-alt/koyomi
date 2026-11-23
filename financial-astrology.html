@@ -34,10 +34,22 @@
       </div>
     </div>
     <p id="astroStatus" class="status" role="status" aria-live="polite"></p>
+    <section class="panel market-board" aria-labelledby="marketBoardHeading">
+      <div class="market-board-top">
+        <div>
+          <div class="eyebrow">MARKET SNAPSHOT</div>
+          <h2 id="marketBoardHeading">いまの相場</h2>
+          <p>見たい市場を選んでください。休場日は直近の終値を表示します。</p>
+        </div>
+        <button id="historyAuto" type="button" class="market-refresh">更新 <span aria-hidden="true">↻</span></button>
+      </div>
+      <div id="marketAutoStatuses" class="market-price-grid" role="group" aria-label="市場を選択"></div>
+      <p id="historyAutoStatus" class="market-board-status" role="status" aria-live="polite">価格データを確認中です。</p>
+    </section>
     <section class="panel lead-panel" aria-labelledby="leadHeading">
       <div class="eyebrow">CRASH LEAD · 1〜3か月先</div>
       <h2 id="leadHeading">大きく下がるのは、いつ頃か？</h2>
-      <p class="subtext">取り込んだ過去の実際の終値から学習し、過去価格と将来の天体配置を使って<strong>最大90日先までの警戒候補時期</strong>を表示します。</p>
+      <p class="subtext">実際の相場データを使って、これから90日間を30日ごとに比較します。<strong>予測精度は未実証です。</strong></p>
       <button id="leadRun" class="lead-run" type="button">過去の相場から学習して3か月先を占う</button>
       <p id="leadStatus" class="status" role="status" aria-live="polite">この機能には実際の終値データが必要です。下の「値動きと答え合わせ」から読み込んでください。</p>
       <div id="leadResult" hidden>
@@ -48,8 +60,10 @@
           <div id="leadValidation" class="lead-validation"></div>
         </details>
       </div>
+      <details class="reading-method"><summary>学習方法・予測精度について</summary>
       <p class="small"><strong>研究段階：</strong>スコアは暴落確率ではありません。未来の株価は学習に使用しません。過学習を抑えるため、正則化と天体特徴量を学習側の時系列検証だけで選び、90日の空白期間を挟んだ後方期間で比較します。開発中にも検証データを確認しているため、最終的な性能は前向き検証が必要です。天体が価格だけのモデルより役立たなければ天体特徴を不採用にします。</p>
       <p class="market-audit-warning"><strong>長期検証の注意：</strong>1987・2008・2011・2020・2024年の著名な5局面の事前研究では、最高スコアの30日区間が実際に8%下落を初めて記録した区間と一致したのは1局面でした。特定の暴落を前もって捉えられる能力は確認できていません。<a href="https://github.com/elmar50gr28-alt/koyomi/blob/feature/financial-historical-market-validation-20261123/docs/financial-lead-optimization-20261123.md" target="_blank" rel="noopener noreferrer">検証内容</a></p>
+      </details>
     </section>
 
     <section class="panel market-forecast" id="marketForecast" aria-labelledby="marketForecastTitle">
@@ -95,24 +109,27 @@
       </div>
       <h3 class="market-subtitle">日ごとの占断</h3>
       <div id="marketDaily" class="market-day-grid" aria-label="日別の上昇・下落占い"></div>
+      <details class="reading-method"><summary>この占いの限界と過去の成績</summary>
       <p class="market-warning">注意：これは市場価格を一切使わない<strong>占星術上の相場占い</strong>です。各市場の違いを反映した予測モデルではなく、対象を切り替えても同じ天体占断を表示します。実際の騰落を予測できると実証されたものではありません。</p>
 
       <p class="market-audit-warning"><strong>実相場の検証では予測優位性なし。</strong>NASDAQ100の過去履歴（2019〜2026年）で、7日間の占断的中率は42.53%、常に上昇と予想する場合は61.69%でした。<a href="#historyHeading">終値と検証方法を見る</a></p>
+      </details>
     </section>
 
-    <section class="panel history-panel" aria-labelledby="historyHeading">
-      <div class="heading-row"><h2 id="historyHeading">実際の値動きと答え合わせ</h2><span class="tag">過去検証</span></div>
-      <p class="subtext">この画面を開くと、4市場の終値履歴を<strong>自動取得・端末内保存</strong>します。通信できないときは保存履歴を利用し、取得日が古ければ明示します。相場データの通信先は各提供元のみです。</p>
+    <details class="panel history-panel" aria-labelledby="historyHeading">
+      <summary class="history-disclosure">
+        <span id="historyHeading">相場の詳細と過去検証</span>
+        <small>価格チャート・データ取込・検証結果</small>
+      </summary>
+      <div class="history-expanded">
+      <p class="subtext">相場データは自動取得し、端末内に保存します。手元のCSVも利用できます。</p>
       <div class="history-tools">
-        <button id="historyAuto" type="button">この市場の終値を再取得</button>
         <label class="history-file-label" for="historyFile">手元の終値CSVを取り込む
           <input id="historyFile" type="file" accept=".csv,text/csv">
         </label>
         <a id="historyCSVLink" href="https://fred.stlouisfed.org/graph/fredgraph.csv?id=NIKKEI225" target="_blank" rel="noopener noreferrer">FREDから終値CSVを入手</a>
         <button id="historyRun" type="button">この市場の過去検証を実行</button>
       </div>
-      <p id="historyAutoStatus" class="market-auto-status" aria-live="polite">自動取込：起動時に確認します。</p>
-      <div id="marketAutoStatuses" class="market-auto-overview" role="status" aria-label="4市場の自動取得状況"></div>
       <p id="historyStatus" class="status" role="status" aria-live="polite">保存済み終値を確認しています。未取得なら自動的に取り込みます。</p>
       <div id="historyResult" hidden>
         <p id="historySource" class="history-source"></p>
@@ -139,7 +156,8 @@
       </div>
       <p class="small">比較方法：選んだ日の終値から、1・7・14暦日後以降の最初の取引日の終値まで。重複しない期間だけを集計し、方向感なし・変化ゼロは的中率から除外します。過去データに合わせて占星術の規則を変更しません。</p>
       <p class="small">自動取得元：日経平均はFREDを試し、接続できなければ第三者の公開アーカイブを使用します。アーカイブが更新停止している場合は「古い」と表示します。NASDAQ100は第三者ミラー、ドル円はFrankfurterの参考レート、金は<a href="https://xaudaily.com/" rel="noopener noreferrer" target="_blank">xaudaily.com</a>（CC BY 4.0）による<strong>COMEX金先物</strong>の終値で、現物金やLBMAと同一の価格系列ではありません。自動取得元が利用不能な場合はCSVの手動取込も残します。外部データは提供元・収録日を確認してください。</p>
-    </section>
+    </div>
+    </details>
 
     <section class="hero-reading panel" aria-labelledby="astroHeadline" id="astroResult">
       <div class="eyebrow">補足 · 社会全体の経済運（相場方向とは別）</div>
