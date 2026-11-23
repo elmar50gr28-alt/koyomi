@@ -103,9 +103,13 @@ function showCrashResults(data){
   const section=get('historyCrashes'),host=get('historyCrashList');
   host.replaceChildren();
   const events=data?.events||[];
-  section.hidden=!events.some(item=>item.status==='evaluated');
+  section.hidden=!events.length;
   for(const item of events){
-    if(item.status!=='evaluated')continue;
+    if(item.status!=='evaluated'){
+      const box=node('article','');box.className='crash-case';
+      box.append(node('h4',item.title),node('p','対象期間の終値データが不足しています。未検証です。'));
+      host.append(box);continue;
+    }
     const box=node('article','');box.className='crash-case';
     box.append(node('h4',item.title),
       node('p','この期間の最大下落 '+item.observedDrawdownPct.toFixed(1)+'% ／ 14日以内8%以上下落 '+item.crashCases+'件 ／ 評価日 '+item.n+'件'),
