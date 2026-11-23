@@ -284,14 +284,14 @@ async function runHistoricalValidation(){
 }
 function setup(){
   get('marketInstrument').addEventListener('change',updateMarket);
-  get('astroDate').addEventListener('change',showMarketRisk);
+  get('astroDate').addEventListener('change',()=>{showMarketRisk();get('leadResult').hidden=true;});
   for(const id of ['astroPrev','astroNext','astroToday'])get(id).addEventListener('click',showMarketRisk);
   get('marketHorizon').addEventListener('change',()=>{get('historyStatistics').hidden=true;});
   get('historyAuto').addEventListener('click',loadOnline);
   get('historyFile').addEventListener('change',loadFile);
   get('historyRun').addEventListener('click',runHistoricalValidation);
   get('leadRun').addEventListener('click',runLeadForecast);
-  get('astroDate').addEventListener('change',()=>{get('leadResult').hidden=true;});
+
   restore();
 }
 if(typeof document!=='undefined')setup();
