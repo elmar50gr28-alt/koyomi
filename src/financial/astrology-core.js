@@ -122,20 +122,68 @@ export function localDateKey(date) {
     String(date.getMonth()+1).padStart(2,'0') + '-' +
     String(date.getDate()).padStart(2,'0');
 }
+// KOYOMI interpretive rules: these are symbolic judgments, not validated market signals.
+const FINANCE_BODIES = new Set(['Mercury', 'Venus', 'Jupiter', 'Saturn']);
+function interpretEconomy(aspects, retrogrades, phase) {
+  const factors = [];
+  for (const aspect of aspects) {
+    if (!aspect.bodies.some(body => FINANCE_BODIES.has(body))) continue;
+    const pair = new Set(aspect.bodies);
+    let direction = 0;
+    if (aspect.type === 'trine' || aspect.type === 'sextile') direction = 1;
+    else if (aspect.type === 'square' || aspect.type === 'opposition') direction = -1;
+    else if (aspect.type === 'conjunction') {
+      if (pair.has('Venus') && pair.has('Jupiter')) direction = 1;
+      else if (pair.has('Saturn') && (pair.has('Mars') || pair.has('Uranus'))) direction = -1;
+    }
+    if (!direction) continue; // Conjunctions with ambiguous meaning never inflate a verdict.
+    const strength = aspect.orb <= 1.5 ? 2 : 1;
+    factors.push({ direction, strength, explanation: aspect.label + 'の' + aspect.aspect });
+  }
+  // In this explicit v1 school rule, Mercury/Venus retrograde is cautionary, not a price forecast.
+  for (const transit of retrogrades) {
+    if (transit.body === 'Mercury' || transit.body === 'Venus') {
+      factors.push({ direction: -1, strength: 1, explanation: transit.label + 'の逆行' });
+    }
+  }
+  const total = factors.reduce((sum, item) => sum + item.direction * item.strength, 0);
+  const supports = factors.filter(item => item.direction > 0);
+  const cautions = factors.filter(item => item.direction < 0);
+  const mode = total >= 3 ? 'good' : total <= -3 ? 'caution' : 'mixed';
+  const statements = {
+    good: {
+      label: '吉', headline: '経済運は吉。前進の気配が優勢。',
+      conclusion: '占星術上は拡大と連携に追い風。先送りしてきた企画の具体化が吉。',
+      action: '今日の一手：数字と条件が揃った計画から、実行順を決める。'
+    },
+    caution: {
+      label: '凶', headline: '経済運は凶。守りが優勢。',
+      conclusion: '占星術上は衝突と調整の暗示が強い。勢いだけで拡大するのは凶。',
+      action: '今日の一手：新しい約束より先に、支出とリスクの上限を確認する。'
+    },
+    mixed: {
+      label: '平', headline: '経済運は平。強気にも弱気にも傾くな。',
+      conclusion: '占星術上の吉凶は拮抗。決定打が乏しいため、背伸びした判断は不向き。',
+      action: '今日の一手：判断を急がず、費用・契約・公開情報を一つ確認する。'
+    }
+  };
+  const verdict = statements[mode];
+  const dominant = [...factors].sort((a,b) => b.strength - a.strength)[0];
+  const reason = factors.length
+    ? '根拠：' + (dominant?.explanation || '') + 'など。吉の要素' + supports.length + '件、注意の要素' + cautions.length + '件。月相は' + phase.label + '。'
+    : '根拠：対象とする主要な吉凶アスペクト・水星／金星逆行の該当がなく、月相は' + phase.label + '。';
+  return { ...verdict, mode, reason, supportCount: supports.length, cautionCount: cautions.length, symbolicOnly: true };
+}
 export function readFinancialSky(date, astronomy) {
   const positions = positionsAt(date, astronomy);
   const phase = lunarPhase(positions);
   const aspects = findAspects(positions);
   const retrogrades = retrogradesAt(date, astronomy);
-  const lead = aspects[0];
-  const headline = lead
-    ? lead.label + 'の' + lead.aspect + 'に注目'
-    : phase.label + 'の節目を読む';
-  const overview = lead
-    ? lead.topic + 'という象徴が重なります。' + lead.meaning + 'という読み方を参考に、実際の数字と条件を確かめましょう。'
-    : phase.label + 'を手掛かりに、収支や情報の整理に目を向けましょう。';
+  const verdict = interpretEconomy(aspects, retrogrades, phase);
+  const headline = verdict.headline;
+  const overview = verdict.conclusion;
   return {
-    date: localDateKey(date), phase, aspects, retrogrades, headline, overview,
+    date: localDateKey(date), phase, aspects, retrogrades, verdict, headline, overview,
     // This is an astronomical event count, NOT a price or bullish/bearish index.
     tightAspectCount: aspects.filter(item => item.orb <= 2).length,
     meta: FINANCIAL_ASTROLOGY_META
