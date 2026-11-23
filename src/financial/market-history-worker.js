@@ -2,6 +2,7 @@
 import '../../vendor/astronomy-engine/2.1.19/astronomy.browser.min.js';
 import {readFinancialSky} from './astrology-core.js';
 import {backtestMarketDirection} from './market-history.js';
+import {studyHistoricalCrashes} from './market-crash-research.js';
 
 const DAY_MS=86400000;
 self.addEventListener('message',event=>{
@@ -23,7 +24,8 @@ self.addEventListener('message',event=>{
       return days;
     };
     const result=backtestMarketDirection({prices,market,horizon,readWindow});
-    self.postMessage({requestId,ok:true,result:{...result,cases:result.cases.slice(-12)}});
+    const crises=studyHistoricalCrashes({prices,market,readWindow,horizon:14});
+    self.postMessage({requestId,ok:true,result:{...result,cases:result.cases.slice(-12),crises}});
   }catch(error){
     self.postMessage({requestId,ok:false,error:String(error?.message||error)});
   }
