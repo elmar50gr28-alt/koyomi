@@ -131,23 +131,32 @@ function renderStock(){
     const months=get('stockMonths');months.replaceChildren();
     get('stockForecast').hidden=false;
     get('stockBasis').textContent=reading.basis==='company-date'?
-      '企業の'+(referenceType==='listing'?'上場日':'設立日')+
-        'を基準とする象徴。株価の騰落ではありません。':
-      '企業固有の基準日がないため、市場全体に共通する天体の象意を表示しています。';
+      '企業の'+(referenceType==='listing'?'上場日':'設立日')+'を使った星の象徴と、'+
+        selected.code+'のコード数秘を区別して表示。株価の騰落ではありません。':
+      '設立日・上場日が未登録です。下は'+selected.code+
+        'のコード数秘による象徴で、企業固有の星回りではありません。市場共通の天体傾向は別記しています。';
+    get('stockForecastHeading').textContent=referenceDate?
+      '90日間の企業占星術とコード数秘':'90日間の銘柄コード数秘';
     for(const period of reading.periods){
       const card=elt('article',undefined,'month');card.dataset.mood=period.mood;
+      const number=elt('div','数秘 '+period.codeCycle.number+' · '+period.codeCycle.title,'period-number');
+      const action=elt('p','確認する視点：'+period.codeCycle.focus+
+        ' ／ 注意：'+period.codeCycle.caution,'period-focus');
+      const codeBasis=elt('small',period.codeCycle.basis,'period-code-basis');
       card.append(elt('small',period.label+' / '+period.from.slice(5)+'〜'+period.to.slice(5)),
-        elt('strong',period.mood),elt('span',period.message),
-        elt('p',period.grounds[0]));
+        elt('strong',period.mood),elt('span',period.message),number,
+        action,elt('p',period.grounds[0]),codeBasis);
+      if(period.marketContext)card.append(elt('p',period.marketContext,'market-context'));
       months.append(card);
     }
-    get('stockReferenceExplanation').textContent=reading.referenceNote+' / '+reading.meta.warning;
+    get('stockReferenceExplanation').textContent=reading.referenceNote+
+      ' 同じ設立日・上場日を入力すると星の位置も同じになります。数秘による銘柄別の象徴と混同しないでください。 / '+reading.meta.warning;
     get('stockNumerology').textContent=reading.numerology.number;
     get('stockNumerologyText').textContent=reading.numerology.meaning;
     get('stockNumerologyReason').textContent=reading.numerology.formula+'。'+reading.numerology.note;
     get('stockStatus').textContent='鑑定日 '+date+'。'+
-      (referenceDate?'入力した企業基準日 '+referenceDate+' を反映しました。':
-        '企業の設立日・上場日を入力すると、企業固有の天体角度を計算できます。');
+      (referenceDate?'入力した企業基準日 '+referenceDate+' を反映しました。企業星回りと数秘は独立した象徴です。':
+        'コードの数秘周期を表示中です。企業固有の占星術を使うには設立日または上場日を入力してください。');
     if(referenceDate)writeStorage(REFERENCE_KEY+selected.code,{date:referenceDate,referenceType});
     else try{localStorage.removeItem(REFERENCE_KEY+selected.code);}catch{}
     const stored=readStorage(PRICE_KEY+selected.code);
