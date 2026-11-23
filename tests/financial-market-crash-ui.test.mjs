@@ -11,7 +11,7 @@ const ids=['marketInstrument','marketHorizon','marketDirection','astroDate','ast
   'historyAuto','historyFile','historyRun','historyStatus','historyResult','historyStatistics','historySource',
   'historyLatest','historyLatestDate','historyRange','historyRows','historyPriceCurve','historyCSVLink',
   'historyAccuracy','historyBaseline','historyCount','historyInterpretation','historyExamples','historyCrashes','historyCrashList',
-  'marketRiskTag','marketRiskText','marketRiskVerdict','leadRun','leadStatus','leadResult','leadMonths','leadHeadline','leadDiagnostics'];
+  'marketRiskTag','marketRiskText','marketRiskVerdict','leadRun','leadStatus','leadResult','leadMonths','leadHeadline','leadDiagnostics','historyAutoStatus','marketAutoStatuses'];
 const elements=Object.fromEntries(ids.map(id=>[id,new Element()]));
 elements.marketInstrument.value='nikkei';elements.marketHorizon.value='7';elements.marketDirection.dataset.direction='up';
 const start=new Date('2026-01-01T00:00:00Z');const rows=[];

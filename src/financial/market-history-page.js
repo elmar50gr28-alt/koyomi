@@ -2,20 +2,29 @@ import {readFinancialWindow} from './astrology-core.js';
 import {priceRiskAt,studyHistoricalCrashes} from './market-crash-research.js';
 import {forecastLeadMonths} from './market-lead-forecast.js';
 import {
-  MARKET_PRICE_SOURCE,OFFICIAL_CSV_LINKS,parseMarketCSV,validatePriceRows,backtestMarketDirection
+  OFFICIAL_CSV_LINKS,parseMarketCSV,validatePriceRows,backtestMarketDirection
 } from './market-history.js';
+import {
+  AUTO_MARKET_SOURCES,AUTO_REFRESH_INTERVAL_MS,
+  ageOfLastClose,fetchAutomaticMarket,reconcileMarketHistory
+} from './market-auto-import.js';
 
 const KEY='koyomi-financial-market-prices-v1-';
 const datasets=new Map();
+const autoStates=new Map();
+const activeSync=new Map();
+const MARKET_NAMES={nikkei:'日経平均',nasdaq:'NASDAQ100',gold:'金先物',usdjpy:'ドル／円'};
+const LAST_ATTEMPT_KEY='koyomi-financial-market-attempt-v1-';
 const get=id=>document.getElementById(id);
 const node=(tag,text)=>{const e=document.createElement(tag);e.textContent=String(text);return e;};
 function selectedMarket(){return get('marketInstrument').value||'nikkei';}
 function sourceLink(){
   const market=selectedMarket(),auto=get('historyAuto'),link=get('historyCSVLink');
-  auto.hidden=market!=='nasdaq';
+  auto.hidden=false;
+  auto.textContent='この市場の終値を再取得';
   link.href=OFFICIAL_CSV_LINKS[market];
   const hints={nikkei:'日経平均（権利に配慮して端末内のみで読み込む）',
-    nasdaq:'NASDAQ100',usdjpy:'ドル／円',gold:'金価格（FRED系列は2022年で終了）'};
+    nasdaq:'NASDAQ100',usdjpy:'ドル／円',gold:'金価格（FREDのLBMA系列は終了。自動はCOMEX金先物）'};
   link.textContent=hints[market]+'のFRED終値CSVを取得';
 }
 function drawPriceCurve(rows){
@@ -44,9 +53,13 @@ function showDataset(){
   get('historyLatestDate').textContent=last.date+(daily===null?'':' ／ 前回比 '+(daily>0?'+':'')+daily.toFixed(2)+'%');
   get('historyRange').textContent=first.date.slice(0,7)+' ～ '+last.date.slice(0,7);
   get('historyRows').textContent=rows.length.toLocaleString('ja-JP')+'営業日分';
-  get('historySource').textContent='取得元：'+data.source;
+  const freshness=ageOfLastClose(rows);
+  const oldTag=freshness.stale?' ／ 【データが古い：'+freshness.daysOld+'日前】':'';
+  get('historySource').textContent='取得元：'+data.source+oldTag;
   drawPriceCurve(rows);
-  get('historyStatus').textContent='終値データを読み込みました。期間を選んで「過去検証を実行」を押してください。';
+  get('historyStatus').textContent=freshness.stale
+    ?'収録終値は'+freshness.lastDate+'までです。古い値を最新として扱いません。オンライン再取得を試みています。'
+    :'終値データを表示しています（最終収録日 '+freshness.lastDate+'）。必要に応じて過去検証を実行できます。';
   showMarketRisk();
 }
 function showMarketRisk(){
@@ -78,16 +91,66 @@ function showMarketRisk(){
     verdict.textContent='実市場の安全性は未確認です。';
   }
 }
-function updateMarket(){sourceLink();showDataset();showMarketRisk();}
+function renderAutoStatuses(){
+  const host=get('marketAutoStatuses');
+  host.replaceChildren();
+  for(const market of ['nikkei','nasdaq','usdjpy','gold']){
+    const info=autoStates.get(market);
+    const cached=datasets.get(market);
+    const last=cached?.rows?.at(-1)?.date||'未取得';
+    const messages={
+      queued:'自動更新待ち',checking:'自動更新中',updated:'取得成功',
+      unchanged:'保存済みの履歴が新しい',stale:'取得成功（古いデータ）',
+      unavailable:'自動取得不可・手元の履歴を維持',offline:'通信なし・保存データで継続',
+      conflict:'価格系列が一致しないため更新しない'
+    };
+    const line=node('p',MARKET_NAMES[market]+'：'+(messages[info?.status]||'自動更新待ち')+
+      ' ／ 収録 '+last+(info?.message?' ／ '+info.message:''));
+    line.className='market-auto-line';
+    line.dataset.status=info?.status||'queued';
+    host.append(line);
+  }
+}
+function setAutoState(market,status,message=''){
+  autoStates.set(market,{status,message});
+  renderAutoStatuses();
+  if(selectedMarket()===market){
+    const info=autoStates.get(market);
+    const existing=datasets.get(market);
+    const date=existing?.rows?.at(-1)?.date||'未取得';
+    get('historyAutoStatus').textContent='自動取込：'+(status==='checking'?'更新中':
+      status==='updated'?'成功':status==='stale'?'取得元が古い':
+      status==='offline'?'オフライン':
+      status==='unavailable'?'取得失敗・キャッシュ使用':
+      status==='conflict'?'系列不一致で保留':'確認済み')+
+      ' ／ 保存終値 '+date+(message?' ／ '+message:'');
+  }
+}
+function updateMarket(){
+  sourceLink();showDataset();showMarketRisk();
+  const status=autoStates.get(selectedMarket());
+  if(status)setAutoState(selectedMarket(),status.status,status.message);
+  else renderAutoStatuses();
+}
+function persistMarket(market,data){
+  validatePriceRows(data.rows);
+  const rows=data.rows.slice(-15000).map(r=>({date:r.date,close:r.close}));
+  const stored={rows,source:String(data.source||'不明な出典'),
+    sourceId:data.sourceId||null,instrument:data.instrument||null,
+    downloadedAt:data.downloadedAt||null};
+  datasets.set(market,stored);
+  try{localStorage.setItem(KEY+market,JSON.stringify({
+    rows:rows.map(r=>[r.date,r.close]),source:stored.source,sourceId:stored.sourceId,
+    instrument:stored.instrument,downloadedAt:stored.downloadedAt
+  }));}catch{
+    if(selectedMarket()===market)get('historyStatus').textContent=
+      '表示は可能ですが、保存容量の制限により次回は再取込が必要です。';
+  }
+  if(selectedMarket()===market)showDataset();
+}
 function save(market,rows,source){
-  validatePriceRows(rows);
-  // The browser keeps only closes and dates; no remote upload or account required.
-  const slim=rows.slice(-15000).map(r=>[r.date,r.close]);
-  const data={rows:slim.map(([date,close])=>({date,close})),source};
-  datasets.set(market,data);
-  try{localStorage.setItem(KEY+market,JSON.stringify({rows:slim,source}));}
-  catch{get('historyStatus').textContent='表示中ですが、端末の保存容量により次回起動時は再取込が必要です。';}
-  showDataset();
+  persistMarket(market,{rows,source,sourceId:'manual-csv',
+    instrument:null,downloadedAt:new Date().toISOString()});
 }
 function restore(){
   for(const market of Object.keys(OFFICIAL_CSV_LINKS)){
@@ -96,10 +159,60 @@ function restore(){
       if(!raw||!Array.isArray(raw.rows)||raw.rows.length<2)continue;
       const rows=raw.rows.map(([date,close])=>({date,close}));
       validatePriceRows(rows);
-      datasets.set(market,{rows,source:String(raw.source||'端末保存')});
+      datasets.set(market,{rows,source:String(raw.source||'端末保存'),
+        sourceId:raw.sourceId||null,instrument:raw.instrument||null,
+        downloadedAt:raw.downloadedAt||null});
     }catch{}
+    autoStates.set(market,{status:'queued',message:''});
   }
   updateMarket();
+}
+async function refreshMarket(market,{force=false}={}){
+  if(activeSync.has(market))return activeSync.get(market);
+  if(typeof navigator!=='undefined' && navigator.onLine===false){
+    setAutoState(market,'offline','接続回復時に再試行します。');return;
+  }
+  const prior=datasets.get(market);
+  let lastAttempt=0;
+  try{lastAttempt=Number(localStorage.getItem(LAST_ATTEMPT_KEY+market))||0;}catch{}
+  if(!force&&Date.now()-lastAttempt<AUTO_REFRESH_INTERVAL_MS&&lastAttempt<=Date.now()){
+    const last=prior?.rows?.at(-1)?.date||'未取得';
+    const stale=prior?ageOfLastClose(prior.rows).stale:false;
+    setAutoState(market,prior?(stale?'stale':'unchanged'):'unavailable',
+      '次回の自動更新まで前回の取得結果を利用（'+last+'）'+(stale?'・最新値ではありません':''));
+    return;
+  }
+  const work=(async()=>{
+    setAutoState(market,'checking');
+    try{
+      const result=await fetchAutomaticMarket(market);
+      try{localStorage.setItem(LAST_ATTEMPT_KEY+market,String(Date.now()));}catch{}
+      const joined=reconcileMarketHistory(prior,result);
+      if(joined.updated)persistMarket(market,joined.data);
+      const latest=joined.data.rows.at(-1).date;
+      if(joined.reason==='conflict'||joined.reason==='different-instrument'||joined.reason==='unverified-source'){
+        setAutoState(market,'conflict','保存済みCSVと一致しません。収録 '+latest+'、取得元 '+result.asOf);
+      }else if(joined.reason==='older'||joined.reason==='unchanged'){
+        const stale=ageOfLastClose(joined.data.rows).stale;
+        setAutoState(market,stale?'stale':'unchanged',
+          '取得元の終値 '+result.asOf+' ／ 採用せず'+(stale?'・保存履歴も古い':''));
+      }else{
+        setAutoState(market,result.stale?'stale':'updated',
+          '取得元の終値 '+result.asOf+(result.stale?'（更新遅延）':'')+
+          (result.errors.length?' ／ 一部取得先に制限あり':''));
+      }
+    }catch(error){
+      setAutoState(market,'unavailable','原因：'+String(error?.message||error).slice(0,120));
+      // Failed fetches use a short backoff instead of six-hour freshness suppression.
+      try{localStorage.setItem(LAST_ATTEMPT_KEY+market,String(Date.now()-AUTO_REFRESH_INTERVAL_MS+15*60*1000));}catch{}
+    }finally{activeSync.delete(market);}
+  })();
+  activeSync.set(market,work);
+  return work;
+}
+async function refreshAllMarkets(){
+  const preferred=selectedMarket(),markets=[preferred,...Object.keys(AUTO_MARKET_SOURCES).filter(x=>x!==preferred)];
+  for(const market of markets)await refreshMarket(market);
 }
 function showCrashResults(data){
   const section=get('historyCrashes'),host=get('historyCrashList');
@@ -146,17 +259,8 @@ function showBacktest(result){
   }
 }
 async function loadOnline(){
-  const market=selectedMarket(),source=MARKET_PRICE_SOURCE[market];
-  if(!source)return;
   const button=get('historyAuto');button.disabled=true;
-  get('historyStatus').textContent='公開されているNASDAQ100の終値CSVを取得しています…';
-  try{
-    const response=await fetch(source.url,{cache:'no-store'});
-    if(!response.ok)throw new Error('取得先がHTTP '+response.status+'を返しました。');
-    const text=await response.text();
-    const prices=parseMarketCSV(text);
-    save(market,prices,source.attribution);
-  }catch(e){get('historyStatus').textContent='オンライン取得できません：'+e.message+'。FREDのCSV取込をお試しください。';}
+  try{await refreshMarket(selectedMarket(),{force:true});}
   finally{button.disabled=false;}
 }
 async function loadFile(){
@@ -306,5 +410,17 @@ function setup(){
   get('leadRun').addEventListener('click',runLeadForecast);
 
   restore();
+  // No background polling: refresh automatically only on launch/reconnect/foreground.
+  if(typeof window!=='undefined'){
+    void refreshAllMarkets();
+    window.addEventListener('online',()=>{void refreshAllMarkets();});
+    // Updates while the page remains open; hidden background tabs are not polled.
+    window.setInterval?.(()=>{
+      if(!document.hidden)void refreshAllMarkets();
+    },AUTO_REFRESH_INTERVAL_MS);
+    document.addEventListener('visibilitychange',()=>{
+      if(!document.hidden)void refreshAllMarkets();
+    });
+  }
 }
 if(typeof document!=='undefined')setup();
