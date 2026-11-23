@@ -21,8 +21,11 @@ export const CRASH_RISK_RULES=Object.freeze({
 });
 // Historical event WINDOWS are named in advance. They never feed the indicator.
 export const HISTORICAL_CRASH_WINDOWS=Object.freeze([
+  {id:'nikkei-1987',market:'nikkei',title:'1987年 ブラックマンデー',from:'1987-09-21',to:'1987-11-06',checkpoint:'1987-10-19'},
   {id:'nikkei-2008',market:'nikkei',title:'2008年 世界金融危機',from:'2008-09-01',to:'2008-11-28',checkpoint:'2008-09-12'},
   {id:'nikkei-2011',market:'nikkei',title:'2011年 東日本大震災後の急落',from:'2011-03-01',to:'2011-04-15',checkpoint:'2011-03-10'},
+  {id:'nikkei-2024',market:'nikkei',title:'2024年 8月の日本株急落',from:'2024-07-15',to:'2024-08-30',checkpoint:'2024-08-02'},
+  {id:'nasdaq-2000',market:'nasdaq',title:'2000年 ITバブル崩壊の初期',from:'2000-02-15',to:'2000-07-31',checkpoint:'2000-03-10'},
   {id:'nasdaq-2020',market:'nasdaq',title:'2020年 コロナショック',from:'2020-02-03',to:'2020-04-15',checkpoint:'2020-02-19'},
   {id:'nasdaq-2022',market:'nasdaq',title:'2022年 金融引き締め相場',from:'2022-01-03',to:'2022-07-15',checkpoint:'2022-01-03'}
 ]);
