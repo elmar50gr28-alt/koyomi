@@ -190,3 +190,74 @@ details p {margin:6px 0 10px}
 .market-auto-line[data-status="stale"],.market-auto-line[data-status="unavailable"],.market-auto-line[data-status="conflict"]{border-color:#bc9872;background:#332b2b;color:#ffe1bd}
 .market-auto-line[data-status="updated"]{border-color:#70a68a;color:#caebd8}
 @media(max-width:550px){.market-auto-overview{grid-template-columns:1fr}}
+
+
+/* Financial home refinement: prices first, provenance on demand. */
+.market-board{
+  margin-top:12px;padding:20px 18px;
+  background:linear-gradient(160deg,#182a3b 0%,#102032 100%);
+  border:1px solid #6b746f;box-shadow:0 8px 28px #0003;
+}
+.market-board-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}
+.market-board-top h2{margin:3px 0 3px;font-family:Georgia,"Yu Mincho",serif;
+  font-size:clamp(1.35rem,5vw,1.8rem);font-weight:650;color:#f7e6c5}
+.market-board-top p{margin:0;font-size:.79rem;line-height:1.6;color:#c8d2d6}
+.market-refresh{flex-shrink:0;min-height:44px;min-width:78px;
+  border:1px solid #a48e6e;border-radius:11px;background:#23394b;
+  color:#fae9cb;font-size:.84rem;font-weight:800;padding:8px 12px}
+.market-refresh:disabled{opacity:.55}
+.market-price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.market-price-card{display:flex;flex-direction:column;text-align:left;min-width:0;
+  gap:3px;padding:15px 13px 12px;border-radius:14px;
+  border:1px solid #526272;background:#101e2e;color:#f4f0e7;
+  transition:border-color .15s,background-color .15s,box-shadow .15s;
+  overflow-wrap:anywhere;min-height:148px}
+.market-price-card:hover{border-color:#cab383}
+.market-price-card[aria-pressed="true"]{
+  border:1.5px solid #e5c58c;background:#1c3144;box-shadow:inset 0 0 0 1px #d7bb7135}
+.market-price-name{font-size:.83rem;font-weight:750;color:#e3e3e0}
+.market-price-value{font-size:clamp(1.45rem,4.4vw,1.85rem);
+  letter-spacing:-.025em;font-variant-numeric:tabular-nums;line-height:1.24;margin-top:7px}
+.market-price-unit{font-size:.68rem;color:#adbcc5;line-height:1.3}
+.market-price-date{font-size:.76rem;color:#d0dae0;font-variant-numeric:tabular-nums;margin-top:6px}
+.market-price-status{font-size:.73rem;font-weight:700;color:#b6dbcc;line-height:1.35}
+.market-price-card[data-status="stale"] .market-price-status{color:#ffcf9d}
+.market-price-card[data-status="unavailable"] .market-price-status,
+.market-price-card[data-status="offline"] .market-price-status{color:#d9bdb2}
+.market-board-status{margin:12px 2px 0;color:#b9c8d2;font-size:.8rem;line-height:1.5}
+.history-panel{padding:0;overflow:hidden}
+.history-disclosure{display:flex!important;flex-direction:column;justify-content:center;gap:3px;
+  position:relative;cursor:pointer;min-height:68px;padding:16px 46px 16px 20px;
+  color:#f0dfc4;list-style:none}
+.history-disclosure::-webkit-details-marker{display:none}
+.history-disclosure::after{content:"＋";position:absolute;right:20px;top:21px;font-size:1.2rem;color:#d3b27d}
+.history-panel[open]>.history-disclosure::after{content:"−"}
+.history-disclosure>span{font-size:1rem;font-weight:800}
+.history-disclosure>small{color:#b6c5cc;font-size:.77rem}
+.history-expanded{padding:2px 19px 20px;border-top:1px solid #3c5366}
+.reading-method{margin-top:12px;border-top:1px solid #3e5667;padding-top:8px}
+.reading-method>summary{min-height:44px;cursor:pointer;color:#d8c8ab;font-weight:700;font-size:.83rem;
+  display:flex;align-items:center}
+.reading-method>summary::marker{color:#b9a37d}
+.reading-method[open] .market-audit-warning{margin-top:10px}
+.market-board + .lead-panel{margin-top:13px}
+@media(min-width:710px){
+ .market-price-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .market-price-card{min-height:162px}
+}
+@media(max-width:600px){
+ .astro-header{min-height:160px;padding-bottom:10px}
+ .astro-header h1{font-size:clamp(1.85rem,7vw,2.6rem);margin:10px 0 8px}
+ .astro-header .intro{max-width:75%;font-size:.83rem}
+ .orbit-art{height:145px;width:145px;right:-47px;top:15px;opacity:.31}
+ .orbit-art::before{inset:20px}
+ .orbit-core{font-size:50px}
+ .market-board{padding:16px 13px}
+ .market-price-grid{gap:8px}
+ .market-price-card{padding:12px 11px 10px;min-height:141px}
+ .market-price-value{font-size:clamp(1.36rem,6vw,1.75rem)}
+ .market-board-top p{font-size:.76rem}
+}
+@media(prefers-reduced-motion:reduce){
+ .market-price-card{transition:none}
+}

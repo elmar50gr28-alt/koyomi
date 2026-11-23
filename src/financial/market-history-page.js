@@ -14,14 +14,14 @@ const datasets=new Map();
 const autoStates=new Map();
 const activeSync=new Map();
 const MARKET_NAMES={nikkei:'日経平均',nasdaq:'NASDAQ100',gold:'金先物',usdjpy:'ドル／円'};
-const LAST_ATTEMPT_KEY='koyomi-financial-market-attempt-v1-';
+const LAST_ATTEMPT_KEY='koyomi-financial-market-attempt-v2-'; // recheck immediately after switching to the fresh Nikkei source
 const get=id=>document.getElementById(id);
 const node=(tag,text)=>{const e=document.createElement(tag);e.textContent=String(text);return e;};
 function selectedMarket(){return get('marketInstrument').value||'nikkei';}
 function sourceLink(){
   const market=selectedMarket(),auto=get('historyAuto'),link=get('historyCSVLink');
   auto.hidden=false;
-  auto.textContent='この市場の終値を再取得';
+  auto.textContent='更新 ↻';
   link.href=OFFICIAL_CSV_LINKS[market];
   const hints={nikkei:'日経平均（権利に配慮して端末内のみで読み込む）',
     nasdaq:'NASDAQ100',usdjpy:'ドル／円',gold:'金価格（FREDのLBMA系列は終了。自動はCOMEX金先物）'};
@@ -46,7 +46,7 @@ function showDataset(){
   get('historyStatistics').hidden=true;
   get('leadResult').hidden=true;
   get('historyResult').hidden=!data;
-  if(!data){showMarketRisk();return;}
+  if(!data){showMarketRisk();renderAutoStatuses();return;}
   const rows=data.rows,first=rows[0],last=rows.at(-1);
   get('historyLatest').textContent=last.close.toLocaleString('ja-JP',{maximumFractionDigits:4});
   const prev=rows.at(-2),daily=prev?(last.close/prev.close-1)*100:null;
@@ -58,9 +58,10 @@ function showDataset(){
   get('historySource').textContent='取得元：'+data.source+oldTag;
   drawPriceCurve(rows);
   get('historyStatus').textContent=freshness.stale
-    ?'収録終値は'+freshness.lastDate+'までです。古い値を最新として扱いません。オンライン再取得を試みています。'
-    :'終値データを表示しています（最終収録日 '+freshness.lastDate+'）。必要に応じて過去検証を実行できます。';
+    ?'最終収録日は'+freshness.lastDate+'。提供元の更新が遅れているため、現在値として扱いません。'
+    :'最終取引日の終値：'+freshness.lastDate+'。休場日は前回の終値を表示します。';
   showMarketRisk();
+  renderAutoStatuses();
 }
 function showMarketRisk(){
   const market=selectedMarket(),data=datasets.get(market);
@@ -91,43 +92,72 @@ function showMarketRisk(){
     verdict.textContent='実市場の安全性は未確認です。';
   }
 }
+const MARKET_LABELS={
+  nikkei:{title:'日経平均',unit:'ポイント',digits:2},
+  nasdaq:{title:'NASDAQ100',unit:'ポイント',digits:2},
+  usdjpy:{title:'ドル／円',unit:'円 / USD',digits:2},
+  gold:{title:'金先物',unit:'USD / oz',digits:2}
+};
 function renderAutoStatuses(){
   const host=get('marketAutoStatuses');
   host.replaceChildren();
+  const selected=selectedMarket();
   for(const market of ['nikkei','nasdaq','usdjpy','gold']){
-    const info=autoStates.get(market);
-    const cached=datasets.get(market);
-    const last=cached?.rows?.at(-1)?.date||'未取得';
-    const messages={
-      queued:'自動更新待ち',checking:'自動更新中',updated:'取得成功',
-      unchanged:'保存済みの履歴が新しい',stale:'取得成功（古いデータ）',
-      unavailable:'自動取得不可・手元の履歴を維持',offline:'通信なし・保存データで継続',
-      conflict:'価格系列が一致しないため更新しない'
-    };
-    const line=node('p',MARKET_NAMES[market]+'：'+(messages[info?.status]||'自動更新待ち')+
-      ' ／ 収録 '+last+(info?.message?' ／ '+info.message:''));
-    line.className='market-auto-line';
-    line.dataset.status=info?.status||'queued';
-    host.append(line);
+    const info=autoStates.get(market),cached=datasets.get(market);
+    const last=cached?.rows?.at(-1);
+    const age=last?ageOfLastClose(cached.rows):null;
+    const label=MARKET_LABELS[market];
+    const displayName=market==='gold'&&cached?.instrument!=='COMEX-GC'?'金価格':label.title;
+    const state=info?.status||'queued';
+    const stale=!!(age?.stale||state==='stale');
+    const headline=stale?'更新が遅れています':
+      state==='checking'?'データ確認中':
+      state==='unavailable'||state==='offline'?'保存データを表示':
+      last?'直近の公表終値':'データ取得中';
+    const card=node('button','');
+    card.type='button';card.className='market-price-card';
+    card.setAttribute('aria-pressed',String(market===selected));
+    card.dataset.status=stale?'stale':state;
+    const name=node('span',displayName);name.className='market-price-name';
+    const amount=node('strong',last?
+      last.close.toLocaleString('ja-JP',{minimumFractionDigits:market==='nikkei'?0:2,maximumFractionDigits:label.digits}):
+      '—');amount.className='market-price-value';
+    const unit=node('span',label.unit);unit.className='market-price-unit';
+    const date=node('span',last?last.date.replaceAll('-','/')+' 終値':'取得待ち');
+    date.className='market-price-date';
+    const status=node('span',headline);status.className='market-price-status';
+    card.append(name,amount,unit,date,status);
+    card.addEventListener('click',()=>{
+      if(market===selectedMarket())return;
+      const select=get('marketInstrument');
+      select.value=market;
+      if(typeof select.dispatchEvent==='function'&&typeof Event!=='undefined')
+        select.dispatchEvent(new Event('change',{bubbles:true}));
+      else updateMarket();
+      // The selected instrument is also used by historical validation controls.
+    });
+    host.append(card);
   }
 }
 function setAutoState(market,status,message=''){
   autoStates.set(market,{status,message});
   renderAutoStatuses();
   if(selectedMarket()===market){
-    const info=autoStates.get(market);
     const existing=datasets.get(market);
-    const date=existing?.rows?.at(-1)?.date||'未取得';
-    get('historyAutoStatus').textContent='自動取込：'+(status==='checking'?'更新中':
-      status==='updated'?'成功':status==='stale'?'取得元が古い':
-      status==='offline'?'オフライン':
-      status==='unavailable'?'取得失敗・キャッシュ使用':
-      status==='conflict'?'系列不一致で保留':'確認済み')+
-      ' ／ 保存終値 '+date+(message?' ／ '+message:'');
+    const last=existing?.rows?.at(-1)?.date;
+    get('historyAutoStatus').textContent=
+      status==='checking'?'最新の公表終値を確認しています…':
+      status==='updated'?'更新しました。基準日 '+last:
+      status==='stale'?'提供元の更新が遅れています。基準日 '+(last||'不明'):
+      status==='offline'?'オフラインです。保存済みの終値を表示しています。':
+      status==='unavailable'?'自動取得に失敗しました。保存済みの終値を表示しています。':
+      status==='conflict'?'価格系列が一致しないため、既存の終値を保持しました。':
+      last?'保存済みの終値：'+last:'価格データはまだ取得できていません。';
   }
 }
 function updateMarket(){
   sourceLink();showDataset();showMarketRisk();
+  renderAutoStatuses();
   const status=autoStates.get(selectedMarket());
   if(status)setAutoState(selectedMarket(),status.status,status.message);
   else renderAutoStatuses();
@@ -147,6 +177,7 @@ function persistMarket(market,data){
       '表示は可能ですが、保存容量の制限により次回は再取込が必要です。';
   }
   if(selectedMarket()===market)showDataset();
+  else renderAutoStatuses();
 }
 function save(market,rows,source){
   persistMarket(market,{rows,source,sourceId:'manual-csv',

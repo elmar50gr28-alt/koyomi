@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {
   AUTO_MARKET_SOURCES, AUTO_REFRESH_INTERVAL_MS, AUTO_STALE_AFTER_DAYS,
-  ageOfLastClose, parseFrankfurterRates,parseGoldReadings,parseGanaseNikkeiCSV,
+  ageOfLastClose, parseFrankfurterRates,parseGoldReadings,parseGanaseNikkeiCSV,parseNikkeiHistory,
   fetchAutomaticMarket,reconcileMarketHistory
 } from '../src/financial/market-auto-import.js';
 
@@ -11,7 +11,7 @@ const prices=[
  {date:'2026-11-20',close:101}
 ];
 assert.equal(AUTO_REFRESH_INTERVAL_MS,6*3600*1000);
-assert.equal(AUTO_STALE_AFTER_DAYS,7);
+assert.equal(AUTO_STALE_AFTER_DAYS,5);
 assert.deepEqual(Object.keys(AUTO_MARKET_SOURCES).sort(),['gold','nasdaq','nikkei','usdjpy']);
 const nikkeiArchiveFixture=[
  'index_id,date,open,high,low,close,source,fetched_at',
@@ -24,12 +24,23 @@ assert.deepEqual(parseGanaseNikkeiCSV(nikkeiArchiveFixture),[
 assert.throws(()=>parseGanaseNikkeiCSV(nikkeiArchiveFixture.replace('57012.77','55000.00')),/矛盾/,
  'reject misleading malformed index OHLC');
 assert.equal(ageOfLastClose(prices,date).stale,false);
+assert.equal(ageOfLastClose(prices,date).tradingWeekdaysOld,1,'Friday close is fresh on Monday holiday');
+assert.equal(ageOfLastClose(prices,new Date('2026-11-30T03:00:00Z')).stale,true,'week-old missing market updates must be visible');
+assert.equal(ageOfLastClose(prices,new Date('2026-11-27T03:00:00Z')).stale,false,'weekends are not counted as sessions');
 assert.equal(ageOfLastClose([{date:'2026-10-20',close:100},{date:'2026-10-21',close:101}],date).stale,true);
 
 assert.deepEqual(parseFrankfurterRates({base:'USD',rates:{
  '2026-11-20':{JPY:158.2},'2026-11-19':{JPY:158.1},'2026-11-18':{JPY:null}
 }}),[{date:'2026-11-19',close:158.1},{date:'2026-11-20',close:158.2}]);
 assert.throws(()=>parseFrankfurterRates({base:'JPY',rates:{'2026-11-20':{USD:1}}}),/米ドル/);
+const fgJson={last_date:'2026-11-20',history:[
+ {date:'2026-11-19',nikkei:59444.21,score:25},
+ {date:'2026-11-20',nikkei:56436.65,score:20}
+]};
+assert.deepEqual(parseNikkeiHistory(fgJson),[
+ {date:'2026-11-19',close:59444.21},{date:'2026-11-20',close:56436.65}
+]);
+assert.throws(()=>parseNikkeiHistory({history:[{date:'2026-11-20',nikkei:0}]}),/不足/);
 const gold={schema:'xaudaily.readings/v1',readings:{gold:{unit:'USD/oz',asOf:'2026-11-20',stale:true,
  rows:[{d:'2026-11-19',c:3600},{d:'2026-11-20',c:3500}]}}};
 assert.equal(parseGoldReadings(gold).upstreamStale,true);
@@ -72,10 +83,19 @@ assert.match(gc.source,/先物/);
 let calls=[];
 const nikkei=await fetchAutomaticMarket('nikkei',{now:date,fetcher:async(uri)=>{
  calls.push(uri);
+ if(uri.includes('feargreedchart.com'))throw new Error('API temporarily unavailable');
  if(uri.includes('fred.stlouisfed.org'))throw new Error('CORS rejected');
  return response(nikkeiArchiveFixture);
 }});
-assert.equal(calls.length,2,'attempt FRED before falling back to a stale third-party archive');
+assert.equal(calls.length,3,'try new Nikkei API, then FRED, then archival mirror');
+const freshNikkei=await fetchAutomaticMarket('nikkei',{now:date,fetcher:async(uri)=>{
+ assert.ok(uri.includes('feargreedchart.com'),'fresh API must be selected first');
+ return response(JSON.stringify(fgJson));
+}});
+assert.equal(freshNikkei.sourceId,'fg-nikkei225');
+assert.equal(freshNikkei.stale,false);
+assert.equal(freshNikkei.asOf,'2026-11-20');
+assert.equal(freshNikkei.rows.at(-1).close,56436.65);
 assert.equal(nikkei.stale,true);
 assert.equal(nikkei.asOf,'2026-04-13');
 assert.equal(nikkei.rows.at(-1).close,56502.77, 'the correct published CLOSE, never the LOW');

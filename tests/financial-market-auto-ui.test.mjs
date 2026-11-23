@@ -39,6 +39,10 @@ declare('fetch',async(uri,options)=>{
  calls.push(uri);
  assert.equal(options.credentials,'omit','external requests must not send cookies');
  if(uri.includes('frankfurter.dev'))return textResponse(fxJSON);
+ if(uri.includes('feargreedchart.com'))return textResponse(JSON.stringify({history:[
+   {date:'2026-11-19',nikkei:59444.21},
+   {date:'2026-11-20',nikkei:56436.65}
+ ]}));
  if(uri.includes('xaudaily-data'))return textResponse(goldJson);
  return textResponse(marketCSV);
 });
@@ -50,8 +54,12 @@ try{
  assert.ok(keys.every(k=>storage.has(k)),'all four markets should import on startup without taps');
  assert.equal(calls.length,4,'one request per market when primary source succeeds');
  assert.equal(elements.marketAutoStatuses.children.length,4);
- assert.match(elements.historyAutoStatus.textContent,/保存終値 2026-11-20/);
+ assert.match(elements.historyAutoStatus.textContent,/基準日 2026-11-20/);
  assert.match(elements.historySource.textContent,/Yahoo Finance/);
+ assert.equal(elements.marketAutoStatuses.children[0].children[1].textContent,'56,436.65');
+ assert.match(elements.marketAutoStatuses.children[0].children.at(-1).textContent,/直近の公表終値/);
+ elements.marketAutoStatuses.children[0].listeners.click();
+ assert.equal(elements.marketInstrument.value,'nikkei','tapping a market tile selects its forecast');
  assert.equal(events.intervalMs,6*3600*1000,'refresh only every six hours while page visible');
  assert.equal(typeof events['window:online'],'function');
  assert.equal(typeof events['document:visibilitychange'],'function');

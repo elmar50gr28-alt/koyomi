@@ -5,9 +5,15 @@ import {parseMarketCSV,validatePriceRows} from './market-history.js';
 const MAX_BYTES=3500000;
 const MS_DAY=86400000;
 export const AUTO_REFRESH_INTERVAL_MS=6*60*60*1000;
-export const AUTO_STALE_AFTER_DAYS=7;
+export const AUTO_STALE_AFTER_DAYS=5; // weekdays without a new published daily close
 export const AUTO_MARKET_SOURCES=Object.freeze({
   nikkei: Object.freeze([
+    Object.freeze({
+      id:'fg-nikkei225',format:'fg-nikkei',
+      url:'https://nikkei.feargreedchart.com/api/?action=nikkei-history',
+      label:'FearGreedChart 日経平均 (^N225) / Yahoo Finance由来（第三者提供）',
+      class:'third-party-api',instrument:'NIKKEI225'
+    }),
     Object.freeze({
       id:'fred-nikkei225',format:'csv',
       url:'https://fred.stlouisfed.org/graph/fredgraph.csv?id=NIKKEI225',
@@ -54,7 +60,15 @@ export function ageOfLastClose(rows,at=new Date()){
   const today=isoDay(at);
   const last=rows.at(-1).date;
   const days=Math.floor((Date.parse(today+'T00:00:00Z')-Date.parse(last+'T00:00:00Z'))/MS_DAY);
-  return {lastDate:last,daysOld:days,stale:days>AUTO_STALE_AFTER_DAYS};
+  let weekdays=0;
+  // Count possible trading weekdays only. Exchange-specific holidays may reduce this further.
+  for(let d=1;d<=Math.max(0,Math.min(days,100));d++){
+    const day=new Date(Date.parse(last+'T00:00:00Z')+d*MS_DAY).getUTCDay();
+    if(day!==0&&day!==6)weekdays++;
+  }
+  const stale=weekdays>AUTO_STALE_AFTER_DAYS || days>100;
+  return {lastDate:last,daysOld:days,tradingWeekdaysOld:weekdays,stale,
+    freshness:stale?'stale':weekdays<=2?'recent':'delayed'};
 }
 // Third-party ganase archive has MISLABELED OHLC columns:
 // header "open,high,low,close" actually stores close,open,high,low.
@@ -76,6 +90,19 @@ export function parseGanaseNikkeiCSV(text){
     result.push({date:fields[1],close});
   }
   return validatePriceRows(result);
+}
+export function parseNikkeiHistory(payload){
+  const history=payload?.history;
+  if(!Array.isArray(history)||history.length<2)throw new Error('日経平均の価格履歴が不足しています。');
+  const prices=history.map(item=>{
+    const raw=item?.nikkei;
+    const close=typeof raw==='number'?raw:
+      typeof raw==='string'&&raw.trim()!==''?Number(raw):NaN;
+    return {date:item?.date,close};
+  }).filter(row=>typeof row.date==='string'&&Number.isFinite(row.close)&&row.close>0)
+    .sort((a,b)=>a.date.localeCompare(b.date));
+  const unique=new Map(prices.map(p=>[p.date,p.close]));
+  return validatePriceRows([...unique].map(([date,close])=>({date,close})));
 }
 export function parseFrankfurterRates(payload) {
   if(!payload||payload.base!=='USD'||!payload.rates||typeof payload.rates!=='object'||Array.isArray(payload.rates)) {
@@ -129,7 +156,8 @@ async function readSource(source,fetcher,now,timeoutMs){
     else {
       let parsed;
       try{parsed=JSON.parse(body);}catch{throw new Error('データがJSONとして解析できません。');}
-      if(source.format==='frankfurter')rows=parseFrankfurterRates(parsed);
+      if(source.format==='fg-nikkei')rows=parseNikkeiHistory(parsed);
+      else if(source.format==='frankfurter')rows=parseFrankfurterRates(parsed);
       else if(source.format==='xaudaily'){
         const result=parseGoldReadings(parsed);
         rows=result.rows;upstreamStale=result.upstreamStale;

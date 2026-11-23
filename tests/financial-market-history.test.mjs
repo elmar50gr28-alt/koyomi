@@ -58,6 +58,13 @@ assert.ok(html.includes('./src/financial/market-history-page.js'));
 for(const asset of ['./src/financial/market-history.js','./src/financial/market-auto-import.js','./src/financial/market-history-page.js','./src/financial/market-history-worker.js','./src/financial/market-crash-research.js'])
   assert.ok(sw.includes("'"+asset+"'"),asset+' offline asset missing');
 assert.match(css,/\.history-metrics/);
+assert.ok(html.indexOf('id="marketBoardHeading"')<html.indexOf('id="leadHeading"'),
+ 'price board appears before monthly model and explains freshness first');
+assert.match(html,/id="marketAutoStatuses" class="market-price-grid"/);
+assert.match(html,/<details class="panel history-panel"/);
+assert.match(html,/class="reading-method"/);
+assert.match(css,/\.market-price-card\[aria-pressed="true"\]/);
+assert.match(css,/min-height:141px/);
 assert.match(fs.readFileSync('src/financial/market-history-page.js','utf8'),/時期の予測力は未確認/);
 assert.match(html,/前向き検証が必要/);
 assert.match(css,/\.market-risk-panel/);
