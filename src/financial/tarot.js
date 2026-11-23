@@ -85,7 +85,7 @@ document.getElementById("reading").textContent=verdict.action+"\n"+verdict.reaso
 const evidence=document.getElementById("evidence");evidence.replaceChildren();readings.forEach(r=>evidence.append(node("p",r.position+"："+r.card.name+"／"+r.orientation+"／"+r.card.theme+"。採用した象意："+r.message)));
 document.getElementById("results").scrollIntoView({behavior:"smooth",block:"start"});
 }
-if(typeof document!=="undefined"){
+if(typeof document!=="undefined" && document.getElementById("draw")){
 if('serviceWorker'in navigator)navigator.serviceWorker.register(new URL('../../service-worker.js',import.meta.url)).catch(()=>{});
 let chosen="daily";const buttons=[...document.querySelectorAll("[data-spread]")];
 function select(type){chosen=type;buttons.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.spread===type)));document.getElementById("description").textContent=SPREADS[type].description;document.getElementById("results").hidden=true}
