@@ -177,7 +177,9 @@ async function refreshMarket(market,{force=false}={}){
   try{lastAttempt=Number(localStorage.getItem(LAST_ATTEMPT_KEY+market))||0;}catch{}
   if(!force&&Date.now()-lastAttempt<AUTO_REFRESH_INTERVAL_MS&&lastAttempt<=Date.now()){
     const last=prior?.rows?.at(-1)?.date||'未取得';
-    setAutoState(market,prior?'unchanged':'unavailable','次回自動更新まで前回の取得結果を利用（'+last+'）');
+    const stale=prior?ageOfLastClose(prior.rows).stale:false;
+    setAutoState(market,prior?(stale?'stale':'unchanged'):'unavailable',
+      '次回の自動更新まで前回の取得結果を利用（'+last+'）'+(stale?'・最新値ではありません':''));
     return;
   }
   const work=(async()=>{
@@ -191,7 +193,9 @@ async function refreshMarket(market,{force=false}={}){
       if(joined.reason==='conflict'||joined.reason==='different-instrument'||joined.reason==='unverified-source'){
         setAutoState(market,'conflict','保存済みCSVと一致しません。収録 '+latest+'、取得元 '+result.asOf);
       }else if(joined.reason==='older'||joined.reason==='unchanged'){
-        setAutoState(market,'unchanged','取得元の終値 '+result.asOf+' ／ 採用せず');
+        const stale=ageOfLastClose(joined.data.rows).stale;
+        setAutoState(market,stale?'stale':'unchanged',
+          '取得元の終値 '+result.asOf+' ／ 採用せず'+(stale?'・保存履歴も古い':''));
       }else{
         setAutoState(market,result.stale?'stale':'updated',
           '取得元の終値 '+result.asOf+(result.stale?'（更新遅延）':'')+
@@ -410,6 +414,10 @@ function setup(){
   if(typeof window!=='undefined'){
     void refreshAllMarkets();
     window.addEventListener('online',()=>{void refreshAllMarkets();});
+    // Updates while the page remains open; hidden background tabs are not polled.
+    window.setInterval?.(()=>{
+      if(!document.hidden)void refreshAllMarkets();
+    },AUTO_REFRESH_INTERVAL_MS);
     document.addEventListener('visibilitychange',()=>{
       if(!document.hidden)void refreshAllMarkets();
     });
