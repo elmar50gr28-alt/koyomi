@@ -57,6 +57,16 @@ const css=fs.readFileSync('src/financial/astrology-page.css','utf8');
 const home=fs.readFileSync('index.html','utf8');
 const tarot=fs.readFileSync('financial.html','utf8');
 const worker=fs.readFileSync('service-worker.js','utf8');
+const stockPage=fs.readFileSync('stock-reading.html','utf8');
+assert.match(stockPage,/id="stockQuery"/);
+assert.match(stockPage,/id="stockMonths"/);
+assert.match(stockPage,/id="stockCSV"/);
+assert.match(stockPage,/id="stockReferenceDate"/);
+assert.match(html,/href="\.\/stock-reading.html"/);
+assert.match(home,/href="stock-reading.html"/);
+for(const asset of ['./stock-reading.html','./src/financial/stock-directory.js',
+  './src/financial/stock-reading-core.js','./src/financial/stock-reading-page.js',
+  './src/financial/stock-reading.css'])assert.ok(worker.includes("'"+asset+"'"));
 assert.match(html,/data-panel="world"/);
 assert.match(html,/data-panel="personal"/);
 assert.match(html,/id="astroVerdict"/);

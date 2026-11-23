@@ -261,3 +261,11 @@ details p {margin:6px 0 10px}
 @media(prefers-reduced-motion:reduce){
  .market-price-card{transition:none}
 }
+
+.stock-reading-entry{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  min-height:74px;margin:13px 0;padding:14px 16px;text-decoration:none;
+  border:1px solid #d5b678;border-radius:16px;background:linear-gradient(135deg,#23394a,#19344a);
+  color:#f4e2bf}
+.stock-reading-entry strong{display:block;font-size:1rem;line-height:1.45}
+.stock-reading-entry small{display:block;margin-top:5px;font-size:.78rem;color:#d4dbe0;line-height:1.5}
+.stock-reading-entry>span:last-child{font-size:2rem;color:#ebcd95}

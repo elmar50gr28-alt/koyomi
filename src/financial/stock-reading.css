@@ -1,0 +1,38 @@
+:root{color-scheme:dark;--bg:#08141f;--surface:#112538;--line:#4c6373;--gold:#e8c689;--text:#f3eee4;--muted:#bfced4;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:radial-gradient(ellipse at top,#22374a 0%,var(--bg) 55%);color:var(--text);line-height:1.65;min-height:100dvh}
+[hidden]{display:none!important}
+button,input,select{font:inherit}button{cursor:pointer}a{color:var(--gold)}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #fff4b6;outline-offset:3px}
+.stock-app{width:min(760px,100%);margin:auto;padding:16px clamp(13px,4vw,26px) calc(50px + env(safe-area-inset-bottom))}
+.stock-hero{padding:0 0 14px}.back{min-height:44px;display:inline-flex;align-items:center;text-decoration:none;font-weight:700}.eyebrow{font-size:.71rem;font-weight:850;letter-spacing:.13em;color:var(--gold)}
+h1{font:600 clamp(1.95rem,7vw,2.8rem)/1.22 Georgia,"Yu Mincho",serif;margin:11px 0 9px}
+.stock-hero p{color:#d4ddd9;font-size:.91rem;margin:0}.panel{background:linear-gradient(145deg,#152b3b,#101e2b);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,4vw,23px);margin:13px 0;box-shadow:0 8px 25px #0003}
+h2{font-size:1.15rem;line-height:1.45;margin:7px 0 12px}label{font-size:.88rem;font-weight:700;display:block;margin:8px 0 6px}
+input,select{width:100%;min-height:48px;border:1px solid #748595;border-radius:11px;background:#0c1a29;color:#fff;padding:10px 12px}
+input::placeholder{color:#8d9fac}button{border-radius:11px;min-height:48px}
+.search-input{position:relative}.search-input span{position:absolute;left:13px;top:5px;font-size:1.6rem;color:#bdc7c3}.search-input input{padding-left:40px}
+.stock-results{display:grid;gap:5px;margin:10px 0 0;max-height:300px;overflow:auto}
+.stock-result{width:100%;border:1px solid #51697b;background:#152c40;padding:10px 12px;color:#fff;text-align:left;display:flex;gap:12px;align-items:center}
+.stock-result strong{color:#f2d6aa;min-width:45px;font-variant-numeric:tabular-nums}.stock-result span{flex:1;font-size:.88rem}
+.stock-result:hover,.stock-result:focus-visible{border-color:#e9cd98}
+.subnote{font-size:.79rem;color:#c2cdd2;line-height:1.7;overflow-wrap:anywhere}
+.manual-details{border-top:1px solid #435364;padding-top:10px;margin-top:14px}.manual-details summary,.reference-settings summary,.reading-method summary{min-height:44px;display:list-item;align-content:center;cursor:pointer;color:#dfcba7;font-size:.85rem;font-weight:750}
+.manual-form{display:grid;gap:6px;padding:6px 0}.manual-form button{border:1px solid #a58b66;background:#25384b;color:#f0dfc3;font-weight:800}
+.company-identity{border-color:#9c8964}.identity-top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.identity-top h2{font-size:clamp(1.3rem,5vw,1.7rem);margin-bottom:3px}.identity-top p{font-size:.83rem;color:#cfdae0;margin:2px 0}.identity-top strong{margin-right:6px;color:var(--gold)}
+.favorite{border:1px solid #876c49;background:transparent;color:#f0d8ac;padding:8px 12px;min-width:78px;font-size:.85rem}
+.favorite[aria-pressed="true"]{background:#3c3021;color:#ffe4aa}.date-line{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:6px;margin-top:14px}.date-line label{margin:0}
+.reference-settings{margin:10px 0}.primary-action{width:100%;background:linear-gradient(105deg,#efce8d,#dcb77c);border:0;font-weight:850;color:#202738;font-size:.96rem;padding:10px}
+.stock-forecast h2{font-size:1.25rem}.basis{font-size:.84rem;color:#eed9b1}.month-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.month{min-width:0;padding:14px 10px;border:1px solid #56708a;border-radius:13px;background:#122b40;display:grid;align-content:start;gap:7px}
+.month strong{font-size:1.25rem;font-weight:850;color:#f4d69d}.month small{font-size:.77rem;color:#cad5da;overflow-wrap:anywhere}
+.month[data-mood="慎重"]{border-color:#bb8a79;background:#302b35}.month[data-mood="吉"]{border-color:#83a490}
+.month span{font-size:.83rem;line-height:1.58}.month p{font-size:.76rem;color:#c5d2d9;margin:0;line-height:1.6}
+.compact-two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.compact-two .eye-panel+.eye-panel{border-left:1px solid #4b6070;padding-left:15px}
+.numerology-line{display:flex;gap:11px;align-items:center}.numerology-line strong{font:650 2rem Georgia,serif;color:#f0d398}
+.secondary-action{width:100%;border:1px solid #aa8b59;background:#223c4c;color:#f5dfb3;font-weight:800;padding:10px}
+#stockTarotResult{font-size:.83rem;line-height:1.7;margin-top:10px}
+.price-section .file-pick{display:flex;justify-content:center;align-items:center;min-height:48px;border:1px solid #aa9474;border-radius:11px;background:#1b3444;color:#f0d8a9;cursor:pointer;padding:10px 14px;text-align:center}
+.file-pick input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.price-highlight{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:12px}.price-highlight strong{font-size:1.7rem;color:#f3dfab;font-variant-numeric:tabular-nums}.price-highlight span{color:#c1ccd5;font-size:.82rem}
+.stock-footer{padding:10px 6px 32px;color:#bfcbd0;font-size:.8rem}.stock-footer a{display:inline-flex;margin-right:20px;min-height:44px;align-items:center}
+@media(max-width:570px){.month-list{grid-template-columns:1fr}.month{padding:13px 14px}.compact-two{grid-template-columns:1fr}.compact-two .eye-panel+.eye-panel{padding:15px 0 0;border-left:0;border-top:1px solid #4b6070}.stock-hero h1{font-size:2rem}.stock-app{padding-inline:14px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
