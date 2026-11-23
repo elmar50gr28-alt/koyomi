@@ -55,8 +55,10 @@ const html=fs.readFileSync('financial-astrology.html','utf8'),css=fs.readFileSyn
 for(const name of ['historyAuto','historyFile','historyRun','historyAccuracy','historyBaseline','historyCount','historyPriceCurve'])
   assert.ok(html.includes('id="'+name+'"'),name+' UI missing');
 assert.ok(html.includes('./src/financial/market-history-page.js'));
-for(const asset of ['./src/financial/market-history.js','./src/financial/market-history-page.js'])
+for(const asset of ['./src/financial/market-history.js','./src/financial/market-history-page.js','./src/financial/market-history-worker.js'])
   assert.ok(sw.includes("'"+asset+"'"),asset+' offline asset missing');
 assert.match(css,/\.history-metrics/);
 assert.match(css,/min-height:48px/);
+assert.match(fs.readFileSync('src/financial/market-history-page.js','utf8'),/new Worker/);
+assert.match(fs.readFileSync('src/financial/market-history-worker.js','utf8'),/readFinancialSky/);
 console.log('CSV parsing, real-price backtest accounting, neutral exclusion, naive baseline, and offline UI contracts passed');
