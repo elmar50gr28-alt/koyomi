@@ -14,7 +14,7 @@ const datasets=new Map();
 const autoStates=new Map();
 const activeSync=new Map();
 const MARKET_NAMES={nikkei:'日経平均',nasdaq:'NASDAQ100',gold:'金先物',usdjpy:'ドル／円'};
-const LAST_ATTEMPT_KEY='koyomi-financial-market-attempt-v1-';
+const LAST_ATTEMPT_KEY='koyomi-financial-market-attempt-v2-'; // recheck immediately after switching to the fresh Nikkei source
 const get=id=>document.getElementById(id);
 const node=(tag,text)=>{const e=document.createElement(tag);e.textContent=String(text);return e;};
 function selectedMarket(){return get('marketInstrument').value||'nikkei';}
