@@ -57,6 +57,6 @@ for(const name of ['historyAuto','historyFile','historyRun','historyAccuracy','h
 assert.ok(html.includes('./src/financial/market-history-page.js'));
 for(const asset of ['./src/financial/market-history.js','./src/financial/market-history-page.js'])
   assert.ok(sw.includes("'"+asset+"'"),asset+' offline asset missing');
-assert.match(css,/\\.history-metrics/);
+assert.match(css,/\.history-metrics/);
 assert.match(css,/min-height:48px/);
 console.log('CSV parsing, real-price backtest accounting, neutral exclusion, naive baseline, and offline UI contracts passed');
