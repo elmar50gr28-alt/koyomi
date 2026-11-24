@@ -1,0 +1,46 @@
+name: Update Official Economic Calendar
+
+on:
+  schedule:
+    - cron: '15 21 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: economic-calendar-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch official release schedules
+        run: node scripts/update-economic-calendar.mjs
+      - name: Validate calendar and stock integration
+        run: |
+          node tests/economic-calendar.test.mjs
+          node tests/financial-stock-ui.test.mjs
+      - name: Open update pull request without merging
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- data/financial/economic-calendar.json; then
+            exit 0
+          fi
+          branch="automation/economic-calendar-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add data/financial/economic-calendar.json
+          git commit -m "Refresh official economic release calendar"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title "Update official economic calendar" --body "Official e-Stat and BEA schedule snapshot. Calendar parsing, timezone conversion, cached fallback and stock UI tests passed. Source status and original check times are retained on partial fetch failure. Review before merging."

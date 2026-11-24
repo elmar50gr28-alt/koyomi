@@ -1,3 +1,5 @@
+import {setupEconomicCalendar} from './economic-calendar-view.js';
+import {formatJapaneseDate,formatDatesInText} from '../shared/japanese-date-display.js';
 import {
   BUILTIN_STOCKS,STOCK_CATALOG_META,updateStockCatalog,
   stockSearch,lookupStock,makeManualStock,normalizeStockCode
@@ -14,7 +16,7 @@ const SAVED_KEY='koyomi-stock-reading-saved-v1';
 const REFERENCE_KEY='koyomi-stock-reading-reference-v1-';
 const PRICE_KEY='koyomi-stock-reading-close-v1-';
 const USER_KEY='koyomi-stock-reading-user-v1-';
-let catalog=BUILTIN_STOCKS,selected=null;
+let catalog=BUILTIN_STOCKS,selected=null,economicCalendar=null;
 function readStorage(key){
   try{return JSON.parse(localStorage.getItem(key)||'null');}catch{return null;}
 }
@@ -75,7 +77,7 @@ function displayPrices(rows,source){
   const last=rows.at(-1);
   get('stockPriceResult').hidden=false;
   get('stockLastClose').textContent=last.close.toLocaleString('ja-JP',{maximumFractionDigits:4});
-  get('stockPriceDate').textContent=last.date+' 終値';
+  get('stockPriceDate').textContent=formatJapaneseDate(last.date)+' 終値';
   get('stockPriceStatus').textContent='実市場データ：'+rows.length+'営業日分 ／ '+source;
   try{
     const risk=priceRiskAt(rows,get('stockDate').value);
@@ -121,7 +123,13 @@ function selectStock(item){
   status('選択中：'+code+' '+selected.name);
   renderStock();
 }
+function updateDateLabels(){
+  get('stockDateDisplay').textContent=formatJapaneseDate(get('stockDate').value);
+  get('stockReferenceDateDisplay').textContent=formatJapaneseDate(get('stockReferenceDate').value);
+}
 function renderStock(){
+  updateDateLabels();
+  economicCalendar?.render();
   if(!selected)return;
   try{
     const date=get('stockDate').value,referenceDate=get('stockReferenceDate').value||null;
@@ -144,9 +152,9 @@ function renderStock(){
       const action=elt('p','確認する視点：'+period.codeCycle.focus+
         ' ／ 注意：'+period.codeCycle.caution,'period-focus');
       const codeBasis=elt('small',period.codeCycle.basis,'period-code-basis');
-      card.append(elt('small',period.label+' / '+period.from.slice(5)+'〜'+period.to.slice(5)),
+      card.append(elt('small',period.label+' / '+formatJapaneseDate(period.from)+'〜'+formatJapaneseDate(period.to)),
         elt('strong',period.mood),elt('span',period.message),number,
-        action,elt('p',period.grounds[0]),codeBasis);
+        action,elt('p',formatDatesInText(period.grounds[0])),codeBasis);
       if(period.marketContext)card.append(elt('p',period.marketContext,'market-context'));
       months.append(card);
     }
@@ -155,8 +163,8 @@ function renderStock(){
     get('stockNumerology').textContent=reading.numerology.number;
     get('stockNumerologyText').textContent=reading.numerology.meaning;
     get('stockNumerologyReason').textContent=reading.numerology.formula+'。'+reading.numerology.note;
-    get('stockStatus').textContent='鑑定日 '+date+'。'+
-      (referenceDate?'入力した企業基準日 '+referenceDate+' を反映しました。企業星回りと数秘は独立した象徴です。':
+    get('stockStatus').textContent='鑑定日 '+formatJapaneseDate(date)+'。'+
+      (referenceDate?'入力した企業基準日 '+formatJapaneseDate(referenceDate)+' を反映しました。企業星回りと数秘は独立した象徴です。':
         'コードの数秘周期を表示中です。企業固有の占星術を使うには設立日または上場日を入力してください。');
     if(referenceDate)writeStorage(REFERENCE_KEY+selected.code,{date:referenceDate,referenceType});
     else try{localStorage.removeItem(REFERENCE_KEY+selected.code);}catch{}
@@ -207,6 +215,11 @@ function saveManual(){
 }
 function setup(){
   get('stockDate').value=dateToday();
+  updateDateLabels();
+  let calendarStore;try{calendarStore=localStorage;}catch{}
+  economicCalendar=setupEconomicCalendar({document,store:calendarStore});
+  get('stockDate').addEventListener('input',updateDateLabels);
+  get('stockReferenceDate').addEventListener('input',updateDateLabels);
   get('stockQuery').addEventListener('input',renderResults);
   get('stockQuery').addEventListener('keydown',e=>{
     if(e.key!=='Enter')return;

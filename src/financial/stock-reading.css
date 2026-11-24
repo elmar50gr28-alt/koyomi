@@ -43,3 +43,12 @@ input::placeholder{color:#8d9fac}button{border-radius:11px;min-height:48px}
 .period-focus{color:#f0e4cc!important;font-size:.81rem!important}
 .period-code-basis{font-size:.69rem!important;line-height:1.5!important;color:#a7bdc9!important}
 .market-context{padding-top:7px;border-top:1px dashed #5c6874;color:#b3c4cc!important}
+
+.economic-calendar-controls{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
+.economic-calendar-controls label{flex:1;min-width:120px}.economic-calendar-controls select{width:100%;min-height:44px}
+.economic-calendar-controls button{width:auto;min-height:44px}
+.economic-calendar-list{list-style:none;padding:0;margin:12px 0}.economic-event{padding:14px 0;border-top:1px solid var(--line);overflow-wrap:anywhere}
+.economic-event p{margin:3px 0}.economic-event-date{font-size:.83rem;color:var(--gold)}
+.economic-event a,.economic-calendar-links a{display:inline-flex;align-items:center;min-height:44px;font-size:.82rem}
+.economic-calendar-links{display:flex;flex-wrap:wrap;gap:0 18px}
+#economicCalendarStatus[data-stale="true"]{color:#f3d092}

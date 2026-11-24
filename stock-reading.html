@@ -49,7 +49,8 @@
     <p id="selectedStockSource" class="subnote"></p>
     <div class="date-line">
       <label for="stockDate">鑑定基準日</label>
-      <input id="stockDate" type="date" min="1900-01-01" max="2099-09-30" required>
+      <input id="stockDate" type="date" min="1900-01-01" max="2099-09-30" required aria-describedby="stockDateDisplay">
+      <span id="stockDateDisplay" class="subnote" aria-live="polite"></span>
     </div>
     <details class="reference-settings" open>
       <summary>企業固有の星占いにするには、設立日・上場日を登録</summary>
@@ -60,7 +61,8 @@
           <option value="established">設立日</option>
         </select>
         <label for="stockReferenceDate">確認済みの年月日</label>
-        <input id="stockReferenceDate" type="date" min="1900-01-01" max="2099-09-30">
+        <input id="stockReferenceDate" type="date" min="1900-01-01" max="2099-09-30" aria-describedby="stockReferenceDateDisplay">
+        <p id="stockReferenceDateDisplay" class="subnote" aria-live="polite"></p>
         <p class="subnote">未入力ならコードの数秘周期だけを銘柄別に表示します。市場全体の星の動きは全銘柄共通です。設立日と上場日は別の基準で、確認できた日付のみ入力してください。</p>
       </div>
     </details>
@@ -77,6 +79,32 @@
       <p id="stockReferenceExplanation"></p>
       <p>設立日・上場日が入力された場合に限り、企業基準日と天体配置の角度関係を計算します。未入力なら証券コードの数字・英字と鑑定日から数秘の周期を計算し、共通の市場星占いとは明確に区別します。コード数秘が似る別銘柄は、同じ象徴になる場合があります。どちらも実際の株価や業績を学習した予測ではありません。</p>
     </details>
+  </section>
+  <section class="panel economic-calendar" aria-labelledby="economicCalendarHeading">
+    <div class="eyebrow">ECONOMIC RELEASE CALENDAR</div>
+    <h2 id="economicCalendarHeading">経済指標の発表予定</h2>
+    <p>鑑定基準日からの予定を日本時間（JST）で表示します。日本の主要経済統計と米国BEAの公式日程を収録しています。</p>
+    <div class="economic-calendar-controls">
+      <label>国・地域 <select id="economicCalendarCountry"><option value="all">日本・米国</option><option value="JP">日本</option><option value="US">米国</option></select></label>
+      <label>表示期間 <select id="economicCalendarDays"><option value="7">7日間</option><option value="30" selected>30日間</option><option value="90">90日間</option></select></label>
+      <button id="economicCalendarRefresh" type="button" class="secondary-action">最新の収録データを確認</button>
+    </div>
+    <p id="economicCalendarRange" class="subnote"></p>
+    <p id="economicCalendarStatus" class="subnote" role="status" aria-live="polite"></p>
+    <ul id="economicCalendarList" class="economic-calendar-list"></ul>
+    <button id="economicCalendarMore" type="button" class="secondary-action" hidden>さらに30件表示</button>
+    <details><summary>収録範囲・出典と更新について</summary>
+      <p id="economicCalendarCoverage" class="subnote"></p>
+      <p class="subnote">公式発表予定を定期取得して収録します。予定日は変更・延期される場合があります。日付未確定の予定は一覧に含みません。予想・前回・結果の数値、重要度は未取得です。詳細・結果は発表元で確認してください。米雇用統計・米CPI・政策金利など、収録元以外の予定は下記の公式カレンダーで確認できます。</p>
+      <p class="subnote">経済日程は全銘柄共通の参考情報です。銘柄固有の決算予定や占いの吉凶・価格予測には使いません。オフラインでは取得済みの予定を表示します。</p>
+    </details>
+    <nav class="economic-calendar-links" aria-label="公式経済カレンダー">
+      <a href="https://www.e-stat.go.jp/release-calendar" target="_blank" rel="noopener noreferrer">日本：e-Stat</a>
+      <a href="https://www.bea.gov/news/schedule" target="_blank" rel="noopener noreferrer">米国：BEA（GDP・PCE等）</a>
+      <a href="https://www.bls.gov/schedule/" target="_blank" rel="noopener noreferrer">米国：BLS（雇用・CPI等）</a>
+      <a href="https://www.boj.or.jp/about/calendar/index.htm" target="_blank" rel="noopener noreferrer">日本銀行</a>
+      <a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener noreferrer">米国：FOMC</a>
+    </nav>
   </section>
   <section class="panel compact-two">
     <div class="eye-panel">

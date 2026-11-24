@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import {webcrypto} from 'node:crypto';
+import {readFileSync} from 'node:fs';
+const economicData=JSON.parse(readFileSync(new URL('../data/financial/economic-calendar.json',import.meta.url),'utf8'));
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 class Element{
  constructor(){
@@ -11,7 +13,7 @@ class Element{
  replaceChildren(...elements){this.children=elements;}
  setAttribute(key,value){this.attributes[key]=value;}
 }
-const keys=['stockQuery','stockSearchStatus','stockResults','stockManualCode','stockManualName',
+const keys=['economicCalendarList','economicCalendarMore','economicCalendarRange','economicCalendarStatus','economicCalendarCoverage','economicCalendarCountry','economicCalendarDays','economicCalendarRefresh','stockDateDisplay','stockReferenceDateDisplay','stockQuery','stockSearchStatus','stockResults','stockManualCode','stockManualName',
  'stockManualSave','stockReading','selectedStockName','selectedStockCode','selectedStockSector',
  'selectedStockSource','stockFavorite','stockDate','stockReferenceType','stockReferenceDate',
  'stockRead','stockStatus','stockForecast','stockForecastHeading','stockBasis','stockMonths','stockReferenceExplanation',
@@ -19,6 +21,7 @@ const keys=['stockQuery','stockSearchStatus','stockResults','stockManualCode','s
  'stockCSV','stockPriceStatus','stockPriceResult','stockLastClose','stockPriceDate','stockPriceWarning'];
 const els=Object.fromEntries(keys.map(k=>[k,new Element()]));
 els.stockReferenceType.value='listing';
+els.economicCalendarCountry.value='all';els.economicCalendarDays.value='30';
 const storage=new Map(),originals=Object.fromEntries(
  ['document','window','navigator','fetch','localStorage'].map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
 const declare=(name,value)=>Object.defineProperty(globalThis,name,{configurable:true,writable:true,value});
@@ -40,6 +43,7 @@ declare('navigator',{serviceWorker:{register:async()=>{}}});
 declare('localStorage',{getItem:k=>storage.get(k)||null,
  setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)});
 declare('fetch',async(url,opts)=>{
+ if(String(url).includes('/data/financial/economic-calendar.json'))return {ok:true,json:async()=>economicData};
  assert.ok(url.includes('ticker-master-japan'));
  assert.equal(opts.credentials,'omit');
  return {ok:true,headers:{get:()=>null},text:async()=>fakeCSV.join('\n')};
@@ -62,6 +66,15 @@ try{
  els.stockReferenceDate.value='2020-01-01';
  els.stockReferenceDate.listeners.change();
  assert.match(els.stockBasis.textContent,/企業の上場日/);
+ assert.equal(els.stockReferenceDateDisplay.textContent,'2020-01-01（令和2年1月1日）');
+ els.stockReferenceDate.value='1989-01-08';
+ els.stockDate.value='2019-04-29';els.stockDate.listeners.change();
+ assert.match(els.stockStatus.textContent,/2019-04-29（平成31年4月29日）/);
+ assert.match(els.stockMonths.children[0].children[0].textContent,/2019-05-29（令和元年5月29日）/);
+ els.stockDate.value='2019-05-01';els.stockDate.listeners.change();
+ assert.equal(els.stockDateDisplay.textContent,'2019-05-01（令和元年5月1日）');
+ els.stockReferenceDate.value='';els.stockReferenceDate.listeners.input();
+ assert.equal(els.stockReferenceDateDisplay.textContent,'');
  assert.match(els.stockForecastHeading.textContent,/企業占星術とコード数秘/);
  els.stockFavorite.listeners.click();
  assert.equal(els.stockFavorite.attributes['aria-pressed'],'true');
@@ -72,6 +85,7 @@ try{
  await els.stockCSV.listeners.change();
  assert.equal(els.stockPriceResult.hidden,false);
  assert.equal(els.stockLastClose.textContent,'98');
+ assert.equal(els.stockPriceDate.textContent,'2026-11-20（令和8年11月20日） 終値');
  assert.ok(storage.get('koyomi-stock-reading-close-v1-6480'));
  els.stockManualCode.value='555A';els.stockManualName.value='テスト企業';
  els.stockManualSave.listeners.click();
@@ -87,6 +101,15 @@ try{
  assert.ok(els.stockResults.children.some(b=>b.children[0].textContent==='6480'),
    '83 packaged equities remain accessible even after online catalog refresh');
  assert.ok(els.stockSearchStatus.textContent);
+ assert.match(els.economicCalendarRange.textContent,/2019-05-01/,'calendar follows changed reading date');
+ declare('fetch',async()=>{throw new Error('offline');});
+ await import('../src/financial/stock-reading-page.js?test-offline');
+ await new Promise(r=>setTimeout(r,20));
+ assert.equal(els.selectedStockCode.textContent,'6480');
+ assert.equal(els.stockPriceDate.textContent,'2026-11-20（令和8年11月20日） 終値');
+ assert.match(els.stockDateDisplay.textContent,/令和/);
+ assert.match(els.economicCalendarStatus.textContent,/保存済みデータ/,'offline calendar restores validated local snapshot');
+ assert.equal(els.stockForecast.hidden,false);
  console.log('Stock browser UI: query selection, company date, forecast, tarot, favorites, price isolation, cached full-list lookup passed');
 }finally{
  for(const [name,descriptor]of Object.entries(originals)){
