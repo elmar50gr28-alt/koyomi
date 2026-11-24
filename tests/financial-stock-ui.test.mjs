@@ -11,7 +11,7 @@ class Element{
  replaceChildren(...elements){this.children=elements;}
  setAttribute(key,value){this.attributes[key]=value;}
 }
-const keys=['stockQuery','stockSearchStatus','stockResults','stockManualCode','stockManualName',
+const keys=['stockDateDisplay','stockReferenceDateDisplay','stockQuery','stockSearchStatus','stockResults','stockManualCode','stockManualName',
  'stockManualSave','stockReading','selectedStockName','selectedStockCode','selectedStockSector',
  'selectedStockSource','stockFavorite','stockDate','stockReferenceType','stockReferenceDate',
  'stockRead','stockStatus','stockForecast','stockForecastHeading','stockBasis','stockMonths','stockReferenceExplanation',
@@ -62,6 +62,15 @@ try{
  els.stockReferenceDate.value='2020-01-01';
  els.stockReferenceDate.listeners.change();
  assert.match(els.stockBasis.textContent,/企業の上場日/);
+ assert.equal(els.stockReferenceDateDisplay.textContent,'2020-01-01（令和2年1月1日）');
+ els.stockReferenceDate.value='1989-01-08';
+ els.stockDate.value='2019-04-29';els.stockDate.listeners.change();
+ assert.match(els.stockStatus.textContent,/2019-04-29（平成31年4月29日）/);
+ assert.match(els.stockMonths.children[0].children[0].textContent,/2019-05-29（令和元年5月29日）/);
+ els.stockDate.value='2019-05-01';els.stockDate.listeners.change();
+ assert.equal(els.stockDateDisplay.textContent,'2019-05-01（令和元年5月1日）');
+ els.stockReferenceDate.value='';els.stockReferenceDate.listeners.input();
+ assert.equal(els.stockReferenceDateDisplay.textContent,'');
  assert.match(els.stockForecastHeading.textContent,/企業占星術とコード数秘/);
  els.stockFavorite.listeners.click();
  assert.equal(els.stockFavorite.attributes['aria-pressed'],'true');
@@ -72,6 +81,7 @@ try{
  await els.stockCSV.listeners.change();
  assert.equal(els.stockPriceResult.hidden,false);
  assert.equal(els.stockLastClose.textContent,'98');
+ assert.equal(els.stockPriceDate.textContent,'2026-11-20（令和8年11月20日） 終値');
  assert.ok(storage.get('koyomi-stock-reading-close-v1-6480'));
  els.stockManualCode.value='555A';els.stockManualName.value='テスト企業';
  els.stockManualSave.listeners.click();
@@ -87,6 +97,13 @@ try{
  assert.ok(els.stockResults.children.some(b=>b.children[0].textContent==='6480'),
    '83 packaged equities remain accessible even after online catalog refresh');
  assert.ok(els.stockSearchStatus.textContent);
+ declare('fetch',async()=>{throw new Error('offline');});
+ await import('../src/financial/stock-reading-page.js?test-offline');
+ await new Promise(r=>setTimeout(r,20));
+ assert.equal(els.selectedStockCode.textContent,'6480');
+ assert.equal(els.stockPriceDate.textContent,'2026-11-20（令和8年11月20日） 終値');
+ assert.match(els.stockDateDisplay.textContent,/令和/);
+ assert.equal(els.stockForecast.hidden,false);
  console.log('Stock browser UI: query selection, company date, forecast, tarot, favorites, price isolation, cached full-list lookup passed');
 }finally{
  for(const [name,descriptor]of Object.entries(originals)){
