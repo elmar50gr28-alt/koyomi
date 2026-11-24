@@ -1,3 +1,4 @@
+import {setupEconomicCalendar} from './economic-calendar-view.js';
 import {formatJapaneseDate,formatDatesInText} from '../shared/japanese-date-display.js';
 import {
   BUILTIN_STOCKS,STOCK_CATALOG_META,updateStockCatalog,
@@ -15,7 +16,7 @@ const SAVED_KEY='koyomi-stock-reading-saved-v1';
 const REFERENCE_KEY='koyomi-stock-reading-reference-v1-';
 const PRICE_KEY='koyomi-stock-reading-close-v1-';
 const USER_KEY='koyomi-stock-reading-user-v1-';
-let catalog=BUILTIN_STOCKS,selected=null;
+let catalog=BUILTIN_STOCKS,selected=null,economicCalendar=null;
 function readStorage(key){
   try{return JSON.parse(localStorage.getItem(key)||'null');}catch{return null;}
 }
@@ -128,6 +129,7 @@ function updateDateLabels(){
 }
 function renderStock(){
   updateDateLabels();
+  economicCalendar?.render();
   if(!selected)return;
   try{
     const date=get('stockDate').value,referenceDate=get('stockReferenceDate').value||null;
@@ -214,6 +216,8 @@ function saveManual(){
 function setup(){
   get('stockDate').value=dateToday();
   updateDateLabels();
+  let calendarStore;try{calendarStore=localStorage;}catch{}
+  economicCalendar=setupEconomicCalendar({document,store:calendarStore});
   get('stockDate').addEventListener('input',updateDateLabels);
   get('stockReferenceDate').addEventListener('input',updateDateLabels);
   get('stockQuery').addEventListener('input',renderResults);

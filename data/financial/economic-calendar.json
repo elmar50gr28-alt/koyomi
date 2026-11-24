@@ -1,0 +1,1233 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-24T10:01:14.120Z",
+  "sources": [
+    {
+      "id": "estat",
+      "status": "ok",
+      "checkedAt": "2026-11-24T10:01:14.120Z"
+    },
+    {
+      "id": "bea",
+      "status": "ok",
+      "checkedAt": "2026-11-24T10:01:14.120Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830-サービス産業動態統計調査 2026年6月分(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "サービス産業動態統計調査 2026年6月分(確報)",
+      "date": "2026-11-24",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830-サービス産業動態統計調査 2026年9月分(速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "サービス産業動態統計調査 2026年9月分(速報)",
+      "date": "2026-11-24",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00450071/202611250830-毎月勤労統計調査 全国調査(2026（令和８）年 ９月分 確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "毎月勤労統計調査 全国調査(2026（令和８）年 ９月分 確報)",
+      "date": "2026-11-25",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00450071/202611250830"
+    },
+    {
+      "id": "bea-395d58c3-51cf-44ef-b5bd-d35240623299",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Second Estimate) and Corporate Profits, 3rd Quarter 2026",
+      "date": "2026-11-25",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-c6b23055-287a-4975-bcf7-026c2c6dd8e1",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, October 2026",
+      "date": "2026-11-25",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100406/202611261400-景気動向指数 令和8年(9月分 速報からの改訂状況)",
+      "source": "estat",
+      "country": "JP",
+      "title": "景気動向指数 令和8年(9月分 速報からの改訂状況)",
+      "date": "2026-11-26",
+      "time": "14:00",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100406/202611261400"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200571/202611270830-小売物価統計調査 【動向編】主要品目の東京都区部小売価格及び全国統一価格品目の価格(2026年11月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "小売物価統計調査 【動向編】主要品目の東京都区部小売価格及び全国統一価格品目の価格(2026年11月分)",
+      "date": "2026-11-27",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200571/202611270830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200573/202611270830-消費者物価指数 東京都区部（中旬速報値）(2026年11月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "消費者物価指数 東京都区部（中旬速報値）(2026年11月分)",
+      "date": "2026-11-27",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200573/202611270830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350300/202611270930-普通貿易統計 令和8年10月(月分（輸出確報；輸入9桁速報）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "普通貿易統計 令和8年10月(月分（輸出確報；輸入9桁速報）)",
+      "date": "2026-11-27",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350300/202611270930"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350300/202611270930-普通貿易統計 令和8年9月(月分（輸入確報）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "普通貿易統計 令和8年9月(月分（輸入確報）)",
+      "date": "2026-11-27",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350300/202611270930"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350310/202611270930-特殊貿易統計 令和8年10月(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "特殊貿易統計 令和8年10月(確報)",
+      "date": "2026-11-27",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350310/202611270930"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550030/202611300850-商業動態統計調査 2026年10月分(速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "商業動態統計調査 2026年10月分(速報)",
+      "date": "2026-11-30",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550030/202611300850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550300/202611300850-鉱工業生産・出荷・在庫指数 2026年(10月分 速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業生産・出荷・在庫指数 2026年(10月分 速報)",
+      "date": "2026-11-30",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550300/202611300850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550333/202611300850-鉱工業出荷内訳表・総供給表 2026年(10月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業出荷内訳表・総供給表 2026年(10月分)",
+      "date": "2026-11-30",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550333/202611300850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200531/202612010830-労働力調査 2026年10月分(基本集計（2026年10月分）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "労働力調査 2026年10月分(基本集計（2026年10月分）)",
+      "date": "2026-12-01",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200531/202612010830"
+    },
+    {
+      "id": "bea-24ad66f8-b973-454d-93c1-9fd339a61d9b",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP by County and Personal Income by County, 2025",
+      "date": "2026-12-02",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100406/202612071400-景気動向指数 令和8年(10月分 速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "景気動向指数 令和8年(10月分 速報)",
+      "date": "2026-12-07",
+      "time": "14:00",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100406/202612071400"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200561/202612080830-家計調査 家計収支編(2026年10月分 二人以上の世帯)",
+      "source": "estat",
+      "country": "JP",
+      "title": "家計調査 家計収支編(2026年10月分 二人以上の世帯)",
+      "date": "2026-12-08",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200561/202612080830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00450071/202612080830-毎月勤労統計調査 全国調査(2026（令和８）年 10月分 速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "毎月勤労統計調査 全国調査(2026（令和８）年 10月分 速報)",
+      "date": "2026-12-08",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00450071/202612080830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100409/202612080850-国民経済計算 四半期別ＧＤＰ速報(2026年7-9月期 2次速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "国民経済計算 四半期別ＧＤＰ速報(2026年7-9月期 2次速報)",
+      "date": "2026-12-08",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100409/202612080850"
+    },
+    {
+      "id": "bea-fcb9a791-4080-4f4b-87cf-b5f189e6d1a2",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, October 2026",
+      "date": "2026-12-08",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-1fedfe18-0b6c-4a41-8079-5d07b8e6e6de",
+      "source": "bea",
+      "country": "US",
+      "title": "Real Personal Consumption Expenditures by State and Real Personal Income by State, 2025",
+      "date": "2026-12-10",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550300/202612141330-鉱工業生産・出荷・在庫指数 2026年(10月分 確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業生産・出荷・在庫指数 2026年(10月分 確報)",
+      "date": "2026-12-14",
+      "time": "13:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550300/202612141330"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550030/202612151330-商業動態統計調査 2026年10月分(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "商業動態統計調査 2026年10月分(確報)",
+      "date": "2026-12-15",
+      "time": "13:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550030/202612151330"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100401/202612160850-機械受注統計調査 令和8年(10月実績)",
+      "source": "estat",
+      "country": "JP",
+      "title": "機械受注統計調査 令和8年(10月実績)",
+      "date": "2026-12-16",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100401/202612160850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550360/202612161330-第3次産業活動指数 2026年(10月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "第3次産業活動指数 2026年(10月分)",
+      "date": "2026-12-16",
+      "time": "13:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550360/202612161330"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200571/202612180830-小売物価統計調査 【動向編】主要品目の都市別小売価格（都道府県庁所在市及び人口15万以上の市）(2026年11月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "小売物価統計調査 【動向編】主要品目の都市別小売価格（都道府県庁所在市及び人口15万以上の市）(2026年11月分)",
+      "date": "2026-12-18",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200571/202612180830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200573/202612180830-消費者物価指数 全国(2026年11月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "消費者物価指数 全国(2026年11月分)",
+      "date": "2026-12-18",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200573/202612180830"
+    },
+    {
+      "id": "bea-4666e9ef-89c0-422f-b8cb-fef7bd2fe8f6",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Transactions and Investment Position, 3rd Quarter 2026",
+      "date": "2026-12-18",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202612210830-サービス産業動態統計調査 2026年10月分(速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "サービス産業動態統計調査 2026年10月分(速報)",
+      "date": "2026-12-21",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202612210830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202612210830-サービス産業動態統計調査 2026年7月分(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "サービス産業動態統計調査 2026年7月分(確報)",
+      "date": "2026-12-21",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202612210830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00450071/202612230830-毎月勤労統計調査 全国調査(2026（令和８）年 10月分 確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "毎月勤労統計調査 全国調査(2026（令和８）年 10月分 確報)",
+      "date": "2026-12-23",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00450071/202612230830"
+    },
+    {
+      "id": "bea-0a2682b1-41aa-4ec7-992e-07c8bfc1b92e",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Third Estimate), Industries, Corporate Profits, State GDP, and State Personal Income, 3rd Quarter 2026",
+      "date": "2026-12-23",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-715d281b-925d-40f9-8400-6a9096a861ec",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, November 2026",
+      "date": "2026-12-23",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100406/202612241400-景気動向指数 令和8年(10月分 速報からの改訂状況)",
+      "source": "estat",
+      "country": "JP",
+      "title": "景気動向指数 令和8年(10月分 速報からの改訂状況)",
+      "date": "2026-12-24",
+      "time": "14:00",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100406/202612241400"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200531/202612250830-労働力調査 2026年11月分(基本集計（2026年11月分）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "労働力調査 2026年11月分(基本集計（2026年11月分）)",
+      "date": "2026-12-25",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200531/202612250830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200571/202612250830-小売物価統計調査 【動向編】主要品目の東京都区部小売価格及び全国統一価格品目の価格(2026年12月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "小売物価統計調査 【動向編】主要品目の東京都区部小売価格及び全国統一価格品目の価格(2026年12月分)",
+      "date": "2026-12-25",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200571/202612250830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200573/202612250830-消費者物価指数 東京都区部（中旬速報値）(2026年12月分,2026年平均)",
+      "source": "estat",
+      "country": "JP",
+      "title": "消費者物価指数 東京都区部（中旬速報値）(2026年12月分,2026年平均)",
+      "date": "2026-12-25",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200573/202612250830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350300/202612250930-普通貿易統計 令和8年10月(月分（輸入確報）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "普通貿易統計 令和8年10月(月分（輸入確報）)",
+      "date": "2026-12-25",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350300/202612250930"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350300/202612250930-普通貿易統計 令和8年11月(月分（輸出確報；輸入9桁速報）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "普通貿易統計 令和8年11月(月分（輸出確報；輸入9桁速報）)",
+      "date": "2026-12-25",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350300/202612250930"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350310/202612250930-特殊貿易統計 令和8年11月(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "特殊貿易統計 令和8年11月(確報)",
+      "date": "2026-12-25",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350310/202612250930"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550030/202612280850-商業動態統計調査 2026年11月分(速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "商業動態統計調査 2026年11月分(速報)",
+      "date": "2026-12-28",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550030/202612280850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550300/202612280850-鉱工業生産・出荷・在庫指数 2026年(11月分 速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業生産・出荷・在庫指数 2026年(11月分 速報)",
+      "date": "2026-12-28",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550300/202612280850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550333/202612280850-鉱工業出荷内訳表・総供給表 2026年(11月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業出荷内訳表・総供給表 2026年(11月分)",
+      "date": "2026-12-28",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550333/202612280850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00450071/202701070830-毎月勤労統計調査 全国調査(2026（令和８）年 11月分 速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "毎月勤労統計調査 全国調査(2026（令和８）年 11月分 速報)",
+      "date": "2027-01-07",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00450071/202701070830"
+    },
+    {
+      "id": "bea-60c2963e-adbe-4467-b7b3-c55ddedcead4",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, November 2026",
+      "date": "2027-01-07",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200561/202701080830-家計調査 家計収支編(2026年11月分 二人以上の世帯)",
+      "source": "estat",
+      "country": "JP",
+      "title": "家計調査 家計収支編(2026年11月分 二人以上の世帯)",
+      "date": "2027-01-08",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200561/202701080830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100406/202701081400-景気動向指数 令和8年(11月分 速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "景気動向指数 令和8年(11月分 速報)",
+      "date": "2027-01-08",
+      "time": "14:00",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100406/202701081400"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100401/202701180850-機械受注統計調査 令和8年(11月実績)",
+      "source": "estat",
+      "country": "JP",
+      "title": "機械受注統計調査 令和8年(11月実績)",
+      "date": "2027-01-18",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100401/202701180850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550030/202701181330-商業動態統計調査 2026年11月分(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "商業動態統計調査 2026年11月分(確報)",
+      "date": "2027-01-18",
+      "time": "13:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550030/202701181330"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550300/202701181330-鉱工業生産・出荷・在庫指数 2026年(11月分 確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業生産・出荷・在庫指数 2026年(11月分 確報)",
+      "date": "2027-01-18",
+      "time": "13:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550300/202701181330"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550360/202701181330-第3次産業活動指数 2026年(11月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "第3次産業活動指数 2026年(11月分)",
+      "date": "2027-01-18",
+      "time": "13:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550360/202701181330"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202701220830-サービス産業動態統計調査 2026年11月分(速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "サービス産業動態統計調査 2026年11月分(速報)",
+      "date": "2027-01-22",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202701220830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202701220830-サービス産業動態統計調査 2026年8月分(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "サービス産業動態統計調査 2026年8月分(確報)",
+      "date": "2027-01-22",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202701220830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200571/202701220830-小売物価統計調査 【動向編】主要品目の都市別小売価格（都道府県庁所在市及び人口15万以上の市）(2026年12月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "小売物価統計調査 【動向編】主要品目の都市別小売価格（都道府県庁所在市及び人口15万以上の市）(2026年12月分)",
+      "date": "2027-01-22",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200571/202701220830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200573/202701220830-消費者物価指数 全国(2026年12月分,2026年平均)",
+      "source": "estat",
+      "country": "JP",
+      "title": "消費者物価指数 全国(2026年12月分,2026年平均)",
+      "date": "2027-01-22",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200573/202701220830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00450071/202701220830-毎月勤労統計調査 全国調査(2026（令和８）年 11月分 確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "毎月勤労統計調査 全国調査(2026（令和８）年 11月分 確報)",
+      "date": "2027-01-22",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00450071/202701220830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200561/202701221400-家計調査 貯蓄・負債編 (2026年7～9月期 二人以上の世帯)",
+      "source": "estat",
+      "country": "JP",
+      "title": "家計調査 貯蓄・負債編 (2026年7～9月期 二人以上の世帯)",
+      "date": "2027-01-22",
+      "time": "14:00",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200561/202701221400"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100406/202701251400-景気動向指数 令和8年(11月分 速報からの改訂状況)",
+      "source": "estat",
+      "country": "JP",
+      "title": "景気動向指数 令和8年(11月分 速報からの改訂状況)",
+      "date": "2027-01-25",
+      "time": "14:00",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100406/202701251400"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350300/202701280930-普通貿易統計 令和8年11月(月分（輸入確報）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "普通貿易統計 令和8年11月(月分（輸入確報）)",
+      "date": "2027-01-28",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350300/202701280930"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350300/202701280930-普通貿易統計 令和8年12月(月分（輸出確報；輸入9桁速報）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "普通貿易統計 令和8年12月(月分（輸出確報；輸入9桁速報）)",
+      "date": "2027-01-28",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350300/202701280930"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350310/202701280930-特殊貿易統計 令和8年12月(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "特殊貿易統計 令和8年12月(確報)",
+      "date": "2027-01-28",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350310/202701280930"
+    },
+    {
+      "id": "bea-20dea777-8e6b-48a2-93a7-d92e7215956d",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Advance Estimate), 4th Quarter and Year 2026",
+      "date": "2027-01-28",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-e3a6de0c-0553-47aa-a115-727090032aea",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, December 2026",
+      "date": "2027-01-28",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200531/202701290830-労働力調査 2026年12月分(基本集計（2026年10～12月期平均）,基本集計（2026年12月分）,基本集計（2026年平均）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "労働力調査 2026年12月分(基本集計（2026年10～12月期平均）,基本集計（2026年12月分）,基本集計（2026年平均）)",
+      "date": "2027-01-29",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200531/202701290830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200571/202701290830-小売物価統計調査 【動向編】主要品目の東京都区部小売価格及び全国統一価格品目の価格(2027年1月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "小売物価統計調査 【動向編】主要品目の東京都区部小売価格及び全国統一価格品目の価格(2027年1月分)",
+      "date": "2027-01-29",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200571/202701290830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200573/202701290830-消費者物価指数 東京都区部（中旬速報値）(2027年1月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "消費者物価指数 東京都区部（中旬速報値）(2027年1月分)",
+      "date": "2027-01-29",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200573/202701290830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550030/202701290850-商業動態統計調査 2026年12月分(速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "商業動態統計調査 2026年12月分(速報)",
+      "date": "2027-01-29",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550030/202701290850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550300/202701290850-鉱工業生産・出荷・在庫指数 2026年(12月分 速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業生産・出荷・在庫指数 2026年(12月分 速報)",
+      "date": "2027-01-29",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550300/202701290850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550333/202701290850-鉱工業出荷内訳表・総供給表 2026年(12月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業出荷内訳表・総供給表 2026年(12月分)",
+      "date": "2027-01-29",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550333/202701290850"
+    },
+    {
+      "id": "bea-0a6d54c6-da4d-402f-a2a2-9ece90f7a839",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, December and Annual 2026",
+      "date": "2027-02-04",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200561/202702050830-家計調査 家計収支編(2026年10～12月期,2026年12月分,2026年平均)",
+      "source": "estat",
+      "country": "JP",
+      "title": "家計調査 家計収支編(2026年10～12月期,2026年12月分,2026年平均)",
+      "date": "2027-02-05",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200561/202702050830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100406/202702051400-景気動向指数 令和8年(12月分 速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "景気動向指数 令和8年(12月分 速報)",
+      "date": "2027-02-05",
+      "time": "14:00",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100406/202702051400"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00450071/202702090830-毎月勤労統計調査 全国調査(2026（令和８）年 12月分,年平均)",
+      "source": "estat",
+      "country": "JP",
+      "title": "毎月勤労統計調査 全国調査(2026（令和８）年 12月分,年平均)",
+      "date": "2027-02-09",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00450071/202702090830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200531/202702121400-労働力調査 2026年12月分(詳細集計（2026年10～12月期平均）,詳細集計（2026年平均）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "労働力調査 2026年12月分(詳細集計（2026年10～12月期平均）,詳細集計（2026年平均）)",
+      "date": "2027-02-12",
+      "time": "14:00",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200531/202702121400"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100409/202702150850-国民経済計算 四半期別ＧＤＰ速報(2026年10-12月期 1次速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "国民経済計算 四半期別ＧＤＰ速報(2026年10-12月期 1次速報)",
+      "date": "2027-02-15",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100409/202702150850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550030/202702151330-商業動態統計調査 2026年12月分(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "商業動態統計調査 2026年12月分(確報)",
+      "date": "2027-02-15",
+      "time": "13:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550030/202702151330"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550300/202702151330-鉱工業生産・出荷・在庫指数 2026年(12月分 確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業生産・出荷・在庫指数 2026年(12月分 確報)",
+      "date": "2027-02-15",
+      "time": "13:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550300/202702151330"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550360/202702171330-第3次産業活動指数 2026年(12月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "第3次産業活動指数 2026年(12月分)",
+      "date": "2027-02-17",
+      "time": "13:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550360/202702171330"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100401/202702180850-機械受注統計調査 令和8年(12月実績および令和9年1～3月見通し)",
+      "source": "estat",
+      "country": "JP",
+      "title": "機械受注統計調査 令和8年(12月実績および令和9年1～3月見通し)",
+      "date": "2027-02-18",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100401/202702180850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200571/202702190830-小売物価統計調査 【動向編】主要品目の都市別小売価格（都道府県庁所在市及び人口15万以上の市）(2027年1月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "小売物価統計調査 【動向編】主要品目の都市別小売価格（都道府県庁所在市及び人口15万以上の市）(2027年1月分)",
+      "date": "2027-02-19",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200571/202702190830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200573/202702190830-消費者物価指数 全国(2027年1月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "消費者物価指数 全国(2027年1月分)",
+      "date": "2027-02-19",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200573/202702190830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202702220830-サービス産業動態統計調査 2026年12月分(速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "サービス産業動態統計調査 2026年12月分(速報)",
+      "date": "2027-02-22",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202702220830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202702220830-サービス産業動態統計調査 2026年9月分(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "サービス産業動態統計調査 2026年9月分(確報)",
+      "date": "2027-02-22",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202702220830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350300/202702250930-普通貿易統計 令和9年1月(月分（輸出確報；輸入9桁速報）)",
+      "source": "estat",
+      "country": "JP",
+      "title": "普通貿易統計 令和9年1月(月分（輸出確報；輸入9桁速報）)",
+      "date": "2027-02-25",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350300/202702250930"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350310/202702250930-特殊貿易統計 令和9年1月(確報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "特殊貿易統計 令和9年1月(確報)",
+      "date": "2027-02-25",
+      "time": "09:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350310/202702250930"
+    },
+    {
+      "id": "bea-6eb95591-6442-4506-9491-2e80266bad4c",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Second Estimate), 4th Quarter and Year 2026",
+      "date": "2027-02-25",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-bff6f863-4cbc-43e7-a895-80d020f4ea6e",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, January 2027",
+      "date": "2027-02-25",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200571/202702260830-小売物価統計調査 【動向編】主要品目の東京都区部小売価格及び全国統一価格品目の価格(2027年2月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "小売物価統計調査 【動向編】主要品目の東京都区部小売価格及び全国統一価格品目の価格(2027年2月分)",
+      "date": "2027-02-26",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200571/202702260830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200573/202702260830-消費者物価指数 東京都区部（中旬速報値）(2027年2月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "消費者物価指数 東京都区部（中旬速報値）(2027年2月分)",
+      "date": "2027-02-26",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200573/202702260830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00450071/202702260830-毎月勤労統計調査 全国調査(2026（令和８）年 12月分,年平均)",
+      "source": "estat",
+      "country": "JP",
+      "title": "毎月勤労統計調査 全国調査(2026（令和８）年 12月分,年平均)",
+      "date": "2027-02-26",
+      "time": "08:30",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00450071/202702260830"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550030/202702260850-商業動態統計調査 2027年1月分(速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "商業動態統計調査 2027年1月分(速報)",
+      "date": "2027-02-26",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550030/202702260850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550300/202702260850-鉱工業生産・出荷・在庫指数 2027年(1月分 速報)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業生産・出荷・在庫指数 2027年(1月分 速報)",
+      "date": "2027-02-26",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550300/202702260850"
+    },
+    {
+      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550333/202702260850-鉱工業出荷内訳表・総供給表 2027年(1月分)",
+      "source": "estat",
+      "country": "JP",
+      "title": "鉱工業出荷内訳表・総供給表 2027年(1月分)",
+      "date": "2027-02-26",
+      "time": "08:50",
+      "url": "https://www.e-stat.go.jp/release-calendar/detail/00550333/202702260850"
+    },
+    {
+      "id": "bea-1711e546-76e3-4559-b77a-d557f6ea2494",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, January 2027",
+      "date": "2027-03-09",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-1f4532a2-fb22-4fff-9bf3-e94c9fb8e686",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Transactions and Investment Position, 4th Quarter and Year 2026",
+      "date": "2027-03-24",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-a6760fe8-0263-418e-8b6a-3d7cf54782f5",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Third Estimate), Industries, Corporate Profits, State GDP, and State Personal Income, 4th Quarter and Year 2026",
+      "date": "2027-03-31",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-863b8353-4f65-49de-86fb-b692b722fc00",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, February 2027",
+      "date": "2027-03-31",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-d0dfb719-30fc-4fb0-a00f-7715422872d4",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, February 2027",
+      "date": "2027-04-06",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-f9d11bcc-b68e-4d34-8edb-db33c38fdaf0",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Advance Estimate), 1st Quarter 2027",
+      "date": "2027-04-29",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-320ba100-8803-41e5-ac3a-d39cd9801816",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, March 2027",
+      "date": "2027-04-29",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-2db2055f-5710-44ba-b9a9-6b5a3ab68651",
+      "source": "bea",
+      "country": "US",
+      "title": "Activities of U.S. Affiliates of Foreign Multinational Enterprises, 2025",
+      "date": "2027-04-30",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-efcde9b3-f686-4159-9d70-0f0916b19caa",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, March 2027",
+      "date": "2027-05-05",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-01d7e497-cd0d-41d2-bbc7-335f0786330f",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Second Estimate) and Corporate Profits, 1st Quarter 2027",
+      "date": "2027-05-27",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-c1fc94a3-73ce-4750-bacc-b4aff49cf020",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, April 2027",
+      "date": "2027-05-27",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-cbf759f7-1508-4d55-bc3b-8d6d75b70784",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, April 2027 and Annual Update",
+      "date": "2027-06-09",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-4e18d3f4-95cc-433c-a823-d930cae5e839",
+      "source": "bea",
+      "country": "US",
+      "title": "New Foreign Direct Investment in the United States, 2026",
+      "date": "2027-06-10",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-7fc1ba5d-d70f-4a29-8ee3-b757043aa435",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Transactions and Investment Position, 1st Quarter 2027 and Annual Update",
+      "date": "2027-06-24",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-aca3a331-4976-4a54-b069-480113397e94",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Third Estimate), Industries, Corporate Profits, State GDP, and State Personal Income, 1st Quarter 2027",
+      "date": "2027-06-25",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-a2a45f23-7b9e-4690-bacf-90af55d117d6",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, May 2027",
+      "date": "2027-06-25",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-7eb5a133-99ce-461a-9994-7547e5531f80",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, May 2027",
+      "date": "2027-07-07",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-7abe1ed3-335d-43be-8dee-e9c605a05188",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. Trade in Services, Expanded Detail, 2026; Services Supplied Through Affiliates, 2025",
+      "date": "2027-07-07",
+      "time": "23:00",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-f85a2cb1-bb70-4cc7-91cf-f510263a23a8",
+      "source": "bea",
+      "country": "US",
+      "title": "Direct Investment by Country and Industry, 2026",
+      "date": "2027-07-20",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-cad15f9d-0eef-4991-b947-25e82546b968",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Advance Estimate), 2nd Quarter 2027",
+      "date": "2027-07-29",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-5ed58ba0-7c57-4497-bd14-29f09f9edd08",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, June 2027",
+      "date": "2027-07-29",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-daaadad0-f494-44d1-9c06-46daf2f54815",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, June 2027",
+      "date": "2027-08-05",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-b4a37e5a-806d-4f47-8212-fa6b083e85d3",
+      "source": "bea",
+      "country": "US",
+      "title": "Activities of U.S. Multinational Enterprises, 2025",
+      "date": "2027-08-20",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-a6962ba5-911b-4f90-8414-e22f2f93a791",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Second Estimate) and Corporate Profits, 2nd Quarter 2027",
+      "date": "2027-08-25",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-0b604b28-45cd-4ca0-8a28-68a3a84299a1",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, July 2027",
+      "date": "2027-08-25",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-57b96183-dec3-4c2a-8f77-89272f43e507",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, July 2027",
+      "date": "2027-09-08",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-5096eb02-b13d-4fe6-ab09-01a5769a07dc",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Transactions and Investment Position, 2nd Quarter 2027",
+      "date": "2027-09-22",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-76c24480-3cb7-40e4-a824-f2b0f17d869f",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Third Estimate), Industries, Corporate Profits, State GDP, and State Personal Income, 2nd Quarter 2027; State Consumer Spending, 2026",
+      "date": "2027-09-30",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-feb54afd-8e52-4e48-8337-ed9a69bd860b",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, August 2027",
+      "date": "2027-09-30",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-af2225e2-eba3-4dbf-91bd-e3ea91349860",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, August 2027",
+      "date": "2027-10-06",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-2683f864-4dad-461e-a25b-d18efa785bd5",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Advance Estimate), 3rd Quarter 2027",
+      "date": "2027-10-28",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-76076163-d922-44ce-ab1a-0de5727afacd",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, September 2027",
+      "date": "2027-10-28",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-a7b51754-f4c8-46d5-9418-1cc67285cad6",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, September 2027",
+      "date": "2027-11-04",
+      "time": "21:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-5ca13f21-a57e-4b30-9e8c-52c16151dce3",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Second Estimate) and Corporate Profits, 3rd Quarter 2027",
+      "date": "2027-11-24",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-9fab5eb4-935e-4191-af97-50287c1380c4",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, October 2027",
+      "date": "2027-11-24",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-b867e6f9-e61b-427c-822d-e6053953ffa4",
+      "source": "bea",
+      "country": "US",
+      "title": "Gross Domestic Product by County and Personal Income by County, 2026",
+      "date": "2027-12-01",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-39b4f454-2f03-4968-a2b8-303067798496",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Trade in Goods and Services, October 2027",
+      "date": "2027-12-07",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-6bba9e3e-7145-4c6b-91bb-2aba2b800d12",
+      "source": "bea",
+      "country": "US",
+      "title": "Real Consumer Spending by State and Real Personal Income by State, 2026",
+      "date": "2027-12-15",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-a991a5cb-e351-4809-b1e7-3110cf9cb122",
+      "source": "bea",
+      "country": "US",
+      "title": "U.S. International Transactions and Investment Position, 3rd Quarter 2027",
+      "date": "2027-12-17",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-fbd98f64-7afe-4b40-ae27-ea3fc77c1853",
+      "source": "bea",
+      "country": "US",
+      "title": "GDP (Third Estimate), Industries, Corporate Profits, State GDP, and State Personal Income, 3rd Quarter 2027",
+      "date": "2027-12-22",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "bea-6c4e2eb6-96ac-464c-b525-f74503f2d66d",
+      "source": "bea",
+      "country": "US",
+      "title": "Personal Income and Outlays, November 2027",
+      "date": "2027-12-22",
+      "time": "22:30",
+      "url": "https://www.bea.gov/news/schedule"
+    }
+  ]
+}
