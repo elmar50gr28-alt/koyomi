@@ -1,64 +1,19 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-24T10:01:14.120Z",
+  "generatedAt": "2026-11-26T03:32:43.520Z",
   "sources": [
     {
       "id": "estat",
       "status": "ok",
-      "checkedAt": "2026-11-24T10:01:14.120Z"
+      "checkedAt": "2026-11-26T03:32:43.520Z"
     },
     {
       "id": "bea",
       "status": "ok",
-      "checkedAt": "2026-11-24T10:01:14.120Z"
+      "checkedAt": "2026-11-26T03:32:43.520Z"
     }
   ],
   "events": [
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830-サービス産業動態統計調査 2026年6月分(確報)",
-      "source": "estat",
-      "country": "JP",
-      "title": "サービス産業動態統計調査 2026年6月分(確報)",
-      "date": "2026-11-24",
-      "time": "08:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830"
-    },
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830-サービス産業動態統計調査 2026年9月分(速報)",
-      "source": "estat",
-      "country": "JP",
-      "title": "サービス産業動態統計調査 2026年9月分(速報)",
-      "date": "2026-11-24",
-      "time": "08:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830"
-    },
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00450071/202611250830-毎月勤労統計調査 全国調査(2026（令和８）年 ９月分 確報)",
-      "source": "estat",
-      "country": "JP",
-      "title": "毎月勤労統計調査 全国調査(2026（令和８）年 ９月分 確報)",
-      "date": "2026-11-25",
-      "time": "08:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00450071/202611250830"
-    },
-    {
-      "id": "bea-395d58c3-51cf-44ef-b5bd-d35240623299",
-      "source": "bea",
-      "country": "US",
-      "title": "GDP (Second Estimate) and Corporate Profits, 3rd Quarter 2026",
-      "date": "2026-11-25",
-      "time": "22:30",
-      "url": "https://www.bea.gov/news/schedule"
-    },
-    {
-      "id": "bea-c6b23055-287a-4975-bcf7-026c2c6dd8e1",
-      "source": "bea",
-      "country": "US",
-      "title": "Personal Income and Outlays, October 2026",
-      "date": "2026-11-25",
-      "time": "22:30",
-      "url": "https://www.bea.gov/news/schedule"
-    },
     {
       "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100406/202611261400-景気動向指数 令和8年(9月分 速報からの改訂状況)",
       "source": "estat",
