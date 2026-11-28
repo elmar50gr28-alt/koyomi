@@ -1,118 +1,19 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-24T10:01:14.120Z",
+  "generatedAt": "2026-11-28T03:17:29.491Z",
   "sources": [
     {
       "id": "estat",
       "status": "ok",
-      "checkedAt": "2026-11-24T10:01:14.120Z"
+      "checkedAt": "2026-11-28T03:17:29.491Z"
     },
     {
       "id": "bea",
       "status": "ok",
-      "checkedAt": "2026-11-24T10:01:14.120Z"
+      "checkedAt": "2026-11-28T03:17:29.491Z"
     }
   ],
   "events": [
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830-サービス産業動態統計調査 2026年6月分(確報)",
-      "source": "estat",
-      "country": "JP",
-      "title": "サービス産業動態統計調査 2026年6月分(確報)",
-      "date": "2026-11-24",
-      "time": "08:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830"
-    },
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830-サービス産業動態統計調査 2026年9月分(速報)",
-      "source": "estat",
-      "country": "JP",
-      "title": "サービス産業動態統計調査 2026年9月分(速報)",
-      "date": "2026-11-24",
-      "time": "08:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200546/202611240830"
-    },
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00450071/202611250830-毎月勤労統計調査 全国調査(2026（令和８）年 ９月分 確報)",
-      "source": "estat",
-      "country": "JP",
-      "title": "毎月勤労統計調査 全国調査(2026（令和８）年 ９月分 確報)",
-      "date": "2026-11-25",
-      "time": "08:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00450071/202611250830"
-    },
-    {
-      "id": "bea-395d58c3-51cf-44ef-b5bd-d35240623299",
-      "source": "bea",
-      "country": "US",
-      "title": "GDP (Second Estimate) and Corporate Profits, 3rd Quarter 2026",
-      "date": "2026-11-25",
-      "time": "22:30",
-      "url": "https://www.bea.gov/news/schedule"
-    },
-    {
-      "id": "bea-c6b23055-287a-4975-bcf7-026c2c6dd8e1",
-      "source": "bea",
-      "country": "US",
-      "title": "Personal Income and Outlays, October 2026",
-      "date": "2026-11-25",
-      "time": "22:30",
-      "url": "https://www.bea.gov/news/schedule"
-    },
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00100406/202611261400-景気動向指数 令和8年(9月分 速報からの改訂状況)",
-      "source": "estat",
-      "country": "JP",
-      "title": "景気動向指数 令和8年(9月分 速報からの改訂状況)",
-      "date": "2026-11-26",
-      "time": "14:00",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00100406/202611261400"
-    },
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200571/202611270830-小売物価統計調査 【動向編】主要品目の東京都区部小売価格及び全国統一価格品目の価格(2026年11月分)",
-      "source": "estat",
-      "country": "JP",
-      "title": "小売物価統計調査 【動向編】主要品目の東京都区部小売価格及び全国統一価格品目の価格(2026年11月分)",
-      "date": "2026-11-27",
-      "time": "08:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200571/202611270830"
-    },
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00200573/202611270830-消費者物価指数 東京都区部（中旬速報値）(2026年11月分)",
-      "source": "estat",
-      "country": "JP",
-      "title": "消費者物価指数 東京都区部（中旬速報値）(2026年11月分)",
-      "date": "2026-11-27",
-      "time": "08:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00200573/202611270830"
-    },
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350300/202611270930-普通貿易統計 令和8年10月(月分（輸出確報；輸入9桁速報）)",
-      "source": "estat",
-      "country": "JP",
-      "title": "普通貿易統計 令和8年10月(月分（輸出確報；輸入9桁速報）)",
-      "date": "2026-11-27",
-      "time": "09:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350300/202611270930"
-    },
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350300/202611270930-普通貿易統計 令和8年9月(月分（輸入確報）)",
-      "source": "estat",
-      "country": "JP",
-      "title": "普通貿易統計 令和8年9月(月分（輸入確報）)",
-      "date": "2026-11-27",
-      "time": "09:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350300/202611270930"
-    },
-    {
-      "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00350310/202611270930-特殊貿易統計 令和8年10月(確報)",
-      "source": "estat",
-      "country": "JP",
-      "title": "特殊貿易統計 令和8年10月(確報)",
-      "date": "2026-11-27",
-      "time": "09:30",
-      "url": "https://www.e-stat.go.jp/release-calendar/detail/00350310/202611270930"
-    },
     {
       "id": "estat-https://www.e-stat.go.jp/release-calendar/detail/00550030/202611300850-商業動態統計調査 2026年10月分(速報)",
       "source": "estat",
